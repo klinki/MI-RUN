@@ -64,15 +64,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="arithmetic.cpp" />
+    <ClCompile Include="Class.cpp" />
+    <ClCompile Include="ClassLoader.cpp" />
+    <ClCompile Include="ConstantPool.cpp" />
+    <ClCompile Include="FrameStack.cpp" />
+    <ClCompile Include="Heap.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Method.cpp" />
+    <ClCompile Include="MethodArea.cpp" />
+    <ClCompile Include="Runtime.cpp" />
+    <ClCompile Include="Stack.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Access.h" />
-    <ClInclude Include="ClassFile.h" />
+    <ClInclude Include="Class.h" />
+    <ClInclude Include="ClassLoader.h" />
     <ClInclude Include="ConstantPool.h" />
+    <ClInclude Include="declarations.h" />
+    <ClInclude Include="FrameStack.h" />
+    <ClInclude Include="Heap.h" />
     <ClInclude Include="InstructionSet.h" />
-    <ClInclude Include="Reference.h" />
-    <ClInclude Include="TypeInfo.h" />
+    <ClInclude Include="Method.h" />
+    <ClInclude Include="MethodArea.h" />
+    <ClInclude Include="Runtime.h" />
+    <ClInclude Include="Stack.h" />
+    <ClInclude Include="types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
