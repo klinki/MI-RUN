@@ -24,23 +24,7 @@ enum ConstantPoolTag
 
 };
 
-union ConstantPoolItem
-{
-	CONSTANT_Class_info classInfo;
-	CONSTANT_Fieldref_info fieldInfo;
-	CONSTANT_Methodref_info methodInfo;
-	CONSTANT_InterfaceMethodref_info interfaceMethodInfo;
-	CONSTANT_String_info stringInfo;
-	CONSTANT_Integer_info integerInfo;
-	CONSTANT_Float_info floatInfo;
-	CONSTANT_Long_info longInfo;
-	CONSTANT_Double_info doubleInfo;
-	CONSTANT_NameAndType_info nameAndTypeInfo;
-	CONSTANT_Utf8_info utf8Info;
-	CONSTANT_MethodHandle_info methodHandleInfo;
-	CONSTANT_MethodType_info methodTypeInfo;
-	CONSTANT_InvokeDynamic_info invokeDynamicInfo;
-};
+
 
 struct CONSTANT_Class_info
 {
@@ -140,3 +124,23 @@ struct CONSTANT_InvokeDynamic_info
 	ConstantPoolAddress bootstrap_method_attr_index;
 	ConstantPoolAddress name_and_type_index;
 };
+
+
+union ConstantPoolItem
+{
+	CONSTANT_Class_info classInfo;
+	CONSTANT_Fieldref_info fieldInfo;
+	CONSTANT_Methodref_info methodInfo;
+	CONSTANT_InterfaceMethodref_info interfaceMethodInfo;
+	CONSTANT_String_info stringInfo;
+	CONSTANT_Integer_info integerInfo;
+	CONSTANT_Float_info floatInfo;
+	CONSTANT_Long_info longInfo;
+	CONSTANT_Double_info doubleInfo;
+	CONSTANT_NameAndType_info nameAndTypeInfo;
+	CONSTANT_Utf8_info utf8Info;
+	CONSTANT_MethodHandle_info methodHandleInfo;
+	CONSTANT_MethodType_info methodTypeInfo;
+	CONSTANT_InvokeDynamic_info invokeDynamicInfo;
+};
+

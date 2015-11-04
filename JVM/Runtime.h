@@ -7,7 +7,7 @@
 class Runtime
 {
 protected:
-	ConstantPool constantPool;
+//	ConstantPool constantPool;
 	Heap heap;
 	FrameStack frameStack;
 	MethodArea methodArea;

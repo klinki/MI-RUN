@@ -22,10 +22,6 @@ int ExecutionEngine::execute(Instruction instructions[], unsigned int length)
 
 		switch (currentInstruction)
 		{
-		default:
-			break;
-		case InstructionSet::NOP:
-			break;
 		case InstructionSet::ACONST_NULL:
 			// push null to operand stack
 			break;
@@ -286,14 +282,17 @@ int ExecutionEngine::execute(Instruction instructions[], unsigned int length)
 		case GOTO_W:
 		case JSR_W:
 
+		default:
 		// Reserved: (should not be loaded in classFile)
 		case BREAKPOINT:
 		//(NO NAME) = 0xCB - 0xFD,
 		case IMPDEP1:
 		case IMPDEP2:
 			break;
-
+		case InstructionSet::NOP:
+			break;
 		}
 
+		return 0;
 	}
 }

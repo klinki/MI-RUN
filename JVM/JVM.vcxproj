@@ -68,13 +68,15 @@
     <ClCompile Include="Class.cpp" />
     <ClCompile Include="ClassLoader.cpp" />
     <ClCompile Include="ConstantPool.cpp" />
+    <ClCompile Include="ExecutionEngine.cpp" />
     <ClCompile Include="FrameStack.cpp" />
+    <ClCompile Include="GarbageCollector.cpp" />
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Method.cpp" />
     <ClCompile Include="MethodArea.cpp" />
     <ClCompile Include="Runtime.cpp" />
-    <ClCompile Include="Stack.cpp" />
+    <ClCompile Include="OperandStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class.h" />
@@ -82,15 +84,18 @@
     <ClInclude Include="ClassLoader.h" />
     <ClInclude Include="ConstantPool.h" />
     <ClInclude Include="declarations.h" />
+    <ClInclude Include="ExecutionEngine.h" />
     <ClInclude Include="FrameStack.h" />
+    <ClInclude Include="GarbageCollector.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="InstructionSet.h" />
     <ClInclude Include="Method.h" />
     <ClInclude Include="MethodArea.h" />
     <ClInclude Include="Runtime.h" />
-    <ClInclude Include="Stack.h" />
+    <ClInclude Include="OperandStack.h" />
     <ClInclude Include="TypeInfo.h" />
     <ClInclude Include="types.h" />
+    <ClInclude Include="types\TypeTag.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
