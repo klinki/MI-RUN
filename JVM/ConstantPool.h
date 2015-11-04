@@ -3,6 +3,8 @@
 
 typedef unsigned short ConstantPoolAddress;
 
+class ConstantPool;
+
 enum ConstantPoolTag
 {
 	CONSTANT_Class = 7,

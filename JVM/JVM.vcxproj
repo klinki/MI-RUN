@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class.h" />
+    <ClInclude Include="ClassFile.h" />
     <ClInclude Include="ClassLoader.h" />
     <ClInclude Include="ConstantPool.h" />
     <ClInclude Include="declarations.h" />
@@ -88,6 +89,7 @@
     <ClInclude Include="MethodArea.h" />
     <ClInclude Include="Runtime.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="TypeInfo.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

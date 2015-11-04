@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "..\Java Virtual Machine\ConstantPool.h"
+#include "..\JVM\ConstantPool.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests

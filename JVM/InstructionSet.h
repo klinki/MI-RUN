@@ -3,6 +3,7 @@ enum InstructionSet
 	NOP = 0x00,
 
 	ACONST_NULL = 0x01,
+
 	ICONST_M1 = 0x02,
 	ICONST_0 = 0x03,
 	ICONST_1 = 0x04,
