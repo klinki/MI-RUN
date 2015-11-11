@@ -7,7 +7,7 @@ OperandStack::OperandStack(int size)
 {
 	this->allocatedSize = size;
 	this->sp = 0;
-	this->stackArray = (TypeHeader*)malloc(sizeof(*this->stackArray) * this->allocatedSize);
+	this->stackArray = new JavaType[this->allocatedSize];
 }
 
 OperandStack::~OperandStack()
@@ -16,7 +16,7 @@ OperandStack::~OperandStack()
 	this->stackArray = NULL;
 }
 
-void OperandStack::push(TypeHeader value)
+void OperandStack::push(JavaType value)
 {
 	if (this->sp == this->allocatedSize)
 	{
@@ -26,14 +26,14 @@ void OperandStack::push(TypeHeader value)
 	this->stackArray[this->sp++] = value;
 }
 
-TypeHeader OperandStack::pop()
+JavaType OperandStack::pop()
 {
 	if (this->sp == 0)
 	{
 		throw StackEmtpyException();
 	}
 
-	TypeHeader & val = this->stackArray[this->sp - 1];
+	JavaType & val = this->stackArray[this->sp - 1];
 	this->sp--;
 	return val;
 }

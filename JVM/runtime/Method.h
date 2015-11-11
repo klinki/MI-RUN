@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
-#include "types.h"
+#include "ConstantPool.h"
+#include "../types/types.h"
+#include "ExceptionTable.h"
 
 class Method
 {
@@ -11,8 +13,10 @@ protected:
 	Instruction byteCode[1];
 	unsigned int byteCodeLength;
 
-	// exception table
-	// constant table
+	unsigned int operandStackSize;
+	unsigned int localVariablesArraySize;
+
+	ExceptionTable exceptionTable;
 public:
 	Method();
 	~Method();

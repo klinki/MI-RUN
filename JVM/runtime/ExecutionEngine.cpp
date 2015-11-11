@@ -1,6 +1,5 @@
 #include "ExecutionEngine.h"
-
-
+#include "../types/types.h"
 
 ExecutionEngine::ExecutionEngine()
 {
@@ -26,24 +25,46 @@ int ExecutionEngine::execute(Instruction instructions[], unsigned int length)
 			// push null to operand stack
 			break;
 		case InstructionSet::ICONST_M1:
-			// push integer to operand stack
+			this->frame->stack.push(JavaInt(-1));
 			break;
 		case InstructionSet::ICONST_0:
+			this->frame->stack.push(JavaInt(0));
 			break;
 		case ICONST_1:
+			this->frame->stack.push(JavaInt(1));
 			break;
 		case ICONST_2:
+			this->frame->stack.push(JavaInt(2));
 			break;
 		case ICONST_3:
+			this->frame->stack.push(JavaInt(3));
+			break;
 		case ICONST_4:
+			this->frame->stack.push(JavaInt(4));
+			break;
 		case ICONST_5:
+			this->frame->stack.push(JavaInt(5));
+			break;
 		case LCONST_0:
+			this->frame->stack.push(JavaLong(0));
+			break;
 		case LCONST_1:
+			this->frame->stack.push(JavaLong(1));
+			break;
 		case FCONST_0:
+			this->frame->stack.push(JavaFloat(0));
+			break;
 		case FCONST_1:
+			this->frame->stack.push(JavaFloat(1));
+			break;
 		case FCONST_2:
+			this->frame->stack.push(JavaFloat(2));
+			break;
 		case DCONST_0:
-		case DCONST_1:
+			this->frame->stack.push(JavaDouble(0));
+			break;
+		case DCONST_1:			
+			this->frame->stack.push(JavaDouble(1));
 			break;
 
 		case BIPUSH:
@@ -155,6 +176,10 @@ int ExecutionEngine::execute(Instruction instructions[], unsigned int length)
 			// category 1
 		
 		case IADD:
+/*			JavaInt a = static_cast<JavaInt>(this->frame->stack.pop());
+			JavaInt b = static_cast<JavaInt>(this->frame->stack.pop());
+			this->frame->stack.push(a + b);
+*/
 		case LADD:
 		case FADD:
 		case DADD:
@@ -292,7 +317,7 @@ int ExecutionEngine::execute(Instruction instructions[], unsigned int length)
 		case InstructionSet::NOP:
 			break;
 		}
-
-		return 0;
 	}
+
+	return 0;
 }

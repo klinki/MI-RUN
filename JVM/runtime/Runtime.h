@@ -3,6 +3,7 @@
 #include "Heap.h"
 #include "FrameStack.h"
 #include "MethodArea.h"
+#include "ExecutionEngine.h"
 
 class Runtime
 {
@@ -11,6 +12,7 @@ protected:
 	Heap heap;
 	FrameStack frameStack;
 	MethodArea methodArea;
+	ExecutionEngine executionEngine;
 
 public:
 	Runtime();

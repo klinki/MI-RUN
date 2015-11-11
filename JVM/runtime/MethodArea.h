@@ -3,6 +3,8 @@
 
 class MethodArea
 {
+protected:
+
 public:
 	MethodArea();
 	~MethodArea();

@@ -1,21 +1,5 @@
 #pragma once
-
-typedef unsigned int ProgramCounter;
-typedef unsigned char Instruction;
-
-
-typedef char java_byte;
-typedef short java_short;
-typedef int java_int;
-typedef long java_long;
-typedef unsigned short java_char;
-
-typedef float java_float;
-typedef double java_double;
-
-typedef void* java_ref;
-
-typedef unsigned int Flag;
+#include "Aliases.h"
 
 enum TypeTag
 {
@@ -34,7 +18,7 @@ enum TypeTag
 
 class Object;
 //class ReferenceType;
-
+/*
 class ValueType;
 class Integer;
 class Long;
@@ -45,9 +29,29 @@ class Double;
 class Float;
 
 class Array;
+*/
 
-struct TypeHeader
+class JavaType;
+class JavaValueType;
+class JavaVoid;
+class JavaByte;
+class JavaChar;
+class JavaBoolean;
+class JavaShort;
+class JavaInt;
+class JavaLong;
+class JavaFloat;
+class JavaDouble;
+class JavaRefType;
+class JavaArray;
+class JavaObject;
+
+
+
+
+class JavaType
 {
+public:
 	TypeTag tag; // 1B
 	Flag flags; // 1B
 	// 2 or 6B free
@@ -63,8 +67,61 @@ struct TypeHeader
 		char byteValue;
 		unsigned short charValue;
 	}; // 8B
+
+public:
+	JavaType() {}
+	JavaType(TypeTag tag) : tag(tag) {}
+
+	JavaType operator+(JavaType &);
 };
 
+class JavaValueType : public JavaType
+{
+};
+
+class JavaVoid : public JavaType
+{
+public:
+	JavaVoid(): JavaType(TypeTag::VOID) { }
+};
+
+
+class JavaInt : public JavaType
+{
+public:
+	JavaInt(): JavaInt(0) {}
+	JavaInt(int value): JavaType(TypeTag::INT)
+	{
+		this->intValue = value;
+	}
+};
+
+class JavaFloat : public JavaType
+{
+public:
+	JavaFloat(float value) : JavaType(TypeTag::FLOAT)
+	{
+		this->floatValue = value;
+	}
+};
+
+class JavaLong : public JavaType
+{
+public:
+	JavaLong(long value) : JavaType(TypeTag::LONG)
+	{
+		this->longValue = value;
+	}
+};
+
+class JavaDouble : public JavaType
+{
+public:
+	JavaDouble(double value) : JavaType(TypeTag::DOUBLE)
+	{
+		this->doubleValue = value;
+	}
+};
 
 
 

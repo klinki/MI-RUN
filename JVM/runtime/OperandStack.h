@@ -1,12 +1,12 @@
 #pragma once
-#include "types.h"
-#include "GarbageCollector.h"
+#include "../types/types.h"
+#include "../gc/GarbageCollector.h"
 
 class OperandStack
 {
 	const int DEFAULT_STACK_SIZE = 64;
 protected:
-	TypeHeader* stackArray;
+	JavaType* stackArray;
 	unsigned int sp;
 	unsigned int allocatedSize;
 public:
@@ -14,8 +14,8 @@ public:
 	OperandStack(int size);
 	~OperandStack();
 
-	void push(TypeHeader);
-	TypeHeader pop();
+	void push(JavaType);
+	JavaType pop();
 	bool isEmpty() const;
 	bool isFull() const;
 
