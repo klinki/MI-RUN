@@ -1,23 +1,24 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "..\JVM\runtime\ConstantPool.h"
+#include "..\JVM\runtime\MethodArea.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
 {
-	TEST_CLASS(ConstantPool)
+	TEST_CLASS(MethodAreaTest)
 	{
 	public:
-
-		TEST_METHOD(constReturningFunction)
+/*
+		TEST_METHOD(findUnknownMethod)
 		{
-			int expected = 123;
-			// TODO: Add bytecode for function call without argument
-			int result = 0;
+			MethodArea methodArea;
+			intptr_t expected = NULL;
+			intptr_t result = (intptr_t)methodArea.getMethod("unknownMethod");
+
 			Assert::AreEqual(expected, result);
 		}
 
-		TEST_METHOD(argReturningFunction)
+		TEST_METHOD(findMethod)
 		{
 			int arg = 123;
 			int expected = 123;
@@ -26,7 +27,7 @@ namespace Tests
 			Assert::AreEqual(expected, result);
 		}
 
-		TEST_METHOD(argSumReturningFunction)
+		TEST_METHOD(findMethodWithCollisions)
 		{
 			int a = 100;
 			int b = 100;
@@ -36,5 +37,10 @@ namespace Tests
 			Assert::AreEqual(expected, result);
 		}
 
+		TEST_METHOD(addMethod)
+		{
+
+		}
+		*/
 	};
 }

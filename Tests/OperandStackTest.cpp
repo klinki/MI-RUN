@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "..\JVM\OperandStack.h"
+#include "..\JVM\runtime\OperandStack.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 
 namespace Microsoft {
 	namespace VisualStudio {
 		namespace CppUnitTestFramework {
-			template<> std::wstring ToString<TypeHeader>(const TypeHeader & q)
+			template<> std::wstring ToString<JavaType>(const JavaType & q)
 			{ 
 				std::wstringstream ss;
 				ss << L"Tag: "  << (unsigned short)q.tag << L"\r\n";
@@ -17,7 +17,7 @@ namespace Microsoft {
 				return ss.str();
 			}
 
-			bool operator==(const TypeHeader & A, const TypeHeader & B)
+			bool operator==(const JavaType & A, const JavaType & B)
 			{
 				if (A.tag != B.tag)
 				{
@@ -49,27 +49,27 @@ namespace Tests
 		TEST_METHOD(pushFullStack)
 		{
 			OperandStack stack(1);
-			stack.push(TypeHeader());
-			auto callback = [&stack] { stack.push(TypeHeader()); };
+			stack.push(JavaType());
+			auto callback = [&stack] { stack.push(JavaType()); };
 			Assert::ExpectException<StackOverflowException>(callback);
 		}
 
 		TEST_METHOD(pushAndPopTest)
 		{
 			OperandStack stack(1);
-			TypeHeader header;
+			JavaType header;
 			header.tag = TypeTag::LONG;
 			header.flags = 0;
 			header.longValue = UINT64_MAX;
 			stack.push(header);
-			TypeHeader poppedHeader = stack.pop();
+			JavaType poppedHeader = stack.pop();
 			Assert::AreEqual(header, poppedHeader);
 		}
 
 		TEST_METHOD(fullStack)
 		{
 			OperandStack stack(1);
-			stack.push(TypeHeader());
+			stack.push(JavaType());
 			bool result = stack.isFull();
 			bool expected = true;
 			Assert::AreEqual(expected, result);

@@ -1,15 +1,16 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "..\JVM\runtime\ConstantPool.h"
+#include "../JVM/runtime/Runtime.h"
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
 {
-	TEST_CLASS(ConstantPool)
+	TEST_CLASS(FunctionCalls)
 	{
 	public:
 
-		TEST_METHOD(constReturningFunction)
+		TEST_METHOD(testILOAD)
 		{
 			int expected = 123;
 			// TODO: Add bytecode for function call without argument
@@ -19,6 +20,11 @@ namespace Tests
 
 		TEST_METHOD(argReturningFunction)
 		{
+			/*
+			iload
+			index
+			*/
+
 			int arg = 123;
 			int expected = 123;
 			// TODO: Add bytecode for function call with one argument
