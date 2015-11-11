@@ -1,21 +1,21 @@
 #pragma once
 #include <string>
 #include "AccessFlags.h"
-typedef const unsigned char TypePrefix;
+#include "../classfile/ClassLoader.h"
+#include "../utils/Utf8String.h"
 
 class Field
 {
-
-
 protected:
-	FLAG flags;
-	std::string name;
-	std::string descriptor;
+	const FLAG flags;
+	const Utf8String name;
+	const Utf8String descriptor;
 
 	// attributes - constant value 
 
 public:
 	Field(FLAG f) : flags(f) {};
 	~Field();
-};
 
+	friend class ClassLoader;
+};

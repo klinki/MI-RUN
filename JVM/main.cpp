@@ -1,4 +1,5 @@
 #include <iostream>
+#include "classfile\ClassLoader.h"
 
 class ClassWithArray
 {
@@ -19,6 +20,9 @@ public:
 
 int main(int argc, const char argv[])
 {
+	ClassLoader classLoader;
+	classLoader.load("Arithmetics.class");
+
 	const char * string = "this is just sample string";
 
 	ClassWithArray * classPtr;

@@ -3,14 +3,16 @@
 #include "ConstantPool.h"
 #include "../types/types.h"
 #include "ExceptionTable.h"
+#include "../utils/Utf8String.h"
+#include "../classfile/ClassLoader.h"
 
 class Method
 {
 protected:
-	const std::string name;
-	const std::string descriptor;
+	const Utf8String name;
+	const Utf8String descriptor;
 
-	Instruction byteCode[1];
+	Instruction* byteCode;
 	unsigned int byteCodeLength;
 
 	unsigned int operandStackSize;
@@ -20,4 +22,6 @@ protected:
 public:
 	Method();
 	~Method();
+
+	friend class ClassLoader;
 };

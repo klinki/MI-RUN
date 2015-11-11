@@ -136,10 +136,12 @@
     <ClCompile Include="runtime\MethodArea.cpp" />
     <ClCompile Include="runtime\OperandStack.cpp" />
     <ClCompile Include="runtime\Runtime.cpp" />
+    <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="runtime\Field.h" />
     <ClInclude Include="runtime\TypeDescriptors.h" />
+    <ClInclude Include="utils\Utf8String.h" />
     <ClInclude Include="utils\Array.h" />
     <ClInclude Include="classfile\ClassFile.h" />
     <ClInclude Include="classfile\ClassLoader.h" />
