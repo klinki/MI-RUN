@@ -1,6 +1,6 @@
 #pragma once
 #include "ConstantPool.h"
-#include "Heap.h"
+#include "../gc/Heap.h"
 #include "FrameStack.h"
 #include "MethodArea.h"
 #include "ExecutionEngine.h"

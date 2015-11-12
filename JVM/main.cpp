@@ -1,5 +1,8 @@
 #include <iostream>
 #include "classfile\ClassLoader.h"
+#include <string>
+#include <iostream>
+#include "gc\experiments.h"
 
 int main(int argc, const char argv[])
 {
@@ -13,6 +16,8 @@ int main(int argc, const char argv[])
 			3) find main method and load it to memory (stackframe)
 			4) run while loop with instructions switch
 	*/
+
+	experiments();
 
 	return 0;
 }

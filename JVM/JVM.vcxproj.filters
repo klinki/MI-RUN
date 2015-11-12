@@ -22,9 +22,6 @@
     <ClCompile Include="runtime\FrameStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\Heap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtime\Method.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -55,6 +52,15 @@
     <ClCompile Include="utils\Utf8String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gc\Heap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\TreadMillGc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\experiments.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="types\TypeTag.h">
@@ -79,9 +85,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\FrameStack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="runtime\Heap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\InstructionSet.h">
@@ -142,6 +145,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\Utf8String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\Heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\MemoryCell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\TreadMillGc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\experiments.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
