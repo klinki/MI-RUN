@@ -23,50 +23,35 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		switch (currentInstruction)
 		{
-		case InstructionSet::ACONST_NULL:
-			// push null to operand stack
+		case ACONST_NULL:
+			this->frame->stack.push(NULL);
 			break;
-		case InstructionSet::ICONST_M1:
-			this->frame->stack.push(JavaInt(-1));
-			break;
-		case InstructionSet::ICONST_0:
-			this->frame->stack.push(JavaInt(0));
-			break;
+		
+		// FALL THROUGH:
+		case ICONST_M1:
+		case ICONST_0:
 		case ICONST_1:
-			this->frame->stack.push(JavaInt(1));
-			break;
 		case ICONST_2:
-			this->frame->stack.push(JavaInt(2));
-			break;
 		case ICONST_3:
-			this->frame->stack.push(JavaInt(3));
-			break;
 		case ICONST_4:
-			this->frame->stack.push(JavaInt(4));
-			break;
 		case ICONST_5:
-			this->frame->stack.push(JavaInt(5));
+			this->frame->stack.push(currentInstruction - ICONST_0);
 			break;
+
 		case LCONST_0:
-			this->pushLong(0);
-			break;
 		case LCONST_1:
-			this->pushLong(1);
+			this->pushLong(currentInstruction - LCONST_0);
 			break;
+
 		case FCONST_0:
-			this->frame->stack.push(JavaFloat(0));
-			break;
 		case FCONST_1:
-			this->frame->stack.push(JavaFloat(1));
-			break;
 		case FCONST_2:
-			this->frame->stack.push(JavaFloat(2));
+			this->frame->stack.push(currentInstruction  -  FCONST_0);
 			break;
+
 		case DCONST_0:
-			this->pushDouble(0);
-			break;
 		case DCONST_1:
-			this->pushDouble(1);
+			this->pushDouble(currentInstruction - DCONST_0);
 			break;
 
 		case BIPUSH:
@@ -116,20 +101,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->iload(index);
 			break;
 
+		// FALL THROUGH
 		case ILOAD_0:
-			this->iload(0);
-			break;
-
 		case ILOAD_1:
-			this->iload(1);
-			break;
-
 		case ILOAD_2:
-			this->iload(2);
-			break;
-
 		case ILOAD_3:
-			this->iload(3);
+			this->iload(currentInstruction - ILOAD_0);
 			break;
 
 		case LLOAD:
@@ -138,16 +115,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case LLOAD_0:
-			this->lload(0);
-			break;
 		case LLOAD_1:
-			this->lload(1);
-			break;
 		case LLOAD_2:
-			this->lload(2);
-			break;
 		case LLOAD_3:
-			this->lload(3);
+			this->lload(currentInstruction - LLOAD_0);
 			break;
 
 		case FLOAD:
@@ -156,39 +127,26 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case FLOAD_0:
-			this->fload(0);
-			break;
-
 		case FLOAD_1:
-			this->fload(1);
-			break;
-
 		case FLOAD_2:
-			this->fload(2);
-			break;
-
 		case FLOAD_3:
-			this->fload(3);
+			this->fload(currentInstruction - FLOAD_0);
 			break;
 
 		case DLOAD:
 			unsigned char index = instructions[pc++];
 			this->dload(index);
 			break;
+
 		case DLOAD_0:
-			this->dload(0);
-			break;
 		case DLOAD_1:
-			this->dload(1);
-			break;
 		case DLOAD_2:
-			this->dload(2);
-			break;
 		case DLOAD_3:
-			this->dload(3);
+			this->dload(currentInstruction - DLOAD_0);
 			break;
 
 		case ALOAD:
+
 		case ALOAD_0:
 		case ALOAD_1:
 		case ALOAD_2:
