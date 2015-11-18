@@ -41,6 +41,7 @@ namespace Tests
 
 		TEST_METHOD(popEmptyStack)
 		{
+			ExecutionEngine 
 			OperandStack stack;
 			auto callback = [&stack] { stack.pop(); };
 			Assert::ExpectException<StackEmtpyException>(callback);

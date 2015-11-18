@@ -1,21 +1,21 @@
 #pragma once
+#include "../utils/Array.h"
 #include "../types/types.h"
 #include "../gc/GarbageCollector.h"
 
-class OperandStack
+class OperandStack : Array<word>
 {
 	const int DEFAULT_STACK_SIZE = 64;
-protected:
-	JavaType* stackArray;
-	unsigned int sp;
-	unsigned int allocatedSize;
 public:
 	OperandStack();
 	OperandStack(int size);
 	~OperandStack();
 
-	void push(JavaType);
-	JavaType pop();
+	void push(word value);
+	void push(word high, word low);
+
+	word pop();
+
 	bool isEmpty() const;
 	bool isFull() const;
 

@@ -121,6 +121,7 @@
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
+    <ClCompile Include="threads\Mutex.cpp" />
     <ClCompile Include="runtime\Object.cpp" />
     <ClCompile Include="runtime\Field.cpp" />
     <ClCompile Include="runtime\LocalVariablesArray.cpp" />
@@ -142,8 +143,11 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="runtime\ArrayObject.h" />
+    <ClInclude Include="exceptions\RuntimeExceptions.h" />
     <ClInclude Include="gc\experiments.h" />
     <ClInclude Include="gc\MemoryCell.h" />
+    <ClInclude Include="threads\Mutex.h" />
     <ClInclude Include="runtime\Object.h" />
     <ClInclude Include="runtime\Field.h" />
     <ClInclude Include="runtime\TypeDescriptors.h" />

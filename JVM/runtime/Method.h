@@ -23,5 +23,15 @@ public:
 	Method();
 	~Method();
 
+	const Instruction* getBytecode() const
+	{
+		return this->byteCode;
+	}
+	
+	const unsigned int getByteCodeLength() const
+	{
+		return this->byteCodeLength;
+	}
+
 	friend class ClassLoader;
 };

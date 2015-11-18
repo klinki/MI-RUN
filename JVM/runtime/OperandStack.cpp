@@ -3,47 +3,45 @@
 
 OperandStack::OperandStack(): OperandStack(DEFAULT_STACK_SIZE) {}
 
-OperandStack::OperandStack(int size)
+OperandStack::OperandStack(int size): Array(size)
 {
-	this->allocatedSize = size;
-	this->sp = 0;
-	this->stackArray = new JavaType[this->allocatedSize];
 }
 
 OperandStack::~OperandStack()
 {
-	delete[] this->stackArray;
-	this->stackArray = NULL;
 }
 
-void OperandStack::push(JavaType value)
+void OperandStack::push(word value)
 {
-	if (this->sp == this->allocatedSize)
+	if (this->isFull())
 	{
 		throw StackOverflowException();
 	}
 
-	this->stackArray[this->sp++] = value;
+	this->allocatedArray[this->index++] = value;
 }
 
-JavaType OperandStack::pop()
+word OperandStack::pop()
 {
-	if (this->sp == 0)
+	if (this->isEmpty())
 	{
 		throw StackEmtpyException();
 	}
 
-	JavaType & val = this->stackArray[this->sp - 1];
+	return this->allocatedArray[this->index--];
+	/*
+	JavaType & val = this->allocatedArray[this->index- 1];
 	this->sp--;
 	return val;
+	*/
 }
 
 bool OperandStack::isEmpty() const
 {
-	return this->sp == 0;
+	return this->index == 0;
 }
 
 bool OperandStack::isFull() const
 {
-	return this->sp >= this->allocatedSize - 1;
+	return this->index >= this->allocatedSize - 1;
 }

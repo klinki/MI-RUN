@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdlib>
+#include "../types/types.h"
+
 template <class T> 
 class Array
 {
@@ -21,4 +23,26 @@ public:
 		delete[] this->allocatedArray;
 		this->allocatedArray = NULL;
 	}
+
+	word & operator[] (int index)
+	{
+		if (index < 0 || index >= this->index)
+		{
+			throw IndexOutOfBoundsException();
+		}
+
+		return this->allocatedArray[index];
+	}
+
+	const word & operator[] (int index) const
+	{
+		if (index < 0 || index >= this->index)
+		{
+			throw IndexOutOfBoundsException();
+		}
+
+		return this->allocatedArray[index];
+	}
 };
+
+class IndexOutOfBoundsException {};

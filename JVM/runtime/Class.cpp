@@ -12,5 +12,5 @@ unsigned int Class::getCountFields() const
 
 bool Class::isFlagSet(FLAG flag) const
 {
-	return this->flags & flag == flag;
+	return (this->flags & flag) == flag;
 }

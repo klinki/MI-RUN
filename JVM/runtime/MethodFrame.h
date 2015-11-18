@@ -11,7 +11,7 @@ protected:
 	unsigned int sp;
 	Method* method;
 	
-	LocalVariablesArray ar; // array of local variables
+	LocalVariablesArray localVariables; // array of local variables
 	OperandStack operandStack;
 	ConstantPool * constantPool;
 

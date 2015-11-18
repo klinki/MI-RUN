@@ -1,7 +1,9 @@
 #pragma once
+#include <cstdint>
 typedef unsigned int ProgramCounter;
 typedef unsigned char Instruction;
 
+typedef uintptr_t word;
 
 typedef char java_byte;
 typedef short java_short;
