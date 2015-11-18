@@ -38,17 +38,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->frame->stack.push(currentInstruction - ICONST_0);
 			break;
 
+		// FALL THROUGH:
 		case LCONST_0:
 		case LCONST_1:
 			this->pushLong(currentInstruction - LCONST_0);
 			break;
 
+		// FALL THROUGH:
 		case FCONST_0:
 		case FCONST_1:
 		case FCONST_2:
 			this->frame->stack.push(currentInstruction  -  FCONST_0);
 			break;
 
+		// FALL THROUGH:
 		case DCONST_0:
 		case DCONST_1:
 			this->pushDouble(currentInstruction - DCONST_0);
@@ -114,6 +117,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->lload(index);
 			break;
 
+		// FALL THROUGH:
 		case LLOAD_0:
 		case LLOAD_1:
 		case LLOAD_2:
@@ -126,6 +130,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->fload(index);
 			break;
 
+		// FALL THROUGH:
 		case FLOAD_0:
 		case FLOAD_1:
 		case FLOAD_2:
@@ -138,6 +143,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->dload(index);
 			break;
 
+		// FALL THROUGH:
 		case DLOAD_0:
 		case DLOAD_1:
 		case DLOAD_2:
@@ -146,11 +152,19 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case ALOAD:
+			{
+				unsigned char index = instructions[pc++];
+				this->aload(index);
+			}
+			break;
 
+		// FALL THROUGH:
 		case ALOAD_0:
 		case ALOAD_1:
 		case ALOAD_2:
 		case ALOAD_3:
+			this->aload(currentInstruction - ALOAD_0);
+			break;
 
 		case IALOAD:
 		case LALOAD:
@@ -166,17 +180,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->istore(index);
 			// store int into local variable
 			break;
+
+		// FALL THROUGH:
 		case ISTORE_0:
-			this->istore(0);
-			break;
 		case ISTORE_1:
-			this->istore(1);
-			break;
 		case ISTORE_2:
-			this->istore(2);
-			break;
 		case ISTORE_3:
-			this->istore(3);
+			this->istore(currentInstruction - ISTORE_0);
 			break;
 
 		case LSTORE:
@@ -184,16 +194,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->lstore(index);
 			break;
 		case LSTORE_0:
-			this->lstore(0);
-			break;
 		case LSTORE_1:
-			this->lstore(1);
-			break;
 		case LSTORE_2:
-			this->lstore(2);
-			break;
 		case LSTORE_3:
-			this->lstore(3);
+			this->lstore(currentInstruction - LSTORE_0);
 			break;
 
 		case FSTORE:
@@ -201,16 +205,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->fstore(index);
 			break;
 		case FSTORE_0:
-			this->fstore(0);
-			break;
 		case FSTORE_1:
-			this->fstore(1);
-			break;
 		case FSTORE_2:
-			this->fstore(2);
-			break;
 		case FSTORE_3:
-			this->fstore(3);
+			this->fstore(currentInstruction - FSTORE_0);
 			break;
 
 		case DSTORE:
@@ -218,33 +216,22 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->dstore(index);
 			break;
 		case DSTORE_0:
-			this->dstore(0);
-			break;
 		case DSTORE_1:
-			this->dstore(1);
-			break;
 		case DSTORE_2:
-			this->dstore(2);
-			break;
 		case DSTORE_3:
-			this->dstore(3);
+			this->dstore(currentInstruction - DSTORE_0);
+			this->dstore(0);
 			break;
 
 		case ASTORE:
 			unsigned char index = instructions[pc++];
 			this->astore(index);
 			break;
-		case ASTORE_0:
-			this->astore(0);
-			break;
+		case ASTORE_0:		
 		case ASTORE_1:
-			this->astore(1);
-			break;
 		case ASTORE_2:
-			this->astore(2);
-			break;
 		case ASTORE_3:
-			this->astore(3);
+			this->astore(currentInstruction - ASTORE_0);
 			break;
 
 		case IASTORE:

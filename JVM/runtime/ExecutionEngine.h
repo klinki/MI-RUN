@@ -59,6 +59,12 @@ public:
 		ref->operator[](index) = value;
 	}
 
+	inline void aload(unsigned char index)
+	{
+		word ptr = this->frame->localVariables[index];
+		this->frame->operandStack.push(ptr);
+	}
+
 	inline void astore(unsigned char index)
 	{}
 	
