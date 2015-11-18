@@ -8,6 +8,6 @@ inline short shortFromStack(unsigned char HIGH, unsigned char LOW)
 
 inline long longFromStack(unsigned int HIGH, unsigned int LOW)
 {
-	return ((long)HIGH << 32) | LOW;
+	return ((long long)HIGH << 32) | LOW;
 }
 
