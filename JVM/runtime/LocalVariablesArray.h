@@ -4,7 +4,7 @@
 class LocalVariablesArray : public Array<word>
 {
 public:
-	LocalVariablesArray();
-	~LocalVariablesArray();
+	LocalVariablesArray() : LocalVariablesArray(10) {};
+	LocalVariablesArray(int size) : Array(size) {};
+	~LocalVariablesArray() {}
 };
-

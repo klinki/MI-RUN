@@ -5,7 +5,7 @@
 
 class OperandStack : Array<word>
 {
-	const int DEFAULT_STACK_SIZE = 64;
+	static const int DEFAULT_STACK_SIZE = 64;
 public:
 	OperandStack();
 	OperandStack(int size);
@@ -18,6 +18,9 @@ public:
 
 	bool isEmpty() const;
 	bool isFull() const;
+
+	word & operator[] (int index);
+	const word & operator[] (int index) const;
 
 	friend class GarbageCollector;
 };

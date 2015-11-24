@@ -16,6 +16,8 @@ public:
 	Array(int size)
 	{
 		this->allocatedArray = new T[size];
+		this->allocatedSize = size;
+		this->index = 0;
 	}
 
 	~Array()
@@ -26,7 +28,7 @@ public:
 
 	word & operator[] (int index)
 	{
-		if (index < 0 || index >= this->index)
+		if (index < 0 || index >= this->allocatedSize)
 		{
 			throw IndexOutOfBoundsException();
 		}
@@ -36,7 +38,7 @@ public:
 
 	const word & operator[] (int index) const
 	{
-		if (index < 0 || index >= this->index)
+		if (index < 0 || index >= this->allocatedSize)
 		{
 			throw IndexOutOfBoundsException();
 		}

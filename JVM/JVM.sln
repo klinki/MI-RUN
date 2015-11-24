@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JVM", "JVM.vcxproj", "{AF5BBC14-9774-47FC-A8D5-096458C1E533}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "..\Tests\Tests.vcxproj", "{68E1EA07-D8E5-488E-930E-AAFC5A156CC6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AF5BBC14-9774-47FC-A8D5-096458C1E533} = {AF5BBC14-9774-47FC-A8D5-096458C1E533}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -40,9 +40,6 @@
     <ClCompile Include="runtime\ExceptionTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\LocalVariablesArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtime\MethodFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -1,7 +1,7 @@
 #include "OperandStack.h"
 #include <cstdlib>
 
-OperandStack::OperandStack(): OperandStack(DEFAULT_STACK_SIZE) {}
+OperandStack::OperandStack(): OperandStack(OperandStack::DEFAULT_STACK_SIZE) {}
 
 OperandStack::OperandStack(int size): Array(size)
 {
@@ -28,7 +28,7 @@ word OperandStack::pop()
 		throw StackEmtpyException();
 	}
 
-	return this->allocatedArray[this->index--];
+	return this->allocatedArray[--this->index];
 	/*
 	JavaType & val = this->allocatedArray[this->index- 1];
 	this->sp--;
@@ -43,5 +43,25 @@ bool OperandStack::isEmpty() const
 
 bool OperandStack::isFull() const
 {
-	return this->index >= this->allocatedSize - 1;
+	return this->index >= this->allocatedSize;
+}
+
+word & OperandStack::operator[] (int index)
+{
+	if (index < 0 || index > this->index)
+	{
+		throw IndexOutOfBoundsException();
+	}
+
+	return this->allocatedArray[index];
+}
+
+const word & OperandStack::operator[] (int index) const
+{
+	if (index < 0 || index >= this->index)
+	{
+		throw IndexOutOfBoundsException();
+	}
+
+	return this->allocatedArray[index];
 }

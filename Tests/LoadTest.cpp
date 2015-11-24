@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../JVM/runtime/Runtime.h"
+#include "../JVM/runtime/ExecutionEngine.h"
+#include "../JVM/runtime/MethodFrame.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -12,35 +14,121 @@ namespace Tests
 
 		TEST_METHOD(testILOAD)
 		{
-			int expected = 123;
-			// TODO: Add bytecode for function call without argument
-			int result = 0;
+			ExecutionEngine eng;
+			Method m;
+			
+			int expected = 0x0BAFBAF;
+
+			m.byteCode = new Instruction[1]; 
+			m.byteCode[0] = (Instruction)InstructionSet::ILOAD_0;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(1, 1);
+			frm.pc = 0;
+			frm.localVariables[0] = expected;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			int result = frm.operandStack.pop();
 			Assert::AreEqual(expected, result);
 		}
 
-		TEST_METHOD(argReturningFunction)
+		TEST_METHOD(testFLOAD)
 		{
-			/*
-			iload
-			index
-			*/
+			ExecutionEngine eng;
+			Method m;
 
-			int arg = 123;
-			int expected = 123;
-			// TODO: Add bytecode for function call with one argument
-			int result = 0;
+			float expected = (float)3.14159265359;
+
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::FLOAD_0;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(1, 1);
+			frm.pc = 0;
+			frm.localVariables[0] = expected;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			float result = frm.operandStack.pop();
 			Assert::AreEqual(expected, result);
 		}
 
-		TEST_METHOD(argSumReturningFunction)
+		TEST_METHOD(testLLOAD)
 		{
-			int a = 100;
-			int b = 100;
-			int expected = 200;
-			// TODO: Add bytecode for function call with one argument
-			int result = 0;
+			ExecutionEngine eng;
+			Method m;
+
+			long long expected = 0xBAFFEEDBEEF;
+
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::LLOAD_0;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(2, 2);
+			frm.pc = 0;
+			frm.localVariables[0] = highWord(expected); 
+			frm.localVariables[1] = lowWord(expected);
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			unsigned int low = frm.operandStack.pop();
+			unsigned int high = frm.operandStack.pop();
+			
+			long long result = longFromStack(high, low);
+
 			Assert::AreEqual(expected, result);
 		}
 
+		TEST_METHOD(testDLOAD)
+		{
+			ExecutionEngine eng;
+			Method m;
+
+			double expected = (double)3.14159265359;
+
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::DLOAD_0;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(2, 2);
+			frm.pc = 0;
+			frm.localVariables[0] = highWord(expected);
+			frm.localVariables[1] = lowWord(expected);
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			unsigned int low = frm.operandStack.pop();
+			unsigned int high = frm.operandStack.pop();
+
+			double result = doubleFromStack(high, low);
+			Assert::AreEqual(expected, result);
+		}
+
+		TEST_METHOD(testALOAD)
+		{
+			ExecutionEngine eng;
+			Method m;
+
+			int expected = (int)&m;
+
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::ALOAD_0;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(1, 1);
+			frm.pc = 0;
+			frm.localVariables[0] = expected;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			int result = frm.operandStack.pop();
+			Assert::AreEqual(expected, result);
+		}
 	};
 }

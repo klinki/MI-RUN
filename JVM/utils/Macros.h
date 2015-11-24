@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _DEBUG
-	#define  visibility public
+	#define visibility public
 #else
-	#define VISIBILITY protected
+	#define visibility protected
 #endif

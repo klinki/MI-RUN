@@ -21,10 +21,11 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF5BBC14-9774-47FC-A8D5-096458C1E533}</ProjectGuid>
     <RootNamespace>JavaVirtualMachine</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -68,7 +69,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
@@ -123,7 +124,6 @@
     <ClCompile Include="gc\experiments.cpp" />
     <ClCompile Include="runtime\Object.cpp" />
     <ClCompile Include="runtime\Field.cpp" />
-    <ClCompile Include="runtime\LocalVariablesArray.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
     <ClCompile Include="runtime\ConstantPool.cpp" />
     <ClCompile Include="gc\GarbageCollector.cpp" />

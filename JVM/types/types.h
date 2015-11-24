@@ -1,6 +1,28 @@
 #pragma once
 #include "Aliases.h"
 
+union word
+{
+	intptr_t intValue;
+	float floatValue;
+
+	operator int() const { return intValue; }
+	operator unsigned int() const { return (unsigned int)intValue; }
+	operator float() const { return floatValue; }
+	operator unsigned short() const { return (unsigned short)intValue; }
+
+
+	template <class T>
+	operator T*() const { return (T*)intValue; }
+
+	word() { intValue = 0; }
+	word(unsigned int val) { intValue = val; }
+	word(intptr_t val) { intValue = val; }
+	word(float val) { floatValue = val;  }
+
+	word & operator += (word val) { intValue += val.intValue; return *this;  }
+};
+
 enum TypeTag
 {
 	VOID = 0,

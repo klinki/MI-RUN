@@ -1,6 +1,12 @@
 #pragma once
 #include "../runtime/InstructionSet.h"
 
+union doubleUnion
+{
+	unsigned int words[2];
+	double val;
+};
+
 inline short shortFromStack(unsigned char HIGH, unsigned char LOW)
 {
 	return HIGH << 8 | LOW;
@@ -21,5 +27,35 @@ inline long long longFromStack(unsigned int HIGH, unsigned int LOW)
 
 inline double doubleFromStack(unsigned int HIGH, unsigned int LOW)
 {
-	return 0;
+	doubleUnion un;
+	un.words[0] = HIGH;
+	un.words[1] = LOW;
+	return un.val;
+}
+
+
+inline unsigned int lowWord(long long val)
+{
+	return (unsigned int)val;
+}
+
+inline unsigned int highWord(long long val)
+{
+	return (unsigned int)(val >> 32);
+}
+
+inline unsigned int lowWord(double val)
+{
+	doubleUnion un;
+	un.val = val;
+
+	return un.words[1];
+}
+
+inline unsigned int highWord(double val)
+{
+	doubleUnion un;
+	un.val = val;
+
+	return un.words[0];
 }

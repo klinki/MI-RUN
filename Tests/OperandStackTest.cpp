@@ -5,34 +5,6 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-
-namespace Microsoft {
-	namespace VisualStudio {
-		namespace CppUnitTestFramework {
-			template<> std::wstring ToString<JavaType>(const JavaType & q)
-			{ 
-				std::wstringstream ss;
-				ss << L"Tag: "  << (unsigned short)q.tag << L"\r\n";
-				ss << L"Flags: " << (unsigned short)q.flags <<  L"\r\n";
-				ss << L"Long value: " << q.longValue << L"\r\n";
-
-				return ss.str();
-			}
-
-			bool operator==(const JavaType & A, const JavaType & B)
-			{
-				if (A.tag != B.tag)
-				{
-					return false;
-				}
-
-				return A.flags == B.flags && A.longValue == B.longValue;
-			}
-		}
-	}
-}
-
-
 namespace Tests
 {
 
@@ -59,9 +31,9 @@ namespace Tests
 		TEST_METHOD(pushAndPopTest)
 		{
 			OperandStack stack(1);
-			word input = 42;
+			int input = 42;
 			stack.push(input);
-			word poppedWord = stack.pop();
+			int poppedWord = stack.pop();
 			Assert::AreEqual(input, poppedWord);
 		}
 

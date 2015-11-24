@@ -5,7 +5,7 @@
 
 class MethodFrame
 {
-protected:
+visibility:
 	OperandStack stack;
 	ProgramCounter pc;
 	unsigned int sp;
@@ -17,6 +17,7 @@ protected:
 
 public:
 	MethodFrame();
+	MethodFrame(int stackSize, int localVariablesSize);
 	~MethodFrame();
 
 	friend class ExecutionEngine;

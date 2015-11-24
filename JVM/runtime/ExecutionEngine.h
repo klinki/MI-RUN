@@ -125,7 +125,11 @@ public:
 
 	inline void lload(unsigned char index)
 	{
+		word high = this->frame->localVariables[index];
+		word low = this->frame->localVariables[index + 1];
 
+		this->frame->operandStack.push(high);
+		this->frame->operandStack.push(low);
 	}
 
 	inline void lstore(unsigned char index)
@@ -136,7 +140,11 @@ public:
 
 	inline void dload(unsigned char index)
 	{
+		word high = this->frame->localVariables[index];
+		word low = this->frame->localVariables[index + 1];
 
+		this->frame->operandStack.push(high);
+		this->frame->operandStack.push(low);
 	}
 
 	inline void dstore(unsigned char index)
