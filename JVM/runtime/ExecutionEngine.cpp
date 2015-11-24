@@ -24,7 +24,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		switch (currentInstruction)
 		{
 		case ACONST_NULL:
-			this->frame->stack.push(NULL);
+			this->frame->operandStack.push(NULL);
 			break;
 
 			// FALL THROUGH:
@@ -35,7 +35,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ICONST_3:
 		case ICONST_4:
 		case ICONST_5:
-			this->frame->stack.push(currentInstruction - ICONST_0);
+			this->frame->operandStack.push(currentInstruction - ICONST_0);
 			break;
 
 			// FALL THROUGH:
@@ -48,7 +48,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case FCONST_0:
 		case FCONST_1:
 		case FCONST_2:
-			this->frame->stack.push(currentInstruction - FCONST_0);
+			this->frame->operandStack.push((float)(currentInstruction - FCONST_0));
 			break;
 
 			// FALL THROUGH:
@@ -61,7 +61,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			// push byte
 			java_byte byte = (java_byte)instructions[pc++];
-			this->frame->stack.push(JavaByte(byte));
+			this->frame->operandStack.push(JavaByte(byte));
 		}
 		break;
 
@@ -71,7 +71,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// byte 1
 			// byte 2
 			unsigned short index = getShort();
-			this->frame->stack.push(JavaShort(index));
+			this->frame->operandStack.push(JavaShort(index));
 		}
 		break;
 
@@ -243,7 +243,6 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case DSTORE_2:
 		case DSTORE_3:
 			this->dstore(currentInstruction - DSTORE_0);
-			this->dstore(0);
 			break;
 
 		case ASTORE:
@@ -402,15 +401,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case IDIV:
 		{
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
+			int a = this->frame->operandStack.pop();
+			int b = this->frame->operandStack.pop();
 
 			if (b == 0)
 			{
 				// exception! 
 			}
 
-			this->frame->stack.push(JavaInt(a * b));
+			this->frame->operandStack.push(JavaInt(a * b));
 		}
 		break;
 
@@ -444,15 +443,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IREM:
 		{
 			// returns remainder
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
+			int a = this->frame->operandStack.pop();
+			int b = this->frame->operandStack.pop();
 
 			if (b == 0)
 			{
 				// exception! 
 			}
 
-			this->frame->stack.push(JavaInt(a % b));
+			this->frame->operandStack.push(JavaInt(a % b));
 		}
 			break;
 
@@ -472,9 +471,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case FREM:
 		{
-			float a = this->frame->stack.pop();
-			float b = this->frame->stack.pop();
-			this->frame->stack.push(fmodf(a, b));
+			float a = this->frame->operandStack.pop();
+			float b = this->frame->operandStack.pop();
+			this->frame->operandStack.push(fmodf(a, b));
 		}
 		break;
 
@@ -488,7 +487,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case INEG:
 		{
-			int a = this->frame->stack.pop();
+			int a = this->frame->operandStack.pop();
 			this->frame->operandStack.push(-a);
 		}
 		break;
@@ -502,8 +501,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case FNEG:
 		{
-			float a = this->frame->stack.pop();
-			this->frame->stack.push(-a);
+			float a = this->frame->operandStack.pop();
+			this->frame->operandStack.push(-a);
 		}
 		break;
 
@@ -525,7 +524,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case LSHL:
 		{
 			long long a = this->getLongFromStack();
-			int b = this->frame->stack.pop();
+			int b = this->frame->operandStack.pop();
 			this->pushLong(a << b);
 		}
 		break;
@@ -540,7 +539,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			// shift right
 			long long a = this->getLongFromStack();
-			int b = this->frame->stack.pop();
+			int b = this->frame->operandStack.pop();
 			this->pushLong(a >> b);
 		}
 		break;
@@ -555,7 +554,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case LUSHR:
 		{
 			unsigned long long a = this->getLongFromStack();
-			unsigned int b = this->frame->stack.pop();
+			unsigned int b = this->frame->operandStack.pop();
 			this->pushLong(a >> b);
 			break;
 		}

@@ -9,9 +9,9 @@
 #include "ArrayObject.h"
 
 #define SINGLE_WORD_OPERATION(type, op) \
-	type a = this->frame->stack.pop(); \
-	type b = this->frame->stack.pop(); \
-	this->frame->stack.push(a op b)
+	type a = this->frame->operandStack.pop(); \
+	type b = this->frame->operandStack.pop(); \
+	this->frame->operandStack.push(a op b)
 
 #define DOUBLE_OPERATION(op) \
  	double a = this->getDoubleFromStack(); \
@@ -84,7 +84,10 @@ public:
 	}
 
 	inline void astore(unsigned char index)
-	{}
+	{
+		word val = this->frame->operandStack.pop();
+		this->frame->localVariables[index] = val;
+	}
 	
 	inline void iload(unsigned char index)
 	{
@@ -200,12 +203,20 @@ public:
 
 	inline void pushLong(long long value)
 	{
-		
+		word high = highWord(value);
+		word low = lowWord(value);
+
+		this->frame->operandStack.push(high);
+		this->frame->operandStack.push(low);
 	}
 
 	inline void pushDouble(double value)
 	{
+		word high = highWord(value);
+		word low = lowWord(value);
 
+		this->frame->operandStack.push(high);
+		this->frame->operandStack.push(low);
 	}
 
 	inline void jumpIfEq(Instruction currentInstruction, int value)

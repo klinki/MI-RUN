@@ -6,7 +6,6 @@
 class MethodFrame
 {
 visibility:
-	OperandStack stack;
 	ProgramCounter pc;
 	unsigned int sp;
 	Method* method;
