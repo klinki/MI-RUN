@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "..\JVM\runtime\OperandStack.h"
+#include "..\JVM\runtime\ExecutionEngine.h"
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 
@@ -41,7 +43,6 @@ namespace Tests
 
 		TEST_METHOD(popEmptyStack)
 		{
-			ExecutionEngine 
 			OperandStack stack;
 			auto callback = [&stack] { stack.pop(); };
 			Assert::ExpectException<StackEmtpyException>(callback);
@@ -50,27 +51,24 @@ namespace Tests
 		TEST_METHOD(pushFullStack)
 		{
 			OperandStack stack(1);
-			stack.push(JavaType());
-			auto callback = [&stack] { stack.push(JavaType()); };
+			stack.push(0);
+			auto callback = [&stack] { stack.push(0); };
 			Assert::ExpectException<StackOverflowException>(callback);
 		}
 
 		TEST_METHOD(pushAndPopTest)
 		{
 			OperandStack stack(1);
-			JavaType header;
-			header.tag = TypeTag::LONG;
-			header.flags = 0;
-			header.longValue = UINT64_MAX;
-			stack.push(header);
-			JavaType poppedHeader = stack.pop();
-			Assert::AreEqual(header, poppedHeader);
+			word input = 42;
+			stack.push(input);
+			word poppedWord = stack.pop();
+			Assert::AreEqual(input, poppedWord);
 		}
 
 		TEST_METHOD(fullStack)
 		{
 			OperandStack stack(1);
-			stack.push(JavaType());
+			stack.push(0);
 			bool result = stack.isFull();
 			bool expected = true;
 			Assert::AreEqual(expected, result);

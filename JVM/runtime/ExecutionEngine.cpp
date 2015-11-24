@@ -26,8 +26,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ACONST_NULL:
 			this->frame->stack.push(NULL);
 			break;
-		
-		// FALL THROUGH:
+
+			// FALL THROUGH:
 		case ICONST_M1:
 		case ICONST_0:
 		case ICONST_1:
@@ -38,71 +38,79 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->frame->stack.push(currentInstruction - ICONST_0);
 			break;
 
-		// FALL THROUGH:
+			// FALL THROUGH:
 		case LCONST_0:
 		case LCONST_1:
 			this->pushLong(currentInstruction - LCONST_0);
 			break;
 
-		// FALL THROUGH:
+			// FALL THROUGH:
 		case FCONST_0:
 		case FCONST_1:
 		case FCONST_2:
-			this->frame->stack.push(currentInstruction  -  FCONST_0);
+			this->frame->stack.push(currentInstruction - FCONST_0);
 			break;
 
-		// FALL THROUGH:
+			// FALL THROUGH:
 		case DCONST_0:
 		case DCONST_1:
 			this->pushDouble(currentInstruction - DCONST_0);
 			break;
 
 		case BIPUSH:
-			{
-				// push byte
-				java_byte byte = (java_byte)instructions[pc++];
-				this->frame->stack.push(JavaByte(byte));
-			}
-			break;
+		{
+			// push byte
+			java_byte byte = (java_byte)instructions[pc++];
+			this->frame->stack.push(JavaByte(byte));
+		}
+		break;
 
 		case SIPUSH:
-			{
-				// push short
-				// byte 1
-				// byte 2
-				unsigned short index = getShort();
-				this->frame->stack.push(JavaShort(index));
-			}
-			break;
+		{
+			// push short
+			// byte 1
+			// byte 2
+			unsigned short index = getShort();
+			this->frame->stack.push(JavaShort(index));
+		}
+		break;
 
 		case LDC:
+		{
 			/*
 			int or float, or a reference to a string literal, or a symbolic reference to a class, method type, or method handle
 			*/
-			// push item from constant-pool
+			// TODO: push item from constant-pool
 			unsigned char index = instructions[pc++];
 			// index
-
+		}
+		break;
 		case LDC_W:
+		{
 			// push item from constant-pool
 			unsigned short index = getShort();
 			// index 1
 			// index 2
-			break;
+		}
+		break;
 
 		case LDC2_W:
+		{
 			// push long/double from constant-pool
 			// index 1
 			// index 2
 			unsigned short index = getShort();
-			break;
+		}
+		break;
 
 		case ILOAD:
+		{
 			// load from local variable 
 			// index
 			unsigned char index = instructions[pc++];
 			this->iload(index);
-			break;
+		}
+		break;
 
 		// FALL THROUGH
 		case ILOAD_0:
@@ -113,9 +121,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case LLOAD:
+		{
 			unsigned char index = instructions[pc++];
 			this->lload(index);
-			break;
+		}
+		break;
 
 		// FALL THROUGH:
 		case LLOAD_0:
@@ -126,9 +136,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case FLOAD:
+		{
 			unsigned char index = instructions[pc++];
 			this->fload(index);
-			break;
+		}
+		break;
 
 		// FALL THROUGH:
 		case FLOAD_0:
@@ -139,9 +151,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case DLOAD:
+		{
 			unsigned char index = instructions[pc++];
 			this->dload(index);
-			break;
+		}
+		break;
 
 		// FALL THROUGH:
 		case DLOAD_0:
@@ -152,11 +166,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case ALOAD:
-			{
-				unsigned char index = instructions[pc++];
-				this->aload(index);
-			}
-			break;
+		{
+			unsigned char index = instructions[pc++];
+			this->aload(index);
+		}
+		break;
 
 		// FALL THROUGH:
 		case ALOAD_0:
@@ -176,10 +190,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case SALOAD:
 
 		case ISTORE:
+		{
 			unsigned char index = instructions[pc++];
 			this->istore(index);
 			// store int into local variable
-			break;
+		}
+		break;
 
 		// FALL THROUGH:
 		case ISTORE_0:
@@ -190,9 +206,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case LSTORE:
+		{
 			unsigned char index = instructions[pc++];
 			this->lstore(index);
-			break;
+		}
+		break;
+
 		case LSTORE_0:
 		case LSTORE_1:
 		case LSTORE_2:
@@ -201,9 +220,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case FSTORE:
+		{
 			unsigned char index = instructions[pc++];
 			this->fstore(index);
 			break;
+		}
 		case FSTORE_0:
 		case FSTORE_1:
 		case FSTORE_2:
@@ -212,9 +233,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case DSTORE:
+		{
 			unsigned char index = instructions[pc++];
 			this->dstore(index);
-			break;
+		}
+		break;
 		case DSTORE_0:
 		case DSTORE_1:
 		case DSTORE_2:
@@ -224,10 +247,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case ASTORE:
+		{
 			unsigned char index = instructions[pc++];
 			this->astore(index);
-			break;
-		case ASTORE_0:		
+		}
+		break;
+		case ASTORE_0:
 		case ASTORE_1:
 		case ASTORE_2:
 		case ASTORE_3:
@@ -273,12 +298,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case POP2:
 
 		case DUP:
+		{
 			// value
 			// value, value
 			word value = this->frame->operandStack.pop();
 			this->frame->operandStack.push(value);
 			this->frame->operandStack.push(value);
-			break;
+		}
+		break;
 		case DUP_X1:
 			// TODO: 
 			// value2, value1
@@ -290,92 +317,91 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case DUP2_X2:
 
 		case SWAP:
-			{
-				// swap operand-stack values
-				// category 1
-				word low = this->frame->operandStack.pop();
-				word high = this->frame->operandStack.pop();
-				this->frame->operandStack.push(low);
-				this->frame->operandStack.push(high);
-			}
-			break;
+		{
+			// swap operand-stack values
+			// category 1
+			word low = this->frame->operandStack.pop();
+			word high = this->frame->operandStack.pop();
+			this->frame->operandStack.push(low);
+			this->frame->operandStack.push(high);
+		}
+		break;
 
 		case IADD:
-			{
-				int a = this->frame->stack.pop();
-				int b = this->frame->stack.pop();
-				this->frame->stack.push(JavaInt(a + b));
-			}
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, +);
+		}
+		break;
 
 		case LADD:
-			long long a = this->getLongFromStack();
-			long long b = this->getLongFromStack();
-			this->pushLong(a + b);
-			break;
+		{
+			LONG_OPERATION(+);
+		}
+		break;
 
 		case FADD:
-			float a = this->frame->stack.pop();
-			float b = this->frame->stack.pop();
-			this->frame->stack.push(JavaFloat(a + b));
-			break;
+		{
+			SINGLE_WORD_OPERATION(float, +);
+		}
+		break;
 
 		case DADD:
-			double a = this->getDoubleFromStack();
-			double b = this->getDoubleFromStack();
-			this->pushDouble(a + b);
-			break;
+		{
+			DOUBLE_OPERATION(+);
+		}
+		break;
 
 		case ISUB:
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
-			this->frame->stack.push(JavaInt(a - b));
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, -);
+		}
+		break;
 
 		case LSUB:
-			long long a = this->getLongFromStack();
-			long long b = this->getLongFromStack();
-			this->pushLong(a - b);
-			break;
+		{
+			LONG_OPERATION(-);
+		}
+		break;
 
 		case FSUB:
-			float a = this->frame->stack.pop();
-			float b = this->frame->stack.pop();
-			this->frame->stack.push(JavaFloat(a - b));
-			break;
+		{
+			SINGLE_WORD_OPERATION(float, +);
+		}
+		break;
 
 		case DSUB:
-			double a = this->getDoubleFromStack();
-			double b = this->getDoubleFromStack();
-			this->pushDouble(a - b);
-			break;
+		{
+			DOUBLE_OPERATION(-);
+		}
+		break;
 
 		case IMUL:
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
-			this->frame->stack.push(JavaInt(a * b));
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, *);
+		}
+		break;
 
 
 		case LMUL:
-			long long a = this->getLongFromStack();
-			long long b = this->getLongFromStack();
-			this->pushLong(a * b);
-			break;
+		{
+			LONG_OPERATION(*);
+		}
+		break;
 
 		case FMUL:
-			float a = this->frame->stack.pop();
-			float b = this->frame->stack.pop();
-			this->frame->stack.push(JavaFloat(a * b));
-			break;
+		{
+			SINGLE_WORD_OPERATION(float, *);
+		}
+		break;
 
 		case DMUL:
-			double a = this->getDoubleFromStack();
-			double b = this->getDoubleFromStack();
-			this->pushDouble(a * b);
-			break;
+		{
+			DOUBLE_OPERATION(*);
+		}
+		break;
 
 		case IDIV:
+		{
 			int a = this->frame->stack.pop();
 			int b = this->frame->stack.pop();
 
@@ -385,10 +411,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 
 			this->frame->stack.push(JavaInt(a * b));
-			break;
+		}
+		break;
 
 
 		case LDIV:
+		{
 			long a = this->getLongFromStack();
 			long b = this->getLongFromStack();
 
@@ -398,21 +426,23 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 
 			this->pushLong(a / b);
+		}
 			break;
 
 		case FDIV:
-			float a = this->frame->stack.pop();
-			float b = this->frame->stack.pop();
-			this->frame->stack.push(JavaFloat(a / b));
+		{
+			SINGLE_WORD_OPERATION(float, / );
+		}
 			break;
 
 		case DDIV:
-			double a = this->getDoubleFromStack();
-			double b = this->getDoubleFromStack();
-			this->pushDouble(a / b);
-			break;
+		{
+			DOUBLE_OPERATION(/ );
+		}
+		break;
 
 		case IREM:
+		{
 			// returns remainder
 			int a = this->frame->stack.pop();
 			int b = this->frame->stack.pop();
@@ -423,9 +453,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 
 			this->frame->stack.push(JavaInt(a % b));
+		}
 			break;
 
 		case LREM:
+		{
 			long a = this->getLongFromStack();
 			long b = this->getLongFromStack();
 
@@ -435,120 +467,141 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 
 			this->pushLong(a % b);
-			break;
+		}
+		break;
 
 		case FREM:
+		{
 			float a = this->frame->stack.pop();
 			float b = this->frame->stack.pop();
 			this->frame->stack.push(fmodf(a, b));
-			break;
+		}
+		break;
 
 		case DREM:
+		{
 			double a = this->getDoubleFromStack();
 			double b = this->getDoubleFromStack();
 			this->pushDouble(fmod(a, b));
-			break;
+		}
+		break;
 
 		case INEG:
+		{
 			int a = this->frame->stack.pop();
 			this->frame->operandStack.push(-a);
-			break;
+		}
+		break;
 
 		case LNEG:
+		{
 			long a = this->getLongFromStack();
 			this->pushLong(-a);
-			break;
+		}
+		break;
 
 		case FNEG:
+		{
 			float a = this->frame->stack.pop();
 			this->frame->stack.push(-a);
-			break;
+		}
+		break;
 
 		case DNEG:
+		{
 			double a = this->getDoubleFromStack();
 			this->pushDouble(-a);
-			break;
+		}
+		break;
 
 
 		case ISHL:
-			// shift left
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
-			this->frame->operandStack.push(a << b);
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, << );
+		}
+		// shift left
+		break;
 
 		case LSHL:
+		{
 			long long a = this->getLongFromStack();
 			int b = this->frame->stack.pop();
 			this->pushLong(a << b);
-			break;
+		}
+		break;
 
 		case ISHR:
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
-			this->frame->operandStack.push(a >> b);
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, >> );
+		}
+		break;
 
 		case LSHR:
+		{
 			// shift right
 			long long a = this->getLongFromStack();
 			int b = this->frame->stack.pop();
 			this->pushLong(a >> b);
-			break;
+		}
+		break;
 
 		case IUSHR:
+		{
+			SINGLE_WORD_OPERATION(unsigned int, >> );
 			// shift unsigned right
-			unsigned int a = this->frame->stack.pop();
-			unsigned int b = this->frame->stack.pop();
-			this->frame->operandStack.push(a >> b);
-			break;
+		}
+		break;
 
 		case LUSHR:
+		{
 			unsigned long long a = this->getLongFromStack();
 			unsigned int b = this->frame->stack.pop();
 			this->pushLong(a >> b);
 			break;
+		}
 
 		case IAND:
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
-			this->frame->operandStack.push(a & b);
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, &);
+		}
+		break;
 
 		case LAND:
-			long long a = this->getLongFromStack();
-			long long b = this->getLongFromStack();
-			this->pushLong(a & b);
-			break;
+		{
+			LONG_OPERATION(&);
+		}
+		break;
 
 		case IOR:
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
-			this->frame->operandStack.push(a | b);
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, |);
+		}
+		break;
 
 		case LOR:
-			long long a = this->getLongFromStack();
-			long long b = this->getLongFromStack();
-			this->pushLong(a | b);
-			break;
+		{
+			LONG_OPERATION(|);
+		}
+		break;
 
 		case IXOR:
-			int a = this->frame->stack.pop();
-			int b = this->frame->stack.pop();
-			this->frame->operandStack.push(a ^ b);
-			break;
+		{
+			SINGLE_WORD_OPERATION(int, ^);
+		}
+		break;
 
 		case LXOR:
-			long long a = this->getLongFromStack();
-			long long b = this->getLongFromStack();
-			this->pushLong(a ^ b);
-			break;
+		{
+			LONG_OPERATION(^);
+		}
+		break;
 
 		case IINC:
+		{
 			unsigned char index = instructions[pc++];
 			int value = (int)instructions[pc++];
 			this->frame->localVariables[index] += value;
+		}
 			break;
 
 		case I2L:
@@ -568,6 +621,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case I2S:
 
 		case LCMP:
+		{
 			long long a = this->getLongFromStack();
 			long long b = this->getLongFromStack();
 
@@ -587,63 +641,30 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 
 			this->frame->operandStack.push(res);
-			break;
+		}
+		break;
 
 		case FCMPL:
 		case FCMPG:
+		{
 			float a = this->frame->operandStack.pop();
 			float b = this->frame->operandStack.pop();
 
-			int res = 0;
-
-			if (a > b)
-			{
-				res = 1;
-			}
-			else if (a == b)
-			{
-				res = 0;
-			}
-			else if (a < b)
-			{
-				res = -1;
-			}
-			else if ((a == NAN || b == NAN))
-			{
-				res = pc == FCMPG ? 1 : -1;
-			}
-
-			this->frame->operandStack.push(res);
-			break;
+			this->fdcmp<float>(a, b, currentInstruction);
+		}
+		break;
 
 
 
 		case DCMPL:
 		case DCMPG:
+		{
 			double a = this->getDoubleFromStack();
 			double b = this->getDoubleFromStack();
 
-			int res = 0;
-
-			if (a > b)
-			{
-				res = 1;
-			}
-			else if (a == b)
-			{
-				res = 0;
-			}
-			else if (a < b)
-			{
-				res = -1;
-			}
-			else if ((a == NAN || b == NAN))
-			{
-				res = (currentInstruction == DCMPG) ? 1 : -1;
-			}
-
-			this->frame->operandStack.push(res);
-			break;
+			this->fdcmp<double>(a, b, currentInstruction);
+		}
+		break;
 
 		// THESE ARE FALL-THROUGH
 		case IFEQ:
@@ -652,9 +673,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IFGE:
 		case IFGT:
 		case IFLE:
+		{
 			int value = this->frame->operandStack.pop();
 			this->jumpIfEq(currentInstruction, value);
-			break;
+		}
+		break;
 
 		// THESE ARE FALL-THROUGH
 		case IF_ICMPEQ:
@@ -663,17 +686,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IF_ICMPGE:
 		case IF_ICMPGT:
 		case IF_ICMPLE:
+		{
 			int a = this->frame->operandStack.pop();
 			int b = this->frame->operandStack.pop();
 
 			int res = a - b;
 			this->jumpIfEq(currentInstruction - (IF_ICMPEQ - IFEQ), res);
-			break;
+		}
+		break;
 
 
 		case IF_ACMPEQ:
 			// references eq
 		case IF_ACMPNE:
+		{
 			unsigned short pc = this->getShort();
 			unsigned short a = this->frame->operandStack.pop();
 			unsigned short b = this->frame->operandStack.pop();
@@ -682,17 +708,22 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// JUMP
 			}
+		}
 			break;
 
 		case GOTO:
+		{
 			short offset = this->getShort();
 			pc = pc + offset - 1; // check
+		}
 			break;
 
 		case GOTO_W:
+		{
 			int offset = (int)this->getInt();
 			pc = pc + offset - 1;
-			break;
+		}
+		break;
 
 		case JSR:
 			break;
@@ -716,12 +747,16 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case PUTSTATIC:
 
 		case GETFIELD:
+		{
 			unsigned short index = this->getShort();
-			break;
+		}
+		break;
 
 		case PUTFIELD:
+		{
 			unsigned short index = this->getShort();
-			break;
+		}
+		break;
 
 		case INVOKEVIRTUAL:
 		case INVOKESPECIAL:
@@ -751,7 +786,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IMPDEP1:
 		case IMPDEP2:
 			break;
-		case InstructionSet::NOP:
+		case NOP:
 			break;
 		}
 	}

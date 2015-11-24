@@ -64,9 +64,6 @@
     <ClCompile Include="runtime\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="threads\Mutex.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="types\TypeTag.h">
@@ -175,6 +172,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\ArrayObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,3 +1,4 @@
+#pragma once
 enum InstructionSet
 {
 	NOP = 0x00,

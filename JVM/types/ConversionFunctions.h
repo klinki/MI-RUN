@@ -14,7 +14,7 @@ inline int intFromBytes(unsigned char HIGH_HIGH, unsigned char HIGH_LOW, unsigne
 			((int)LOW_LOW);
 }
 
-inline long longFromStack(unsigned int HIGH, unsigned int LOW)
+inline long long longFromStack(unsigned int HIGH, unsigned int LOW)
 {
 	return ((long long)HIGH << 32) | LOW;
 }

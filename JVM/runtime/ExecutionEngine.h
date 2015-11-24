@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../types/ConversionFunctions.h"
 #include "InstructionSet.h"
 #include "../types/types.h"
@@ -6,6 +7,23 @@
 #include "Class.h"
 #include "../exceptions/RuntimeExceptions.h"
 #include "ArrayObject.h"
+
+#define SINGLE_WORD_OPERATION(type, op) \
+	type a = this->frame->stack.pop(); \
+	type b = this->frame->stack.pop(); \
+	this->frame->stack.push(a op b)
+
+#define DOUBLE_OPERATION(op) \
+ 	double a = this->getDoubleFromStack(); \
+	double b = this->getDoubleFromStack(); \
+	this->pushDouble(a op b);
+
+
+#define LONG_OPERATION(op) \
+ 	long long a = this->getLongFromStack(); \
+	long long b = this->getLongFromStack(); \
+	this->pushLong(a op b)
+
 
 class ExecutionEngine
 {
@@ -92,6 +110,18 @@ public:
 		this->frame->localVariables[index] = index;
 	}
 
+	inline void wload()
+	{
+		unsigned char index = this->frame->method->getBytecode()[this->frame->pc++];
+		this->wload(index);
+	}
+
+	inline void wload(unsigned char index)
+	{
+		word val = this->frame->localVariables[index];
+		this->frame->operandStack.push(val);
+	}
+
 
 	inline void lload(unsigned char index)
 	{
@@ -113,6 +143,9 @@ public:
 	{
 
 	}
+
+
+
 
 	inline unsigned short getShort()
 	{
@@ -181,4 +214,32 @@ public:
 	{
 
 	}
+
+
+	template<class T>
+	inline void fdcmp(T a, T b, Instruction currentInstruction)
+	{
+
+		int res = 0;
+
+		if (a > b)
+		{
+			res = 1;
+		}
+		else if (a == b)
+		{
+			res = 0;
+		}
+		else if (a < b)
+		{
+			res = -1;
+		}
+		else if ((a == NAN || b == NAN))
+		{
+			res = (currentInstruction == DCMPG || currentInstruction == FCMPG) ? 1 : -1;
+		}
+
+		this->frame->operandStack.push(res);
+	}
+
 };
