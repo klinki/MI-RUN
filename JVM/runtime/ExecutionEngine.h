@@ -106,8 +106,8 @@ public:
 
 	inline void fstore(unsigned char index)
 	{
-		float val = (float)this->frame->operandStack.pop();
-		this->frame->localVariables[index] = index;
+		word val = this->frame->operandStack.pop();
+		this->frame->localVariables[index] = val;
 	}
 
 	inline void wload()
@@ -134,7 +134,11 @@ public:
 
 	inline void lstore(unsigned char index)
 	{
+		word low = this->frame->operandStack.pop();
+		word high = this->frame->operandStack.pop();
 
+		this->frame->localVariables[index] = high;
+		this->frame->localVariables[index + 1] = low;
 	}
 
 
@@ -149,7 +153,11 @@ public:
 
 	inline void dstore(unsigned char index)
 	{
+		word low = this->frame->operandStack.pop();
+		word high = this->frame->operandStack.pop();
 
+		this->frame->localVariables[index] = high;
+		this->frame->localVariables[index + 1] = low;
 	}
 
 

@@ -3,7 +3,7 @@
 #include "../types/types.h"
 #include "../gc/GarbageCollector.h"
 
-class OperandStack : Array<word>
+class OperandStack : public Array<word>
 {
 	static const int DEFAULT_STACK_SIZE = 64;
 public:

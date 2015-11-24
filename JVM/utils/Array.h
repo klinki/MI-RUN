@@ -1,12 +1,13 @@
 #pragma once
 #include <cstdlib>
+#include "Macros.h"
 #include "../types/types.h"
 
 template <class T> 
 class Array
 {
 	const int DEFAULT_ARRAY_SIZE = 64;
-protected:
+visibility:
 	T* allocatedArray;
 	unsigned int allocatedSize;
 	unsigned int index;
