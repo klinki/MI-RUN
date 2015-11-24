@@ -12,29 +12,46 @@ namespace Tests
 
 		TEST_METHOD(testBIPUSH)
 		{
-			Instruction instructions[] = {
-				BIPUSH,
-				125
-			};
+			ExecutionEngine eng;
+			Method m;
 
-			int expected = 123;
-			// TODO: Add bytecode for function call without argument
-			int result = 0;
+			int expected = 125;
+
+			m.byteCode = new Instruction[2];
+			m.byteCode[0] = (Instruction)InstructionSet::BIPUSH;
+			m.byteCode[1] = (Instruction)expected;
+			m.byteCodeLength = 2;
+
+			MethodFrame frm(1, 1);
+			frm.pc = 0;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			int result = frm.operandStack.pop();
 			Assert::AreEqual(expected, result);
 		}
 
 		TEST_METHOD(testSIPUSH)
 		{
-			Instruction instructions[] = {
-				SIPUSH,
-				0x0001,
-				0x0001
-			};
+			ExecutionEngine eng;
+			Method m;
 
-			int arg = 123;
-			int expected = 123;
-			// TODO: Add bytecode for function call with one argument
-			int result = 0;
+			int expected = 256;
+
+			m.byteCode = new Instruction[3];
+			m.byteCode[0] = (Instruction)InstructionSet::SIPUSH;
+			m.byteCode[1] = (Instruction)highByte(expected);
+			m.byteCode[2] = (Instruction)lowByte(expected);
+			m.byteCodeLength = 3;
+
+			MethodFrame frm(1, 1);
+			frm.pc = 0;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			int result = frm.operandStack.pop();
 			Assert::AreEqual(expected, result);
 		}
 	};

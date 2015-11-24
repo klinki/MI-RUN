@@ -169,10 +169,10 @@ public:
 	inline unsigned short getShort()
 	{
 		const Instruction * instructions = this->frame->method->getBytecode();
-		unsigned char LOW = instructions[this->frame->pc++];
 		unsigned char HIGH = instructions[this->frame->pc++];
-		unsigned short index = shortFromStack(HIGH, LOW);
-		return index;
+		unsigned char LOW = instructions[this->frame->pc++];
+		unsigned short value = shortFromStack(HIGH, LOW);
+		return value;
 	}
 	
 	inline unsigned int getInt()

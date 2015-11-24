@@ -59,3 +59,13 @@ inline unsigned int highWord(double val)
 
 	return un.words[0];
 }
+
+inline unsigned char lowByte(short val)
+{
+	return (unsigned char)val;
+}
+
+inline unsigned char highByte(short val)
+{
+	return (unsigned char)(val >> 8);
+}

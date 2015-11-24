@@ -60,8 +60,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case BIPUSH:
 		{
 			// push byte
-			java_byte byte = (java_byte)instructions[pc++];
-			this->frame->operandStack.push(JavaByte(byte));
+			word byte = instructions[pc++];
+			this->frame->operandStack.push(byte);
 		}
 		break;
 
