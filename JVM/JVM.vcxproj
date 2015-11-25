@@ -122,6 +122,7 @@
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
+    <ClCompile Include="utils\Utf16String.cpp" />
     <ClCompile Include="runtime\Object.cpp" />
     <ClCompile Include="runtime\Field.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
@@ -142,6 +143,8 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="utils\Utf16String.h" />
+    <ClInclude Include="utils\HashMap.h" />
     <ClInclude Include="runtime\ArrayObject.h" />
     <ClInclude Include="exceptions\RuntimeExceptions.h" />
     <ClInclude Include="gc\experiments.h" />

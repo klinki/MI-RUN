@@ -169,6 +169,7 @@
     <ClCompile Include="FunctionCalls.cpp" />
     <ClCompile Include="LoadTest.cpp" />
     <ClCompile Include="MethodAreaTest.cpp" />
+    <ClCompile Include="IntTest.cpp" />
     <ClCompile Include="OperandStackTest.cpp" />
     <ClCompile Include="PushTest.cpp" />
     <ClCompile Include="stdafx.cpp">

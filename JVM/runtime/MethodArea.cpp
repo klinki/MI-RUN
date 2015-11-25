@@ -11,8 +11,9 @@ MethodArea::~MethodArea()
 {
 }
 
-Method* MethodArea::getMethod(const std::string name)
+Method* MethodArea::getMethod(const Utf16String & name)
 {
+	
 	return NULL;
 }
 

@@ -3,9 +3,12 @@
 class Utf8String
 {
 protected:
+	std::string value;
 	unsigned char* data;
 	unsigned int dataLength;
 	unsigned int stringLength;
+	unsigned int hash;
+
 public:
 	Utf8String();
 	Utf8String(const char* bytes, int length);

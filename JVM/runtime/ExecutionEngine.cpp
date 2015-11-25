@@ -401,12 +401,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case IDIV:
 		{
-			int a = this->frame->operandStack.pop();
 			int b = this->frame->operandStack.pop();
-
+			int a = this->frame->operandStack.pop();
+			
 			if (b == 0)
 			{
 				// exception! 
+				throw Exceptions::Runtime::ArithmeticException();
 			}
 
 			this->frame->operandStack.push(JavaInt(a * b));
@@ -416,8 +417,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LDIV:
 		{
-			long a = this->getLongFromStack();
 			long b = this->getLongFromStack();
+			long a = this->getLongFromStack();
 
 			if (b == 0)
 			{
@@ -443,12 +444,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IREM:
 		{
 			// returns remainder
-			int a = this->frame->operandStack.pop();
 			int b = this->frame->operandStack.pop();
+			int a = this->frame->operandStack.pop();
 
 			if (b == 0)
 			{
-				// exception! 
+				// exception!
+				throw Exceptions::Runtime::ArithmeticException();
 			}
 
 			this->frame->operandStack.push(JavaInt(a % b));
@@ -457,12 +459,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LREM:
 		{
-			long a = this->getLongFromStack();
 			long b = this->getLongFromStack();
+			long a = this->getLongFromStack();
 
 			if (b == 0)
 			{
-				// exception! 
+				// exception!
+				throw Exceptions::Runtime::ArithmeticException();
 			}
 
 			this->pushLong(a % b);
@@ -471,16 +474,16 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case FREM:
 		{
-			float a = this->frame->operandStack.pop();
 			float b = this->frame->operandStack.pop();
+			float a = this->frame->operandStack.pop();
 			this->frame->operandStack.push(fmodf(a, b));
 		}
 		break;
 
 		case DREM:
 		{
-			double a = this->getDoubleFromStack();
 			double b = this->getDoubleFromStack();
+			double a = this->getDoubleFromStack();
 			this->pushDouble(fmod(a, b));
 		}
 		break;
@@ -706,6 +709,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			if (a == b && currentInstruction == IF_ACMPEQ || a != b && currentInstruction == IF_ACMPNE)
 			{
 				// JUMP
+				
 			}
 		}
 			break;

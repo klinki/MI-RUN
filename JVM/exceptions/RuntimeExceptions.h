@@ -8,5 +8,6 @@ namespace Exceptions
 		class RuntimeException : Exception {};
 		class NullPointerException : RuntimeException {};
 		class ArrayIndexOutOfBoundsException : RuntimeException {};
+		class ArithmeticException : RuntimeException {};
 	}
 }
