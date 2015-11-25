@@ -7,11 +7,11 @@
 class MethodArea
 {
 protected:
-	HashMap<std::u16string, Class*> hashmap;
+	HashMap<Utf8String, Class*> hashmap;
 public:
 	MethodArea();
 	~MethodArea();
 
-	Method* getMethod(const Utf16String & name);
+	Method* getMethod(const Utf8String & name);
 	void addMethod(Method* method);
 };

@@ -17,4 +17,15 @@ public:
 	std::string toAsciiString();
 	unsigned int length() const;
 	unsigned int bytes() const;
+
+
+	friend std::hash<Utf8String>;
 };
+
+namespace std 
+{
+	template <> struct hash<Utf8String>
+	{
+		size_t operator()(const Utf8String & x) const;
+	};
+}

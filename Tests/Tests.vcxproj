@@ -167,6 +167,7 @@
     <ClCompile Include="ConstTest.cpp" />
     <ClCompile Include="ConstantPoolTest.cpp" />
     <ClCompile Include="FunctionCalls.cpp" />
+    <ClCompile Include="HashMapTest.cpp" />
     <ClCompile Include="LoadTest.cpp" />
     <ClCompile Include="MethodAreaTest.cpp" />
     <ClCompile Include="IntTest.cpp" />

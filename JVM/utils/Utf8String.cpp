@@ -24,3 +24,9 @@ string Utf8String::toAsciiString()
 {
 	return "";
 }
+
+inline size_t std::hash<Utf8String>::operator()(const Utf8String & x) const
+{
+	std::hash<std::string> hash;
+	return hash(x.value);
+}
