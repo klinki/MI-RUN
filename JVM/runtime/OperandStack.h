@@ -8,7 +8,7 @@ class OperandStack : public Array<word>
 	static const int DEFAULT_STACK_SIZE = 64;
 public:
 	OperandStack();
-	OperandStack(int size);
+	OperandStack(size_t size);
 	~OperandStack();
 
 	void push(word value);

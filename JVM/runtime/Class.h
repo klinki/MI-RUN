@@ -24,13 +24,13 @@ protected:
 
 	// This is used for object creation
 	Field * fields;
-	unsigned int countFields;
+	size_t countFields;
 
 	Field * staticFields;
-	unsigned int countStaticFields;
+	size_t countStaticFields;
 
 	Method * methods;
-	unsigned int countMethods;
+	size_t countMethods;
 
 	Class * parentClass;
 
@@ -43,7 +43,7 @@ public:
 	Class(FLAG flag) : flags(flag) {};
 	~Class();
 
-	unsigned int getCountFields() const;
+	size_t getCountFields() const;
 	bool isFlagSet(FLAG flag) const;
 
 	friend class ClassLoader;

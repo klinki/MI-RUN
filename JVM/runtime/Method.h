@@ -14,10 +14,10 @@ visibility:
 	const Utf8String descriptor;
 
 	Instruction* byteCode;
-	unsigned int byteCodeLength;
+	size_t byteCodeLength;
 
-	unsigned int operandStackSize;
-	unsigned int localVariablesArraySize;
+	size_t operandStackSize;
+	size_t localVariablesArraySize;
 
 	ExceptionTable exceptionTable;
 public:
@@ -29,7 +29,7 @@ public:
 		return this->byteCode;
 	}
 	
-	const unsigned int getByteCodeLength() const
+	const size_t getByteCodeLength() const
 	{
 		return this->byteCodeLength;
 	}

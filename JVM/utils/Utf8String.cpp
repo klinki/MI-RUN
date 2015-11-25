@@ -8,7 +8,7 @@ Utf8String::Utf8String()
 	this->stringLength = 0;
 }
 
-Utf8String::Utf8String(const char* data, int length)
+Utf8String::Utf8String(const char* data, size_t length)
 {
 	this->data = new unsigned char[length];
 	this->dataLength = length;

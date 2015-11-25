@@ -4,14 +4,14 @@ template<class T>
 class ArrayObject : public Object
 {
 protected:
-	unsigned int size;
+	size_t size;
 	T * arrayData;
 
 public:
 	ArrayObject();
 	~ArrayObject();
 
-	unsigned int getSize() const { return this->size; }
+	size_t getSize() const { return this->size; }
 
 	T & operator[] (int index)
 	{

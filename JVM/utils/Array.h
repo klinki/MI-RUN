@@ -9,12 +9,12 @@ class Array
 	const int DEFAULT_ARRAY_SIZE = 64;
 visibility:
 	T* allocatedArray;
-	unsigned int allocatedSize;
-	unsigned int index;
+	size_t allocatedSize;
+	size_t index;
 public:
 	Array() : Array(DEFAULT_ARRAY_SIZE) {};
 	
-	Array(int size)
+	Array(size_t size)
 	{
 		this->allocatedArray = new T[size];
 		this->allocatedSize = size;

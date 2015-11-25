@@ -4,6 +4,6 @@ struct MemoryCellStruct
 {
 	MemoryCellStruct * left;
 	MemoryCellStruct * right;
-	unsigned int size;
+	size_t size;
 	unsigned char data[0];
 };

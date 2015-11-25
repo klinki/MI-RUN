@@ -5,18 +5,18 @@ class Utf8String
 protected:
 	std::string value;
 	unsigned char* data;
-	unsigned int dataLength;
-	unsigned int stringLength;
+	size_t dataLength;
+	size_t stringLength;
 	unsigned int hash;
 
 public:
 	Utf8String();
-	Utf8String(const char* bytes, int length);
+	Utf8String(const char* bytes, size_t length);
 	~Utf8String();
 
 	std::string toAsciiString();
-	unsigned int length() const;
-	unsigned int bytes() const;
+	size_t length() const;
+	size_t bytes() const;
 
 
 	friend std::hash<Utf8String>;

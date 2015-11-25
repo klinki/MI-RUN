@@ -7,7 +7,7 @@ class MethodFrame
 {
 visibility:
 	ProgramCounter pc;
-	unsigned int sp;
+	size_t sp;
 	Method* method;
 	
 	LocalVariablesArray localVariables; // array of local variables
@@ -16,7 +16,7 @@ visibility:
 
 public:
 	MethodFrame();
-	MethodFrame(int stackSize, int localVariablesSize);
+	MethodFrame(size_t stackSize, size_t localVariablesSize);
 	~MethodFrame();
 
 	friend class ExecutionEngine;
