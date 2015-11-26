@@ -8,6 +8,7 @@ class OperandStack : public Array<word>
 	static const int DEFAULT_STACK_SIZE = 64;
 public:
 	OperandStack();
+	OperandStack(size_t size, byte * address);
 	OperandStack(size_t size);
 	~OperandStack();
 

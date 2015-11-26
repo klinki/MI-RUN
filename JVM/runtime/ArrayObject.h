@@ -13,9 +13,9 @@ public:
 
 	size_t getSize() const { return this->size; }
 
-	T & operator[] (int index)
+	T & operator[] (size_t index)
 	{
-		if (index < 0 || index >= this->size)
+		if (index >= this->size)
 		{
 			throw Exceptions::Runtime::ArrayIndexOutOfBoundsException();
 		}
@@ -23,9 +23,9 @@ public:
 		return this->arrayData[index];
 	}
 
-	const T & operator[] (int index) const
+	const T & operator[] (size_t index) const
 	{
-		if (index < 0 || index >= this->size)
+		if (index >= this->size)
 		{
 			throw Exceptions::Runtime::ArrayIndexOutOfBoundsException();
 		}

@@ -17,3 +17,5 @@ typedef double java_double;
 typedef void* java_ref;
 
 typedef unsigned int Flag;
+
+typedef unsigned char byte;

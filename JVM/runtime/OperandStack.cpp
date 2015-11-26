@@ -3,7 +3,11 @@
 
 OperandStack::OperandStack(): OperandStack(OperandStack::DEFAULT_STACK_SIZE) {}
 
-OperandStack::OperandStack(int size): Array(size)
+OperandStack::OperandStack(size_t size): Array(size)
+{
+}
+
+OperandStack::OperandStack(size_t size, byte * address) : Array(size, address)
 {
 }
 

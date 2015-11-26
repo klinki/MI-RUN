@@ -5,9 +5,9 @@ namespace Exceptions
 	
 	namespace Runtime
 	{
-		class RuntimeException : Exception {};
-		class NullPointerException : RuntimeException {};
-		class ArrayIndexOutOfBoundsException : RuntimeException {};
-		class ArithmeticException : RuntimeException {};
+		class RuntimeException : public Exception {};
+		class NullPointerException : public RuntimeException {};
+		class ArrayIndexOutOfBoundsException : public RuntimeException {};
+		class ArithmeticException : public RuntimeException {};
 	}
 }

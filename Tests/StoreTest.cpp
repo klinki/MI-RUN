@@ -25,12 +25,12 @@ namespace Tests
 
 			MethodFrame frm(1, 1);
 			frm.pc = 0;
-			frm.operandStack.push(expected);
+			frm.operandStack->push(expected);
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			int result = frm.localVariables[0];
+			int result = (*frm.localVariables)[0];
 			Assert::AreEqual(expected, result);
 		}
 
@@ -47,12 +47,12 @@ namespace Tests
 
 			MethodFrame frm(1, 1);
 			frm.pc = 0;
-			frm.operandStack.push(expected);
+			frm.operandStack->push(expected);
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			float result = frm.localVariables[0];
+			float result = (*frm.localVariables)[0];
 			Assert::AreEqual(expected, result);
 		}
 
@@ -69,14 +69,14 @@ namespace Tests
 
 			MethodFrame frm(2, 2);
 			frm.pc = 0;
-			frm.operandStack.push(highWord(expected));
-			frm.operandStack.push(lowWord(expected));
+			frm.operandStack->push(highWord(expected));
+			frm.operandStack->push(lowWord(expected));
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			unsigned int low = frm.localVariables[1];
-			unsigned int high = frm.localVariables[0];
+			unsigned int low = (*frm.localVariables)[1];
+			unsigned int high = (*frm.localVariables)[0];
 
 			long long result = longFromStack(high, low);
 
@@ -96,14 +96,14 @@ namespace Tests
 
 			MethodFrame frm(2, 2);
 			frm.pc = 0;
-			frm.operandStack.push(highWord(expected));
-			frm.operandStack.push(lowWord(expected));
+			frm.operandStack->push(highWord(expected));
+			frm.operandStack->push(lowWord(expected));
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			unsigned int low = frm.localVariables[1];
-			unsigned int high = frm.localVariables[0];
+			unsigned int low = (*frm.localVariables)[1];
+			unsigned int high = (*frm.localVariables)[0];
 
 			double result = doubleFromStack(high, low);
 
@@ -123,12 +123,12 @@ namespace Tests
 
 			MethodFrame frm(1, 1);
 			frm.pc = 0;
-			frm.operandStack.push(expected);
+			frm.operandStack->push(expected);
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			int result = frm.localVariables[0];
+			int result = (*frm.localVariables)[0];
 			Assert::AreEqual(expected, result);
 		}
 	};

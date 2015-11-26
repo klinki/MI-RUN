@@ -6,11 +6,13 @@
 template <class T> 
 class Array
 {
-	const int DEFAULT_ARRAY_SIZE = 64;
+	static const int DEFAULT_ARRAY_SIZE = 64;
 visibility:
-	T* allocatedArray;
 	size_t allocatedSize;
 	size_t index;
+	bool preallocated = false;
+	T * allocatedArray;
+
 public:
 	Array() : Array(DEFAULT_ARRAY_SIZE) {};
 	
@@ -21,15 +23,43 @@ public:
 		this->index = 0;
 	}
 
+	Array(size_t size, byte * address)
+	{
+		this->preallocated = true;
+		this->index = 0;
+		this->allocatedSize = size;
+		this->allocatedArray = (T*) (&this->allocatedArray + 1);//address;
+	}
+
 	~Array()
 	{
-		delete[] this->allocatedArray;
+		if (!this->preallocated)
+		{
+			delete[] this->allocatedArray;
+		}
+
 		this->allocatedArray = NULL;
 	}
 
-	word & operator[] (int index)
+	void resize()
 	{
-		if (index < 0 || index >= this->allocatedSize)
+		int oldSize = this->allocatedSize;
+		this->allocatedSize *= 2;
+
+		T * oldArray = this->allocatedArray;
+		this->allocatedArray = new T[this->allocatedSize];
+
+		for (int i = 0; i < oldSize; i++)
+		{
+			this->allocatedArray[i] = oldArray[i];
+		}
+
+		delete[] oldArray;
+	}
+
+	T & operator[] (size_t index)
+	{
+		if (index >= this->allocatedSize)
 		{
 			throw IndexOutOfBoundsException();
 		}
@@ -37,14 +67,19 @@ public:
 		return this->allocatedArray[index];
 	}
 
-	const word & operator[] (int index) const
+	const T & operator[] (size_t index) const
 	{
-		if (index < 0 || index >= this->allocatedSize)
+		if (index >= this->allocatedSize)
 		{
 			throw IndexOutOfBoundsException();
 		}
 
 		return this->allocatedArray[index];
+	}
+
+	static size_t getMemorySize(size_t items)
+	{
+		return sizeof(Array<T>) + items * sizeof(T);
 	}
 };
 
