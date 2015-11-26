@@ -28,7 +28,7 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			int result = frm.operandStack.pop();
+			int result = frm.operandStack->pop();
 			Assert::AreEqual(expected, result);
 
 		}
@@ -55,7 +55,7 @@ namespace Tests
 
 				eng.execute(&frm);
 
-				int result = frm.operandStack.pop();
+				int result = frm.operandStack->pop();
 				Assert::AreEqual(expected, result);
 			}
 		}
@@ -70,7 +70,7 @@ namespace Tests
 			frm.method = &m;
 
 			Instruction instructions[] = { FCONST_0, FCONST_1, FCONST_2 };
-			int values[] = { 0, 1, 2 };
+			float values[] = { 0, 1, 2 };
 
 			for (int i = 0; i < 3; i++)
 			{
@@ -82,7 +82,7 @@ namespace Tests
 
 				eng.execute(&frm);
 
-				float result = frm.operandStack.pop();
+				float result = frm.operandStack->pop();
 				Assert::AreEqual(expected, result);
 			}
 		}
@@ -108,8 +108,8 @@ namespace Tests
 
 				eng.execute(&frm);
 
-				unsigned int low = frm.operandStack.pop();
-				unsigned int high = frm.operandStack.pop();
+				unsigned int low = frm.operandStack->pop();
+				unsigned int high = frm.operandStack->pop();
 
 				long long result = longFromStack(high, low);
 
@@ -138,8 +138,8 @@ namespace Tests
 
 				eng.execute(&frm);
 
-				unsigned int low = frm.operandStack.pop();
-				unsigned int high = frm.operandStack.pop();
+				unsigned int low = frm.operandStack->pop();
+				unsigned int high = frm.operandStack->pop();
 
 				double result = doubleFromStack(high, low);
 

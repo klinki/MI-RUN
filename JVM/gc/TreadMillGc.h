@@ -5,7 +5,7 @@ class TreadMillGc
 	{
 		MemoryCell * left;
 		MemoryCell * right;
-		unsigned int size;
+		size_t size;
 		unsigned char data[1];
 	};
 

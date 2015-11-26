@@ -28,7 +28,7 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			int result = frm.operandStack.pop();
+			int result = frm.operandStack->pop();
 			Assert::AreEqual(expected, result);
 		}
 
@@ -51,7 +51,7 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			int result = frm.operandStack.pop();
+			int result = frm.operandStack->pop();
 			Assert::AreEqual(expected, result);
 		}
 	};

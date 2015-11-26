@@ -23,9 +23,9 @@ union word
 	word & operator += (word val) { intValue += val.intValue; return *this;  }
 };
 
-enum TypeTag
+enum class TypeTag
 {
-	VOID = 0,
+	JAVA_VOID = 0,
 	NULL_TYPE,
 	BOOL,
 	BYTE,
@@ -123,7 +123,7 @@ class JavaValueType : public JavaType
 class JavaVoid : public JavaType
 {
 public:
-	JavaVoid(): JavaType(TypeTag::VOID) { }
+	JavaVoid(): JavaType(TypeTag::JAVA_VOID) { }
 };
 
 

@@ -64,6 +64,9 @@
     <ClCompile Include="utils\Utf16String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="runtime\ObjectTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="types\TypeTag.h">
@@ -181,6 +184,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\Utf16String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\ObjectTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

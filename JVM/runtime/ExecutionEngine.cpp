@@ -24,7 +24,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		switch (currentInstruction)
 		{
 		case ACONST_NULL:
-			this->frame->operandStack.push(NULL);
+			this->frame->operandStack->push(NULL);
 			break;
 
 			// FALL THROUGH:
@@ -35,7 +35,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ICONST_3:
 		case ICONST_4:
 		case ICONST_5:
-			this->frame->operandStack.push(currentInstruction - ICONST_0);
+			this->frame->operandStack->push(currentInstruction - ICONST_0);
 			break;
 
 			// FALL THROUGH:
@@ -48,7 +48,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case FCONST_0:
 		case FCONST_1:
 		case FCONST_2:
-			this->frame->operandStack.push((float)(currentInstruction - FCONST_0));
+			this->frame->operandStack->push((float)(currentInstruction - FCONST_0));
 			break;
 
 			// FALL THROUGH:
@@ -61,7 +61,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			// push byte
 			word byte = instructions[pc++];
-			this->frame->operandStack.push(byte);
+			this->frame->operandStack->push(byte);
 		}
 		break;
 
@@ -71,7 +71,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// byte 1
 			// byte 2
 			unsigned short index = getShort();
-			this->frame->operandStack.push(JavaShort(index));
+			this->frame->operandStack->push(JavaShort(index));
 		}
 		break;
 
@@ -292,7 +292,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case POP:
 			// pop value from stack
-			this->frame->operandStack.pop();
+			this->frame->operandStack->pop();
 			break;
 		case POP2:
 
@@ -300,9 +300,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			// value
 			// value, value
-			word value = this->frame->operandStack.pop();
-			this->frame->operandStack.push(value);
-			this->frame->operandStack.push(value);
+			word value = this->frame->operandStack->pop();
+			this->frame->operandStack->push(value);
+			this->frame->operandStack->push(value);
 		}
 		break;
 		case DUP_X1:
@@ -319,10 +319,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			// swap operand-stack values
 			// category 1
-			word low = this->frame->operandStack.pop();
-			word high = this->frame->operandStack.pop();
-			this->frame->operandStack.push(low);
-			this->frame->operandStack.push(high);
+			word low = this->frame->operandStack->pop();
+			word high = this->frame->operandStack->pop();
+			this->frame->operandStack->push(low);
+			this->frame->operandStack->push(high);
 		}
 		break;
 
@@ -401,8 +401,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case IDIV:
 		{
-			int b = this->frame->operandStack.pop();
-			int a = this->frame->operandStack.pop();
+			int b = this->frame->operandStack->pop();
+			int a = this->frame->operandStack->pop();
 			
 			if (b == 0)
 			{
@@ -410,15 +410,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->frame->operandStack.push(JavaInt(a * b));
+			this->frame->operandStack->push(JavaInt(a * b));
 		}
 		break;
 
 
 		case LDIV:
 		{
-			long b = this->getLongFromStack();
-			long a = this->getLongFromStack();
+			long long b = this->getLongFromStack();
+			long long a = this->getLongFromStack();
 
 			if (b == 0)
 			{
@@ -444,8 +444,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IREM:
 		{
 			// returns remainder
-			int b = this->frame->operandStack.pop();
-			int a = this->frame->operandStack.pop();
+			int b = this->frame->operandStack->pop();
+			int a = this->frame->operandStack->pop();
 
 			if (b == 0)
 			{
@@ -453,7 +453,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->frame->operandStack.push(JavaInt(a % b));
+			this->frame->operandStack->push(JavaInt(a % b));
 		}
 			break;
 
@@ -474,9 +474,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case FREM:
 		{
-			float b = this->frame->operandStack.pop();
-			float a = this->frame->operandStack.pop();
-			this->frame->operandStack.push(fmodf(a, b));
+			float b = this->frame->operandStack->pop();
+			float a = this->frame->operandStack->pop();
+			this->frame->operandStack->push(fmodf(a, b));
 		}
 		break;
 
@@ -490,8 +490,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case INEG:
 		{
-			int a = this->frame->operandStack.pop();
-			this->frame->operandStack.push(-a);
+			int a = this->frame->operandStack->pop();
+			this->frame->operandStack->push(-a);
 		}
 		break;
 
@@ -504,8 +504,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case FNEG:
 		{
-			float a = this->frame->operandStack.pop();
-			this->frame->operandStack.push(-a);
+			float a = this->frame->operandStack->pop();
+			this->frame->operandStack->push(-a);
 		}
 		break;
 
@@ -527,7 +527,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case LSHL:
 		{
 			long long a = this->getLongFromStack();
-			int b = this->frame->operandStack.pop();
+			int b = this->frame->operandStack->pop();
 			this->pushLong(a << b);
 		}
 		break;
@@ -542,7 +542,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			// shift right
 			long long a = this->getLongFromStack();
-			int b = this->frame->operandStack.pop();
+			int b = this->frame->operandStack->pop();
 			this->pushLong(a >> b);
 		}
 		break;
@@ -557,7 +557,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case LUSHR:
 		{
 			unsigned long long a = this->getLongFromStack();
-			unsigned int b = this->frame->operandStack.pop();
+			unsigned int b = this->frame->operandStack->pop();
 			this->pushLong(a >> b);
 			break;
 		}
@@ -602,7 +602,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			unsigned char index = instructions[pc++];
 			int value = (int)instructions[pc++];
-			this->frame->localVariables[index] += value;
+			 (*this->frame->localVariables)[index] += value;
 		}
 			break;
 
@@ -642,15 +642,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				res = -1;
 			}
 
-			this->frame->operandStack.push(res);
+			this->frame->operandStack->push(res);
 		}
 		break;
 
 		case FCMPL:
 		case FCMPG:
 		{
-			float a = this->frame->operandStack.pop();
-			float b = this->frame->operandStack.pop();
+			float a = this->frame->operandStack->pop();
+			float b = this->frame->operandStack->pop();
 
 			this->fdcmp<float>(a, b, currentInstruction);
 		}
@@ -676,7 +676,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IFGT:
 		case IFLE:
 		{
-			int value = this->frame->operandStack.pop();
+			int value = this->frame->operandStack->pop();
 			this->jumpIfEq(currentInstruction, value);
 		}
 		break;
@@ -689,8 +689,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IF_ICMPGT:
 		case IF_ICMPLE:
 		{
-			int a = this->frame->operandStack.pop();
-			int b = this->frame->operandStack.pop();
+			int a = this->frame->operandStack->pop();
+			int b = this->frame->operandStack->pop();
 
 			int res = a - b;
 			this->jumpIfEq(currentInstruction - (IF_ICMPEQ - IFEQ), res);
@@ -703,8 +703,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IF_ACMPNE:
 		{
 			unsigned short pc = this->getShort();
-			unsigned short a = this->frame->operandStack.pop();
-			unsigned short b = this->frame->operandStack.pop();
+			unsigned short a = this->frame->operandStack->pop();
+			unsigned short b = this->frame->operandStack->pop();
 
 			if (a == b && currentInstruction == IF_ACMPEQ || a != b && currentInstruction == IF_ACMPNE)
 			{

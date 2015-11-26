@@ -25,12 +25,12 @@ namespace Tests
 
 			MethodFrame frm(1, 1);
 			frm.pc = 0;
-			frm.localVariables[0] = expected;
+			(*frm.localVariables)[0] = expected;
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			int result = frm.operandStack.pop();
+			int result = frm.operandStack->pop();
 			Assert::AreEqual(expected, result);
 		}
 
@@ -47,12 +47,12 @@ namespace Tests
 
 			MethodFrame frm(1, 1);
 			frm.pc = 0;
-			frm.localVariables[0] = expected;
+			(*frm.localVariables)[0] = expected;
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			float result = frm.operandStack.pop();
+			float result = frm.operandStack->pop();
 			Assert::AreEqual(expected, result);
 		}
 
@@ -69,14 +69,14 @@ namespace Tests
 
 			MethodFrame frm(2, 2);
 			frm.pc = 0;
-			frm.localVariables[0] = highWord(expected); 
-			frm.localVariables[1] = lowWord(expected);
+			(*frm.localVariables)[0] = highWord(expected);
+			(*frm.localVariables)[1] = lowWord(expected);
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			unsigned int low = frm.operandStack.pop();
-			unsigned int high = frm.operandStack.pop();
+			unsigned int low = frm.operandStack->pop();
+			unsigned int high = frm.operandStack->pop();
 			
 			long long result = longFromStack(high, low);
 
@@ -96,14 +96,14 @@ namespace Tests
 
 			MethodFrame frm(2, 2);
 			frm.pc = 0;
-			frm.localVariables[0] = highWord(expected);
-			frm.localVariables[1] = lowWord(expected);
+			(*frm.localVariables)[0] = highWord(expected);
+			(*frm.localVariables)[1] = lowWord(expected);
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			unsigned int low = frm.operandStack.pop();
-			unsigned int high = frm.operandStack.pop();
+			unsigned int low = frm.operandStack->pop();
+			unsigned int high = frm.operandStack->pop();
 
 			double result = doubleFromStack(high, low);
 			Assert::AreEqual(expected, result);
@@ -122,12 +122,12 @@ namespace Tests
 
 			MethodFrame frm(1, 1);
 			frm.pc = 0;
-			frm.localVariables[0] = expected;
+			(*frm.localVariables)[0] = expected;
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			int result = frm.operandStack.pop();
+			int result = frm.operandStack->pop();
 			Assert::AreEqual(expected, result);
 		}
 	};

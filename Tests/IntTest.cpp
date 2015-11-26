@@ -26,15 +26,15 @@ namespace Tests
 				m.byteCodeLength = 1;
 
 				MethodFrame frm(2, 2);
-				frm.operandStack.push(a[i]);
-				frm.operandStack.push(b[i]);
+				frm.operandStack->push(a[i]);
+				frm.operandStack->push(b[i]);
 
 				frm.pc = 0;
 				frm.method = &m;
 
 				eng.execute(&frm);
 
-				int result = frm.operandStack.pop();
+				int result = frm.operandStack->pop();
 				Assert::AreEqual(expected, result);
 			}
 		}
@@ -49,8 +49,8 @@ namespace Tests
 			m.byteCodeLength = 1;
 
 			MethodFrame frm(2, 2);
-			frm.operandStack.push(1);
-			frm.operandStack.push(0);
+			frm.operandStack->push(1);
+			frm.operandStack->push(0);
 
 			frm.pc = 0;
 			frm.method = &m;
@@ -81,8 +81,8 @@ namespace Tests
 			m.byteCodeLength = 1;
 
 			MethodFrame frm(2, 2);
-			frm.operandStack.push(1);
-			frm.operandStack.push(0);
+			frm.operandStack->push(1);
+			frm.operandStack->push(0);
 
 			frm.pc = 0;
 			frm.method = &m;
