@@ -4,7 +4,7 @@
 #include "../types/types.h"
 #include "ExceptionTable.h"
 #include "../utils/Utf8String.h"
-#include "../classfile/ClassLoader.h"
+//#include "../classfile/ClassLoader.h"
 #include "../utils//Macros.h"
 
 class Method

@@ -10,7 +10,6 @@ private:
 public:
 	ConstantPool();
 	ConstantPool(int size);
-	//ConstantPool(const ConstantPool & CP);
 	void print();
 	int add(int pos, unsigned char type, int length, unsigned char * data);
 	int GetSize();

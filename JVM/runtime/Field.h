@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "AccessFlags.h"
-#include "../classfile/ClassLoader.h"
+//#include "../classfile/ClassLoader.h"
 #include "../utils/Utf8String.h"
 
 class Field

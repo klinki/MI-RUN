@@ -2,7 +2,7 @@
 #include "Method.h"
 #include "AccessFlags.h"
 #include "../utils/Utf8String.h"
-#include "../classfile/ClassLoader.h"
+//#include "../classfile/ClassLoader.h"
 #include "Field.h"
 
 class Class
@@ -20,7 +20,7 @@ protected:
 	// modifiers
 	FLAG flags;
 	
-	ConstantPool constantPool;
+	ConstantPool * constantPool;
 
 	// This is used for object creation
 	Field * fields;
@@ -42,8 +42,8 @@ protected:
 public:
 	Class(FLAG flag) : flags(flag) {};
 	~Class();
-	void setConstantPool(ConstantPool * CP);
-	void setName(Utf8String * name);
+	//void setConstantPool(ConstantPool CP);
+	//void setName(Utf8String name);
 	size_t getCountFields() const;
 	bool isFlagSet(FLAG flag) const;
 

@@ -13,22 +13,34 @@ ConstantPool::ConstantPool(int size)
 	{
 		constPool[i] = new unsigned char[9];
 	}
+	//printf("%d\n", constant_pool_count);
 }
 
 
 ConstantPool::~ConstantPool()
 {
+	for (int i = 0; i < constant_pool_count; i++)
+	{
+		delete[] constPool[i];
+	}
+	delete[] constPool;
+}
+int ConstantPool::GetSize()
+{
+	return constant_pool_count;
 }
 int ConstantPool::add(int pos, unsigned char type, int length, unsigned char * data)
 {
-	
+	delete[] constPool[pos];
+	constPool[pos] = new unsigned char[9];
 	if ((int)type == 1)
 	{
 		delete[] constPool[pos];
 		constPool[pos] = new unsigned char [length+1];
 		
 	}
-
+	printf("%d\n", pos);
+	
 	constPool[pos][0] = type;
 	for (int i = 0; i < length; i++)
 	{

@@ -17,7 +17,7 @@ int ClassLoader::load(char * filename)
 	access_flags = 0;
 	myfile = ifstream (filename, ios::in | ios::binary);
 	data = new unsigned char[0];
-
+	//thisClass = Class();
 	if (reader(4))//read CAFEBABE
 	{
 		printf("ERROR IN READ FILE");
@@ -27,8 +27,12 @@ int ClassLoader::load(char * filename)
 	
 	loadMinVersion();
 	loadMajVersion();
-	loadCostPool();
+	loadConstPool();
 	loadFlags();
+	FLAG f = access_flags;
+	thisClass = new Class(f);
+	thisClass->constantPool = CPool;
+	thisClass->constantPool->print();
 	loadThisClass();
 	loadSuperClass();
 	loadInterfaces();
@@ -65,7 +69,7 @@ int ClassLoader::loadMajVersion()
 	printf("maj_ver:%d\n", major_version);
 	return 0;
 }
-int ClassLoader::loadCostPool() 
+int ClassLoader::loadConstPool() 
 {
 	if (reader(2))
 	{
@@ -74,7 +78,7 @@ int ClassLoader::loadCostPool()
 	}
 	constant_pool_count = (int)(data[0] * 256 + data[1]);
 	printf("constant_pool_count:%d\n", constant_pool_count);
-	CPool = ConstantPool(constant_pool_count);
+	CPool = new ConstantPool(constant_pool_count);
 	
 	
 	for (int k = 1; k < constant_pool_count; k++)
@@ -115,7 +119,7 @@ int ClassLoader::loadCostPool()
 					utfdata[i + 2] = data[i];
 					
 				}
-				CPool.add(k,(unsigned char)cpType,utflength+2,utfdata);
+				CPool->add(k,(unsigned char)cpType,utflength+2,utfdata);
 			}
 			break;
 		case 2:
@@ -129,7 +133,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 4, data);
+			CPool->add(k, (unsigned char)cpType, 4, data);
 			break;
 		case 4://float
 			
@@ -138,7 +142,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 4, data);
+			CPool->add(k, (unsigned char)cpType, 4, data);
 			break;
 		case 5://long
 			
@@ -147,7 +151,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 8, data);
+			CPool->add(k, (unsigned char)cpType, 8, data);
 			break;
 		case 6://double
 			
@@ -156,7 +160,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 8, data);
+			CPool->add(k, (unsigned char)cpType, 8, data);
 			break;
 		case 7://class
 			
@@ -165,7 +169,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 2, data);
+			CPool->add(k, (unsigned char)cpType, 2, data);
 			break;
 		case 8://string
 			
@@ -174,7 +178,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType,2, data);
+			CPool->add(k, (unsigned char)cpType,2, data);
 			break;
 		case 9://fieldref
 			
@@ -183,7 +187,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 4, data);
+			CPool->add(k, (unsigned char)cpType, 4, data);
 			break;
 		case 10://methodref
 			
@@ -192,7 +196,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 4, data);
+			CPool->add(k, (unsigned char)cpType, 4, data);
 			break;
 		case 11://interfacemethodref
 			
@@ -201,7 +205,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 4, data);
+			CPool->add(k, (unsigned char)cpType, 4, data);
 			break;
 		case 12://nameandtype
 			
@@ -210,7 +214,7 @@ int ClassLoader::loadCostPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool.add(k, (unsigned char)cpType, 4, data);
+			CPool->add(k, (unsigned char)cpType, 4, data);
 			break;
 
 		default:
@@ -219,7 +223,7 @@ int ClassLoader::loadCostPool()
 		}
 
 	}
-	CPool.print();
+	CPool->print();
 
 	return 0; 
 }
@@ -230,7 +234,7 @@ int ClassLoader::loadFlags()
 		printf("ERROR IN READ FILE");
 		return -1;
 	}
-	access_flags = (unsigned int)(data[0] * 256 + data[1]);
+	access_flags = (unsigned short)(data[0] * 256 + data[1]);
 	printf("access flags:%X\n", access_flags);
 	return 0;
 }
@@ -243,14 +247,21 @@ int ClassLoader::loadThisClass()
 		return -1;
 	}
 	int l;
-	unsigned char * adr = CPool.getElem((int)(data[0] * 256 + data[1]),l);
-	thisClassName = CPool.getElem((int)(adr[0] * 256 +adr[1]),l);
+	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]),l);
+	thisClassName = CPool->getElem((int)(adr[0] * 256 +adr[1]),l);
+	char * nameAux = new char[l];
 	printf("this: ");
 	for (int i = 0; i < l; i++)
 	{
 		printf("%c", thisClassName[i]);
+		nameAux[i] = thisClassName[i];
 	}
 	printf("\n");
+	size_t lAux = l;
+
+	Utf8String name = Utf8String(nameAux, lAux);
+	thisClass->fullyQualifiedName = name;
+	
 	return 0; 
 }
 int ClassLoader::loadSuperClass()
@@ -260,9 +271,9 @@ int ClassLoader::loadSuperClass()
 		printf("ERROR IN READ FILE");
 		return -1;
 	}
-	unsigned char * adr = CPool.getElem((int)(data[0] * 256 + data[1]));
+	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]));
 	int l;
-	superClassName = CPool.getElem((int)(adr[0] * 256 + adr[1]), l);
+	superClassName = CPool->getElem((int)(adr[0] * 256 + adr[1]), l);
 	printf("super: ");
 	for (int i = 0; i < l; i++)
 	{

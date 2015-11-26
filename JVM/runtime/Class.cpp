@@ -4,9 +4,7 @@
 Class::~Class()
 {
 }
-Class::Class()
-{
-}
+
 
 unsigned int Class::getCountFields() const
 {
@@ -17,9 +15,12 @@ bool Class::isFlagSet(FLAG flag) const
 {
 	return (this->flags & flag) == flag;
 }
-
-void  Class::setConstantPool(ConstantPool * CP)
+/*
+void  Class::setConstantPool(ConstantPool CP)
 {
-	//this->constantPool = CP;
+	this->constantPool = CP;
 }
-void  Class::setName(Utf8String * name) {}
+void  Class::setName(Utf8String name) {
+	fullyQualifiedName = name;
+}
+*/
