@@ -295,7 +295,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->frame->operandStack->pop();
 			break;
 		case POP2:
-
+			this->frame->operandStack->pop();
+			this->frame->operandStack->pop();
+			break;
 		case DUP:
 		{
 			// value
@@ -306,14 +308,76 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		}
 		break;
 		case DUP_X1:
-			// TODO: 
+		{
 			// value2, value1
 			// value1, value2, value1
+			word a = this->frame->operandStack->pop();
+			word b = this->frame->operandStack->pop();
+			this->frame->operandStack->push(a);
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+		}
+		break;
 
 		case DUP_X2:
+		{
+			// value3, value2, value1
+			// value1, value3, value2, value1
+			word a = this->frame->operandStack->pop();
+			word b = this->frame->operandStack->pop();
+			word c = this->frame->operandStack->pop();
+
+			this->frame->operandStack->push(a);
+			this->frame->operandStack->push(c);
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+		};
+		break;
+
 		case DUP2:
+		{
+			word a = this->frame->operandStack->pop();
+			word b = this->frame->operandStack->pop();
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+		}
+		break;
+
 		case DUP2_X1:
+		{
+			// value3, value2, value1
+			// value2, value1, value3, value2, value1
+			word a = this->frame->operandStack->pop();
+			word b = this->frame->operandStack->pop();
+			word c = this->frame->operandStack->pop();
+
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+			this->frame->operandStack->push(c);
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+		}
+		break;
+
 		case DUP2_X2:
+		{
+			// value4, value3, value2, value1
+			// value2, value1, value4, value3, value2, value1
+			word a = this->frame->operandStack->pop();
+			word b = this->frame->operandStack->pop();
+			word c = this->frame->operandStack->pop();
+			word d = this->frame->operandStack->pop();
+
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+			this->frame->operandStack->push(d);
+			this->frame->operandStack->push(c);
+			this->frame->operandStack->push(b);
+			this->frame->operandStack->push(a);
+		}
+		break;
 
 		case SWAP:
 		{
@@ -403,7 +467,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			int b = this->frame->operandStack->pop();
 			int a = this->frame->operandStack->pop();
-			
+
 			if (b == 0)
 			{
 				// exception! 
@@ -427,13 +491,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			this->pushLong(a / b);
 		}
-			break;
+		break;
 
 		case FDIV:
 		{
 			SINGLE_WORD_OPERATION(float, / );
 		}
-			break;
+		break;
 
 		case DDIV:
 		{
@@ -455,7 +519,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			this->frame->operandStack->push(JavaInt(a % b));
 		}
-			break;
+		break;
 
 		case LREM:
 		{
@@ -576,13 +640,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case IOR:
 		{
-			SINGLE_WORD_OPERATION(int, |);
+			SINGLE_WORD_OPERATION(int, | );
 		}
 		break;
 
 		case LOR:
 		{
-			LONG_OPERATION(|);
+			LONG_OPERATION(| );
 		}
 		break;
 
@@ -602,25 +666,115 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			unsigned char index = instructions[pc++];
 			int value = (int)instructions[pc++];
-			 (*this->frame->localVariables)[index] += value;
+			(*this->frame->localVariables)[index] += value;
 		}
-			break;
+		break;
 
 		case I2L:
+		{
+			long long val = (long long)(int) this->frame->operandStack->pop();
+			this->pushLong(val);
+		}
+		break;
+
 		case I2F:
+		{
+			float val = (float)(int) this->frame->operandStack->pop();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case I2D:
+		{
+			double val = (double)(int) this->frame->operandStack->pop();
+			this->pushDouble(val);
+		}
+		break;
+
 		case L2I:
+		{
+			int val = (int)this->getLongFromStack();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case L2F:
+		{
+			float val = (float)this->getLongFromStack();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case L2D:
+		{
+			double val = (double)this->getLongFromStack();
+			this->pushDouble(val);
+		}
+		break;
+
 		case F2I:
+		{
+			int val = (int)(float)this->frame->operandStack->pop();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case F2L:
+		{
+			long long val = (long long)(float)this->frame->operandStack->pop();
+			this->pushLong(val);
+		}
+		break;
+
 		case F2D:
+		{
+			double val = (double)(float) this->frame->operandStack->pop();
+			this->pushDouble(val);
+		}
+		break;
+
 		case D2I:
+		{
+			int val = (int)this->getDoubleFromStack();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case D2L:
+		{
+			long long val = (long long)this->getDoubleFromStack();
+			this->pushLong(val);
+		}
+		break;
+
 		case D2F:
+		{
+			int val = (float)this->getDoubleFromStack();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case I2B:
+		{
+			int val = (char)(int)this->frame->operandStack->pop();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case I2C:
+		{
+			int val = (java_char)(int)this->frame->operandStack->pop();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 		case I2S:
+		{
+			int val = (short)(int)this->frame->operandStack->pop();
+			this->frame->operandStack->push(val);
+		}
+		break;
+
 
 		case LCMP:
 		{
@@ -709,17 +863,17 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			if (a == b && currentInstruction == IF_ACMPEQ || a != b && currentInstruction == IF_ACMPNE)
 			{
 				// JUMP
-				
+
 			}
 		}
-			break;
+		break;
 
 		case GOTO:
 		{
 			short offset = this->getShort();
 			pc = pc + offset - 1; // check
 		}
-			break;
+		break;
 
 		case GOTO_W:
 		{
@@ -738,26 +892,45 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case RET:
 		case TABLESWITCH:
 		case LOOKUPSWITCH:
-		 
+
 		case IRETURN:
 		case LRETURN:
 		case FRETURN:
 		case DRETURN:
 		case ARETURN:
 		case RETURN:
-		 
+
 		case GETSTATIC:
 		case PUTSTATIC:
 
 		case GETFIELD:
 		{
 			unsigned short index = this->getShort();
+			Object* reference = (Object*)this->frame->operandStack->pop();
+
+			if (reference == NULL)
+			{
+				throw Exceptions::Runtime::NullPointerException();
+			}
+
+			size_t fieldIndex = 0;
+			reference->fields[index];
+
 		}
 		break;
 
 		case PUTFIELD:
 		{
 			unsigned short index = this->getShort();
+			Object* reference = (Object*)this->frame->operandStack->pop();
+
+			if (reference == NULL)
+			{
+				throw Exceptions::Runtime::NullPointerException();
+			}
+
+			size_t fieldIndex = 0;
+			reference->fields[index];
 		}
 		break;
 
@@ -766,18 +939,56 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case INVOKESTATIC:
 		case INVOKEINTERFACE:
 		case INVOKEDYNAMIC:
-		 
+
 		case NEW:
 		case NEWARRAY:
+		{
+			int size = this->frame->operandStack->pop();
+
+			if (size < 0)
+			{
+				throw Exceptions::Runtime::NegativeArraySizeException();
+			}
+		}
+
+
 		case ANEWARRAY:
+		case MULTIANEWARRAY:
 		case ARRAYLENGTH:
 		case ATHROW:
+
+
 		case CHECKCAST:
 		case INSTANCEOF:
+		{
+			Object* ref;
+			Object* resolved;
+
+			if (ref->objectClass == resolved->objectClass)
+			{
+				// same classes
+			}
+
+			// if ref is class
+				// if resolved is class -> same or parent of ref
+				// resolved is interface -> ref implements resolved
+			// if res is interface
+				// if resolved is class -> resolved is object
+				// if resolved is interface -> ref is same or extends resolved
+			// ref is array
+				// if resolved is class -> object
+				// if resolved is interface -> must be implemented by array
+				// if resolved is array -> same primitive array type
+				//  ref and resolved are reference arrays - ref item must be castable to resolved item
+		}
+		break;
+
+		// currently not implemented! 
 		case MONITORENTER:
 		case MONITOREXIT:
+			break;
+
 		case WIDE:
-		case MULTIANEWARRAY:
 		case IFNULL:
 		case IFNONNULL:
 
