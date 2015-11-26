@@ -42,7 +42,8 @@ protected:
 public:
 	Class(FLAG flag) : flags(flag) {};
 	~Class();
-
+	void setConstantPool(ConstantPool * CP);
+	void setName(Utf8String * name);
 	size_t getCountFields() const;
 	bool isFlagSet(FLAG flag) const;
 
