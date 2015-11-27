@@ -1,5 +1,8 @@
 #pragma once
+#include "types.h"
 #include "../runtime/InstructionSet.h"
+
+unsigned const int REFERENCE_MASK = 0xF0000000;
 
 union doubleUnion
 {
@@ -68,4 +71,21 @@ inline unsigned char lowByte(short val)
 inline unsigned char highByte(short val)
 {
 	return (unsigned char)(val >> 8);
+}
+
+
+
+inline bool isReferenceAddress(word value)
+{
+	return (((int)(value)) & REFERENCE_MASK) == REFERENCE_MASK;
+}
+
+inline unsigned int getReferenceAddress(word value)
+{
+	return (int)(value) ^ REFERENCE_MASK;
+}
+
+inline word makeReferenceAddress(word value)
+{
+	return (int)value | REFERENCE_MASK;
 }
