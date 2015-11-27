@@ -72,22 +72,22 @@ class JavaObject;
 inline word JavaInt(int val)
 {
 	return val;
-}
+};
 
 inline word JavaFloat(float val)
 {
 	return val;
-}
+};
 
 inline word JavaByte(java_char val)
 {
 	return val;
-}
+};
 
 inline word JavaShort(java_short val)
 {
 	return val;
-}
+};
 
 
 class JavaType

@@ -961,8 +961,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case CHECKCAST:
 		case INSTANCEOF:
 		{
-			Object* ref;
-			Object* resolved;
+			Object* ref = NULL;
+			Object* resolved = NULL;
 
 			if (ref->objectClass == resolved->objectClass)
 			{

@@ -33,4 +33,11 @@ public:
 		return this->arrayData[index];
 	}
 
+
+	static size_t getMemorySize();
+	static size_t getMemorySize(size_t fields)
+	{
+
+	}
+
 };
