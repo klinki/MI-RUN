@@ -3,8 +3,6 @@
 
 typedef unsigned short ConstantPoolAddress;
 
-class ConstantPool;
-
 enum ConstantPoolTag
 {
 	CONSTANT_Class = 7,
@@ -21,14 +19,10 @@ enum ConstantPoolTag
 	CONSTANT_MethodHandle = 15,
 	CONSTANT_MethodType = 16,
 	CONSTANT_InvokeDynamic = 18,
-
 };
-
-
 
 struct CONSTANT_Class_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress name_index;
 
 	CONSTANT_Class_info(unsigned short index)
@@ -40,87 +34,74 @@ struct CONSTANT_Class_info
 
 struct CONSTANT_Fieldref_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
 };
 
 struct CONSTANT_Methodref_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
 };
 
 struct CONSTANT_InterfaceMethodref_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
 };
 
 struct CONSTANT_String_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress string_index;
 };
 
 struct CONSTANT_Integer_info
 {
-	ConstantPoolTag tag;
 	int value;
 };
 
 struct CONSTANT_Float_info
 {
-	ConstantPoolTag tag;
 	float value;
 };
 
 struct CONSTANT_Long_info
 {
-	ConstantPoolTag tag;
 	unsigned int high_bytes;
 	unsigned int low_bytes;
 };
 
 struct CONSTANT_Double_info
 {
-	ConstantPoolTag tag;
 	unsigned int high_bytes;
 	unsigned int low_bytes;
 };
 
 struct CONSTANT_NameAndType_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress name_index;
 	ConstantPoolAddress descriptor_index;
 };
 
 struct CONSTANT_Utf8_info
 {
-	ConstantPoolTag tag;
 	unsigned short length;
 	const char bytes[1]; // actual: length
 };
 
 struct CONSTANT_MethodHandle_info
 {
-	ConstantPoolTag tag;
 	ReferenceType reference_kind;
 	ConstantPoolAddress reference_index;
 };
 
 struct CONSTANT_MethodType_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress descriptor_index;
 };
 
 struct CONSTANT_InvokeDynamic_info
 {
-	ConstantPoolTag tag;
 	ConstantPoolAddress bootstrap_method_attr_index;
 	ConstantPoolAddress name_and_type_index;
 };
@@ -128,6 +109,8 @@ struct CONSTANT_InvokeDynamic_info
 
 union ConstantPoolItem
 {
+	ConstantPoolTag tag;
+
 	CONSTANT_Class_info classInfo;
 	CONSTANT_Fieldref_info fieldInfo;
 	CONSTANT_Methodref_info methodInfo;
@@ -143,4 +126,3 @@ union ConstantPoolItem
 	CONSTANT_MethodType_info methodTypeInfo;
 	CONSTANT_InvokeDynamic_info invokeDynamicInfo;
 };
-
