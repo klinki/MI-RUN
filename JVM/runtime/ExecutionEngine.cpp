@@ -749,7 +749,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case D2F:
 		{
-			int val = (float)this->getDoubleFromStack();
+			float val = (float)this->getDoubleFromStack();
 			this->frame->operandStack->push(val);
 		}
 		break;
