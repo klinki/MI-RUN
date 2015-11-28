@@ -85,6 +85,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// index
 		}
 		break;
+
 		case LDC_W:
 		{
 			// push item from constant-pool
@@ -294,10 +295,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// pop value from stack
 			this->frame->operandStack->pop();
 			break;
+
 		case POP2:
 			this->frame->operandStack->pop();
 			this->frame->operandStack->pop();
 			break;
+
 		case DUP:
 		{
 			// value
@@ -307,6 +310,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->frame->operandStack->push(value);
 		}
 		break;
+
 		case DUP_X1:
 		{
 			// value2, value1
@@ -867,6 +871,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		}
 		break;
 
+		// fall through
+		case IFNULL:
+		case IFNONNULL:
+		{
+			short offset = this->getShort();
+			unsigned short ref  = this->frame->operandStack->pop();
+
+			if (ref == NULL && currentInstruction == IFNULL || ref != NULL && currentInstruction == IFNONNULL)
+			{
+				this->jumpWithOffset(offset);
+			}
+		}
+		break;
+
 		case GOTO:
 		{
 			short offset = this->getShort();
@@ -988,18 +1006,17 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case WIDE:
-		case IFNULL:
-		case IFNONNULL:
-
+			break;
 
 		default:
+		case NOP:
+			break;
+
 		// Reserved: (should not be loaded in classFile)
 		case BREAKPOINT:
 		//(NO NAME) = 0xCB - 0xFD,
 		case IMPDEP1:
 		case IMPDEP2:
-			break;
-		case NOP:
 			break;
 		}
 	}

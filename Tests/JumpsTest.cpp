@@ -337,6 +337,34 @@ namespace Tests
 		}
 
 
+		TEST_METHOD(IFNULL_TRUE)
+		{
+			int a = 0xCAFEBABD;
+			int b = 1;
+			ifTestStub(IFNULL, 0, a, b, a + b);
+		}
+
+		TEST_METHOD(IFNULL_FALSE)
+		{
+			int a = 0xCAFEBABD;
+			int b = 1;
+			ifTestStub(IFNULL, 1, a, b, a - b);
+		}
+
+		TEST_METHOD(IFNONNULL_TRUE)
+		{
+			int a = 0xCAFEBABD;
+			int b = 1;
+			ifTestStub(IFNONNULL, 1, a, b, a + b);
+		}
+
+		TEST_METHOD(IFNONNULL_FALSE)
+		{
+			int a = 0xCAFEBABD;
+			int b = 1;
+			ifTestStub(IFNONNULL, 0, a, b, a - b);
+		}
+
 
 		inline void ifTestStub(Instruction instruction, int stack, int a, int b, int expected)
 		{
