@@ -843,8 +843,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IF_ICMPGT:
 		case IF_ICMPLE:
 		{
-			int a = this->frame->operandStack->pop();
 			int b = this->frame->operandStack->pop();
+			int a = this->frame->operandStack->pop();
 
 			int res = a - b;
 			this->jumpIfEq(currentInstruction - (IF_ICMPEQ - IFEQ), res);
@@ -852,18 +852,17 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		break;
 
 
+		// references eq - FALL-THROUGH
 		case IF_ACMPEQ:
-			// references eq
 		case IF_ACMPNE:
 		{
-			unsigned short pc = this->getShort();
-			unsigned short a = this->frame->operandStack->pop();
+			short offset = this->getShort();
 			unsigned short b = this->frame->operandStack->pop();
+			unsigned short a = this->frame->operandStack->pop();
 
 			if (a == b && currentInstruction == IF_ACMPEQ || a != b && currentInstruction == IF_ACMPNE)
 			{
-				// JUMP
-
+				this->jumpWithOffset(offset);
 			}
 		}
 		break;
