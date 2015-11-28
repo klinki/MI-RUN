@@ -908,7 +908,80 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case RET:
 		case TABLESWITCH:
+		{
+			int switchPc = pc;
+
+			// figure out padding
+			while (pc % 4 != 0)
+			{
+				pc++;
+			}
+
+			int def = this->getInt();
+			int low = this->getInt();
+			int high = this->getInt();
+
+			int index = this->frame->operandStack->pop();
+
+			int offset = 0;
+
+			if (index < low || index > high)
+			{
+				// default
+				offset = def;
+			}
+			else
+			{
+				pc += (index - low) * 4;
+				offset = this->getInt();
+			}
+
+			// high - low + 1
+			pc = switchPc;
+			this->jumpWithOffset(offset);
+		}
+		break;
+
 		case LOOKUPSWITCH:
+		{
+			int switchPc = pc;
+
+			// figure out padding
+			while (pc % 4 != 0)
+			{
+				pc++;
+			}
+
+			int def = this->getInt();
+			int n = this->getInt();
+
+			int key = this->frame->operandStack->pop();
+			bool matched = false;
+
+			int offset = 0;
+
+			for (int i = 0; i < n; i++)
+			{
+				int value = this->getInt();
+				int currentOffset = this->getInt();
+
+				if (value == key)
+				{
+					matched = true;
+					offset = currentOffset;
+					break;
+				}
+			}
+
+			if (!matched)
+			{
+				offset = def;
+			}
+
+			pc = switchPc;
+			this->jumpWithOffset(offset);
+		}
+		break;
 
 		case IRETURN:
 		case LRETURN:
