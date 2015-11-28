@@ -1,7 +1,8 @@
+#pragma once
 #include <iostream>
 #include <cstdlib>
+#include "../jvm_structures/JavaConstantPool.h"
 
-#pragma once
 class ConstantPool
 {
 private:
@@ -15,5 +16,8 @@ public:
 	int GetSize();
 	unsigned char * getElem(int pos, int & length);
 	unsigned char * getElem(int pos);
+
+	ConstantPoolItem * get(int index);
+
 	~ConstantPool();
 };

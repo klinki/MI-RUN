@@ -273,4 +273,53 @@ public:
 	{
 		this->frame->pc += offset - 1;
 	}
+
+	inline void pushFromConstantPool(int index)
+	{
+		/*
+		int or float, or a reference to a string literal, or a symbolic reference to a class, method type, or method handle
+		*/
+
+		ConstantPoolItem * item = this->frame->constantPool->get(index);
+		word value;
+
+		switch (item->tag)
+		{
+		case CONSTANT_Float:
+			value = item->floatInfo.value;
+			this->frame->operandStack->push(value);
+			break;
+		case CONSTANT_Integer:
+			value = item->integerInfo.value;
+			this->frame->operandStack->push(value);
+			break;
+		case CONSTANT_Class:
+			// TODO: Resolve class name, find class object
+			break;
+		case CONSTANT_MethodType:
+
+			this->frame->operandStack->push(value);
+			break;
+		case CONSTANT_MethodHandle:
+
+			this->frame->operandStack->push(value);
+			break;
+
+			// LDC_W
+		case CONSTANT_Long:
+			word high = item->longInfo.high_bytes;
+			word low = item->longInfo.low_bytes;
+
+			this->frame->operandStack->push(high);
+			this->frame->operandStack->push(low);
+			break;
+		case CONSTANT_Double:
+			word high = item->longInfo.high_bytes;
+			word low = item->longInfo.low_bytes;
+
+			this->frame->operandStack->push(high);
+			this->frame->operandStack->push(low);
+			break;
+		}
+	}
 };

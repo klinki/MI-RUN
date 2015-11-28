@@ -12,5 +12,13 @@ namespace Exceptions
 		class NegativeArraySizeException : public RuntimeException {};
 		class ArrayStoreException : public RuntimeException {};
 		class ClassCastException : public RuntimeException {};
+
 	}
+}
+
+namespace Errors
+{
+	class Error {};
+	class AbstractMethodError : public Error {};
+	class IncompatibleClassChangeError : public Error {};
 }

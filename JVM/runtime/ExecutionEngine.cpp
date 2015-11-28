@@ -1,4 +1,5 @@
 #include "ExecutionEngine.h"
+#include "../jvm_structures/JavaConstantPool.h"
 
 ExecutionEngine::ExecutionEngine()
 {
@@ -77,30 +78,23 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LDC:
 		{
-			/*
-			int or float, or a reference to a string literal, or a symbolic reference to a class, method type, or method handle
-			*/
-			// TODO: push item from constant-pool
 			unsigned char index = instructions[pc++];
-			// index
+			this->pushFromConstantPool(index);
 		}
 		break;
 
 		case LDC_W:
 		{
-			// push item from constant-pool
 			unsigned short index = getShort();
-			// index 1
-			// index 2
+			this->pushFromConstantPool(index);
 		}
 		break;
 
 		case LDC2_W:
 		{
 			// push long/double from constant-pool
-			// index 1
-			// index 2
 			unsigned short index = getShort();
+			this->pushFromConstantPool(index);
 		}
 		break;
 
@@ -983,12 +977,32 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		}
 		break;
 
-		case IRETURN:
-		case LRETURN:
 		case FRETURN:
-		case DRETURN:
+		case IRETURN:
 		case ARETURN:
+		{
+			word reference = this->frame->operandStack->pop();
+			this->frame->parentFrame->operandStack->push(reference);
+			return 0;
+		}
+		break;
+
+
+		case LRETURN:
+		case DRETURN:
+		{
+			word low = this->frame->operandStack->pop();
+			word high = this->frame->operandStack->pop();
+
+			this->frame->parentFrame->operandStack->push(high);
+			this->frame->parentFrame->operandStack->push(low);
+			return 0;
+		};
+
 		case RETURN:
+		{
+			return 0;
+		};
 
 		case GETSTATIC:
 		case PUTSTATIC:
