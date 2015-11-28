@@ -170,6 +170,7 @@
     <ClCompile Include="FunctionCalls.cpp" />
     <ClCompile Include="HashMapTest.cpp" />
     <ClCompile Include="HeapAllocation.cpp" />
+    <ClCompile Include="JumpsTest.cpp" />
     <ClCompile Include="LoadTest.cpp" />
     <ClCompile Include="MethodAreaTest.cpp" />
     <ClCompile Include="IntTest.cpp" />

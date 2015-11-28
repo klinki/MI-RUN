@@ -871,14 +871,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case GOTO:
 		{
 			short offset = this->getShort();
-			pc = pc + offset - 1; // check
+			this->jumpWithOffset(offset);
 		}
 		break;
 
 		case GOTO_W:
 		{
 			int offset = (int)this->getInt();
-			pc = pc + offset - 1;
+			this->jumpWithOffset(offset);
 		}
 		break;
 

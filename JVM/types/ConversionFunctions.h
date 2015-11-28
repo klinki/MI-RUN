@@ -73,6 +73,15 @@ inline unsigned char highByte(short val)
 	return (unsigned char)(val >> 8);
 }
 
+inline unsigned short highShort(int val)
+{
+	return (unsigned short)(val >> 16);
+}
+
+inline unsigned short lowShort(int val)
+{
+	return (unsigned short)val;
+}
 
 
 inline bool isReferenceAddress(word value)

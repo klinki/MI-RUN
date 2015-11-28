@@ -9,8 +9,8 @@
 #include "ArrayObject.h"
 
 #define SINGLE_WORD_OPERATION(type, op) \
-	type a = this->frame->operandStack->pop(); \
 	type b = this->frame->operandStack->pop(); \
+	type a = this->frame->operandStack->pop(); \
 	this->frame->operandStack->push(a op b)
 
 #define DOUBLE_OPERATION(op) \
@@ -221,14 +221,14 @@ public:
 
 	inline void jumpIfEq(Instruction currentInstruction, int value)
 	{
-		unsigned short index = this->getShort();
+		unsigned short offset = this->getShort();
 
 		if ((value == 0 && (currentInstruction == IFEQ || currentInstruction == IFGE || currentInstruction == IFLE))
 			||
 			(currentInstruction == IFNE || (value > 0 && (currentInstruction == IFGT || currentInstruction == IFGE)) ||
 				(value < 0 && (currentInstruction == IFLE || currentInstruction == IFLT))))
 		{
-			// JUMP
+			this->jumpWithOffset(offset);
 		}
 	}
 
@@ -269,4 +269,8 @@ public:
 		this->frame->operandStack->push(res);
 	}
 
+	inline void jumpWithOffset(int offset)
+	{
+		this->frame->pc += offset - 1;
+	}
 };
