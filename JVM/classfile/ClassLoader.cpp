@@ -31,7 +31,7 @@ int ClassLoader::load(char * filename)
 	loadFlags();
 	FLAG f = access_flags;
 	thisClass = new Class(f);
-	thisClass->constantPool = CPool;
+	thisClass->constantPool = this->constantPool;
 	thisClass->constantPool->print();
 	loadThisClass();
 	loadSuperClass();
@@ -78,8 +78,8 @@ int ClassLoader::loadConstPool()
 	}
 	constant_pool_count = (int)(data[0] * 256 + data[1]);
 	printf("constant_pool_count:%d\n", constant_pool_count);
-	CPool = new ConstantPool(constant_pool_count);
-	
+	//CPool = new ConstantPool(constant_pool_count);
+	constantPool = new ConstantPool(constant_pool_count);
 	
 	for (int k = 1; k < constant_pool_count; k++)
 	{
@@ -106,9 +106,9 @@ int ClassLoader::loadConstPool()
 				unsigned char * utfdata;
 			
 				int utflength = (int)(data[0] * 256 + data[1]);
-				utfdata = new unsigned char[utflength + 2];
-				utfdata[0] = data[0];
-				utfdata[1] = data[1];
+				utfdata = new unsigned char[utflength];
+				//utfdata[0] = data[0];
+				//utfdata[1] = data[1];
 				if (reader(utflength))
 				{
 					printf("ERROR IN READ FILE");
@@ -116,10 +116,11 @@ int ClassLoader::loadConstPool()
 				}
 				for (int i = 0; i < utflength; i++)
 				{
-					utfdata[i + 2] = data[i];
+					utfdata[i] = data[i];
 					
 				}
-				CPool->add(k,(unsigned char)cpType,utflength+2,utfdata);
+				//CPool->add(k,(unsigned char)cpType,utflength+2,utfdata);
+				constantPool->add(k, cpType, utflength, utfdata);
 			}
 			break;
 		case 2:
@@ -133,7 +134,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 4, data);
+			//CPool->add(k, (unsigned char)cpType, 4, data);
+			constantPool->add(k, cpType, 4, data);
 			break;
 		case 4://float
 			
@@ -142,7 +144,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 4, data);
+			//CPool->add(k, (unsigned char)cpType, 4, data);
+			constantPool->add(k, cpType, 4, data);
 			break;
 		case 5://long
 			
@@ -151,7 +154,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 8, data);
+			//CPool->add(k, (unsigned char)cpType, 8, data);
+			constantPool->add(k, cpType, 8, data);
 			break;
 		case 6://double
 			
@@ -160,7 +164,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 8, data);
+			//CPool->add(k, (unsigned char)cpType, 8, data);
+			constantPool->add(k, cpType, 8, data);
 			break;
 		case 7://class
 			
@@ -169,7 +174,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 2, data);
+			//CPool->add(k, (unsigned char)cpType, 2, data);
+			constantPool->add(k, cpType, 2, data);
 			break;
 		case 8://string
 			
@@ -178,7 +184,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType,2, data);
+			//CPool->add(k, (unsigned char)cpType,2, data);
+			constantPool->add(k, cpType, 2, data);
 			break;
 		case 9://fieldref
 			
@@ -187,7 +194,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 4, data);
+			//CPool->add(k, (unsigned char)cpType, 4, data);
+			constantPool->add(k, cpType, 4, data);
 			break;
 		case 10://methodref
 			
@@ -196,7 +204,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 4, data);
+			//CPool->add(k, (unsigned char)cpType, 4, data);
+			constantPool->add(k, cpType, 4, data);
 			break;
 		case 11://interfacemethodref
 			
@@ -205,7 +214,8 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 4, data);
+			//CPool->add(k, (unsigned char)cpType, 4, data);
+			constantPool->add(k, cpType, 4, data);
 			break;
 		case 12://nameandtype
 			
@@ -214,7 +224,38 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			CPool->add(k, (unsigned char)cpType, 4, data);
+			//CPool->add(k, (unsigned char)cpType, 4, data);
+			constantPool->add(k, cpType, 4, data);
+			break;
+		case 15://_MethodHandle
+
+			if (reader(3))
+			{
+				printf("ERROR IN READ FILE");
+				return -1;
+			}
+			//CPool->add(k, (unsigned char)cpType, 3, data);
+			constantPool->add(k, cpType, 3, data);
+			break;
+		case 16://_MethodType
+
+			if (reader(2))
+			{
+				printf("ERROR IN READ FILE");
+				return -1;
+			}
+			//CPool->add(k, (unsigned char)cpType,2, data);
+			constantPool->add(k, cpType, 2, data);
+			break;
+		case 18://InvokeDynamic
+
+			if (reader(4))
+			{
+				printf("ERROR IN READ FILE");
+				return -1;
+			}
+			//CPool->add(k, (unsigned char)cpType, 4, data);
+			constantPool->add(k, cpType, 4, data);
 			break;
 
 		default:
@@ -223,7 +264,7 @@ int ClassLoader::loadConstPool()
 		}
 
 	}
-	CPool->print();
+	//CPool->print();
 
 	return 0; 
 }
@@ -247,7 +288,9 @@ int ClassLoader::loadThisClass()
 		return -1;
 	}
 	int l;
+	/*
 	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]),l);
+
 	thisClassName = CPool->getElem((int)(adr[0] * 256 +adr[1]),l);
 	char * nameAux = new char[l];
 	printf("this: ");
@@ -261,7 +304,7 @@ int ClassLoader::loadThisClass()
 
 	Utf8String name = Utf8String(nameAux, lAux);
 	thisClass->fullyQualifiedName = name;
-	
+	*/
 	return 0; 
 }
 int ClassLoader::loadSuperClass()
@@ -271,6 +314,7 @@ int ClassLoader::loadSuperClass()
 		printf("ERROR IN READ FILE");
 		return -1;
 	}
+	/*
 	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]));
 	int l;
 	superClassName = CPool->getElem((int)(adr[0] * 256 + adr[1]), l);
@@ -280,6 +324,7 @@ int ClassLoader::loadSuperClass()
 		printf("%c", superClassName[i]);
 	}
 	printf("\n");
+	*/
 	return 0;
 }
 int ClassLoader::loadInterfaces() // TODO write interefaces, where? //references to const pool

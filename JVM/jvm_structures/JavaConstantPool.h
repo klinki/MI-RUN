@@ -23,11 +23,12 @@ enum ConstantPoolTag
 
 struct CONSTANT_Class_info
 {
+	//ConstantPoolTag tag;
 	ConstantPoolAddress name_index;
 
-	CONSTANT_Class_info(unsigned short index)
+	CONSTANT_Class_info( unsigned short index)
 	{
-		tag = ConstantPoolTag::CONSTANT_Class;
+		//tag = ConstantPoolTag::CONSTANT_Class;
 		name_index = index;
 	}
 };
@@ -36,93 +37,169 @@ struct CONSTANT_Fieldref_info
 {
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
+	CONSTANT_Fieldref_info(unsigned short ci, unsigned short nati)
+	{
+		class_index = ci;
+		name_and_type_index = nati;
+	}
 };
 
 struct CONSTANT_Methodref_info
 {
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
+	CONSTANT_Methodref_info(unsigned short ci, unsigned short nati)
+	{
+		class_index = ci;
+		name_and_type_index = nati;
+	}
 };
 
 struct CONSTANT_InterfaceMethodref_info
 {
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
+	CONSTANT_InterfaceMethodref_info(unsigned short ci, unsigned short nati)
+	{
+		class_index = ci;
+		name_and_type_index = nati;
+	}
 };
 
 struct CONSTANT_String_info
 {
 	ConstantPoolAddress string_index;
+	CONSTANT_String_info(unsigned short index)
+	{
+		
+		string_index = index;
+	}
 };
 
 struct CONSTANT_Integer_info
 {
 	int value;
+	CONSTANT_Integer_info(int v)
+	{
+
+		value = v;
+	}
 };
 
 struct CONSTANT_Float_info
 {
 	float value;
+	CONSTANT_Float_info(float v)
+	{
+
+		value = v;
+	}
 };
 
 struct CONSTANT_Long_info
 {
 	unsigned int high_bytes;
 	unsigned int low_bytes;
+	CONSTANT_Long_info(unsigned int hb, unsigned int lb)
+	{
+		high_bytes = hb;
+		low_bytes = lb;
+	}
 };
 
 struct CONSTANT_Double_info
 {
 	unsigned int high_bytes;
 	unsigned int low_bytes;
+	CONSTANT_Double_info(unsigned int hb, unsigned int lb)
+	{
+		high_bytes = hb;
+		low_bytes = lb;
+	}
 };
 
 struct CONSTANT_NameAndType_info
 {
 	ConstantPoolAddress name_index;
 	ConstantPoolAddress descriptor_index;
+	CONSTANT_NameAndType_info(unsigned short ni, unsigned short di)
+	{
+		name_index = ni;
+		descriptor_index = di;
+	}
 };
 
 struct CONSTANT_Utf8_info
 {
 	unsigned short length;
-	const char bytes[1]; // actual: length
+	unsigned char * bytes; // actual: length
+	CONSTANT_Utf8_info(unsigned short l,unsigned char * d)
+	{
+		length = l;
+		bytes = new unsigned char[length];
+		for (unsigned short i =0; i < length; i++)
+		{
+			bytes[i] = d[i];
+		}
+	}
 };
 
 struct CONSTANT_MethodHandle_info
 {
 	ReferenceType reference_kind;
 	ConstantPoolAddress reference_index;
+	CONSTANT_MethodHandle_info(ReferenceType rk, unsigned short ri)
+	{
+		reference_kind = rk;
+		reference_index = ri;
+	}
+
 };
 
 struct CONSTANT_MethodType_info
 {
 	ConstantPoolAddress descriptor_index;
+	CONSTANT_MethodType_info(unsigned short index)
+	{
+
+		descriptor_index = index;
+	}
 };
 
 struct CONSTANT_InvokeDynamic_info
 {
 	ConstantPoolAddress bootstrap_method_attr_index;
 	ConstantPoolAddress name_and_type_index;
+	CONSTANT_InvokeDynamic_info(unsigned short bmai, unsigned short nati)
+	{
+
+		bootstrap_method_attr_index = bmai;
+		name_and_type_index = nati;
+	}
 };
 
 
-union ConstantPoolItem
+struct ConstantPoolItem
 {
 	ConstantPoolTag tag;
-
-	CONSTANT_Class_info classInfo;
-	CONSTANT_Fieldref_info fieldInfo;
-	CONSTANT_Methodref_info methodInfo;
-	CONSTANT_InterfaceMethodref_info interfaceMethodInfo;
-	CONSTANT_String_info stringInfo;
-	CONSTANT_Integer_info integerInfo;
-	CONSTANT_Float_info floatInfo;
-	CONSTANT_Long_info longInfo;
-	CONSTANT_Double_info doubleInfo;
-	CONSTANT_NameAndType_info nameAndTypeInfo;
-	CONSTANT_Utf8_info utf8Info;
-	CONSTANT_MethodHandle_info methodHandleInfo;
-	CONSTANT_MethodType_info methodTypeInfo;
-	CONSTANT_InvokeDynamic_info invokeDynamicInfo;
+	union {
+		CONSTANT_Class_info classInfo;
+		CONSTANT_Fieldref_info fieldInfo;
+		CONSTANT_Methodref_info methodInfo;
+		CONSTANT_InterfaceMethodref_info interfaceMethodInfo;
+		CONSTANT_String_info stringInfo;
+		CONSTANT_Integer_info integerInfo;
+		CONSTANT_Float_info floatInfo;
+		CONSTANT_Long_info longInfo;
+		CONSTANT_Double_info doubleInfo;
+		CONSTANT_NameAndType_info nameAndTypeInfo;
+		CONSTANT_Utf8_info utf8Info;
+		CONSTANT_MethodHandle_info methodHandleInfo;
+		CONSTANT_MethodType_info methodTypeInfo;
+		CONSTANT_InvokeDynamic_info invokeDynamicInfo;
+	};
+	ConstantPoolItem(ConstantPoolTag t)
+	{
+		tag = t;
+	}
 };

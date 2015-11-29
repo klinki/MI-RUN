@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
@@ -5,14 +7,15 @@
 #include "../runtime/Class.h"
 #include "../utils/Utf8String.h"
 
-#pragma once
+
 class ClassLoader
 {
 private:
 	int minor_version;
 	int major_version;
 	int constant_pool_count;
-	ConstantPool * CPool;
+	//ConstantPool * CPool;
+	ConstantPool * constantPool;
 	unsigned char * data;
 	int interfaces_count;
 	int fields_count;
