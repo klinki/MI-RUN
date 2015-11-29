@@ -10,7 +10,7 @@ class ConstantPool
 private:
 	int constant_pool_count;
 	//unsigned char** constPool;//[constant_pool_count]([0] - type)[1-9] info; if type =1 info is longer,said by [1-2]]
-	ConstantPoolItem ** constantPool;
+	ConstantPoolItem * constantPool;
 public:
 	ConstantPool();
 	ConstantPool(int size);

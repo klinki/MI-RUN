@@ -202,4 +202,7 @@ struct ConstantPoolItem
 	{
 		tag = t;
 	}
+	ConstantPoolItem()
+	{
+	}
 };
