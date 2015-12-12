@@ -1,4 +1,7 @@
-# You've added your first Readme file!
+# Java Virtual Machine for CTU MI-RUN course
+
+![Build Status](https://klinki.visualstudio.com/DefaultCollection/_apis/public/build/definitions/214d6aed-b7de-4135-bd6e-ada13f780a72/2/badge)
+
 A README.md file is intended to quickly orient readers to what your project can do.  New to Markdown? [Learn more](http://go.microsoft.com/fwlink/p/?LinkId=524306&clcid=0x409)
 
 ## Edit this README and commit your change to a topic branch
