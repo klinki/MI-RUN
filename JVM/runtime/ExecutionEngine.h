@@ -301,24 +301,27 @@ public:
 			this->frame->operandStack->push(value);
 			break;
 		case CONSTANT_MethodHandle:
-
 			this->frame->operandStack->push(value);
 			break;
 
 			// LDC_W
 		case CONSTANT_Long:
-			word high = item->longInfo.high_bytes;
-			word low = item->longInfo.low_bytes;
+			{
+				word high = item->longInfo.high_bytes;
+				word low = item->longInfo.low_bytes;
 
-			this->frame->operandStack->push(high);
-			this->frame->operandStack->push(low);
+				this->frame->operandStack->push(high);
+				this->frame->operandStack->push(low);
+			}
 			break;
 		case CONSTANT_Double:
-			word high = item->longInfo.high_bytes;
-			word low = item->longInfo.low_bytes;
+			{
+				word high = item->doubleInfo.high_bytes;
+				word low = item->doubleInfo.low_bytes;
 
-			this->frame->operandStack->push(high);
-			this->frame->operandStack->push(low);
+				this->frame->operandStack->push(high);
+				this->frame->operandStack->push(low);
+			}
 			break;
 		}
 	}
