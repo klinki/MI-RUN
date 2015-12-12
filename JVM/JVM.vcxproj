@@ -122,6 +122,8 @@
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
+    <ClCompile Include="natives\JavaObject.cpp" />
+    <ClCompile Include="natives\JavaString.cpp" />
     <ClCompile Include="runtime\ObjectTable.cpp" />
     <ClCompile Include="utils\Utf16String.cpp" />
     <ClCompile Include="runtime\Object.cpp" />
@@ -144,6 +146,8 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="natives\JavaObject.h" />
+    <ClInclude Include="natives\JavaString.h" />
     <ClInclude Include="runtime\ObjectTable.h" />
     <ClInclude Include="utils\Utf16String.h" />
     <ClInclude Include="utils\HashMap.h" />

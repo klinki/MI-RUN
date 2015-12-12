@@ -13,9 +13,10 @@ public:
 	~OperandStack();
 
 	void push(word value);
-	void push(word high, word low);
+	void push2(doubleWord value);
 
 	word pop();
+	doubleWord pop2();
 
 	bool isEmpty() const;
 	bool isFull() const;

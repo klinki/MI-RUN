@@ -23,6 +23,21 @@ union word
 	word & operator += (word val) { intValue += val.intValue; return *this;  }
 };
 
+union doubleWord
+{
+	unsigned int words[2];
+	double doubleValue;
+	long long longValue;
+
+	doubleWord() { words[0] = words[1] = 0; }
+	doubleWord(size_t high, size_t low) { words[0] = low; words[1] = high; }
+	doubleWord(long long value) { longValue = value; }
+	doubleWord(double value) { doubleValue = value; }
+
+	operator double() const { return doubleValue; }
+	operator long long() const { return longValue; }
+};
+
 enum class TypeTag
 {
 	JAVA_VOID = 0,

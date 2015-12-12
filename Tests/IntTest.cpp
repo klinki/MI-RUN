@@ -6,7 +6,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
 {
-	TEST_CLASS(MulTest)
+	TEST_CLASS(IntTest)
 	{
 	public:
 		TEST_METHOD(testIMUL)

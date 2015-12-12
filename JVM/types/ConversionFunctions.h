@@ -31,8 +31,8 @@ inline long long longFromStack(unsigned int HIGH, unsigned int LOW)
 inline double doubleFromStack(unsigned int HIGH, unsigned int LOW)
 {
 	doubleUnion un;
-	un.words[0] = HIGH;
-	un.words[1] = LOW;
+	un.words[1] = HIGH;
+	un.words[0] = LOW;
 	return un.val;
 }
 
@@ -52,7 +52,7 @@ inline unsigned int lowWord(double val)
 	doubleUnion un;
 	un.val = val;
 
-	return un.words[1];
+	return un.words[0];
 }
 
 inline unsigned int highWord(double val)
@@ -60,7 +60,7 @@ inline unsigned int highWord(double val)
 	doubleUnion un;
 	un.val = val;
 
-	return un.words[0];
+	return un.words[1];
 }
 
 inline unsigned char lowByte(short val)

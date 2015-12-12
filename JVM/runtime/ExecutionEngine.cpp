@@ -42,7 +42,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// FALL THROUGH:
 		case LCONST_0:
 		case LCONST_1:
-			this->pushLong(currentInstruction - LCONST_0);
+			this->frame->operandStack->push2((long long)(currentInstruction - LCONST_0));
 			break;
 
 			// FALL THROUGH:
@@ -55,7 +55,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// FALL THROUGH:
 		case DCONST_0:
 		case DCONST_1:
-			this->pushDouble(currentInstruction - DCONST_0);
+			this->frame->operandStack->push2((double)(currentInstruction - DCONST_0));
 			break;
 
 		case BIPUSH:
@@ -479,15 +479,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LDIV:
 		{
-			long long b = this->getLongFromStack();
-			long long a = this->getLongFromStack();
+			long long b = this->frame->operandStack->pop2();
+			long long a = this->frame->operandStack->pop2();
 
 			if (b == 0)
 			{
 				// exception! 
 			}
 
-			this->pushLong(a / b);
+			this->frame->operandStack->push2(a / b);
 		}
 		break;
 
@@ -521,8 +521,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LREM:
 		{
-			long b = this->getLongFromStack();
-			long a = this->getLongFromStack();
+			long long b = this->frame->operandStack->pop2();
+			long long a = this->frame->operandStack->pop2();
 
 			if (b == 0)
 			{
@@ -530,7 +530,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->pushLong(a % b);
+			this->frame->operandStack->push2(a % b);
 		}
 		break;
 
@@ -544,9 +544,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DREM:
 		{
-			double b = this->getDoubleFromStack();
-			double a = this->getDoubleFromStack();
-			this->pushDouble(fmod(a, b));
+			double b = this->frame->operandStack->pop2();
+			double a = this->frame->operandStack->pop2();
+			this->frame->operandStack->push2(fmod(a, b));
 		}
 		break;
 
@@ -559,8 +559,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LNEG:
 		{
-			long a = this->getLongFromStack();
-			this->pushLong(-a);
+			long long a = this->frame->operandStack->pop2();
+			this->frame->operandStack->push2(-a);
 		}
 		break;
 
@@ -573,8 +573,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DNEG:
 		{
-			double a = this->getDoubleFromStack();
-			this->pushDouble(-a);
+			double a = this->frame->operandStack->pop2();
+			this->frame->operandStack->push2(-a);
 		}
 		break;
 
@@ -588,9 +588,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LSHL:
 		{
-			long long a = this->getLongFromStack();
+			long long a = this->frame->operandStack->pop2();
 			int b = this->frame->operandStack->pop();
-			this->pushLong(a << b);
+			this->frame->operandStack->push2(a << b);
 		}
 		break;
 
@@ -603,9 +603,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case LSHR:
 		{
 			// shift right
-			long long a = this->getLongFromStack();
+			long long a = this->frame->operandStack->pop2();
 			int b = this->frame->operandStack->pop();
-			this->pushLong(a >> b);
+			this->frame->operandStack->push2(a >> b);
 		}
 		break;
 
@@ -618,9 +618,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LUSHR:
 		{
-			unsigned long long a = this->getLongFromStack();
+			unsigned long long a = (unsigned long long)(long long)this->frame->operandStack->pop2();
 			unsigned int b = this->frame->operandStack->pop();
-			this->pushLong(a >> b);
+			this->frame->operandStack->push2((long long)(a >> b));
 			break;
 		}
 
@@ -671,7 +671,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case I2L:
 		{
 			long long val = (long long)(int) this->frame->operandStack->pop();
-			this->pushLong(val);
+			this->frame->operandStack->push2(val);
 		}
 		break;
 
@@ -685,28 +685,28 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case I2D:
 		{
 			double val = (double)(int) this->frame->operandStack->pop();
-			this->pushDouble(val);
+			this->frame->operandStack->push2(val);
 		}
 		break;
 
 		case L2I:
 		{
-			int val = (int)this->getLongFromStack();
+			int val = (int)(long long)this->frame->operandStack->pop2();
 			this->frame->operandStack->push(val);
 		}
 		break;
 
 		case L2F:
 		{
-			float val = (float)this->getLongFromStack();
+			float val = (float)(long long)this->frame->operandStack->pop2();
 			this->frame->operandStack->push(val);
 		}
 		break;
 
 		case L2D:
 		{
-			double val = (double)this->getLongFromStack();
-			this->pushDouble(val);
+			double val = (double)(long long)this->frame->operandStack->pop2();
+			this->frame->operandStack->push2(val);
 		}
 		break;
 
@@ -720,34 +720,34 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case F2L:
 		{
 			long long val = (long long)(float)this->frame->operandStack->pop();
-			this->pushLong(val);
+			this->frame->operandStack->push2(val);
 		}
 		break;
 
 		case F2D:
 		{
 			double val = (double)(float) this->frame->operandStack->pop();
-			this->pushDouble(val);
+			this->frame->operandStack->push2(val);
 		}
 		break;
 
 		case D2I:
 		{
-			int val = (int)this->getDoubleFromStack();
+			int val = (int)(double)this->frame->operandStack->pop2();
 			this->frame->operandStack->push(val);
 		}
 		break;
 
 		case D2L:
 		{
-			long long val = (long long)this->getDoubleFromStack();
-			this->pushLong(val);
+			long long val = (long long)((double)this->frame->operandStack->pop2());
+			this->frame->operandStack->push2(val);
 		}
 		break;
 
 		case D2F:
 		{
-			float val = (float)this->getDoubleFromStack();
+			float val = (float)(double)this->frame->operandStack->pop2();
 			this->frame->operandStack->push(val);
 		}
 		break;
@@ -776,8 +776,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LCMP:
 		{
-			long long a = this->getLongFromStack();
-			long long b = this->getLongFromStack();
+			long long a = this->frame->operandStack->pop2();
+			long long b = this->frame->operandStack->pop2();
 
 			int res = 0;
 
@@ -813,8 +813,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case DCMPL:
 		case DCMPG:
 		{
-			double a = this->getDoubleFromStack();
-			double b = this->getDoubleFromStack();
+			double a = this->frame->operandStack->pop2();
+			double b = this->frame->operandStack->pop2();
 
 			this->fdcmp<double>(a, b, currentInstruction);
 		}

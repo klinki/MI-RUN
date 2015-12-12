@@ -28,13 +28,10 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			int low = frm.operandStack->pop();
-			int high = frm.operandStack->pop();
-			long long result = longFromStack(high, low);
+			long long result = frm.operandStack->pop2();
 
 			long long expected = value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 
@@ -59,7 +56,6 @@ namespace Tests
 			int result = frm.operandStack->pop();
 			int expected = (java_byte)value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 
@@ -86,7 +82,6 @@ namespace Tests
 			int expected = (java_char)value;
 
 			Assert::AreEqual(expected, result);
-			Assert::AreEqual(expected, result);
 		}
 
 		TEST_METHOD(I2S)
@@ -111,7 +106,6 @@ namespace Tests
 			int expected = (java_short)value;
 
 			Assert::AreEqual(expected, result);
-			Assert::AreEqual(expected, result);
 		}
 
 		TEST_METHOD(I2F)
@@ -135,7 +129,6 @@ namespace Tests
 			float result = frm.operandStack->pop();
 			float expected = (float)value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 
@@ -162,7 +155,12 @@ namespace Tests
 			double result = doubleFromStack(high, low);
 			double expected = (double)value;
 
-			Assert::AreEqual(expected, result);
+			doubleWord a = 2.933;
+			doubleWord b = 1024LL;
+			doubleWord c = doubleWord(highWord(1024LL), lowWord(1024LL));
+			doubleWord d = doubleWord(highWord(2.933), lowWord(2.933));
+
+
 			Assert::AreEqual(expected, result);
 		}
 	
@@ -192,7 +190,6 @@ namespace Tests
 			double expected = value;
 
 			Assert::AreEqual(expected, result);
-			Assert::AreEqual(expected, result);
 		}
 
 		TEST_METHOD(F2I)
@@ -217,7 +214,6 @@ namespace Tests
 			int expected = (int)value;
 
 			Assert::AreEqual(expected, result);
-			Assert::AreEqual(expected, result);
 		}
 
 		TEST_METHOD(F2L)
@@ -238,13 +234,10 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			int low = frm.operandStack->pop();
-			int high = frm.operandStack->pop();
-			long long result = longFromStack(high, low);
+			long long result = frm.operandStack->pop2();
 
 			long long expected = (long long)value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 
@@ -274,7 +267,6 @@ namespace Tests
 			int expected = (int)value;
 
 			Assert::AreEqual(expected, result);
-			Assert::AreEqual(expected, result);
 		}
 
 		TEST_METHOD(D2L)
@@ -283,8 +275,6 @@ namespace Tests
 			Method m;
 
 			double value = (double)INT_MAX + 3.14159265359;
-			int high = highWord(value);
-			int low = lowWord(value);
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::D2L;
@@ -292,19 +282,15 @@ namespace Tests
 
 			MethodFrame frm(2, 2);
 			frm.pc = 0;
-			frm.operandStack->push(high);
-			frm.operandStack->push(low);
+			frm.operandStack->push2(value);
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			int resultLow = frm.operandStack->pop();
-			int resultHigh = frm.operandStack->pop();
-			long long result = longFromStack(resultHigh, resultLow);
+			long long result = frm.operandStack->pop2();
 
 			long long expected = (long long)value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 
@@ -333,7 +319,6 @@ namespace Tests
 			float expected = (float)value;
 
 			Assert::AreEqual(expected, result);
-			Assert::AreEqual(expected, result);
 		}
 
 
@@ -343,8 +328,6 @@ namespace Tests
 			Method m;
 
 			long long value = (long long)INT_MAX + 1;
-			int high = highWord(value);
-			int low = lowWord(value);
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::L2I;
@@ -352,8 +335,7 @@ namespace Tests
 
 			MethodFrame frm(2, 2);
 			frm.pc = 0;
-			frm.operandStack->push(high);
-			frm.operandStack->push(low);
+			frm.operandStack->push2(value);
 			frm.method = &m;
 
 			eng.execute(&frm);
@@ -361,7 +343,6 @@ namespace Tests
 			int result = frm.operandStack->pop();
 			int expected = (int)value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 
@@ -386,13 +367,10 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			int resultLow = frm.operandStack->pop();
-			int resultHigh = frm.operandStack->pop();
-			double result = doubleFromStack(resultHigh, resultLow);
+			double result = frm.operandStack->pop2();
 
 			double expected = (double)value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 
@@ -402,8 +380,6 @@ namespace Tests
 			Method m;
 
 			long long value = (long long)INT_MAX + 1;
-			int high = highWord(value);
-			int low = lowWord(value);
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::L2F;
@@ -411,8 +387,7 @@ namespace Tests
 
 			MethodFrame frm(2, 2);
 			frm.pc = 0;
-			frm.operandStack->push(high);
-			frm.operandStack->push(low);
+			frm.operandStack->push2(value);
 			frm.method = &m;
 
 			eng.execute(&frm);
@@ -420,7 +395,6 @@ namespace Tests
 			float result = frm.operandStack->pop();
 			float expected = (float)value;
 
-			Assert::AreEqual(expected, result);
 			Assert::AreEqual(expected, result);
 		}
 	};

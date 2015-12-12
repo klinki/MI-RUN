@@ -15,15 +15,15 @@
 	this->frame->operandStack->push(a op b)
 
 #define DOUBLE_OPERATION(op) \
- 	double a = this->getDoubleFromStack(); \
-	double b = this->getDoubleFromStack(); \
-	this->pushDouble(a op b);
+ 	double a = this->frame->operandStack->pop2(); \
+	double b = this->frame->operandStack->pop2(); \
+	this->frame->operandStack->push2((double)(a op b));
 
 
 #define LONG_OPERATION(op) \
- 	long long a = this->getLongFromStack(); \
-	long long b = this->getLongFromStack(); \
-	this->pushLong(a op b)
+ 	long long a = this->frame->operandStack->pop2(); \
+	long long b = this->frame->operandStack->pop2(); \
+	this->frame->operandStack->push2((long long)(a op b));
 
 
 class ExecutionEngine
@@ -64,7 +64,7 @@ public:
 	{
 		ArrayObject<double>* ref = (ArrayObject<double>*)this->frame->operandStack->pop();
 		int index = this->frame->operandStack->pop();
-		double value = this->getDoubleFromStack();
+		double value = this->frame->operandStack->pop2();
 
 		if (ref == NULL)
 		{
@@ -78,7 +78,7 @@ public:
 	{
 		ArrayObject<long long>* ref = (ArrayObject<long long>*)this->frame->operandStack->pop();
 		int index = this->frame->operandStack->pop();
-		long long value = this->getLongFromStack();
+		long long value = this->frame->operandStack->pop2();
 
 		if (ref == NULL)
 		{
@@ -169,38 +169,6 @@ public:
 
 		int value = intFromBytes(HIGH_HIGH, HIGH_LOW, LOW_HIGH, LOW_LOW);
 		return value;
-	}
-
-	inline long long getLongFromStack()
-	{
-		unsigned int a_low = this->frame->operandStack->pop();
-		unsigned int a_high = this->frame->operandStack->pop();
-		return longFromStack(a_high, a_low);
-	}
-
-	inline double getDoubleFromStack()
-	{
-		unsigned int a_low = this->frame->operandStack->pop();
-		unsigned int a_high = this->frame->operandStack->pop();
-		return doubleFromStack(a_high, a_low);
-	}
-
-	inline void pushLong(long long value)
-	{
-		word high = highWord(value);
-		word low = lowWord(value);
-
-		this->frame->operandStack->push(high);
-		this->frame->operandStack->push(low);
-	}
-
-	inline void pushDouble(double value)
-	{
-		word high = highWord(value);
-		word low = lowWord(value);
-
-		this->frame->operandStack->push(high);
-		this->frame->operandStack->push(low);
 	}
 
 	inline void jumpIfEq(Instruction currentInstruction, int value)

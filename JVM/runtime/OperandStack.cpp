@@ -21,6 +21,12 @@ void OperandStack::push(word value)
 	this->allocatedArray[this->index++] = value;
 }
 
+void OperandStack::push2(doubleWord value)
+{
+	this->push(value.words[1]); // High
+	this->push(value.words[0]); // Low
+}
+
 word OperandStack::pop()
 {
 	if (this->isEmpty())
@@ -34,6 +40,13 @@ word OperandStack::pop()
 	this->sp--;
 	return val;
 	*/
+}
+
+doubleWord OperandStack::pop2()
+{
+	unsigned int low = this->pop();
+	unsigned int high = this->pop();
+	return doubleWord(high, low);
 }
 
 bool OperandStack::isEmpty() const
