@@ -1,8 +1,14 @@
 #pragma once
 #include "Reference.h"
 #include "../types/ConversionFunctions.h"
+#include "../utils/Utf8String.h"
 
 typedef unsigned short ConstantPoolAddress;
+
+class Class;
+class Field;
+class Method;
+class Utf8String;
 
 enum ConstantPoolTag
 {
@@ -26,7 +32,7 @@ struct CONSTANT_Class_info
 {
 	ConstantPoolAddress name_index;
 
-//	Class* classPtr; // TODO: Add this
+	Class* classPtr; // TODO: Add this
 
 	CONSTANT_Class_info(unsigned short index)
 	{
@@ -39,8 +45,8 @@ struct CONSTANT_Fieldref_info
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
 
-//	Class* classPtr; // TODO: Add this
-//	Field* fieldPtr;
+	Class* classPtr; // TODO: Add this
+	Field* fieldPtr;
 
 	CONSTANT_Fieldref_info(unsigned short ci, unsigned short nati)
 	{
@@ -54,8 +60,8 @@ struct CONSTANT_Methodref_info
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
 
-//	Class* classPtr; // TODO: Add this
-//	Method* methodPtr; // TODO: Add this
+	Class* classPtr; // TODO: Add this
+	Method* methodPtr; // TODO: Add this
 
 	CONSTANT_Methodref_info(unsigned short ci, unsigned short nati)
 	{
@@ -69,8 +75,8 @@ struct CONSTANT_InterfaceMethodref_info
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
 
-//	Class* classPtr; // TODO: Add this
-//	Method* methodPtr; // TODO: Add this
+	Class* classPtr; // TODO: Add this
+	Method* methodPtr; // TODO: Add this
 
 	CONSTANT_InterfaceMethodref_info(unsigned short ci, unsigned short nati)
 	{
@@ -83,7 +89,7 @@ struct CONSTANT_String_info
 {
 	ConstantPoolAddress string_index;
 
-//	Utf8String value; // TODO: Add this
+	Utf8String * value; // TODO: Add this
 
 	CONSTANT_String_info(unsigned short index)
 	{
