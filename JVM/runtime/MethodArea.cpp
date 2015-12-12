@@ -11,10 +11,32 @@ MethodArea::~MethodArea()
 {
 }
 
-Method* MethodArea::getMethod(const Utf8String & name)
+Method* MethodArea::getMethod(const Utf8String & name, const Utf8String & descriptor)
 {
-	
-	return NULL;
+	auto iterator = this->hashmap.getIterator(name);
+
+	if (this->hashmap.count(name) > 1)
+	{
+		for (; iterator != this->hashmap.endIterator(); ++iterator)
+		{
+			Method* value = (Method*)iterator->second;
+			if (value->descriptor == descriptor && value->name.equals(name))
+			{
+				return value;
+			}
+		}
+	}
+	else
+	{
+		Method* value = (Method*)iterator->second;
+
+		if (value->descriptor == descriptor)
+		{
+			return value;
+		}
+	}
+
+	return nullptr;
 }
 
 

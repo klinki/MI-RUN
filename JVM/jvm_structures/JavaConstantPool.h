@@ -1,5 +1,6 @@
 #pragma once
 #include "Reference.h"
+#include "../types/ConversionFunctions.h"
 
 typedef unsigned short ConstantPoolAddress;
 
@@ -23,12 +24,12 @@ enum ConstantPoolTag
 
 struct CONSTANT_Class_info
 {
-	//ConstantPoolTag tag;
 	ConstantPoolAddress name_index;
 
-	CONSTANT_Class_info( unsigned short index)
+//	Class* classPtr; // TODO: Add this
+
+	CONSTANT_Class_info(unsigned short index)
 	{
-		//tag = ConstantPoolTag::CONSTANT_Class;
 		name_index = index;
 	}
 };
@@ -37,6 +38,10 @@ struct CONSTANT_Fieldref_info
 {
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
+
+//	Class* classPtr; // TODO: Add this
+//	Field* fieldPtr;
+
 	CONSTANT_Fieldref_info(unsigned short ci, unsigned short nati)
 	{
 		class_index = ci;
@@ -48,6 +53,10 @@ struct CONSTANT_Methodref_info
 {
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
+
+//	Class* classPtr; // TODO: Add this
+//	Method* methodPtr; // TODO: Add this
+
 	CONSTANT_Methodref_info(unsigned short ci, unsigned short nati)
 	{
 		class_index = ci;
@@ -59,6 +68,10 @@ struct CONSTANT_InterfaceMethodref_info
 {
 	ConstantPoolAddress class_index;
 	ConstantPoolAddress name_and_type_index;
+
+//	Class* classPtr; // TODO: Add this
+//	Method* methodPtr; // TODO: Add this
+
 	CONSTANT_InterfaceMethodref_info(unsigned short ci, unsigned short nati)
 	{
 		class_index = ci;
@@ -69,9 +82,11 @@ struct CONSTANT_InterfaceMethodref_info
 struct CONSTANT_String_info
 {
 	ConstantPoolAddress string_index;
+
+//	Utf8String value; // TODO: Add this
+
 	CONSTANT_String_info(unsigned short index)
 	{
-		
 		string_index = index;
 	}
 };
@@ -79,9 +94,9 @@ struct CONSTANT_String_info
 struct CONSTANT_Integer_info
 {
 	int value;
+
 	CONSTANT_Integer_info(int v)
 	{
-
 		value = v;
 	}
 };
@@ -89,9 +104,9 @@ struct CONSTANT_Integer_info
 struct CONSTANT_Float_info
 {
 	float value;
+
 	CONSTANT_Float_info(float v)
 	{
-
 		value = v;
 	}
 };
@@ -100,10 +115,16 @@ struct CONSTANT_Long_info
 {
 	unsigned int high_bytes;
 	unsigned int low_bytes;
+
+	long value;
+
+
 	CONSTANT_Long_info(unsigned int hb, unsigned int lb)
 	{
 		high_bytes = hb;
 		low_bytes = lb;
+
+		value = longFromStack(hb, lb);
 	}
 };
 
@@ -111,10 +132,15 @@ struct CONSTANT_Double_info
 {
 	unsigned int high_bytes;
 	unsigned int low_bytes;
+
+	double value;
+
 	CONSTANT_Double_info(unsigned int hb, unsigned int lb)
 	{
 		high_bytes = hb;
 		low_bytes = lb;
+
+		value = doubleFromStack(hb, lb);
 	}
 };
 
@@ -122,6 +148,7 @@ struct CONSTANT_NameAndType_info
 {
 	ConstantPoolAddress name_index;
 	ConstantPoolAddress descriptor_index;
+
 	CONSTANT_NameAndType_info(unsigned short ni, unsigned short di)
 	{
 		name_index = ni;
@@ -133,11 +160,12 @@ struct CONSTANT_Utf8_info
 {
 	unsigned short length;
 	unsigned char * bytes; // actual: length
-	CONSTANT_Utf8_info(unsigned short l,unsigned char * d)
+
+	CONSTANT_Utf8_info(unsigned short l, unsigned char * d)
 	{
 		length = l;
 		bytes = new unsigned char[length];
-		for (unsigned short i =0; i < length; i++)
+		for (unsigned short i = 0; i < length; i++)
 		{
 			bytes[i] = d[i];
 		}
@@ -148,6 +176,7 @@ struct CONSTANT_MethodHandle_info
 {
 	ReferenceType reference_kind;
 	ConstantPoolAddress reference_index;
+
 	CONSTANT_MethodHandle_info(ReferenceType rk, unsigned short ri)
 	{
 		reference_kind = rk;
@@ -170,6 +199,7 @@ struct CONSTANT_InvokeDynamic_info
 {
 	ConstantPoolAddress bootstrap_method_attr_index;
 	ConstantPoolAddress name_and_type_index;
+
 	CONSTANT_InvokeDynamic_info(unsigned short bmai, unsigned short nati)
 	{
 

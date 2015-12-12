@@ -5,7 +5,7 @@
 #include "ExceptionTable.h"
 #include "../utils/Utf8String.h"
 //#include "../classfile/ClassLoader.h"
-#include "../utils//Macros.h"
+#include "../utils/Macros.h"
 
 class Method
 {
@@ -22,6 +22,7 @@ visibility:
 	ExceptionTable exceptionTable;
 public:
 	Method();
+	Method(const Utf8String & name, const Utf8String & descriptor);
 	~Method();
 
 	const Instruction* getBytecode() const

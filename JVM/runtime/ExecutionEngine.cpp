@@ -103,7 +103,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// load from local variable 
 			// index
 			unsigned char index = instructions[pc++];
-			this->iload(index);
+			this->singleWordLoad(index);
 		}
 		break;
 
@@ -112,7 +112,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ILOAD_1:
 		case ILOAD_2:
 		case ILOAD_3:
-			this->iload(currentInstruction - ILOAD_0);
+			this->singleWordLoad(currentInstruction - ILOAD_0);
 			break;
 
 		case LLOAD:
@@ -133,7 +133,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case FLOAD:
 		{
 			unsigned char index = instructions[pc++];
-			this->fload(index);
+			this->singleWordLoad(index);
 		}
 		break;
 
@@ -142,7 +142,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case FLOAD_1:
 		case FLOAD_2:
 		case FLOAD_3:
-			this->fload(currentInstruction - FLOAD_0);
+			this->singleWordLoad(currentInstruction - FLOAD_0);
 			break;
 
 		case DLOAD:
@@ -163,7 +163,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ALOAD:
 		{
 			unsigned char index = instructions[pc++];
-			this->aload(index);
+			this->singleWordLoad(index);
 		}
 		break;
 
@@ -172,7 +172,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ALOAD_1:
 		case ALOAD_2:
 		case ALOAD_3:
-			this->aload(currentInstruction - ALOAD_0);
+			this->singleWordLoad(currentInstruction - ALOAD_0);
 			break;
 
 		case IALOAD:
@@ -187,7 +187,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ISTORE:
 		{
 			unsigned char index = instructions[pc++];
-			this->istore(index);
+			this->singleWordStore(index);
 			// store int into local variable
 		}
 		break;
@@ -197,7 +197,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ISTORE_1:
 		case ISTORE_2:
 		case ISTORE_3:
-			this->istore(currentInstruction - ISTORE_0);
+			this->singleWordStore(currentInstruction - ISTORE_0);
 			break;
 
 		case LSTORE:
@@ -217,14 +217,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case FSTORE:
 		{
 			unsigned char index = instructions[pc++];
-			this->fstore(index);
+			this->singleWordStore(index);
 			break;
 		}
 		case FSTORE_0:
 		case FSTORE_1:
 		case FSTORE_2:
 		case FSTORE_3:
-			this->fstore(currentInstruction - FSTORE_0);
+			this->singleWordStore(currentInstruction - FSTORE_0);
 			break;
 
 		case DSTORE:
@@ -243,14 +243,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case ASTORE:
 		{
 			unsigned char index = instructions[pc++];
-			this->astore(index);
+			this->singleWordStore(index);
 		}
 		break;
 		case ASTORE_0:
 		case ASTORE_1:
 		case ASTORE_2:
 		case ASTORE_3:
-			this->astore(currentInstruction - ASTORE_0);
+			this->singleWordStore(currentInstruction - ASTORE_0);
 			break;
 
 		case IASTORE:
@@ -664,7 +664,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			unsigned char index = instructions[pc++];
 			int value = (int)instructions[pc++];
-			(*this->frame->localVariables)[index] += value;
+			this->iinc(index, value);
 		}
 		break;
 
@@ -870,7 +870,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case IFNONNULL:
 		{
 			short offset = this->getShort();
-			unsigned short ref  = this->frame->operandStack->pop();
+			unsigned short ref = this->frame->operandStack->pop();
 
 			if (ref == NULL && currentInstruction == IFNULL || ref != NULL && currentInstruction == IFNONNULL)
 			{
@@ -1093,7 +1093,36 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case WIDE:
-			break;
+		{
+			Instruction modifiedInstruction = instructions[pc++];
+			size_t index = this->getShort();
+
+			switch (modifiedInstruction)
+			{
+			case ILOAD:
+			case FLOAD:
+			case ALOAD:
+				this->singleWordLoad(index);
+				break;
+			case DLOAD:
+			case LLOAD:
+				break;
+			case ISTORE:
+			case FSTORE:
+			case ASTORE:
+				break;
+			case DSTORE:
+			case LSTORE:
+				break;
+			case RET:
+				break;
+			case IINC:
+				word value = this->getShort();
+				this->iinc(index, value);
+				break;
+			}
+		}
+		break;
 
 		default:
 		case NOP:

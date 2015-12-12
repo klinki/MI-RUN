@@ -7,6 +7,7 @@
 #include "Class.h"
 #include "../exceptions/RuntimeExceptions.h"
 #include "ArrayObject.h"
+#include "MethodArea.h"
 
 #define SINGLE_WORD_OPERATION(type, op) \
 	type b = this->frame->operandStack->pop(); \
@@ -29,6 +30,16 @@ class ExecutionEngine
 {
 protected:
 	MethodFrame* frame;
+	MethodArea* methodArea;
+
+	struct {
+		size_t constantPoolIndex;
+		size_t cpClassIndex;
+		size_t cpMethodIndex;
+		Class* classPtr;
+		Method* methodPtr;
+	} inlineCache;
+
 public:
 	ExecutionEngine();
 	~ExecutionEngine();
@@ -77,37 +88,13 @@ public:
 		ref->operator[](index) = value;
 	}
 
-	inline void aload(unsigned char index)
+	inline void singleWordLoad(size_t index)
 	{
 		word ptr = (*this->frame->localVariables)[index];
 		this->frame->operandStack->push(ptr);
 	}
 
-	inline void astore(unsigned char index)
-	{
-		word val = this->frame->operandStack->pop();
-		(*this->frame->localVariables)[index] = val;
-	}
-	
-	inline void iload(unsigned char index)
-	{
-		int val = (int)(*this->frame->localVariables)[index];
-		this->frame->operandStack->push(JavaInt(val));
-	}
-
-	inline void istore(unsigned char index)
-	{
-		int val = (int)this->frame->operandStack->pop();
-		(*this->frame->localVariables)[index] = val;
-	}
-
-	inline void fload(unsigned char index)
-	{
-		float val = (float)(*this->frame->localVariables)[index];
-		this->frame->operandStack->push(JavaFloat(val));
-	}
-
-	inline void fstore(unsigned char index)
+	inline void singleWordStore(size_t index)
 	{
 		word val = this->frame->operandStack->pop();
 		(*this->frame->localVariables)[index] = val;
@@ -119,14 +106,14 @@ public:
 		this->wload(index);
 	}
 
-	inline void wload(unsigned char index)
+	inline void wload(size_t index)
 	{
 		word val = (*this->frame->localVariables)[index];
 		this->frame->operandStack->push(val);
 	}
 
 
-	inline void lload(unsigned char index)
+	inline void lload(size_t index)
 	{
 		word high = (*this->frame->localVariables)[index];
 		word low = (*this->frame->localVariables)[index + 1];
@@ -135,7 +122,7 @@ public:
 		this->frame->operandStack->push(low);
 	}
 
-	inline void lstore(unsigned char index)
+	inline void lstore(size_t index)
 	{
 		word low = this->frame->operandStack->pop();
 		word high = this->frame->operandStack->pop();
@@ -145,7 +132,7 @@ public:
 	}
 
 
-	inline void dload(unsigned char index)
+	inline void dload(size_t index)
 	{
 		word high = (*this->frame->localVariables)[index];
 		word low = (*this->frame->localVariables)[index + 1];
@@ -154,7 +141,7 @@ public:
 		this->frame->operandStack->push(low);
 	}
 
-	inline void dstore(unsigned char index)
+	inline void dstore(size_t index)
 	{
 		word low = this->frame->operandStack->pop();
 		word high = this->frame->operandStack->pop();
@@ -162,9 +149,6 @@ public:
 		 (*this->frame->localVariables)[index] = high;
 		 (*this->frame->localVariables)[index + 1] = low;
 	}
-
-
-
 
 	inline unsigned short getShort()
 	{
@@ -324,5 +308,10 @@ public:
 			}
 			break;
 		}
+	}
+
+	inline void iinc(size_t index, word value)
+	{
+		(*this->frame->localVariables)[index] += value;
 	}
 };

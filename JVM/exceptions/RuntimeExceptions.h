@@ -2,7 +2,8 @@
 namespace Exceptions
 {
 	class Exception {};
-	
+	class CloneNotSupportedException {};
+
 	namespace Runtime
 	{
 		class RuntimeException : public Exception {};
@@ -21,4 +22,7 @@ namespace Errors
 	class Error {};
 	class AbstractMethodError : public Error {};
 	class IncompatibleClassChangeError : public Error {};
+	class NoSuchMethodError : public Error {};
+	class IllegalAccessError : public Error {};
+	class UnsatisfiedLinkError : public Error {};
 }

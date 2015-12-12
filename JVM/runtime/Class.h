@@ -2,7 +2,6 @@
 #include "Method.h"
 #include "AccessFlags.h"
 #include "../utils/Utf8String.h"
-//#include "../classfile/ClassLoader.h"
 #include "Field.h"
 
 class Class
@@ -14,7 +13,7 @@ public:
 		CLASS 
 	};
 
-protected:
+visibility:
 	Utf8String fullyQualifiedName;
 	Type type;
 	// modifiers
@@ -29,6 +28,7 @@ protected:
 	Field * staticFields;
 	size_t countStaticFields;
 
+	// MethodArea methodArea;
 	Method * methods;
 	size_t countMethods;
 
@@ -46,6 +46,8 @@ public:
 	//void setName(Utf8String name);
 	size_t getCountFields() const;
 	bool isFlagSet(FLAG flag) const;
+
+	Method* getMethod(const Utf8String & methodName, Utf8String & descriptor);
 
 	friend class ClassLoader;
 };

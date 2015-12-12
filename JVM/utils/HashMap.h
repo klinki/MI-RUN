@@ -64,6 +64,11 @@ public:
 		return iterator;
 	}
 
+	int count(const Key & k)
+	{
+		return this->multimap.count(k);
+	}
+
 	auto endIterator() const
 	{
 		return this->multimap.cend();

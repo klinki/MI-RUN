@@ -25,8 +25,36 @@ string Utf8String::toAsciiString()
 	return "";
 }
 
+bool Utf8String::equals(const Utf8String & b) const
+{
+	if (this->dataLength != b.dataLength)
+	{
+		return false;
+	}
+
+	for (int i = 0; i < this->dataLength; i++)
+	{
+		if (this->data[i] != b.data[i])
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 inline size_t std::hash<Utf8String>::operator()(const Utf8String & x) const
 {
 	std::hash<std::string> hash;
 	return hash(x.value);
+}
+
+inline bool operator==(const Utf8String & a, const Utf8String & b)
+{
+	return a.hash == b.hash;
+}
+
+inline bool operator!=(const Utf8String & a, const Utf8String & b)
+{
+	return !(a == b);
 }
