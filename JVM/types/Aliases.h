@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <string>
+
 typedef unsigned int ProgramCounter;
 typedef unsigned char Instruction;
 
@@ -19,3 +21,37 @@ typedef void* java_ref;
 typedef unsigned int Flag;
 
 typedef unsigned char byte;
+
+
+enum class TypeTag
+{
+	JAVA_VOID,
+	BOOL,
+	BYTE,
+	CHAR,
+	SHORT,
+	INT,
+	LONG,
+	FLOAT,
+	DOUBLE,
+	REFERENCE
+};
+
+struct JavaType
+{
+	std::string className;
+	TypeTag tag;
+	int dimensions;
+
+	JavaType(TypeTag tag) 
+	{
+		this->tag = tag;
+		this->className = nullptr;
+	}
+
+	JavaType(TypeTag tag, const std::string & className)
+	{
+		this->tag = tag;
+		this->className = className;
+	}
+};

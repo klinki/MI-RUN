@@ -125,6 +125,7 @@
     <ClCompile Include="natives\JavaObject.cpp" />
     <ClCompile Include="natives\JavaString.cpp" />
     <ClCompile Include="runtime\ObjectTable.cpp" />
+    <ClCompile Include="types\Descriptors.cpp" />
     <ClCompile Include="utils\Utf16String.cpp" />
     <ClCompile Include="runtime\Object.cpp" />
     <ClCompile Include="runtime\Field.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="natives\JavaObject.h" />
     <ClInclude Include="natives\JavaString.h" />
     <ClInclude Include="runtime\ObjectTable.h" />
+    <ClInclude Include="types\Descriptors.h" />
     <ClInclude Include="utils\Utf16String.h" />
     <ClInclude Include="utils\HashMap.h" />
     <ClInclude Include="runtime\ArrayObject.h" />
@@ -187,7 +189,9 @@
     <ClInclude Include="jvm_structures\Reference.h" />
     <ClInclude Include="jvm_structures\TypeInfo.h" />
     <ClInclude Include="types\types.h" />
-    <ClInclude Include="types\TypeTag.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="natives\Declarations.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,6 +4,8 @@
 #include "LocalVariablesArray.h"
 #include "../gc/MemoryCell.h"
 
+class Method;
+
 class MethodFrame
 {
 visibility:
@@ -27,4 +29,5 @@ public:
 	static size_t getMemorySize(size_t stackSize, size_t localVariblesSize);
 
 	friend class ExecutionEngine;
+	friend class Method;
 };

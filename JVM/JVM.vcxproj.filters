@@ -73,11 +73,11 @@
     <ClCompile Include="natives\JavaString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="types\Descriptors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="types\TypeTag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="classfile\ClassFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -201,6 +201,9 @@
     <ClInclude Include="natives\JavaString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="types\Descriptors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -211,5 +214,8 @@
       <UniqueIdentifier>{833b8f6f-a83b-4d9a-81d2-c2a4f63ed654}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="natives\Declarations.cpp" />
   </ItemGroup>
 </Project>

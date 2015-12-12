@@ -1,5 +1,5 @@
 #include "Class.h"
-
+#include "MethodArea.h"
 
 Class::~Class()
 {

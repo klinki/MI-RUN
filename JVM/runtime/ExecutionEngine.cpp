@@ -72,7 +72,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// byte 1
 			// byte 2
 			unsigned short index = getShort();
-			this->frame->operandStack->push(JavaShort(index));
+			this->frame->operandStack->push(index);
 		}
 		break;
 
@@ -472,7 +472,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->frame->operandStack->push(JavaInt(a * b));
+			this->frame->operandStack->push(a * b);
 		}
 		break;
 
@@ -515,7 +515,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->frame->operandStack->push(JavaInt(a % b));
+			this->frame->operandStack->push(a % b);
 		}
 		break;
 

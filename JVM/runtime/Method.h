@@ -6,12 +6,13 @@
 #include "../utils/Utf8String.h"
 //#include "../classfile/ClassLoader.h"
 #include "../utils/Macros.h"
+#include "../natives/Declarations.h"
 
 class Method
 {
 visibility:
-	const Utf8String name;
-	const Utf8String descriptor;
+	Utf8String name;
+	Utf8String descriptor;
 
 	Instruction* byteCode;
 	size_t byteCodeLength;
@@ -20,9 +21,11 @@ visibility:
 	size_t localVariablesArraySize;
 
 	ExceptionTable exceptionTable;
+
+	NativeMethodPtr nativeMethod;
+
 public:
 	Method();
-	Method(const Utf8String & name, const Utf8String & descriptor);
 	~Method();
 
 	const Instruction* getBytecode() const
@@ -34,6 +37,4 @@ public:
 	{
 		return this->byteCodeLength;
 	}
-
-	friend class ClassLoader;
 };

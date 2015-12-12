@@ -3,11 +3,12 @@
 #include "AccessFlags.h"
 #include "../utils/Utf8String.h"
 #include "Field.h"
+#include "MethodArea.h"
 
 class Class
 {
 public:
-	enum Type
+	enum class Type
 	{
 		INTERFACE,
 		CLASS 
@@ -28,8 +29,8 @@ visibility:
 	Field * staticFields;
 	size_t countStaticFields;
 
-	// MethodArea methodArea;
-	Method * methods;
+	MethodArea methodArea;
+//	Method * methods;
 	size_t countMethods;
 
 	Class * parentClass;
