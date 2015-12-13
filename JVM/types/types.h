@@ -10,7 +10,8 @@ union word
 	operator unsigned int() const { return (unsigned int)intValue; }
 	operator float() const { return floatValue; }
 	operator unsigned short() const { return (unsigned short)intValue; }
-
+	operator bool() const { return (bool)intValue; }
+	operator short() const { return (short)intValue; }
 
 	template <class T>
 	operator T*() const { return (T*)intValue; }

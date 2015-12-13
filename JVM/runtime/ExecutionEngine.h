@@ -52,46 +52,89 @@ public:
 
 	int execute(MethodFrame * frame); // Instruction instructions[], unsigned int length);
 
-	inline void singleArrayStore()
+	template <class T>
+	inline void arrayStore()
 	{
-		ArrayObject<word>* ref = (ArrayObject<word>*)this->frame->operandStack->pop();
-		int index = this->frame->operandStack->pop();
 		word value = this->frame->operandStack->pop();
+		int index = this->frame->operandStack->pop();
+		int ref = this->frame->operandStack->pop();
 
 		if (ref == NULL)
+		{
+			throw Exceptions::Runtime::NullPointerException();
+		}
+
+		ArrayObject<T>* ptr = (ArrayObject<T>*)this->objectTable->get(ref);
+
+		if (ptr == NULL)
 		{
 			throw Exceptions::Runtime::NullPointerException();
 		}
 		
-		ref->operator[](index) = value;
+		ptr->operator[](index) = (T)value;
 	}
 
-	inline void doubleArrayStore()
+	template <class T>
+	inline void arrayStore2()
 	{
-		ArrayObject<double>* ref = (ArrayObject<double>*)this->frame->operandStack->pop();
+		doubleWord value = this->frame->operandStack->pop2();
 		int index = this->frame->operandStack->pop();
-		double value = this->frame->operandStack->pop2();
+		int ref = this->frame->operandStack->pop();
 
 		if (ref == NULL)
 		{
 			throw Exceptions::Runtime::NullPointerException();
 		}
 
-		ref->operator[](index) = value;
+		ArrayObject<T>* ptr = (ArrayObject<T>*)this->objectTable->get(ref);
+
+		if (ptr == NULL)
+		{
+			throw Exceptions::Runtime::NullPointerException();
+		}
+		ptr->operator[](index) = value;
 	}
 
-	inline void longArrayStore()
+	template <class T>
+	inline void arrayLoad()
 	{
-		ArrayObject<long long>* ref = (ArrayObject<long long>*)this->frame->operandStack->pop();
 		int index = this->frame->operandStack->pop();
-		long long value = this->frame->operandStack->pop2();
+		int ref = this->frame->operandStack->pop();
 
 		if (ref == NULL)
 		{
 			throw Exceptions::Runtime::NullPointerException();
 		}
 
-		ref->operator[](index) = value;
+		ArrayObject<T>* ptr = (ArrayObject<T>*)this->objectTable->get(ref);
+
+		if (ptr == NULL)
+		{
+			throw Exceptions::Runtime::NullPointerException();
+		}
+
+		this->frame->operandStack->push(ptr->operator[](index));
+	}
+
+	template <class T>
+	inline void arrayLoad2()
+	{
+		int index = this->frame->operandStack->pop();
+		int ref = this->frame->operandStack->pop();
+
+		if (ref == NULL)
+		{
+			throw Exceptions::Runtime::NullPointerException();
+		}
+
+		ArrayObject<T>* ptr = (ArrayObject<T>*)this->objectTable->get(ref);
+
+		if (ptr == NULL)
+		{
+			throw Exceptions::Runtime::NullPointerException();
+		}
+
+		this->frame->operandStack->push2(ptr->operator[](index));
 	}
 
 	inline void singleWordLoad(size_t index)

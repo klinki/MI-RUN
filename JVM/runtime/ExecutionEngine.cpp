@@ -177,13 +177,36 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case IALOAD:
+			this->arrayLoad<int>();
+			break;
+
 		case LALOAD:
+			this->arrayLoad2<java_long>();
+			break;
+
 		case FALOAD:
+			this->arrayLoad<float>();
+			break;
+
 		case DALOAD:
+			this->arrayLoad2<java_double>();
+			break;
+
 		case AALOAD:
+			this->arrayLoad<int>();
+			break;
+
 		case BALOAD:
+			this->arrayLoad<bool>();
+			break;
+
 		case CALOAD:
+			this->arrayLoad<java_char>();
+			break;
+
 		case SALOAD:
+			this->arrayLoad<java_short>();
+			break;
 
 		case ISTORE:
 		{
@@ -255,35 +278,35 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 		case IASTORE:
-			this->singleArrayStore();
+			this->arrayStore<int>();
 			break;
 
 		case FASTORE:
-			this->singleArrayStore();
+			this->arrayStore<float>();
 			break;
 
 		case AASTORE:
-			this->singleArrayStore();
+			this->arrayStore<int>();
 			break;
 
 		case BASTORE:
-			this->singleArrayStore();
+			this->arrayStore<bool>();
 			break;
 
 		case CASTORE:
-			this->singleArrayStore();
+			this->arrayStore<java_char>();
 			break;
 
 		case SASTORE:
-			this->singleArrayStore();
+			this->arrayStore<short>();
 			break;
 
 		case LASTORE:
-			this->longArrayStore();
+			this->arrayStore2<java_long>();
 			break;
 
 		case DASTORE:
-			this->doubleArrayStore();
+			this->arrayStore2<double>();
 			break;
 
 		case POP:

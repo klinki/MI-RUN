@@ -87,19 +87,151 @@ namespace Tests
 			this->testArrayType<java_short>(ArrayType::T_SHORT, 10, 0);
 		}
 
-		TEST_METHOD(invalidAllocation)
+		TEST_METHOD(invalidArrayAllocation)
 		{
+			ExecutionEngine * eng = new ExecutionEngine();
+			eng->heap = new Heap();
+			eng->objectTable = new ObjectTable();
+			Method m;
 
+			m.byteCode = new Instruction[2];
+			m.byteCode[0] = (Instruction)InstructionSet::NEWARRAY;
+			m.byteCode[1] = (Instruction)ArrayType::T_INT;
+			m.byteCodeLength = 2;
+
+			MethodFrame frm(2, 2);
+			frm.operandStack->push(-1);
+
+			frm.pc = 0;
+			frm.method = &m;
+
+			auto callback = [&eng, &frm] { eng->execute(&frm); };
+			Assert::ExpectException<Exceptions::Runtime::NegativeArraySizeException>(callback);
 		}
 
 
+		template <class T>
+		ObjectTable * getObjectTableWithArray(int size, T defaultValue)
+		{
+			ArrayObject<T> * arrayObject = new ArrayObject<T>(size, defaultValue, NULL, NULL);
+			ObjectTable * table = new ObjectTable();
+			table->insert((Object*)arrayObject);
+
+			return table;
+		}
+		
 		TEST_METHOD(arraySize)
 		{
+			int arraySize = 10;
+
+			ExecutionEngine eng;
+			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0);
+			Method m;
+
+			int arrayIndex = 1;
+
+			m.byteCode = new Instruction[2];
+			m.byteCode[0] = (Instruction)InstructionSet::ARRAYLENGTH;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(1, 1);
+			frm.operandStack->push(arrayIndex);
+
+			frm.pc = 0;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			int result = frm.operandStack->pop();
+
+			Assert::AreEqual(arraySize, result);
 		}
 
 
 		TEST_METHOD(arraySizeNullPtrException)
 		{
+			int arraySize = 10;
+
+			ExecutionEngine eng;
+			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0);
+			Method m;
+
+			int arrayIndex = 1;
+
+			m.byteCode = new Instruction[2];
+			m.byteCode[0] = (Instruction)InstructionSet::ARRAYLENGTH;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(1, 1);
+			frm.operandStack->push(0);
+
+			frm.pc = 0;
+			frm.method = &m;
+
+			auto callback = [&eng, &frm] { eng.execute(&frm); };
+
+			Assert::ExpectException<Exceptions::Runtime::NullPointerException>(callback);
+		}
+
+		TEST_METHOD(arrayStore)
+		{
+			long long value = UINT_MAX + 1024;
+			int arraySize = 10;
+
+			ExecutionEngine eng;
+			eng.objectTable = this->getObjectTableWithArray<long long>(arraySize, 0);
+			Method m;
+
+			int arrayIndex = 9;
+			int arrPtr = 1;
+
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::LASTORE;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(4, 4);
+			frm.operandStack->push(arrPtr);
+			frm.operandStack->push(arrayIndex);
+			frm.operandStack->push2(value);
+
+			frm.pc = 0;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			ArrayObject<long long> * ptr = (ArrayObject<long long>*) eng.objectTable->get(1);
+			long long result = ptr->operator[](arrayIndex);
+
+			Assert::AreEqual(value, result);
+		}
+
+		TEST_METHOD(arrayLoad)
+		{
+			double value = 3.14;
+			int arraySize = 10;
+
+			ExecutionEngine eng;
+			eng.objectTable = this->getObjectTableWithArray<double>(arraySize, value);
+			Method m;
+
+			int arrayIndex = 1;
+
+			m.byteCode = new Instruction[2];
+			m.byteCode[0] = (Instruction)InstructionSet::DALOAD;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(2, 2);
+			frm.operandStack->push(arrayIndex);
+			frm.operandStack->push(9);
+
+			frm.pc = 0;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			double result = frm.operandStack->pop2();
+
+			Assert::AreEqual(value, result);
 		}
 	};
 }
