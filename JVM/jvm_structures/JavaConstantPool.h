@@ -122,7 +122,7 @@ struct CONSTANT_Long_info
 	unsigned int high_bytes;
 	unsigned int low_bytes;
 
-	long value;
+	long long value;
 
 
 	CONSTANT_Long_info(unsigned int hb, unsigned int lb)

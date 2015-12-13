@@ -4,6 +4,7 @@
 #include "../utils/Utf8String.h"
 #include "Field.h"
 #include "MethodArea.h"
+#include "LocalVariablesArray.h"
 
 class Class
 {
@@ -39,6 +40,8 @@ visibility:
 	Class * classLoader;
 
 	Class * classMetaClass;
+
+	LocalVariablesArray * staticVariables;
 
 public:
 	Class(FLAG flag) : flags(flag) {};

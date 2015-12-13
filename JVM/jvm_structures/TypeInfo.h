@@ -354,4 +354,3 @@ struct AnnotationElements
 	u2            num_values;
 	element_value values[1]; // actual ...
 };
-

@@ -1,7 +1,23 @@
 #pragma once
-class JavaString
+#include "../runtime/Class.h"
+
+namespace Java
 {
-public:
-	JavaString();
-	~JavaString();
-};
+	namespace Lang
+	{
+		namespace String
+		{
+			Class* initialize();
+
+			void String();
+			void StringFromCharArray();
+			void StringCopy();
+			void length();
+			void equals();
+			void format();
+			void hashCode();
+			void toString();
+			void clone();
+		}
+	}
+}

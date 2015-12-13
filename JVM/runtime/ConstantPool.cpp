@@ -196,7 +196,7 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		printf("integer value:%d ", constantPool[i].integerInfo.value);
 		break;
 	case 4: //float
-		printf("float value:%d ", constantPool[i].floatInfo.value);
+		printf("float value:%f ", constantPool[i].floatInfo.value);
 		break;
 	case 5: //long 
 		printf("long high_bytes:%d ", constantPool[i].longInfo.high_bytes);
@@ -368,7 +368,7 @@ void ConstantPool::print()
 			printf("integer value:%d ", constantPool[i].integerInfo.value);
 			break;
 		case CONSTANT_Float: //float
-			printf("float value:%d ", constantPool[i].floatInfo.value);
+			printf("float value:%f ", constantPool[i].floatInfo.value);
 			break;
 		case CONSTANT_Long: //long 
 			printf("long high_bytes:%d ", constantPool[i].longInfo.high_bytes);

@@ -13,7 +13,7 @@ namespace Java
 		{
 			Class* initialize();
 
-			void clone(::Object *, MethodFrame *);
+			void clone();
 
 			void equals(::Object *, MethodFrame *);
 			void hashCode(::Object *, MethodFrame *);

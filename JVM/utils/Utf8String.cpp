@@ -32,7 +32,7 @@ bool Utf8String::equals(const Utf8String & b) const
 		return false;
 	}
 
-	for (int i = 0; i < this->dataLength; i++)
+	for (size_t i = 0; i < this->dataLength; i++)
 	{
 		if (this->data[i] != b.data[i])
 		{

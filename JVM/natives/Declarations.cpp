@@ -6,7 +6,7 @@
 
 using namespace TypeDescriptors;
 
-inline Method* getNativeMethod(std::string name, std::string descriptor, NativeMethodPtr nativeMethod)
+inline Method* getNativeMethod(const std::string & name, std::string & descriptor, NativeMethodPtr nativeMethod)
 {
 	Method * method = new Method();
 	method->name = Utf8String("clone");
@@ -20,22 +20,22 @@ inline Method* getNativeMethod(std::string name, std::string descriptor, NativeM
 	return method;
 }
 
-inline Method* getNativeMethod(std::string name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType args...)
+inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType args...)
 {
-	return getNativeMethod(name, getMethodDescriptor(name, returnType, args), nativeMethod);
+	return getNativeMethod(name, getMethodDescriptor(returnType, args), nativeMethod);
 }
 
-inline Method* getNativeMethod(std::string name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType * args)
+inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType * args, size_t countArgs)
 {
-	return getNativeMethod(name, getMethodDescriptor(name, returnType, args), nativeMethod);
+	return getNativeMethod(name, getMethodDescriptor(returnType, args, countArgs), nativeMethod);
 }
 
-inline Method* getNativeMethod(std::string name, NativeMethodPtr nativeMethod, JavaType returnType)
+inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType)
 {
-	return getNativeMethod(name, getMethodDescriptor(name, returnType), nativeMethod);
+	return getNativeMethod(name, getMethodDescriptor(returnType), nativeMethod);
 }
 
-inline Method* getNativeMethod(std::string name, NativeMethodPtr nativeMethod)
+inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod)
 {
-	return getNativeMethod(name, getMethodDescriptor(name), nativeMethod);
+	return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
 }

@@ -121,10 +121,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
+    <ClCompile Include="runtime\ClassMap.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
+    <ClCompile Include="natives\JavaOut.cpp" />
     <ClCompile Include="natives\JavaObject.cpp" />
     <ClCompile Include="natives\JavaString.cpp" />
+    <ClCompile Include="natives\natives.cpp" />
+    <ClCompile Include="natives\PrintStream.cpp" />
     <ClCompile Include="runtime\ObjectTable.cpp" />
+    <ClCompile Include="natives\System.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
     <ClCompile Include="utils\Utf16String.cpp" />
     <ClCompile Include="runtime\Object.cpp" />
@@ -134,7 +139,6 @@
     <ClCompile Include="gc\GarbageCollector.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="runtime\MethodFrame.cpp" />
-    <ClCompile Include="natives\arithmetic.cpp" />
     <ClCompile Include="runtime\Class.cpp" />
     <ClCompile Include="runtime\ExecutionEngine.cpp" />
     <ClCompile Include="runtime\FrameStack.cpp" />
@@ -147,9 +151,14 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="runtime\ClassMap.h" />
+    <ClInclude Include="natives\JavaOut.h" />
     <ClInclude Include="natives\JavaObject.h" />
     <ClInclude Include="natives\JavaString.h" />
+    <ClInclude Include="natives\natives.h" />
+    <ClInclude Include="natives\PrintStream.h" />
     <ClInclude Include="runtime\ObjectTable.h" />
+    <ClInclude Include="natives\System.h" />
     <ClInclude Include="types\Descriptors.h" />
     <ClInclude Include="utils\Utf16String.h" />
     <ClInclude Include="utils\HashMap.h" />

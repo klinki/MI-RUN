@@ -23,7 +23,7 @@ namespace Java
 				newClass->type = Class::Type::CLASS;
 
 				newClass->methodArea.addMethod(getNativeMethod("toString", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/String;")), &toString));
-				newClass->methodArea.addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
+				// newClass->methodArea.addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
 				newClass->methodArea.addMethod(getNativeMethod("equals", getMethodDescriptor(TypeTag::BOOL, JavaType(TypeTag::REFERENCE, "java/lang/Object;")), &equals));
 				newClass->methodArea.addMethod(getNativeMethod("finalize", getMethodDescriptor(), &finalize));
 				newClass->methodArea.addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), &getClass));

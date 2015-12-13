@@ -1039,8 +1039,58 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		break;
 
 		case INVOKEVIRTUAL:
+		{
+			Method* method = nullptr;
+			Object* reference = this->frame->operandStack->pop();
+			unsigned short index = this->getShort();
+
+			if (index == this->inlineCache.constantPoolIndex)
+			{
+				// best-case scenario
+			}
+			else
+			{
+				ConstantPoolItem * item = this->frame->constantPool->get(index);
+
+				Class* classPtr = item->methodInfo.classPtr;
+				Method* methodPtr = item->methodInfo.methodPtr;
+
+
+
+				int classIndex = item->methodInfo.class_index;
+				int nameAndTypeIndex = item->methodInfo.name_and_type_index;
+
+				ConstantPoolItem * nameAndType = this->frame->constantPool->get(nameAndTypeIndex);
+				ConstantPoolItem * name = this->frame->constantPool->get(nameAndType->nameAndTypeInfo.name_index);
+				ConstantPoolItem * descr = this->frame->constantPool->get(nameAndType->nameAndTypeInfo.descriptor_index);
+
+				if (classIndex == this->inlineCache.cpClassIndex)
+				{
+					//method = this->inlineCache.classPtr->getMethod(name->utf8Info);
+				}
+			}
+
+			if (method->nativeMethod != nullptr)
+			{
+				method->nativeMethod(reference, this->frame);
+			}
+
+			// if method is native, execute native code
+			// else create new framestack and execute method
+
+		} break;
 		case INVOKESPECIAL:
+		{
+		}
+		break;
+
 		case INVOKESTATIC:
+		{
+			unsigned short index = this->getShort();
+
+
+		}
+		break;
 		case INVOKEINTERFACE:
 		case INVOKEDYNAMIC:
 

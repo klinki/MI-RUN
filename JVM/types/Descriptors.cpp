@@ -94,7 +94,7 @@ namespace TypeDescriptors
 	{
 		std::string result = "(";
 
-		for (int i = 0; i < countParameters; i++)
+		for (size_t i = 0; i < countParameters; i++)
 		{
 			result.append(getTypeDescriptor(parameters[i]));
 		}

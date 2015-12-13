@@ -59,9 +59,9 @@ bool OperandStack::isFull() const
 	return this->index >= this->allocatedSize;
 }
 
-word & OperandStack::operator[] (int index)
+word & OperandStack::operator[] (size_t index)
 {
-	if (index < 0 || index > this->index)
+	if (index > this->index)
 	{
 		throw IndexOutOfBoundsException();
 	}
@@ -69,9 +69,9 @@ word & OperandStack::operator[] (int index)
 	return this->allocatedArray[index];
 }
 
-const word & OperandStack::operator[] (int index) const
+const word & OperandStack::operator[] (size_t index) const
 {
-	if (index < 0 || index >= this->index)
+	if (index >= this->index)
 	{
 		throw IndexOutOfBoundsException();
 	}

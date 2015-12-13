@@ -21,8 +21,8 @@ public:
 	bool isEmpty() const;
 	bool isFull() const;
 
-	word & operator[] (int index);
-	const word & operator[] (int index) const;
+	word & operator[] (size_t index);
+	const word & operator[] (size_t index) const;
 
 	friend class GarbageCollector;
 };
