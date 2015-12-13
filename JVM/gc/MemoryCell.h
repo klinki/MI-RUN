@@ -1,9 +1,9 @@
 #pragma once
 
-struct MemoryCellStruct
+struct MemoryCell
 {
-	MemoryCellStruct * left;
-	MemoryCellStruct * right;
+	MemoryCell * left;
+	MemoryCell * right;
 	size_t size;
-	unsigned char data[0];
+	unsigned char data[1];
 };

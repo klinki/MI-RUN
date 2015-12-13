@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../JVM/runtime/Object.h"
 #include "../JVM/runtime/MethodFrame.h"
+#include "../JVM/runtime/ArrayObject.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -10,7 +11,7 @@ namespace Tests
 	TEST_CLASS(HeapAllocation)
 	{
 	public:
-		TEST_METHOD(allocateArray)
+		TEST_METHOD(allocateArrayObject)
 		{
 			size_t sizeofArray = sizeof(Array<Object*>);
 			size_t sizeofItems = 10 * sizeof(Object*);
@@ -120,6 +121,35 @@ namespace Tests
 			}
 
 			Assert::AreEqual(0xFDFDFDFD, (unsigned int)intPtr[MethodFrame::getMemorySize(10, 10) / 4]);
+		}
+
+		TEST_METHOD(allocateArrayObjectInt)
+		{
+			size_t sizeofArray = sizeof(ArrayObject<int>);
+			size_t sizeofItems = 10 * sizeof(int);
+
+			unsigned char * test = (unsigned char*)operator new(sizeofArray + sizeofItems);
+			ArrayObject<int> * objectPtr = (ArrayObject<int> *) new(test) ArrayObject<int>(10, 0, NULL, test);
+
+			for (int i = 0; i < 10; i++)
+			{
+				(*objectPtr)[i] = i;
+			}
+
+			int* intPtr = (int*)test;
+
+			Assert::AreEqual(0, *intPtr);
+			Assert::AreEqual(10, intPtr[1]);
+			Assert::AreEqual((int)(intPtr + 3), intPtr[2]);
+
+			for (int i = 0; i < 10; i++)
+			{
+				Assert::AreEqual(i, intPtr[3 + i]);
+			}
+
+			Assert::AreEqual(0xFDFDFDFD, (unsigned int)intPtr[13]);
+
+			delete test;
 		}
 	};
 }

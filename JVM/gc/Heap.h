@@ -8,9 +8,12 @@ protected:
 	unsigned int allocatedBytes;
 	unsigned int usedBytes;
 	unsigned char * data;
+	unsigned char * freeMemory;
 
 	void resize();
 public:
 	Heap();
 	~Heap();
+
+	unsigned char* allocate(size_t size);
 };

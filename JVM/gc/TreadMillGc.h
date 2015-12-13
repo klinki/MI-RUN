@@ -1,17 +1,11 @@
 #pragma once
+#include "MemoryCell.h"
+
 class TreadMillGc
 {
-	struct MemoryCell
-	{
-		MemoryCell * left;
-		MemoryCell * right;
-		size_t size;
-		unsigned char data[1];
-	};
-
 	const int PAGE_SIZE = 4096;
 	const int SMALLEST_SEGMENT_SIZE = 64;
-	const int LARGEST_SEGMENT_SIZE = 131072;
+	const int LARGEST_SEGMENT_SIZE = 128 * 1024; // 128kB
 	const static int NUMBER_OF_GROUPS = 12;
 
 protected:

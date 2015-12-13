@@ -19,6 +19,9 @@ union word
 	word(unsigned int val) { intValue = val; }
 	word(intptr_t val) { intValue = val; }
 	word(float val) { floatValue = val;  }
+	
+	template <class T>
+	word(T* ptr) { intValue = (intptr_t)ptr; }
 
 	word & operator += (word val) { intValue += val.intValue; return *this;  }
 };

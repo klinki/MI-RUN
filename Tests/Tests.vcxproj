@@ -164,6 +164,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ArrayTest.cpp" />
     <ClCompile Include="ConstTest.cpp" />
     <ClCompile Include="ConstantPoolTest.cpp" />
     <ClCompile Include="DoubleTest.cpp" />

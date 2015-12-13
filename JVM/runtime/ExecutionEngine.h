@@ -8,6 +8,9 @@
 #include "../exceptions/RuntimeExceptions.h"
 #include "ArrayObject.h"
 #include "MethodArea.h"
+#include "ClassMap.h"
+#include "ObjectTable.h"
+#include "../gc/Heap.h"
 
 #define SINGLE_WORD_OPERATION(type, op) \
 	type b = this->frame->operandStack->pop(); \
@@ -28,9 +31,12 @@
 
 class ExecutionEngine
 {
-protected:
+visibility:
 	MethodFrame* frame;
 	MethodArea* methodArea;
+	ClassMap* classMap;
+	ObjectTable* objectTable;
+	Heap* heap;
 
 	struct {
 		size_t constantPoolIndex;

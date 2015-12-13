@@ -11,8 +11,17 @@ namespace Microsoft
 		namespace CppUnitTestFramework 
 		{
 			template<> std::wstring ToString<long long>(const long long & q);
+			template<> std::wstring ToString<java_char>(const java_char & q);
+
 
 			template<> std::wstring ToString<long long>(const long long & q)
+			{
+				std::wstringstream ss;
+				ss << q;
+				return ss.str();
+			}
+
+			template<> std::wstring ToString<java_char>(const java_char & q)
 			{
 				std::wstringstream ss;
 				ss << q;

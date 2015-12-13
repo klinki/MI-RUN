@@ -1,5 +1,6 @@
 #include "ExecutionEngine.h"
 #include "../jvm_structures/JavaConstantPool.h"
+#include "../runtime/TypeDescriptors.h"
 
 ExecutionEngine::ExecutionEngine()
 {
@@ -257,16 +258,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			this->singleArrayStore();
 			break;
 
-		case LASTORE:
-			this->longArrayStore();
-			break;
-
 		case FASTORE:
 			this->singleArrayStore();
-			break;
-
-		case DASTORE:
-			this->doubleArrayStore();
 			break;
 
 		case AASTORE:
@@ -283,6 +276,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case SASTORE:
 			this->singleArrayStore();
+			break;
+
+		case LASTORE:
+			this->longArrayStore();
+			break;
+
+		case DASTORE:
+			this->doubleArrayStore();
 			break;
 
 		case POP:
@@ -1078,7 +1079,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			// if method is native, execute native code
 			// else create new framestack and execute method
 
-		} break;
+		} 
+		break;
+
 		case INVOKESPECIAL:
 		{
 		}
@@ -1097,18 +1100,83 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case NEW:
 		case NEWARRAY:
 		{
+			ArrayType type = (ArrayType)instructions[pc++];
 			int size = this->frame->operandStack->pop();
 
 			if (size < 0)
 			{
 				throw Exceptions::Runtime::NegativeArraySizeException();
 			}
+
+			unsigned char* ptr = nullptr;
+			void * object = nullptr;
+
+			switch (type) 
+			{
+			case ArrayType::T_BOOLEAN:
+				ptr = this->heap->allocate(ArrayObject<bool>::getMemorySize(size));
+				object = new (ptr) ArrayObject<bool>(size, false, NULL, ptr);
+				break;
+			case ArrayType::T_BYTE:
+				ptr = this->heap->allocate(ArrayObject<java_byte>::getMemorySize(size));
+				object = new (ptr) ArrayObject<java_byte>(size, 0, NULL, ptr);
+				break;
+			case ArrayType::T_CHAR:
+				ptr = this->heap->allocate(ArrayObject<java_char>::getMemorySize(size));
+				object = new (ptr) ArrayObject<java_char>(size, '\u0000', NULL, ptr);
+				break;
+			case ArrayType::T_DOUBLE:
+				ptr = this->heap->allocate(ArrayObject<java_double>::getMemorySize(size));
+				object = new (ptr) ArrayObject<double>(size, +0.0, NULL, ptr);
+				break;
+			case ArrayType::T_FLOAT:
+				ptr = this->heap->allocate(ArrayObject<java_float>::getMemorySize(size));
+				object = new (ptr) ArrayObject<float>(size, +0.0, NULL, ptr);
+				break;
+			case ArrayType::T_INT:
+				ptr = this->heap->allocate(ArrayObject<java_int>::getMemorySize(size));
+				object = new (ptr) ArrayObject<int>(size, 0, NULL, ptr);
+				break;
+			case ArrayType::T_LONG:
+				ptr = this->heap->allocate(ArrayObject<java_long>::getMemorySize(size));
+				object = new (ptr) ArrayObject<long long>(size, 0, NULL, ptr);
+				break;
+			case ArrayType::T_SHORT:
+				ptr = this->heap->allocate(ArrayObject<java_short>::getMemorySize(size));
+				object = new (ptr) ArrayObject<short>(size, 0, NULL, ptr);
+				break;
+			}
+
+			int objectIndex = this->objectTable->insert((Object*)object);
+
+			this->frame->operandStack->push(objectIndex);
 		}
+		break;
 
 
 		case ANEWARRAY:
 		case MULTIANEWARRAY:
+		
 		case ARRAYLENGTH:
+		{
+			int index = this->frame->operandStack->pop();
+			
+			if (index == 0) 
+			{
+				throw Exceptions::Runtime::NullPointerException();
+			}
+
+			ArrayObject<int>* object = (ArrayObject<int>*)this->objectTable->get(index);
+			
+			if (object == NULL)
+			{
+				throw Exceptions::Runtime::NullPointerException();
+			}
+
+			this->frame->operandStack->push(object->getSize());
+		}
+		break;
+
 		case ATHROW:
 
 
