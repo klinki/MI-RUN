@@ -233,5 +233,53 @@ namespace Tests
 
 			Assert::AreEqual(value, result);
 		}
+
+		TEST_METHOD(allocateMultiDimensionalArray)
+		{
+			ExecutionEngine * eng = new ExecutionEngine();
+			eng->heap = new Heap();
+			eng->objectTable = new ObjectTable();
+			Method m;
+
+			m.byteCode = new Instruction[4];
+			m.byteCode[0] = (Instruction)InstructionSet::MULTIANEWARRAY;
+			m.byteCode[1] = 0;
+			m.byteCode[2] = 0;
+			m.byteCode[3] = 3;
+			m.byteCodeLength = 4;
+
+			MethodFrame frm(3, 3);
+			frm.operandStack->push(2);
+			frm.operandStack->push(3);
+			frm.operandStack->push(4);
+
+
+			frm.pc = 0;
+			frm.method = &m;
+
+			eng->execute(&frm);
+
+			int result = frm.operandStack->pop();
+
+			ArrayObject<Object*> * objectPtr = (ArrayObject<Object*> *) eng->objectTable->get(result);
+
+			Assert::AreEqual(4, (int)objectPtr->getSize());
+
+			for (int i = 0; i < 4; i++)
+			{
+				int index = (int)(*objectPtr)[i];
+				ArrayObject<Object*> * innerPtr = (ArrayObject<Object*> *) eng->objectTable->get(index);
+
+				for (int j = 0; j < 3; j++)
+				{
+					int index2 = (int)(*innerPtr)[j];
+					ArrayObject<Object*> * inner2Ptr = (ArrayObject<Object*> *) eng->objectTable->get(index2);
+
+					Assert::AreEqual(2, (int)inner2Ptr->getSize());
+				}
+
+				Assert::AreEqual(3, (int)innerPtr->getSize());
+			}
+		}
 	};
 }

@@ -918,13 +918,30 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		break;
 
 		case JSR:
-			break;
+		{
+			short offset = this->getShort();
+			this->frame->operandStack->push(pc);
+			this->jumpWithOffset(offset);
+		}
+		break;
 
 		case JSR_W:
-			break;
+		{
+			int offset = (int)this->getInt();
+			this->frame->operandStack->push(pc);
+			this->jumpWithOffset(offset);
+		}
+		break;
 
 
 		case RET:
+		{
+			unsigned char index = instructions[pc];
+			int offset = this->frame->localVariables->operator[](index);
+			this->jumpWithOffset(offset);
+		}
+		break;
+
 		case TABLESWITCH:
 		{
 			int switchPc = pc;
@@ -1029,7 +1046,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		};
 
 		case GETSTATIC:
+		{
+			// TODO: 
+		};
+
 		case PUTSTATIC:
+		{
+			// TODO: 
+		};
 
 		case GETFIELD:
 		{
@@ -1062,6 +1086,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		}
 		break;
 
+		// TODO: Invokes!
 		case INVOKEVIRTUAL:
 		{
 			Method* method = nullptr;
@@ -1117,10 +1142,22 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		}
 		break;
+		
 		case INVOKEINTERFACE:
+		{
+		}
+		break;
+
 		case INVOKEDYNAMIC:
+		{
+		}
+		break;
 
 		case NEW:
+		{
+			// TODO: Class resolution and object allocation
+		};
+
 		case NEWARRAY:
 		{
 			ArrayType type = (ArrayType)instructions[pc++];
@@ -1178,8 +1215,51 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 
 		case ANEWARRAY:
+		{
+			short index = this->getShort();
+			int size = this->frame->operandStack->pop();
+
+			if (size < 0)
+			{
+				throw Exceptions::Runtime::NegativeArraySizeException();
+			}
+
+			// TODO: Resolve class!
+
+
+			unsigned char* ptr = nullptr;
+			void * object = new (ptr) ArrayObject<Object*>(size, 0, NULL, ptr);
+
+			int objectIndex = this->objectTable->insert((Object*)object);
+
+			this->frame->operandStack->push(objectIndex);
+		}
+		break;
+
 		case MULTIANEWARRAY:
-		
+		{
+			// TODO: Check class
+			int index = this->getShort();
+			int dimensions = (int)instructions[pc++];
+
+			if (dimensions < 1) 
+			{
+				// throw exception
+			}
+
+			int arrayDimensions[255];
+
+			for (int i = 0; i < dimensions; i++)
+			{
+				arrayDimensions[i] = this->frame->operandStack->pop();
+			}
+
+			int object = (int)this->recursiveAllocateArray(dimensions, arrayDimensions);
+			
+			this->frame->operandStack->push(object);
+		}
+		break;
+
 		case ARRAYLENGTH:
 		{
 			int index = this->frame->operandStack->pop();

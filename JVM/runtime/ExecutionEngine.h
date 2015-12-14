@@ -331,4 +331,25 @@ public:
 	{
 		(*this->frame->localVariables)[index] += value;
 	}
+
+
+	inline int recursiveAllocateArray(int dimensions, int dimensionsArray[], int currentLevel = 0, ArrayObject<Object*> * previousLevel = NULL)
+	{
+		int currentDimension = dimensionsArray[currentLevel];
+
+		void* memory = (ArrayObject<Object*>*)this->heap->allocate(ArrayObject<Object*>::getMemorySize(currentDimension));
+		ArrayObject<Object*>* object = new(memory) ArrayObject<Object*>(currentDimension, NULL, NULL, NULL);
+
+		int index = this->objectTable->insert((Object*)object);
+
+		while (currentDimension-- > 0)
+		{
+			if (dimensions > 1)
+			{
+				(*object)[currentDimension] = (Object*)this->recursiveAllocateArray(dimensions - 1, dimensionsArray, currentLevel + 1, NULL);
+			}
+		}
+
+		return index;
+	}
 };
