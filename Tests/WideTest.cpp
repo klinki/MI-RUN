@@ -304,7 +304,7 @@ namespace Tests
 			int value = expected - increment;
 			int index = 1024;
 
-			m.byteCode = new Instruction[4];
+			m.byteCode = new Instruction[6];
 			m.byteCode[0] = (Instruction)InstructionSet::WIDE;
 			m.byteCode[1] = (Instruction)InstructionSet::IINC;
 			m.byteCode[2] = highByte(index);

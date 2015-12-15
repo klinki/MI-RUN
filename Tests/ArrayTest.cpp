@@ -111,9 +111,10 @@ namespace Tests
 
 
 		template <class T>
-		ObjectTable * getObjectTableWithArray(int size, T defaultValue)
+		ObjectTable * getObjectTableWithArray(int size, T defaultValue, Heap * heap)
 		{
-			ArrayObject<T> * arrayObject = new ArrayObject<T>(size, defaultValue, NULL, NULL);
+			unsigned char* address = heap->allocate(ArrayObject<T>::getMemorySize(size));
+			ArrayObject<T> * arrayObject = new(address) ArrayObject<T>(size, defaultValue, NULL, NULL);
 			ObjectTable * table = new ObjectTable();
 			table->insert((Object*)arrayObject);
 
@@ -125,7 +126,8 @@ namespace Tests
 			int arraySize = 10;
 
 			ExecutionEngine eng;
-			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0);
+			eng.heap = new Heap();
+			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0, eng.heap);
 			Method m;
 
 			int arrayIndex = 1;
@@ -153,7 +155,8 @@ namespace Tests
 			int arraySize = 10;
 
 			ExecutionEngine eng;
-			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0);
+			eng.heap = new Heap();
+			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0, eng.heap);
 			Method m;
 
 			int arrayIndex = 1;
@@ -179,7 +182,8 @@ namespace Tests
 			int arraySize = 10;
 
 			ExecutionEngine eng;
-			eng.objectTable = this->getObjectTableWithArray<long long>(arraySize, 0);
+			eng.heap = new Heap();
+			eng.objectTable = this->getObjectTableWithArray<long long>(arraySize, 0, eng.heap);
 			Method m;
 
 			int arrayIndex = 9;
@@ -211,7 +215,8 @@ namespace Tests
 			int arraySize = 10;
 
 			ExecutionEngine eng;
-			eng.objectTable = this->getObjectTableWithArray<double>(arraySize, value);
+			eng.heap = new Heap();
+			eng.objectTable = this->getObjectTableWithArray<double>(arraySize, value, eng.heap);
 			Method m;
 
 			int arrayIndex = 1;

@@ -882,7 +882,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			unsigned short b = this->frame->operandStack->pop();
 			unsigned short a = this->frame->operandStack->pop();
 
-			if (a == b && currentInstruction == IF_ACMPEQ || a != b && currentInstruction == IF_ACMPNE)
+			if ((a == b && currentInstruction == IF_ACMPEQ) || (a != b && currentInstruction == IF_ACMPNE))
 			{
 				this->jumpWithOffset(offset);
 			}
@@ -896,7 +896,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			short offset = this->getShort();
 			unsigned short ref = this->frame->operandStack->pop();
 
-			if (ref == NULL && currentInstruction == IFNULL || ref != NULL && currentInstruction == IFNONNULL)
+			if ((ref == NULL && currentInstruction == IFNULL) || (ref != NULL && currentInstruction == IFNONNULL) )
 			{
 				this->jumpWithOffset(offset);
 			}
