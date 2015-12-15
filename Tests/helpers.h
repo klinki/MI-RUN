@@ -4,6 +4,8 @@
 #include "../JVM/types/types.h"
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+class NotImplementedException {};
+
 namespace Microsoft 
 {
 	namespace VisualStudio 

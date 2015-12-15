@@ -11,6 +11,8 @@ namespace Tests
 
 		TEST_METHOD(constReturningFunction)
 		{
+			throw NotImplementedException();
+
 			int expected = 123;
 			// TODO: Add bytecode for function call without argument
 			int result = 0;
@@ -19,6 +21,8 @@ namespace Tests
 
 		TEST_METHOD(argReturningFunction)
 		{
+			throw NotImplementedException();
+
 			int arg = 123;
 			int expected = 123;
 			// TODO: Add bytecode for function call with one argument
@@ -28,6 +32,8 @@ namespace Tests
 
 		TEST_METHOD(argSumReturningFunction)
 		{
+			throw NotImplementedException();
+
 			int a = 100;
 			int b = 100;
 			int expected = 200;
