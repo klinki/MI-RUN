@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "..\JVM\runtime\MethodArea.h"
+#include "../JVM/runtime/MethodArea.h"
 #include "../JVM/runtime/ExecutionEngine.h"
 #include "../JVM/runtime/TypeDescriptors.h"
 

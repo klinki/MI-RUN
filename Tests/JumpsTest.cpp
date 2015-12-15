@@ -82,6 +82,42 @@ namespace Tests
 			Assert::AreEqual(expected, result);
 		}
 
+		TEST_METHOD(RET)
+		{
+			const int byteCodeLength = 5;
+			ExecutionEngine eng;
+			Method m;
+
+			int a = 0xCAFEBABD;
+			int b = 1;
+
+			int index = 1;
+			int address = 3;
+
+			m.byteCode = new Instruction[byteCodeLength];
+			m.byteCode[0] = (Instruction)InstructionSet::RET;
+			m.byteCode[1] = index;
+			m.byteCode[2] = (Instruction)InstructionSet::ISUB;
+			m.byteCode[3] = (Instruction)InstructionSet::IADD;
+
+			m.byteCodeLength = byteCodeLength;
+
+			MethodFrame frm(3, 3);
+			frm.operandStack->push(a);
+			frm.operandStack->push(b);
+			
+			frm.localVariables->operator[](index) = address;
+
+			frm.pc = 0;
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			int expected = a + b;
+			int result = frm.operandStack->pop();
+			Assert::AreEqual(expected, result);
+		}
+
 		TEST_METHOD(IFEQ_TRUE)
 		{
 			int a = 0xCAFEBABD;

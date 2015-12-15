@@ -937,8 +937,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case RET:
 		{
 			unsigned char index = instructions[pc];
-			int offset = this->frame->localVariables->operator[](index);
-			this->jumpWithOffset(offset);
+			int restoredPc = this->frame->localVariables->operator[](index);
+			pc = restoredPc;
 		}
 		break;
 
@@ -1326,20 +1326,33 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				this->singleWordLoad(index);
 				break;
 			case DLOAD:
+				this->dload(index);
+				break;
 			case LLOAD:
+				this->lload(index);
 				break;
 			case ISTORE:
 			case FSTORE:
 			case ASTORE:
+				this->singleWordStore(index);
 				break;
 			case DSTORE:
-			case LSTORE:
+				this->dstore(index);
 				break;
-			case RET:
+			case LSTORE:
+				this->lstore(index);
+				break;
+			case RET: 
+				{
+					int restoredPc = this->frame->localVariables->operator[](index);
+					pc = restoredPc;
+				}
 				break;
 			case IINC:
-				word value = this->getShort();
-				this->iinc(index, value);
+				{
+					word value = this->getShort();
+					this->iinc(index, value);
+				}
 				break;
 			}
 		}
