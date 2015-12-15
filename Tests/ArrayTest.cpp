@@ -189,7 +189,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::LASTORE;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(4, 4);
+			MethodFrame frm(6, 6);
 			frm.operandStack->push(arrPtr);
 			frm.operandStack->push(arrayIndex);
 			frm.operandStack->push2(value);
@@ -220,7 +220,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DALOAD;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(4, 4);
 			frm.operandStack->push(arrayIndex);
 			frm.operandStack->push(9);
 
