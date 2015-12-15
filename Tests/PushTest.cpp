@@ -6,7 +6,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
 {
-	TEST_CLASS(FunctionCalls)
+	TEST_CLASS(PushTest)
 	{
 	public:
 
