@@ -57,7 +57,7 @@ void MethodFrame::accept(ObjectVisitorInterface * visitor)
 
 	if (this->parentFrame != NULL)
 	{
-		this->parentFrame->accept(visitor);
+		visitor->visit(this->parentFrame);
 	}
 }
 
