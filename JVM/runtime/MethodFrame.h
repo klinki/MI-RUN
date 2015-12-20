@@ -3,10 +3,11 @@
 #include "Method.h"
 #include "LocalVariablesArray.h"
 #include "../gc/MemoryCell.h"
+#include "../gc/VisitableInterface.h"
 
 class Method;
 
-class MethodFrame
+class MethodFrame : VisitableInterface
 {
 visibility:
 	ProgramCounter pc;
@@ -24,9 +25,11 @@ public:
 	MethodFrame(size_t stackSize, size_t localVariablesSize, MethodFrame * parent, ConstantPool * constantPool, Method * method, byte * address);
 	~MethodFrame();
 
-
 	static size_t getMemorySize();
 	static size_t getMemorySize(size_t stackSize, size_t localVariblesSize);
+
+	virtual void accept(ObjectVisitorInterface * visitor);
+	virtual void accept(ObjectVisitorInterface & visitor);
 
 	friend class ExecutionEngine;
 	friend class Method;

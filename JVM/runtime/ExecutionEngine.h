@@ -9,7 +9,7 @@
 #include "ArrayObject.h"
 #include "MethodArea.h"
 #include "ClassMap.h"
-#include "ObjectTable.h"
+#include "../gc/ObjectTable.h"
 #include "../gc/Heap.h"
 
 #define SINGLE_WORD_OPERATION(type, op) \

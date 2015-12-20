@@ -6,30 +6,6 @@ class ItemNotFoundException {};
 template <class Key, class Value>
 class HashMap
 {
-	/*
-	struct Iterator
-	{
-		std::unordered_multimap<Key, Value> iterator;
-		std::unordered_multimap<Key, Value> end;
-
-	public:
-		Iterator(std::unordered_multimap<Key, Value> first, std::unordered_multimap<Key, Value> last) : iterator(first), end(last)
-		{
-			iterator.begin();
-		}
-
-		bool hasNext() const
-		{
-			return iterator != end;
-		}
-		
-		Value & const next()
-		{
-			return iterator->second;
-		}
-	};
-	*/
-
 protected:
 	std::unordered_multimap<Key, Value> multimap;
 public:

@@ -42,3 +42,26 @@ size_t MethodFrame::getMemorySize(size_t stackSize, size_t localVariblesSize)
 		+ OperandStack::getMemorySize(stackSize);
 	// already included in size;
 }
+
+void MethodFrame::accept(ObjectVisitorInterface * visitor)
+{
+	for (size_t i = 0; i < this->operandStack->index; i++)
+	{
+		visitor->visit((*this->operandStack)[i]);
+	}
+
+	for (size_t i = 0; i < this->localVariables->index; i++)
+	{
+		visitor->visit((*this->localVariables)[i]);
+	}
+
+	if (this->parentFrame != NULL)
+	{
+		this->parentFrame->accept(visitor);
+	}
+}
+
+void MethodFrame::accept(ObjectVisitorInterface & visitor)
+{
+	this->accept(&visitor);
+}

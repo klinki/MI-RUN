@@ -1,30 +1,55 @@
 #include "PrintStream.h"
 
+
+void close(::Object *, MethodFrame *);
+void flush(::Object *, MethodFrame *);
+void write(::Object *, MethodFrame *);
+void writeWithOffset(::Object *, MethodFrame *);
+void writeSingleByte(::Object *, MethodFrame *);
+void println(::Object *, MethodFrame *);
+
+PrintStream::PrintStream(std::ostream * stream)
+{
+	this->output = stream;
+}
+
 PrintStream::~PrintStream()
 {
 }
 
+void PrintStream::close()
+{
+	delete this->output;
+}
 
-void PrintStream::close(::Object *, MethodFrame *)
+void PrintStream::flush()
+{
+	this->output->flush();
+}
+
+void PrintStream::println()
+{
+	*this->output << std::endl;
+}
+
+void PrintStream::println(Utf8String)
 {
 }
 
-void PrintStream::flush(::Object *, MethodFrame *)
+void PrintStream::write(java_byte byte)
 {
+	*this->output << byte;
 }
 
-void PrintStream::write(::Object *, MethodFrame *)
+void PrintStream::write(ArrayObject<java_byte>* arr)
 {
+	this->write(arr, 0, arr->getSize());
 }
 
-void PrintStream::writeWithOffset(::Object *, MethodFrame *)
+void PrintStream::write(ArrayObject<java_byte>* arr, size_t offset, size_t length)
 {
-}
-
-void PrintStream::writeSingleByte(::Object *, MethodFrame *)
-{
-}
-
-void PrintStream::println(::Object *, MethodFrame *)
-{
+	for (int i = offset; i < length; i++)
+	{
+		*this->output << (*arr)[i];
+	}
 }
