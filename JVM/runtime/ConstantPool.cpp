@@ -32,6 +32,53 @@ ConstantPool::~ConstantPool()
 	*/
 	delete[] constantPool;
 }
+/*
+void ConstantPool::consolidate()
+{
+	for (int  i = 0; i < constant_pool_count; i++)
+	{
+		switch (constantPool[i].tag)
+		{
+		case 7:
+			break;
+		case 9:
+			break;
+		case 10:
+			break;
+		case 11:
+			break;
+		case 8:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 12:
+			break;
+		case 1:
+			break;
+		case 15:
+			break;
+		case 16:
+			break;
+		case 18:
+			break;
+
+
+
+
+		default:
+			break;
+		}
+	}
+
+}
+*/
+
 int ConstantPool::GetSize()
 {
 	return constant_pool_count;
@@ -407,6 +454,7 @@ void ConstantPool::print()
 		printf("\n");
 		
 	}
+
 	/*
 	for (int i = 1; i < constant_pool_count; i++)
 	{
@@ -469,5 +517,11 @@ void ConstantPool::print()
 	}
 	*/
 
+}
+
+
+void ConstantPool::setClassPtr(int index, Class * c)
+{
+	constantPool[index].classInfo.classPtr = c;
 }
 

@@ -37,4 +37,5 @@ public:
 	{
 		return this->byteCodeLength;
 	}
+	friend class ClassLoader;
 };

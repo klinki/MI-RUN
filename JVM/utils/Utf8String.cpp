@@ -8,7 +8,7 @@ Utf8String::Utf8String()
 	this->stringLength = 0;
 }
 
-Utf8String::Utf8String(const char* data, size_t length)
+Utf8String::Utf8String(const unsigned char* data, size_t length)
 {
 	this->data = new unsigned char[length];
 	this->dataLength = length;
@@ -41,6 +41,15 @@ bool Utf8String::equals(const Utf8String & b) const
 	}
 
 	return true;
+}
+
+Utf8String& Utf8String::operator=(const Utf8String & u)
+{
+	
+	delete[] data;
+	this->data = u.data;
+	this->dataLength = u.dataLength;
+	return *this;
 }
 
 inline size_t std::hash<Utf8String>::operator()(const Utf8String & x) const

@@ -15,6 +15,7 @@ public:
 	ConstantPool();
 	ConstantPool(int size);
 	void print();
+
 	int add(int pos, int type, int length, unsigned char * data);
 	//int add(int pos, unsigned char type, int length, unsigned char * data);
 	int GetSize();
@@ -22,6 +23,8 @@ public:
 	//unsigned char * getElem(int pos);
 
 	ConstantPoolItem * get(int index);
-
+	void setClassPtr(int index,Class * c);
 	~ConstantPool();
+
+
 };

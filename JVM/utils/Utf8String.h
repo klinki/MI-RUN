@@ -11,7 +11,7 @@ protected:
 
 public:
 	Utf8String();
-	Utf8String(const char* bytes, size_t length);
+	Utf8String(const unsigned char* bytes, size_t length);
 	Utf8String(std::string string);
 	~Utf8String();
 
@@ -23,6 +23,7 @@ public:
 
 	friend std::hash<Utf8String>;
 	friend bool operator==(const Utf8String & a, const Utf8String & b);
+	Utf8String& operator=(const Utf8String & u);
 };
 
 namespace std 

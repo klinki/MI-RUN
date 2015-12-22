@@ -16,8 +16,11 @@ private:
 	int constant_pool_count;
 	//ConstantPool * CPool;
 	ConstantPool * constantPool;
+	int thisClassIndex;
+	int superClassIndex;
 	unsigned char * data;
 	int interfaces_count;
+	int * interfacesIndex;
 	int fields_count;
 	int methods_count;
 	int attributes_count;

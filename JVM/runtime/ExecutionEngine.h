@@ -307,6 +307,7 @@ public:
 
 			// LDC_W
 		case CONSTANT_Long:
+//<<<<<<< Updated upstream
 			{
 				word high = item->longInfo.high_bytes;
 				word low = item->longInfo.low_bytes;
@@ -324,6 +325,21 @@ public:
 				this->frame->operandStack->push(low);
 			}
 			break;
+/*=======
+			{word high = item->longInfo.high_bytes;
+			word low = item->longInfo.low_bytes;
+
+			this->frame->operandStack->push(high);
+			this->frame->operandStack->push(low);
+			break;}
+		case CONSTANT_Double:
+			{word high = item->longInfo.high_bytes;
+			word low = item->longInfo.low_bytes;
+
+			this->frame->operandStack->push(high);
+			this->frame->operandStack->push(low);
+			break;}
+>>>>>>> Stashed changes*/
 		}
 	}
 

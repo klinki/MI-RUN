@@ -24,7 +24,7 @@ visibility:
 	ConstantPool * constantPool;
 
 	// This is used for object creation
-	Field * fields;
+	Field ** fields;
 	size_t countFields;
 
 	Field * staticFields;

@@ -287,8 +287,11 @@ int ClassLoader::loadThisClass()
 		printf("ERROR IN READ FILE");
 		return -1;
 	}
-	int l;
+	thisClassIndex=(int)(data[0] * 256 + data[1]);
+	thisClass->constantPool->setClassPtr(thisClassIndex,thisClass);
+	
 	/*
+	int l;
 	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]),l);
 
 	thisClassName = CPool->getElem((int)(adr[0] * 256 +adr[1]),l);
@@ -314,6 +317,8 @@ int ClassLoader::loadSuperClass()
 		printf("ERROR IN READ FILE");
 		return -1;
 	}
+	superClassIndex = (int)(data[0] * 256 + data[1]);
+
 	/*
 	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]));
 	int l;
@@ -335,6 +340,7 @@ int ClassLoader::loadInterfaces() // TODO write interefaces, where? //references
 		return -1;
 	}
 	interfaces_count = (int)(data[0] * 256 + data[1]);
+	interfacesIndex = new int[interfaces_count];
 	printf("interface count:%d\n", interfaces_count);
 	for (int i = 0; i < interfaces_count; i++)
 	{
@@ -343,9 +349,8 @@ int ClassLoader::loadInterfaces() // TODO write interefaces, where? //references
 			printf("ERROR IN READ FILE");
 			return -1;
 		}
+		interfacesIndex[i] = (int)(data[0] * 256 + data[1]);
 	}
-	
-
 
 	return 0; 
 }
@@ -374,10 +379,32 @@ int ClassLoader::loadFields()
 		return -1;
 	}
 	fields_count = (int)(data[0] * 256 + data[1]);
-	printf("methods count:%d\n", methods_count);
+	thisClass->countFields = (unsigned int)(data[0] * 256 + data[1]);
+	//thisClass->fields = new Field[thisClass->countFields];
+	printf("fields count:%d\n", methods_count);
+	//thisClass->staticFields = new Field[fields_count];
+	unsigned short* flags;
+	flags = new unsigned short[fields_count];
 
+	int * name_indexes;
+	name_indexes = new int[fields_count];
+
+	int * descriptor_indexes;
+	descriptor_indexes = new int[fields_count];
+
+	int * att_counts;
+	att_counts = new int[fields_count];
+
+	int ** att_name_indexes;
+	att_name_indexes = new int*[fields_count];
+
+	int ** att_lengts;
+	att_lengts = new int*[fields_count];
 	
-	for (int i = 0; i < methods_count; i++)
+	unsigned char *** att_data;
+	att_data = new unsigned char **[fields_count];
+
+	for (int i = 0; i < fields_count; i++)
 	{
 		int access_flags;
 		int name_index;
@@ -389,14 +416,25 @@ int ClassLoader::loadFields()
 			return -1;
 		}
 		access_flags = (int)(data[0] * 256 + data[1]);
+		//thisClass->fields[i].flags = (const unsigned short)(data[0] * 256 + data[1]);	
 		name_index = (int)(data[2] * 256 + data[3]);
 		descriptor_index = (int)(data[4] * 256 + data[5]);
 		attributes_count = (int)(data[6] * 256 + data[7]);
+
+		flags[i] = (unsigned short)(data[0] * 256 + data[1]);
+		name_indexes[i] = (int)(data[2] * 256 + data[3]);
+		descriptor_indexes[i] = (int)(data[4] * 256 + data[5]);
+		att_counts[i] = (int)(data[6] * 256 + data[7]);
 
 		printf("access_flags:%d\n", access_flags);
 		printf("name_index:%d\n", name_index);
 		printf("descriptor_index:%d\n", descriptor_index);
 		printf("attributes count:%d\n", attributes_count);
+
+		att_name_indexes[i] = new int[att_counts[i]];
+		att_lengts[i] = new int[att_counts[i]];
+		att_data[i]= new unsigned char*[att_counts[i]];
+
 		for (int j = 0; j < attributes_count; j++)
 		{
 			int attribute_name_index;
@@ -410,6 +448,10 @@ int ClassLoader::loadFields()
 			attribute_name_index = (int)(data[0] * 256 + data[1]);
 			attribute_length = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
 
+			att_name_indexes[i][j] =  (int)(data[0] * 256 + data[1]);
+			att_lengts[i][j] = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
+			
+
 			printf("attribute_name_index:%d\n", attribute_name_index);
 			printf("attribute lenght:%d\n", attribute_length);
 			if (reader(attribute_length))
@@ -417,8 +459,26 @@ int ClassLoader::loadFields()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
+			att_data[i][j] = data;
 		}
 	}
+	for (int i = 0; i < fields_count; i++)
+	{
+		thisClass->fields = new Field*[thisClass->countFields];
+		Utf8String name(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
+		Utf8String descriptor(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
+		thisClass->fields[i] = new Field(flags[i], name, descriptor, att_counts[i]);
+
+		for (int j = 0; j < att_counts[i]; j++)
+		{
+			if (att_lengts[i][j] == 2)
+			{
+				thisClass->fields[i]->setAttribute(j, att_data[i][j][0] * 256 + att_data[i][j][1]);
+			}
+		}
+
+	}
+
 
 	return 0;
 }
@@ -429,6 +489,7 @@ int ClassLoader::loadMethods() {
 		return -1;
 	}
 	methods_count = (int)(data[0] * 256 + data[1]);
+	thisClass->countMethods = methods_count;
 	printf("methods count:%d\n", methods_count);
 	
 	//methods[methods_count]
@@ -448,6 +509,28 @@ int ClassLoader::loadMethods() {
 	//}
 	//}
 	//}
+
+	unsigned short* flags;
+	flags = new unsigned short[methods_count];
+
+	int * name_indexes;
+	name_indexes = new int[methods_count];
+
+	int * descriptor_indexes;
+	descriptor_indexes = new int[methods_count];
+
+	int * att_counts;
+	att_counts = new int[methods_count];
+
+	int ** att_name_indexes;
+	att_name_indexes = new int*[methods_count];
+
+	int ** att_lengts;
+	att_lengts = new int*[methods_count];
+
+	unsigned char *** att_data;
+	att_data = new unsigned char **[methods_count];
+
 	for (int i = 0; i < methods_count; i++)
 	{
 		int access_flags;
@@ -463,6 +546,15 @@ int ClassLoader::loadMethods() {
 		name_index = (int)(data[2] * 256 + data[3]);
 		descriptor_index = (int)(data[4] * 256 + data[5]);
 		attributes_count = (int)(data[6] * 256 + data[7]);
+
+		flags[i] = (unsigned short)(data[0] * 256 + data[1]);
+		name_indexes[i] = (int)(data[2] * 256 + data[3]);
+		descriptor_indexes[i] = (int)(data[4] * 256 + data[5]);
+		att_counts[i] = (int)(data[6] * 256 + data[7]);
+
+		att_name_indexes[i] = new int[att_counts[i]];
+		att_lengts[i] = new int[att_counts[i]];
+		att_data[i] = new unsigned char*[att_counts[i]];
 
 		printf("access_flags:%d\n", access_flags);
 		printf("name_index:%d\n", name_index);
@@ -481,6 +573,10 @@ int ClassLoader::loadMethods() {
 			attribute_name_index = (int)(data[0] * 256 + data[1]);
 			attribute_length = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
 
+			att_name_indexes[i][j] = (int)(data[0] * 256 + data[1]);
+			att_lengts[i][j] = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
+			att_data[i][j] = new unsigned char[att_lengts[i][j]];
+
 			printf("attribute_name_index:%d\n", attribute_name_index);
 			printf("attribute lenght:%d\n", attribute_length);
 			if (reader(attribute_length))
@@ -488,9 +584,84 @@ int ClassLoader::loadMethods() {
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
+			for (int k = 0; k < att_lengts[i][j]; k++)
+			{
+				att_data[i][j][k] = data[k];
+			}
+			
+
 		}
 	}
-	
+	for (int i = 0; i < methods_count; i++)
+	{
+		Method m;
+		m.name = Utf8String(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
+		m.descriptor = Utf8String(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
+
+
+		for (int j = 0; j < att_counts[i]; j++)
+		{
+			Utf8String attName(thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes, (int)thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.length);
+			unsigned char* n= thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes;
+			
+			
+			if (n[0]=='C'&&n[1] == '0'&&n[2] == 'd'&&n[3] == 'e') // zmenit na porovnani utf8
+			{
+				int max_stack = (int)(att_data[i][j][0] *256 + att_data[i][j][1]);
+				m.operandStackSize = max_stack;
+				int max_variables = (int)(att_data[i][j][2] *256 + att_data[i][j][3]);
+				m.localVariablesArraySize;
+				int code_length = (int)(att_data[i][j][4] * 256 *256 * 256 + att_data[i][j][5] *256 *256 + att_data[i][j][6] * 256 + att_data[i][j][7]);
+				m.byteCodeLength = code_length;
+				//unsigned char * code = new unsigned char[code_length];
+				m.byteCode = new Instruction[code_length];
+				for (int i1 = 0; i1 < code_length; i1++)
+				{
+					m.byteCode[i1] = att_data[i][j][i1+8];
+
+				}
+			
+				int exception_table_length = (int)(att_data[i][j][code_length+8] * 256 + att_data[i][j][code_length+9]);
+				m.exceptionTable = ExceptionTable(exception_table_length);
+				for (int i1 = 0; i1 < exception_table_length; i1++)
+				{
+					int start_pc = (int)(att_data[i][j][code_length + 10 + i1*8] * 256 + att_data[i][j][code_length + 11 + i1 * 8]);
+					int end_pc = (int)(att_data[i][j][code_length + 12 + i1 * 8] * 256 + att_data[i][j][code_length + 13 + i1 * 8]);
+					int handler_pc = (int)(att_data[i][j][code_length + 14 + i1 * 8] * 256 + att_data[i][j][code_length + 15 + i1 * 8]);
+					int catch_type = (int)(att_data[i][j][code_length + 16 + i1 * 8] * 256 + att_data[i][j][code_length + 17 + i1 * 8]);
+					m.exceptionTable.setException(i1,start_pc,end_pc, handler_pc, catch_type);
+				}
+				int code_attributes_count = (int)(att_data[i][j][code_length + 10 + exception_table_length * 8] * 256 + att_data[i][j][code_length + 11 + exception_table_length * 8]);
+				int r = 0;
+				for (int i1 = 0; i1 < code_attributes_count; i1++)
+				{
+					//Utf8String datAttName(thisClass->constantPool->get(att_data[i][j][code_length + 12 + (exception_table_length * 8) + r])->utf8Info.bytes, (int)thisClass->constantPool->get(att_data[i][j][code_length + 13 + (exception_table_length * 8) + r])->utf8Info.length);
+					int datAttName = (int)(att_data[i][j][code_length + 12 +r + exception_table_length * 8] * 256 + att_data[i][j][code_length + 13 + r + exception_table_length * 8]);
+
+					r += 4; //name + length
+					//if (thisClass->constantPool->get(datAttName)->utf8Info.bytes == "StackMapTable")// zmenit na porovnani utf8
+					{
+						int number_of_entries = (int)(att_data[i][j][code_length + 12+r + exception_table_length * 8] * 256 + att_data[i][j][code_length + 13+r + exception_table_length * 8]);
+						r += 2;
+						for (int i2 = 0; i2 < number_of_entries; i2++)
+						{
+							short tag = (short)(att_data[i][j][code_length + 12 + r + exception_table_length * 8]);
+							switch (tag)
+							{
+							case 7:
+							case 8:
+								r += 2;
+							default:
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		thisClass->methodArea.addMethod(&m);
+	}
+
 	return 0; 
 }
 int ClassLoader::loadAttributes()
