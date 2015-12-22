@@ -120,15 +120,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gc\Baker\BakerObjectTable.cpp" />
     <ClCompile Include="classfile\ClassLoader.cpp" />
+    <ClCompile Include="gc\Marker.cpp" />
+    <ClCompile Include="runtime\ArrayObject.cpp" />
     <ClCompile Include="runtime\ClassMap.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
-    <ClCompile Include="natives\JavaOut.cpp" />
     <ClCompile Include="natives\JavaObject.cpp" />
     <ClCompile Include="natives\JavaString.cpp" />
     <ClCompile Include="natives\natives.cpp" />
     <ClCompile Include="natives\PrintStream.cpp" />
-    <ClCompile Include="runtime\ObjectTable.cpp" />
+    <ClCompile Include="gc\ObjectTable.cpp" />
     <ClCompile Include="natives\System.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
     <ClCompile Include="utils\Utf16String.cpp" />
@@ -151,13 +153,15 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gc\Baker\BakerObjectTable.h" />
+    <ClInclude Include="gc\Marker.h" />
+    <ClInclude Include="gc\ObjectVisitorInterface.h" />
     <ClInclude Include="runtime\ClassMap.h" />
-    <ClInclude Include="natives\JavaOut.h" />
     <ClInclude Include="natives\JavaObject.h" />
     <ClInclude Include="natives\JavaString.h" />
     <ClInclude Include="natives\natives.h" />
     <ClInclude Include="natives\PrintStream.h" />
-    <ClInclude Include="runtime\ObjectTable.h" />
+    <ClInclude Include="gc\ObjectTable.h" />
     <ClInclude Include="natives\System.h" />
     <ClInclude Include="types\Descriptors.h" />
     <ClInclude Include="utils\Utf16String.h" />
@@ -198,6 +202,7 @@
     <ClInclude Include="jvm_structures\Reference.h" />
     <ClInclude Include="jvm_structures\TypeInfo.h" />
     <ClInclude Include="types\types.h" />
+    <ClInclude Include="gc\VisitableInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="natives\Declarations.cpp" />

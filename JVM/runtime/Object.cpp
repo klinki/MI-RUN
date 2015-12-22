@@ -29,3 +29,16 @@ size_t Object::getMemorySize(size_t fields)
 {
 	return sizeof(Object) + LocalVariablesArray::getMemorySize(fields) - sizeof(LocalVariablesArray); // already included in size;
 }
+
+void Object::accept(ObjectVisitorInterface * visitor)
+{
+	for (int i = 0; i < this->fields.index; i++)
+	{
+		visitor->visit(this->fields[i]);
+	}
+}
+
+void Object::accept(ObjectVisitorInterface & visitor)
+{
+	this->accept(&visitor);
+}

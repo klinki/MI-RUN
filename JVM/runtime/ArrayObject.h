@@ -1,9 +1,10 @@
 #pragma once
 #include "Object.h"
 #include "../exceptions/RuntimeExceptions.h"
+#include "../gc/VisitableInterface.h"
 
 template<class T>
-class ArrayObject
+class ArrayObject : public VisitableInterface
 {
 protected:
 	Class* objectClass;
@@ -56,4 +57,27 @@ public:
 	{
 		return sizeof(ArrayObject<T>) + sizeof(T) * fields; // already included in size;
 	}
+
+
+	void accept(ObjectVisitorInterface * visitor)
+	{}
+
+	void accept(ObjectVisitorInterface & visitor)
+	{}
 };
+
+
+template <>
+void ArrayObject<Object*>::accept(ObjectVisitorInterface * visitor)
+{
+	for (int i = 0; i < this->size; i++)
+	{
+		visitor->visit(this->arrayData[i]);
+	}
+}
+
+template <>
+void ArrayObject<Object*>::accept(ObjectVisitorInterface & visitor)
+{
+	this->accept(&visitor);
+}

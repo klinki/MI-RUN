@@ -61,9 +61,6 @@
     <ClCompile Include="utils\Utf16String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\ObjectTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="natives\JavaObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,10 +79,19 @@
     <ClCompile Include="natives\System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="natives\JavaOut.cpp">
+    <ClCompile Include="runtime\ClassMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\ClassMap.cpp">
+    <ClCompile Include="gc\ObjectTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\Baker\BakerObjectTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\Marker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="runtime\ArrayObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -204,9 +210,6 @@
     <ClInclude Include="utils\Utf16String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="runtime\ObjectTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="natives\JavaObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -225,10 +228,22 @@
     <ClInclude Include="natives\PrintStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="natives\JavaOut.h">
+    <ClInclude Include="runtime\ClassMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="runtime\ClassMap.h">
+    <ClInclude Include="gc\ObjectTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\Baker\BakerObjectTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\Marker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\ObjectVisitorInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\VisitableInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

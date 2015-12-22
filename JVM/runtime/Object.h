@@ -2,8 +2,9 @@
 #include "Class.h"
 #include "Field.h"
 #include "LocalVariablesArray.h"
+#include "../gc/VisitableInterface.h"
 
-class Object
+class Object : public VisitableInterface
 {
 visibility:
 	Class * objectClass;
@@ -18,4 +19,7 @@ public:
 
 	static size_t getMemorySize();
 	static size_t getMemorySize(size_t fields);
+
+	virtual void accept(ObjectVisitorInterface * visitor);
+	virtual void accept(ObjectVisitorInterface & visitor);
 };

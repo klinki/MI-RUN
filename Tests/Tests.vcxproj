@@ -190,6 +190,7 @@
     <ClCompile Include="SwitchTest.cpp" />
     <ClCompile Include="TestConversions.cpp" />
     <ClCompile Include="TypeConvertersTest.cpp" />
+    <ClCompile Include="VisitorTest.cpp" />
     <ClCompile Include="WideTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

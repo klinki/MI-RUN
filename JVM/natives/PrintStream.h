@@ -2,18 +2,20 @@
 #include <iostream>
 #include "../runtime/Class.h"
 #include "../runtime/MethodFrame.h"
+#include "../runtime/ArrayObject.h"
 
 class PrintStream
 {
-	std::ostream output;
+	std::ostream * output;
 public:
-	PrintStream(std::ostream & stream);
+	PrintStream(std::ostream * stream);
 	~PrintStream();
 
-	void close(::Object *, MethodFrame *);
-	void flush(::Object *, MethodFrame *);
-	void write(::Object *, MethodFrame *);
-	void writeWithOffset(::Object *, MethodFrame *);
-	void writeSingleByte(::Object *, MethodFrame *);
-	void println(::Object *, MethodFrame *);
+	void close();
+	void flush();
+	void println();
+	void println(Utf8String);
+	void write(java_byte);
+	void write(ArrayObject<java_byte> * arr);
+	void write(ArrayObject<java_byte> * arr, size_t offset, size_t length);
 };
