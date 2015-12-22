@@ -33,4 +33,9 @@ public:
 
 	friend class ExecutionEngine;
 	friend class Method;
+
+
+#ifdef _DEBUG
+	MethodFrame(size_t stackSize, size_t localVariablesSize, bool debugging);
+#endif
 };

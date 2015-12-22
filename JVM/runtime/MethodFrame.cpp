@@ -1,7 +1,5 @@
 #include "MethodFrame.h"
 
-
-
 MethodFrame::MethodFrame()
 {
 }
@@ -29,7 +27,6 @@ MethodFrame::~MethodFrame()
 {
 }
 
-
 size_t MethodFrame::getMemorySize()
 {
 	return sizeof(MethodFrame);
@@ -50,7 +47,7 @@ void MethodFrame::accept(ObjectVisitorInterface * visitor)
 		visitor->visit((*this->operandStack)[i]);
 	}
 
-	for (size_t i = 0; i < this->localVariables->index; i++)
+	for (size_t i = 0; i < this->localVariables->allocatedSize; i++)
 	{
 		visitor->visit((*this->localVariables)[i]);
 	}
@@ -65,3 +62,13 @@ void MethodFrame::accept(ObjectVisitorInterface & visitor)
 {
 	this->accept(&visitor);
 }
+
+
+
+#ifdef _DEBUG
+MethodFrame::MethodFrame(size_t stackSize, size_t localVariablesSize, bool debugging) 
+{
+	this->operandStack = new OperandStack(stackSize, debugging);
+	this->localVariables = new LocalVariablesArray(localVariablesSize, debugging);
+}
+#endif

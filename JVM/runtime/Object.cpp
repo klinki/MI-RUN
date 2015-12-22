@@ -32,7 +32,7 @@ size_t Object::getMemorySize(size_t fields)
 
 void Object::accept(ObjectVisitorInterface * visitor)
 {
-	for (int i = 0; i < this->fields.index; i++)
+	for (int i = 0; i < this->fields.allocatedSize; i++)
 	{
 		visitor->visit(this->fields[i]);
 	}

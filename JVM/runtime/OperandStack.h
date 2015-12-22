@@ -5,10 +5,11 @@
 
 class OperandStack : public Array<word>
 {
-	static const int DEFAULT_STACK_SIZE = 64;
+visibility:
+	size_t index;
 public:
 	OperandStack();
-	OperandStack(size_t size, byte * address) : Array(size, address) {}
+	OperandStack(size_t size, bool debugging);
 	OperandStack(size_t size);
 	~OperandStack();
 
