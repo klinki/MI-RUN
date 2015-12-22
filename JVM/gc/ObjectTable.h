@@ -1,9 +1,11 @@
 #pragma once
 #include "../runtime/Object.h"
-class ObjectTable
+class ObjectTable : public Array<Object*>
 {
-protected:
-	Array<Object*> objectArray;
+visibility:
+	size_t index;
+
+	void resize();
 public:
 	ObjectTable(size_t size = 10);
 	~ObjectTable();
