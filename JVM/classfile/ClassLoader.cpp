@@ -597,9 +597,9 @@ int ClassLoader::loadMethods() {
 	}
 	for (int i = 0; i < methods_count; i++)
 	{
-		Method m;
-		m.name = Utf8String(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
-		m.descriptor = Utf8String(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
+		Method * m = new Method();
+		m->name = Utf8String(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
+		m->descriptor = Utf8String(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
 
 
 		for (int j = 0; j < att_counts[i]; j++)
@@ -611,28 +611,28 @@ int ClassLoader::loadMethods() {
 			if (n[0]=='C'&&n[1] == '0'&&n[2] == 'd'&&n[3] == 'e') // zmenit na porovnani utf8
 			{
 				int max_stack = (int)(att_data[i][j][0] *256 + att_data[i][j][1]);
-				m.operandStackSize = max_stack;
+				m->operandStackSize = max_stack;
 				int max_variables = (int)(att_data[i][j][2] *256 + att_data[i][j][3]);
-				m.localVariablesArraySize;
+				m->localVariablesArraySize;
 				int code_length = (int)(att_data[i][j][4] * 256 *256 * 256 + att_data[i][j][5] *256 *256 + att_data[i][j][6] * 256 + att_data[i][j][7]);
-				m.byteCodeLength = code_length;
+				m->byteCodeLength = code_length;
 				//unsigned char * code = new unsigned char[code_length];
-				m.byteCode = new Instruction[code_length];
+				m->byteCode = new Instruction[code_length];
 				for (int i1 = 0; i1 < code_length; i1++)
 				{
-					m.byteCode[i1] = att_data[i][j][i1+8];
+					m->byteCode[i1] = att_data[i][j][i1+8];
 
 				}
 			
 				int exception_table_length = (int)(att_data[i][j][code_length+8] * 256 + att_data[i][j][code_length+9]);
-				m.exceptionTable = ExceptionTable(exception_table_length);
+				m->exceptionTable = ExceptionTable(exception_table_length);
 				for (int i1 = 0; i1 < exception_table_length; i1++)
 				{
 					int start_pc = (int)(att_data[i][j][code_length + 10 + i1*8] * 256 + att_data[i][j][code_length + 11 + i1 * 8]);
 					int end_pc = (int)(att_data[i][j][code_length + 12 + i1 * 8] * 256 + att_data[i][j][code_length + 13 + i1 * 8]);
 					int handler_pc = (int)(att_data[i][j][code_length + 14 + i1 * 8] * 256 + att_data[i][j][code_length + 15 + i1 * 8]);
 					int catch_type = (int)(att_data[i][j][code_length + 16 + i1 * 8] * 256 + att_data[i][j][code_length + 17 + i1 * 8]);
-					m.exceptionTable.setException(i1,start_pc,end_pc, handler_pc, catch_type);
+					m->exceptionTable.setException(i1,start_pc,end_pc, handler_pc, catch_type);
 				}
 				int code_attributes_count = (int)(att_data[i][j][code_length + 10 + exception_table_length * 8] * 256 + att_data[i][j][code_length + 11 + exception_table_length * 8]);
 				int r = 0;
@@ -662,7 +662,7 @@ int ClassLoader::loadMethods() {
 				}
 			}
 		}
-		thisClass->methodArea.addMethod(&m);
+		thisClass->methodArea.addMethod(m);
 	}
 
 	return 0; 
