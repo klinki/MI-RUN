@@ -106,7 +106,7 @@ int ClassLoader::loadConstPool()
 				unsigned char * utfdata;
 			
 				int utflength = (int)(data[0] * 256 + data[1]);
-				utfdata = new unsigned char[utflength];
+				utfdata = new unsigned char[utflength + 1];
 				//utfdata[0] = data[0];
 				//utfdata[1] = data[1];
 				if (reader(utflength))
@@ -114,11 +114,14 @@ int ClassLoader::loadConstPool()
 					printf("ERROR IN READ FILE");
 					return -1;
 				}
+
 				for (int i = 0; i < utflength; i++)
 				{
 					utfdata[i] = data[i];
-					
 				}
+
+				utfdata[utflength] = '\0';
+
 				//CPool->add(k,(unsigned char)cpType,utflength+2,utfdata);
 				constantPool->add(k, cpType, utflength, utfdata);
 			}
