@@ -7,10 +7,12 @@
 //#include "../classfile/ClassLoader.h"
 #include "../utils/Macros.h"
 #include "../natives/Declarations.h"
+#include "AccessFlags.h"
 
 class Method
 {
 visibility:
+	const FLAG flags;
 	Utf8String name;
 	Utf8String descriptor;
 
@@ -25,7 +27,7 @@ visibility:
 	NativeMethodPtr nativeMethod;
 
 public:
-	Method();
+	Method(FLAG f) : flags(f) {};
 	~Method();
 
 	const Instruction* getBytecode() const

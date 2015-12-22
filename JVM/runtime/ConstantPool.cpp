@@ -387,7 +387,7 @@ void ConstantPool::print()
 {
  for (int i = 1; i < constant_pool_count; i++)
 	{
-		printf("%d: ", i);
+		printf("%d: t%d ", i, constantPool[i].tag);
 		ConstantPoolItem * cpi;
 		//cpi = this->get(i);
 		

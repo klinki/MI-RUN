@@ -41,4 +41,7 @@ Method* MethodArea::getMethod(const Utf8String & name, const Utf8String & descri
 
 
 void MethodArea::addMethod(Method* method)
-{}
+{
+	this->hashmap.insert(method->name,(Class*)method);
+
+}
