@@ -12,7 +12,7 @@ namespace TypeDescriptors
 	static const char* BOOLEAN = "Z";
 	static const char* ARRAY = "[";
 
-	inline std::string getClassDescriptor(const std::string & name)
+	std::string getClassDescriptor(const std::string & name)
 	{
 		std::string result;
 		result.append("L");
@@ -22,7 +22,7 @@ namespace TypeDescriptors
 		return result;
 	}
 
-	inline std::string getArrayDescriptor(JavaType type, int dimensions)
+	std::string getArrayDescriptor(JavaType type, int dimensions)
 	{
 		std::string result;
 
@@ -36,7 +36,7 @@ namespace TypeDescriptors
 		return result;
 	}
 
-	inline std::string getSimpleDescriptor(JavaType type)
+	std::string getSimpleDescriptor(JavaType type)
 	{
 		switch (type.tag)
 		{
@@ -73,7 +73,7 @@ namespace TypeDescriptors
 		}
 	}
 
-	inline std::string getTypeDescriptor(JavaType type)
+	std::string getTypeDescriptor(JavaType type)
 	{
 		if (type.dimensions > 0)
 		{
@@ -85,12 +85,12 @@ namespace TypeDescriptors
 		}
 	}
 
-	inline std::string getMethodDescriptor(JavaType returnType, JavaType parameters...)
+	std::string getMethodDescriptor(JavaType returnType, JavaType parameters...)
 	{
 		return "";
 	}
 
-	inline std::string getMethodDescriptor(JavaType returnType, JavaType * parameters, size_t countParameters)
+	std::string getMethodDescriptor(JavaType returnType, JavaType * parameters, size_t countParameters)
 	{
 		std::string result = "(";
 
@@ -105,14 +105,14 @@ namespace TypeDescriptors
 		return result;
 	}
 
-	inline std::string getMethodDescriptor(JavaType returnType)
+	std::string getMethodDescriptor(JavaType returnType)
 	{
 		std::string result = "()";
 		result.append(getTypeDescriptor(returnType));
 		return result;
 	}
 
-	inline const char* getMethodDescriptor()
+	std::string getMethodDescriptor()
 	{
 		return "()";
 	}

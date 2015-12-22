@@ -1,3 +1,4 @@
+#include <cstring>
 #include "Utf8String.h"
 using namespace std;
 
@@ -8,10 +9,20 @@ Utf8String::Utf8String()
 	this->stringLength = 0;
 }
 
-Utf8String::Utf8String(const unsigned char* data, size_t length)
+Utf8String::Utf8String(const char * string): Utf8String(string, strlen(string))
 {
-	this->data = new unsigned char[length];
-	this->dataLength = length;
+}
+
+Utf8String::Utf8String(const char* data, size_t length)
+{
+	this->data = new unsigned char[length + 1];
+	memcpy(this->data, data, length);
+	this->dataLength = length + 1;
+	this->stringLength = length;
+}
+
+Utf8String::Utf8String(const unsigned char* data, size_t length): Utf8String((char*) data, length)
+{
 }
 
 
@@ -52,18 +63,3 @@ Utf8String& Utf8String::operator=(const Utf8String & u)
 	return *this;
 }
 
-inline size_t std::hash<Utf8String>::operator()(const Utf8String & x) const
-{
-	std::hash<std::string> hash;
-	return hash(x.value);
-}
-
-inline bool operator==(const Utf8String & a, const Utf8String & b)
-{
-	return a.hash == b.hash;
-}
-
-inline bool operator!=(const Utf8String & a, const Utf8String & b)
-{
-	return !(a == b);
-}

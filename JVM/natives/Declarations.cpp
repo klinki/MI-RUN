@@ -3,10 +3,11 @@
 #include "../runtime/MethodFrame.h"
 #include "../runtime/Method.h"
 #include "../types/Descriptors.h"
+#include "../runtime/Object.h"
 
 using namespace TypeDescriptors;
 
-inline Method* getNativeMethod(const std::string & name, std::string & descriptor, NativeMethodPtr nativeMethod)
+Method* getNativeMethod(const std::string & name, const std::string & descriptor, void* nativeMethod)
 {
 	Method * method = new Method();
 	method->name = Utf8String("clone");
@@ -15,27 +16,32 @@ inline Method* getNativeMethod(const std::string & name, std::string & descripto
 	method->byteCodeLength = 0;
 	method->localVariablesArraySize = 0;
 	method->operandStackSize = 0;
-	method->nativeMethod = nativeMethod;
+	method->nativeMethod = (NativeMethodPtr)nativeMethod;
 
 	return method;
 }
 
-inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType args...)
+Method* getNativeMethod(const std::string & name, const std::string & descriptor, NativeMethodPtr nativeMethod)
+{
+	return getNativeMethod(name, descriptor, (void*)nativeMethod);
+}
+
+Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType args...)
 {
 	return getNativeMethod(name, getMethodDescriptor(returnType, args), nativeMethod);
 }
 
-inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType * args, size_t countArgs)
+Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType, JavaType * args, size_t countArgs)
 {
 	return getNativeMethod(name, getMethodDescriptor(returnType, args, countArgs), nativeMethod);
 }
 
-inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType)
+Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType)
 {
 	return getNativeMethod(name, getMethodDescriptor(returnType), nativeMethod);
 }
 
-inline Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod)
+Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod)
 {
 	return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
 }

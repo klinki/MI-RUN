@@ -19,6 +19,10 @@ public:
 	{
 		this->hasBeenCalled = true;
 	}
+
+	virtual void visit(MethodFrame* frame)
+	{
+	}
 };
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

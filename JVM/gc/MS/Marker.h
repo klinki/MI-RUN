@@ -5,4 +5,3 @@ public:
 	Marker();
 	~Marker();
 };
-

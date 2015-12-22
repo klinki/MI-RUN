@@ -1,9 +1,9 @@
 #pragma once
 #include "JavaString.h"
-#include "..\runtime\Class.h"
-#include "..\exceptions\RuntimeExceptions.h"
-#include "JavaString.h"
-#include "..\runtime\MethodFrame.h"
+#include "../runtime/Class.h"
+#include "../exceptions/RuntimeExceptions.h"
+#include "../runtime/MethodFrame.h"
+#include "../types/Descriptors.h"
 
 namespace Java
 {

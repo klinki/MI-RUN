@@ -11,8 +11,11 @@ protected:
 
 public:
 	Utf8String();
+	Utf8String(const char* string);
+	Utf8String(const char* bytes, size_t length);
 	Utf8String(const unsigned char* bytes, size_t length);
 	Utf8String(std::string string);
+	Utf8String& operator=(const Utf8String & u);
 	~Utf8String();
 
 	std::string toAsciiString();
@@ -22,17 +25,28 @@ public:
 	bool equals(const Utf8String & b) const;
 
 	friend std::hash<Utf8String>;
-	friend bool operator==(const Utf8String & a, const Utf8String & b);
-	Utf8String& operator=(const Utf8String & u);
+	friend inline bool operator==(const Utf8String & a, const Utf8String & b);
+	
 };
 
 namespace std 
 {
 	template <> struct hash<Utf8String>
 	{
-		size_t operator()(const Utf8String & x) const;
+		inline size_t std::hash<Utf8String>::operator()(const Utf8String & x) const
+		{
+			std::hash<std::string> hash;
+			return hash(x.value);
+		}
 	};
 }
 
-bool operator==(const Utf8String & a, const Utf8String & b);
-bool operator!=(const Utf8String & a, const Utf8String & b);
+inline bool operator==(const Utf8String & a, const Utf8String & b)
+{
+	return a.hash == b.hash;
+}
+
+inline bool operator!=(const Utf8String & a, const Utf8String & b)
+{
+	return !(a == b);
+}

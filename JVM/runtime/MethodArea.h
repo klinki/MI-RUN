@@ -1,7 +1,7 @@
 #pragma once
 #include "Method.h"
 #include "../utils/HashMap.h"
-#include "../utils/Utf16String.h"
+#include "../utils/Utf8String.h"
 
 class Class;
 
