@@ -30,24 +30,24 @@ Class* ClassLoader::load(char * filename)
 	loadConstPool();
 	unsigned short access_flags = loadFlags();
 	FLAG f = access_flags;
-	thisClass = new Class(f);
+	Class *thisClass = new Class(f);
 	thisClass->constantPool = this->constantPool;
 	thisClass->constantPool->resolveStringRef();
 	thisClass->constantPool->print();
-	loadThisClass();
-	loadSuperClass();
-	loadInterfaces();
-	loadFields();
-	loadMethods();
-	loadAttributes();
+	loadThisClass(thisClass);
+	loadSuperClass(thisClass);
+	loadInterfaces(thisClass);
+	loadFields(thisClass);
+	loadMethods(thisClass);
+	loadAttributes(thisClass);
 
 	myfile.close();
-	this->resolvePool();
+	this->resolvePool(thisClass);
 	delete[] data;
 	classMap->addClass(thisClass);
 	return thisClass;
 }
-int ClassLoader::loadMinVersion() 
+int ClassLoader::loadMinVersion()
 {
 	if (reader(2))
 	{
@@ -71,7 +71,7 @@ int ClassLoader::loadMajVersion()
 	//printf("maj_ver:%d\n", major_version);
 	return 0;
 }
-int ClassLoader::loadConstPool() 
+int ClassLoader::loadConstPool()
 {
 	if (reader(2))
 	{
@@ -284,7 +284,7 @@ unsigned short ClassLoader::loadFlags()
 	//printf("access flags:%X\n", access_flags);
 	return access_flags;
 }
-int ClassLoader::loadThisClass() 
+int ClassLoader::loadThisClass(Class * thisClass)
 {
 
 	if (reader(2))
@@ -317,7 +317,7 @@ int ClassLoader::loadThisClass()
 	*/
 	return 0; 
 }
-int ClassLoader::loadSuperClass()
+int ClassLoader::loadSuperClass(Class * thisClass)
 {
 	if (reader(2))
 	{
@@ -339,7 +339,7 @@ int ClassLoader::loadSuperClass()
 	*/
 	return 0;
 }
-int ClassLoader::loadInterfaces() // TODO write interefaces, where? //references to const pool
+int ClassLoader::loadInterfaces(Class * thisClass) // TODO write interefaces, where? //references to const pool
 {
 	if (reader(2))
 	{
@@ -361,7 +361,7 @@ int ClassLoader::loadInterfaces() // TODO write interefaces, where? //references
 
 	return 0; 
 }
-int ClassLoader::loadFields() 
+int ClassLoader::loadFields(Class * thisClass)
 {
 	//fields[fields_count]
 	//{
@@ -489,7 +489,7 @@ int ClassLoader::loadFields()
 
 	return 0;
 }
-int ClassLoader::loadMethods() {
+int ClassLoader::loadMethods(Class * thisClass) {
 	if (reader(2))
 	{
 		printf("ERROR IN READ FILE");
@@ -729,7 +729,7 @@ int ClassLoader::loadMethods() {
 
 	return 0; 
 }
-int ClassLoader::loadAttributes()
+int ClassLoader::loadAttributes(Class * thisClass)
 {
 	if (reader(2))
 	{
@@ -799,7 +799,7 @@ int ClassLoader::reader(int nob)
 	}
 
 }
-void ClassLoader::resolvePool()
+void ClassLoader::resolvePool(Class * thisClass)
 {
 	int constant_pool_size = thisClass->constantPool->GetSize();
 	for (int i = 1; i < constant_pool_size; i++)
@@ -813,7 +813,7 @@ void ClassLoader::resolvePool()
 			
 			if (thisClass->constantPool->get(i)->classInfo.classPtr == nullptr)
 			{
-				resolveClassPointer(i);
+				resolveClassPointer(thisClass,i);
 			}
 			
 			break;}
@@ -822,7 +822,7 @@ void ClassLoader::resolvePool()
 			int class_index = thisClass->constantPool->get(i)->fieldInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
 			{
-				resolveClassPointer(class_index);
+				resolveClassPointer(thisClass, class_index);
 			}
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
 			thisClass->constantPool->setClassPtr(i, myClass);
@@ -852,7 +852,7 @@ void ClassLoader::resolvePool()
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
 			{
 				
-				resolveClassPointer(class_index);
+				resolveClassPointer(thisClass, class_index);
 				
 			}
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
@@ -878,7 +878,7 @@ void ClassLoader::resolvePool()
 			int class_index = thisClass->constantPool->get(i)->interfaceMethodInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
 			{
-				resolveClassPointer(class_index);
+				resolveClassPointer(thisClass, class_index);
 			}
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
 			thisClass->constantPool->setClassPtr(i, myClass);
@@ -899,7 +899,7 @@ void ClassLoader::resolvePool()
 		}
 	}
 }
-void ClassLoader::resolveClassPointer(int i)
+void ClassLoader::resolveClassPointer(Class * thisClass,int i)
 {
 	int name_index = thisClass->constantPool->get(i)->classInfo.name_index;
 	Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);

@@ -19,7 +19,7 @@ private:
 	unsigned char * data;
 
 	std::ifstream myfile;
-	Class * thisClass;
+	
 
 public:
 	ClassLoader(ClassMap * cm);
@@ -30,14 +30,14 @@ public:
 	int loadMajVersion();
 	int loadConstPool();
 	unsigned short loadFlags();
-	int loadThisClass();
-	int loadSuperClass();
-	int loadInterfaces();
-	int loadFields();
-	int loadMethods();
-	int loadAttributes();
+	int loadThisClass(Class * thisClass);
+	int loadSuperClass(Class * thisClass);
+	int loadInterfaces(Class * thisClass);
+	int loadFields(Class * thisClass);
+	int loadMethods(Class * thisClass);
+	int loadAttributes(Class * thisClass);
 	int reader(int nob); // reads data from file to array data
-	void resolvePool();
-	void resolveClassPointer(int i);
+	void resolvePool(Class * thisClass);
+	void resolveClassPointer(Class * thisClass,int i);
 	~ClassLoader();
 };
