@@ -23,7 +23,10 @@ public:
 	//unsigned char * getElem(int pos);
 
 	ConstantPoolItem * get(int index);
+	void resolveStringRef();
 	void setClassPtr(int index,Class * c);
+	void setFieldPtr(int index, Field * f);
+	void setMethodPtr(int index, Method * m);
 	~ConstantPool();
 
 

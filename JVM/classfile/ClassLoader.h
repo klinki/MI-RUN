@@ -5,39 +5,30 @@
 #include <cstdlib>
 #include "../runtime/ConstantPool.h"
 #include "../runtime/Class.h"
+#include "../runtime/ClassMap.h"
 #include "../utils/Utf8String.h"
 
 
 class ClassLoader
 {
 private:
-	int minor_version;
-	int major_version;
-	int constant_pool_count;
-	//ConstantPool * CPool;
+
+
 	ConstantPool * constantPool;
-	int thisClassIndex;
-	int superClassIndex;
+	ClassMap * classMap;
 	unsigned char * data;
-	int interfaces_count;
-	int * interfacesIndex;
-	int fields_count;
-	int methods_count;
-	int attributes_count;
-	unsigned short access_flags;
-	unsigned char * thisClassName;
-	unsigned char * superClassName;
+
 	std::ifstream myfile;
 	Class * thisClass;
 
 public:
 	ClassLoader();
 	//bool load(char * filename);
-	int load(char * filename);
+	Class* load(char * filename);
 	int loadMinVersion();
 	int loadMajVersion();
 	int loadConstPool();
-	int loadFlags();
+	unsigned short loadFlags();
 	int loadThisClass();
 	int loadSuperClass();
 	int loadInterfaces();
@@ -45,5 +36,7 @@ public:
 	int loadMethods();
 	int loadAttributes();
 	int reader(int nob); // reads data from file to array data
+	void consolidatePool();
+	void resolveClassPointer(int i);
 	~ClassLoader();
 };

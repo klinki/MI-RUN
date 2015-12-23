@@ -37,6 +37,7 @@ struct CONSTANT_Class_info
 	CONSTANT_Class_info(unsigned short index)
 	{
 		name_index = index;
+		classPtr = nullptr;
 	}
 };
 
@@ -52,6 +53,8 @@ struct CONSTANT_Fieldref_info
 	{
 		class_index = ci;
 		name_and_type_index = nati;
+		classPtr = nullptr;
+		fieldPtr = nullptr;
 	}
 };
 
@@ -67,6 +70,8 @@ struct CONSTANT_Methodref_info
 	{
 		class_index = ci;
 		name_and_type_index = nati;
+		classPtr = nullptr;
+		methodPtr = nullptr;
 	}
 };
 
@@ -82,6 +87,8 @@ struct CONSTANT_InterfaceMethodref_info
 	{
 		class_index = ci;
 		name_and_type_index = nati;
+		classPtr = nullptr;
+		methodPtr = nullptr;
 	}
 };
 
@@ -170,11 +177,13 @@ struct CONSTANT_Utf8_info
 	CONSTANT_Utf8_info(unsigned short l, unsigned char * d)
 	{
 		length = l;
+		bytes = d;
+		/*
 		bytes = new unsigned char[length];
 		for (unsigned short i = 0; i < length; i++)
 		{
 			bytes[i] = d[i];
-		}
+		}*/
 	}
 };
 

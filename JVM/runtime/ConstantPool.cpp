@@ -519,9 +519,54 @@ void ConstantPool::print()
 
 }
 
+void ConstantPool::resolveStringRef()
+{
+	for (int i = 1;	i < this->constant_pool_count; i++)
+	{
+		if (this->constantPool[i].tag == 8)
+		{
+			this->constantPool[i].stringInfo.value = new Utf8String(constantPool[this->constantPool[i].stringInfo.string_index].utf8Info.bytes, constantPool[this->constantPool[i].stringInfo.string_index].utf8Info.length);
+		}
+	}
+
+}
+
 
 void ConstantPool::setClassPtr(int index, Class * c)
 {
-	constantPool[index].classInfo.classPtr = c;
+	if (constantPool[index].tag == 7)
+	{
+		constantPool[index].classInfo.classPtr = c;
+	}
+	else if (constantPool[index].tag == 9)
+	{
+		constantPool[index].fieldInfo.classPtr = c;
+	}
+	else if (constantPool[index].tag == 10)
+	{
+		constantPool[index].methodInfo.classPtr = c;
+	}
+	else if (constantPool[index].tag == 11)
+	{
+		constantPool[index].interfaceMethodInfo.classPtr = c;
+	}
+}
+void ConstantPool::setFieldPtr(int index, Field * f)
+{
+	if (constantPool[index].tag == 9)
+	{
+		constantPool[index].fieldInfo.fieldPtr = f;
+	}
 }
 
+void ConstantPool::setMethodPtr(int index, Method * m)
+{
+	if (constantPool[index].tag == 10)
+	{
+		constantPool[index].methodInfo.methodPtr = m;
+	}
+	else if (constantPool[index].tag == 11)
+	{
+		constantPool[index].interfaceMethodInfo.methodPtr = m;
+	}
+}
