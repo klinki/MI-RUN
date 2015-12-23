@@ -22,6 +22,7 @@ private:
 	Class * thisClass;
 
 public:
+	ClassLoader(ClassMap * classMap);
 	ClassLoader();
 	//bool load(char * filename);
 	Class* load(char * filename);

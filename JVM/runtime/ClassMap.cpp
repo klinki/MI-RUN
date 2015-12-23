@@ -13,7 +13,6 @@ ClassMap::~ClassMap()
 
 Class* ClassMap::getClass(const Utf8String & name)
 {
-	
 	auto iterator = this->hashmap.getIterator(name);
 	
 	if (this->hashmap.count(name) > 1)

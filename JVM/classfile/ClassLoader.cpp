@@ -2,6 +2,11 @@
 
 using namespace std;
 
+ClassLoader::ClassLoader(ClassMap * classMap)
+{
+	this->classMap = classMap;
+}
+
 ClassLoader::ClassLoader()
 {
 	
@@ -92,7 +97,7 @@ int ClassLoader::loadConstPool()
 		switch (cpType)
 		{
 
-		case 1://utf8
+		case ConstantPoolTag::CONSTANT_Utf8:
 			if (reader(2))
 			{
 				printf("ERROR IN READ FILE");
@@ -120,15 +125,10 @@ int ClassLoader::loadConstPool()
 				utfdata[utflength] = '\0';
 
 				//CPool->add(k,(unsigned char)cpType,utflength+2,utfdata);
-				constantPool->add(k, cpType, utflength, utfdata);
+				constantPool->add(k, cpType, utflength + 1, utfdata);
 			}
 			break;
-		case 2:
-			//is not in table of types
-			printf("ERROR WRONG CPTYPE 2\n");
-			
-			break;
-		case 3://integer
+		case ConstantPoolTag::CONSTANT_Integer:
 			if (reader(4))
 			{
 				printf("ERROR IN READ FILE");
@@ -137,8 +137,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 4://float
-			
+		case ConstantPoolTag::CONSTANT_Float:
 			if (reader(4))
 			{
 				printf("ERROR IN READ FILE");
@@ -147,7 +146,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 5://long
+		case ConstantPoolTag::CONSTANT_Long:
 			
 			if (reader(8))
 			{
@@ -157,7 +156,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 8, data);
 			constantPool->add(k, cpType, 8, data);
 			break;
-		case 6://double
+		case ConstantPoolTag::CONSTANT_Double:
 			
 			if (reader(8))
 			{
@@ -167,7 +166,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 8, data);
 			constantPool->add(k, cpType, 8, data);
 			break;
-		case 7://class
+		case ConstantPoolTag::CONSTANT_Class:
 			
 			if (reader(2))
 			{
@@ -177,7 +176,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case 8://string
+		case ConstantPoolTag::CONSTANT_String:
 			
 			if (reader(2))
 			{
@@ -187,7 +186,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType,2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case 9://fieldref
+		case ConstantPoolTag::CONSTANT_Fieldref:
 			
 			if (reader(4))
 			{
@@ -197,7 +196,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 10://methodref
+			case ConstantPoolTag::CONSTANT_Methodref:
 			
 			if (reader(4))
 			{
@@ -207,7 +206,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 11://interfacemethodref
+		case ConstantPoolTag::CONSTANT_InterfaceMethodref:
 			
 			if (reader(4))
 			{
@@ -217,7 +216,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 12://nameandtype
+		case ConstantPoolTag::CONSTANT_NameAndType:
 			
 			if (reader(4))
 			{
@@ -227,7 +226,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 15://_MethodHandle
+		case ConstantPoolTag::CONSTANT_MethodHandle:
 
 			if (reader(3))
 			{
@@ -237,7 +236,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 3, data);
 			constantPool->add(k, cpType, 3, data);
 			break;
-		case 16://_MethodType
+		case ConstantPoolTag::CONSTANT_MethodType:
 
 			if (reader(2))
 			{
@@ -247,7 +246,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType,2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case 18://InvokeDynamic
+		case ConstantPoolTag::CONSTANT_InvokeDynamic:
 
 			if (reader(4))
 			{
@@ -883,15 +882,16 @@ void ClassLoader::resolveClassPointer(int i)
 	int name_index = thisClass->constantPool->get(i)->classInfo.name_index;
 	Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 	printf("0");
-	Class* class_pointer = classMap->getClass(item_name);
-	printf("1");
-	if (class_pointer == nullptr)
+
+	try 
 	{
-		//reurzivne zavolej classloader pro tridu co nenasel
-	}
-	else
-	{
+		Class* class_pointer = classMap->getClass(item_name);
+		printf("1");
 		thisClass->constantPool->setClassPtr(i, class_pointer);
+	}
+	catch (ItemNotFoundException e)
+	{
+		// rekurzivni volani
 	}
 }
 ClassLoader::~ClassLoader()

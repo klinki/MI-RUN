@@ -174,6 +174,8 @@ struct CONSTANT_Utf8_info
 	unsigned short length;
 	unsigned char * bytes; // actual: length
 
+	Utf8String * string;
+
 	CONSTANT_Utf8_info(unsigned short l, unsigned char * d)
 	{
 		length = l;

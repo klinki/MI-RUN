@@ -6,7 +6,8 @@
 
 int main(int argc, const char argv[])
 {
-	ClassLoader classLoader;
+	ClassMap * classMap = new ClassMap();
+	ClassLoader classLoader(classMap);
 	classLoader.load("Arithmetics.class");
 
 	/*
