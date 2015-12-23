@@ -496,7 +496,6 @@ int ClassLoader::loadMethods() {
 	printf("methods count:%d\n", methods_count);
 	
 	//methods[methods_count]
-	//methods[methods_count]
 	//{
 	//u2 access_flags;
 	//u2 name_index;
@@ -597,18 +596,24 @@ int ClassLoader::loadMethods() {
 	}
 	for (int i = 0; i < methods_count; i++)
 	{
-		Method * m = new Method();
+		Method * m = new Method(flags[i]);
 		m->name = Utf8String(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
 		m->descriptor = Utf8String(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
-
+		
+		printf("method %d flags: %d\n", i, flags[i]);
+		printf("method %d name: %d\n", i, name_indexes[i]);
+		printf("method %d descriptor: %d\n", i, descriptor_indexes[i]);
+		printf("method %d att count: %d\n", i, att_counts[i]);
 
 		for (int j = 0; j < att_counts[i]; j++)
 		{
-			Utf8String attName(thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes, (int)thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.length);
+			//Utf8String attName(thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes, (int)thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.length);
 			unsigned char* n= thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes;
+			int n_length = (int)thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.length;
 			
+			printf("method %d att %d name: %d\n", i,j, att_name_indexes[i][j]);
 			
-			if (n[0]=='C'&&n[1] == '0'&&n[2] == 'd'&&n[3] == 'e') // zmenit na porovnani utf8
+			if (n_length == 4 && n[0]=='C'&&n[1] == 'o'&&n[2] == 'd'&&n[3] == 'e') // zmenit na porovnani utf8
 			{
 				int max_stack = (int)(att_data[i][j][0] *256 + att_data[i][j][1]);
 				m->operandStackSize = max_stack;
@@ -618,6 +623,12 @@ int ClassLoader::loadMethods() {
 				m->byteCodeLength = code_length;
 				//unsigned char * code = new unsigned char[code_length];
 				m->byteCode = new Instruction[code_length];
+
+				printf("method %d max stack: %d\n", i, max_stack);
+				printf("method %d max var: %d\n", i, max_variables);
+				printf("method %d code length: %d\n", i, code_length);
+
+
 				for (int i1 = 0; i1 < code_length; i1++)
 				{
 					m->byteCode[i1] = att_data[i][j][i1+8];
@@ -625,24 +636,36 @@ int ClassLoader::loadMethods() {
 				}
 			
 				int exception_table_length = (int)(att_data[i][j][code_length+8] * 256 + att_data[i][j][code_length+9]);
-				m->exceptionTable = ExceptionTable(exception_table_length);
+				printf("method %d exc table length: %d\n", i, exception_table_length);
+				//m->exceptionTable = ExceptionTable(exception_table_length);
 				for (int i1 = 0; i1 < exception_table_length; i1++)
 				{
 					int start_pc = (int)(att_data[i][j][code_length + 10 + i1*8] * 256 + att_data[i][j][code_length + 11 + i1 * 8]);
 					int end_pc = (int)(att_data[i][j][code_length + 12 + i1 * 8] * 256 + att_data[i][j][code_length + 13 + i1 * 8]);
 					int handler_pc = (int)(att_data[i][j][code_length + 14 + i1 * 8] * 256 + att_data[i][j][code_length + 15 + i1 * 8]);
 					int catch_type = (int)(att_data[i][j][code_length + 16 + i1 * 8] * 256 + att_data[i][j][code_length + 17 + i1 * 8]);
-					m->exceptionTable.setException(i1,start_pc,end_pc, handler_pc, catch_type);
+					//m->exceptionTable.setException(i1,start_pc,end_pc, handler_pc, catch_type);
 				}
+
 				int code_attributes_count = (int)(att_data[i][j][code_length + 10 + exception_table_length * 8] * 256 + att_data[i][j][code_length + 11 + exception_table_length * 8]);
+				printf("method %d code att count: %d\n", i, code_attributes_count);
 				int r = 0;
+				/*
 				for (int i1 = 0; i1 < code_attributes_count; i1++)
 				{
 					//Utf8String datAttName(thisClass->constantPool->get(att_data[i][j][code_length + 12 + (exception_table_length * 8) + r])->utf8Info.bytes, (int)thisClass->constantPool->get(att_data[i][j][code_length + 13 + (exception_table_length * 8) + r])->utf8Info.length);
 					int datAttName = (int)(att_data[i][j][code_length + 12 +r + exception_table_length * 8] * 256 + att_data[i][j][code_length + 13 + r + exception_table_length * 8]);
+					printf("method %d code att %d name: %d\n", i,i1, datAttName);
+					r += 6; //name + length
+					
+					unsigned char* an = thisClass->constantPool->get(datAttName)->utf8Info.bytes;
+					int an_length = (int)thisClass->constantPool->get(datAttName)->utf8Info.length;
+					
+					if (an_length == 15)//LineNumberTable
+					{
 
-					r += 4; //name + length
-					//if (thisClass->constantPool->get(datAttName)->utf8Info.bytes == "StackMapTable")// zmenit na porovnani utf8
+					}
+					else if (an_length == 13)// StackMapTable
 					{
 						int number_of_entries = (int)(att_data[i][j][code_length + 12+r + exception_table_length * 8] * 256 + att_data[i][j][code_length + 13+r + exception_table_length * 8]);
 						r += 2;
@@ -659,10 +682,41 @@ int ClassLoader::loadMethods() {
 							}
 						}
 					}
+					else if (an_length == 22)//LocalVariableTypeTable
+					{
+
+					}
+					else if (an_length == 18)//LocalVariableTable
+					{
+
+					}
 				}
+				*/
+			}
+			else if (n_length == 11 &&n[0]=='E' &&n[1] == 'x' &&n[2] == 'c' &&n[3] == 'e' &&n[4] == 'p' &&n[5] == 't' &&n[6] == 'i' &&n[7] == 'o' &&n[8] == 'n' &&n[9] == 's')// Exceptions
+			{
+
+				//u2 number_of_exceptions;
+				//u2 exception_index_table[number_of_exceptions];
+				int number_of_exceptions = (int)(att_data[i][j][0] * 256 + att_data[i][j][1]);
+				for (int k = 0; k < number_of_exceptions; k++)
+				{
+					int exception_index = (int)(att_data[i][j][2 + k*2] * 256 + att_data[i][j][3+ k*2]);
+					//add exception to exception table
+				}
+			}
+			else if (n_length == 16 && n[0] == 'M' &&n[1] == 'e' &&n[2] == 't' &&n[3] == 'h' &&n[4] == 'o' &&n[5] == 'd' &&n[6] == 'P' &&n[7] == 'a' &&n[8] == 'r' &&n[9] == 'a'&&n[10] == 'm'&&n[11] == 'e'&&n[12] == 't'&&n[13] == 'e'&&n[14] == 'r'&&n[15] == 's')// MethodParameters
+			{
+				//u2 attribute_name_index;
+				//u4 attribute_length;
+				//u1 parameters_count;
+				//{   u2 name_index;
+				//u2 access_flags;
+				//} parameters[parameters_count];
 			}
 		}
 		thisClass->methodArea.addMethod(m);
+
 	}
 
 	return 0; 

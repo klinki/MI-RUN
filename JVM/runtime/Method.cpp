@@ -2,10 +2,6 @@
 
 
 
-Method::Method()
-{
-}
-
 
 Method::~Method()
 {
