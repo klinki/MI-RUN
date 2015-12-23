@@ -40,8 +40,9 @@ visibility:
 	Class * classLoader;
 
 	Class * classMetaClass;
-
+	
 	LocalVariablesArray * staticVariables;
+
 
 public:
 	Class(FLAG flag) : flags(flag) {};

@@ -22,7 +22,7 @@ private:
 	Class * thisClass;
 
 public:
-	ClassLoader(ClassMap * classMap);
+	ClassLoader(ClassMap * cm);
 	ClassLoader();
 	//bool load(char * filename);
 	Class* load(char * filename);
@@ -37,7 +37,7 @@ public:
 	int loadMethods();
 	int loadAttributes();
 	int reader(int nob); // reads data from file to array data
-	void consolidatePool();
+	void resolvePool();
 	void resolveClassPointer(int i);
 	~ClassLoader();
 };

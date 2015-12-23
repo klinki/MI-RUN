@@ -2,14 +2,13 @@
 
 using namespace std;
 
-ClassLoader::ClassLoader(ClassMap * classMap)
-{
-	this->classMap = classMap;
-}
-
 ClassLoader::ClassLoader()
 {
 	
+}
+ClassLoader::ClassLoader(ClassMap * cm)
+{
+	this->classMap = cm;
 }
 
 Class* ClassLoader::load(char * filename)
@@ -43,8 +42,9 @@ Class* ClassLoader::load(char * filename)
 	loadAttributes();
 
 	myfile.close();
-	this->consolidatePool();
+	this->resolvePool();
 	delete[] data;
+	classMap->addClass(thisClass);
 	return thisClass;
 }
 int ClassLoader::loadMinVersion() 
@@ -79,7 +79,7 @@ int ClassLoader::loadConstPool()
 		return -1;
 	}
 	int constant_pool_count = (int)(data[0] * 256 + data[1]);
-	printf("constant_pool_count:%d\n", constant_pool_count);
+	//printf("constant_pool_count:%d\n", constant_pool_count);
 	//CPool = new ConstantPool(constant_pool_count);
 	constantPool = new ConstantPool(constant_pool_count);
 	
@@ -93,11 +93,11 @@ int ClassLoader::loadConstPool()
 		}
 		
 		int cpType = (int)(data[0]);
-		printf("entry:%d type:%d\n", k, cpType);
+		//printf("entry:%d type:%d\n", k, cpType);
 		switch (cpType)
 		{
 
-		case ConstantPoolTag::CONSTANT_Utf8:
+		case 1://utf8
 			if (reader(2))
 			{
 				printf("ERROR IN READ FILE");
@@ -125,10 +125,15 @@ int ClassLoader::loadConstPool()
 				utfdata[utflength] = '\0';
 
 				//CPool->add(k,(unsigned char)cpType,utflength+2,utfdata);
-				constantPool->add(k, cpType, utflength + 1, utfdata);
+				constantPool->add(k, cpType, utflength, utfdata);
 			}
 			break;
-		case ConstantPoolTag::CONSTANT_Integer:
+		case 2:
+			//is not in table of types
+			printf("ERROR WRONG CPTYPE 2\n");
+			
+			break;
+		case 3://integer
 			if (reader(4))
 			{
 				printf("ERROR IN READ FILE");
@@ -137,7 +142,8 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case ConstantPoolTag::CONSTANT_Float:
+		case 4://float
+			
 			if (reader(4))
 			{
 				printf("ERROR IN READ FILE");
@@ -146,7 +152,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case ConstantPoolTag::CONSTANT_Long:
+		case 5://long
 			
 			if (reader(8))
 			{
@@ -156,7 +162,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 8, data);
 			constantPool->add(k, cpType, 8, data);
 			break;
-		case ConstantPoolTag::CONSTANT_Double:
+		case 6://double
 			
 			if (reader(8))
 			{
@@ -166,7 +172,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 8, data);
 			constantPool->add(k, cpType, 8, data);
 			break;
-		case ConstantPoolTag::CONSTANT_Class:
+		case 7://class
 			
 			if (reader(2))
 			{
@@ -176,7 +182,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case ConstantPoolTag::CONSTANT_String:
+		case 8://string
 			
 			if (reader(2))
 			{
@@ -186,7 +192,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType,2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case ConstantPoolTag::CONSTANT_Fieldref:
+		case 9://fieldref
 			
 			if (reader(4))
 			{
@@ -196,7 +202,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-			case ConstantPoolTag::CONSTANT_Methodref:
+		case 10://methodref
 			
 			if (reader(4))
 			{
@@ -206,7 +212,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case ConstantPoolTag::CONSTANT_InterfaceMethodref:
+		case 11://interfacemethodref
 			
 			if (reader(4))
 			{
@@ -216,7 +222,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case ConstantPoolTag::CONSTANT_NameAndType:
+		case 12://nameandtype
 			
 			if (reader(4))
 			{
@@ -226,7 +232,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case ConstantPoolTag::CONSTANT_MethodHandle:
+		case 15://_MethodHandle
 
 			if (reader(3))
 			{
@@ -236,7 +242,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 3, data);
 			constantPool->add(k, cpType, 3, data);
 			break;
-		case ConstantPoolTag::CONSTANT_MethodType:
+		case 16://_MethodType
 
 			if (reader(2))
 			{
@@ -246,7 +252,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType,2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case ConstantPoolTag::CONSTANT_InvokeDynamic:
+		case 18://InvokeDynamic
 
 			if (reader(4))
 			{
@@ -275,7 +281,7 @@ unsigned short ClassLoader::loadFlags()
 		return -1;
 	}
 	unsigned short access_flags = (unsigned short)(data[0] * 256 + data[1]);
-	printf("access flags:%X\n", access_flags);
+	//printf("access flags:%X\n", access_flags);
 	return access_flags;
 }
 int ClassLoader::loadThisClass() 
@@ -288,7 +294,7 @@ int ClassLoader::loadThisClass()
 	}
 	int thisClassIndex=(int)(data[0] * 256 + data[1]);
 	thisClass->constantPool->setClassPtr(thisClassIndex,thisClass);
-	printf("-%d/n",thisClassIndex);
+	//printf("-%d/n",thisClassIndex);
 	int nameptr = thisClass->constantPool->get(thisClassIndex)->classInfo.name_index;
 	thisClass ->fullyQualifiedName= Utf8String(thisClass->constantPool->get(nameptr)->utf8Info.bytes,thisClass->constantPool->get(nameptr)->utf8Info.length);
 	/*
@@ -342,7 +348,7 @@ int ClassLoader::loadInterfaces() // TODO write interefaces, where? //references
 	}
 	int interfaces_count = (int)(data[0] * 256 + data[1]);
 	int * interfacesIndex = new int[interfaces_count];
-	printf("interface count:%d\n", interfaces_count);
+	//printf("interface count:%d\n", interfaces_count);
 	for (int i = 0; i < interfaces_count; i++)
 	{
 		if (reader(2))
@@ -382,7 +388,7 @@ int ClassLoader::loadFields()
 	int fields_count = (int)(data[0] * 256 + data[1]);
 	thisClass->countFields = (unsigned int)(data[0] * 256 + data[1]);
 	//thisClass->fields = new Field[thisClass->countFields];
-	printf("fields count:%d\n", fields_count);
+	//printf("fields count:%d\n", fields_count);
 	//thisClass->staticFields = new Field[fields_count];
 	unsigned short* flags;
 	flags = new unsigned short[fields_count];
@@ -427,10 +433,10 @@ int ClassLoader::loadFields()
 		descriptor_indexes[i] = (int)(data[4] * 256 + data[5]);
 		att_counts[i] = (int)(data[6] * 256 + data[7]);
 
-		printf("access_flags:%d\n", access_flags);
-		printf("name_index:%d\n", name_index);
-		printf("descriptor_index:%d\n", descriptor_index);
-		printf("attributes count:%d\n", attributes_count);
+		//printf("access_flags:%d\n", access_flags);
+		//printf("name_index:%d\n", name_index);
+		//printf("descriptor_index:%d\n", descriptor_index);
+		//printf("attributes count:%d\n", attributes_count);
 
 		att_name_indexes[i] = new int[att_counts[i]];
 		att_lengts[i] = new int[att_counts[i]];
@@ -453,8 +459,8 @@ int ClassLoader::loadFields()
 			att_lengts[i][j] = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
 			
 
-			printf("attribute_name_index:%d\n", attribute_name_index);
-			printf("attribute lenght:%d\n", attribute_length);
+			//printf("attribute_name_index:%d\n", attribute_name_index);
+			//printf("attribute lenght:%d\n", attribute_length);
 			if (reader(attribute_length))
 			{
 				printf("ERROR IN READ FILE");
@@ -491,7 +497,7 @@ int ClassLoader::loadMethods() {
 	}
 	int methods_count = (int)(data[0] * 256 + data[1]);
 	thisClass->countMethods = methods_count;
-	printf("methods count:%d\n", methods_count);
+	//printf("methods count:%d\n", methods_count);
 	
 	//methods[methods_count]
 	//{
@@ -556,10 +562,10 @@ int ClassLoader::loadMethods() {
 		att_lengts[i] = new int[att_counts[i]];
 		att_data[i] = new unsigned char*[att_counts[i]];
 
-		printf("access_flags:%d\n", access_flags);
-		printf("name_index:%d\n", name_index);
-		printf("descriptor_index:%d\n", descriptor_index);
-		printf("attributes count:%d\n", attributes_count);
+		//printf("access_flags:%d\n", access_flags);
+		//printf("name_index:%d\n", name_index);
+		//printf("descriptor_index:%d\n", descriptor_index);
+		//printf("attributes count:%d\n", attributes_count);
 		for (int j = 0; j < attributes_count; j++)
 		{
 			int attribute_name_index;
@@ -577,8 +583,8 @@ int ClassLoader::loadMethods() {
 			att_lengts[i][j] = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
 			att_data[i][j] = new unsigned char[att_lengts[i][j]];
 
-			printf("attribute_name_index:%d\n", attribute_name_index);
-			printf("attribute lenght:%d\n", attribute_length);
+			//printf("attribute_name_index:%d\n", attribute_name_index);
+			//printf("attribute lenght:%d\n", attribute_length);
 			if (reader(attribute_length))
 			{
 				printf("ERROR IN READ FILE");
@@ -598,10 +604,10 @@ int ClassLoader::loadMethods() {
 		m->name = Utf8String(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
 		m->descriptor = Utf8String(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
 		
-		printf("method %d flags: %d\n", i, flags[i]);
-		printf("method %d name: %d\n", i, name_indexes[i]);
-		printf("method %d descriptor: %d\n", i, descriptor_indexes[i]);
-		printf("method %d att count: %d\n", i, att_counts[i]);
+		//printf("method %d flags: %d\n", i, flags[i]);
+		//printf("method %d name: %d\n", i, name_indexes[i]);
+		//printf("method %d descriptor: %d\n", i, descriptor_indexes[i]);
+		//printf("method %d att count: %d\n", i, att_counts[i]);
 
 		for (int j = 0; j < att_counts[i]; j++)
 		{
@@ -609,7 +615,7 @@ int ClassLoader::loadMethods() {
 			unsigned char* n= thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes;
 			int n_length = (int)thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.length;
 			
-			printf("method %d att %d name: %d\n", i,j, att_name_indexes[i][j]);
+			//printf("method %d att %d name: %d\n", i,j, att_name_indexes[i][j]);
 			
 			if (n_length == 4 && n[0]=='C'&&n[1] == 'o'&&n[2] == 'd'&&n[3] == 'e'&& n[4]=='\0') // zmenit na porovnani utf8
 			{
@@ -622,9 +628,9 @@ int ClassLoader::loadMethods() {
 				//unsigned char * code = new unsigned char[code_length];
 				m->byteCode = new Instruction[code_length];
 
-				printf("method %d max stack: %d\n", i, max_stack);
-				printf("method %d max var: %d\n", i, max_variables);
-				printf("method %d code length: %d\n", i, code_length);
+				//printf("method %d max stack: %d\n", i, max_stack);
+				//printf("method %d max var: %d\n", i, max_variables);
+				//printf("method %d code length: %d\n", i, code_length);
 
 
 				for (int i1 = 0; i1 < code_length; i1++)
@@ -634,7 +640,7 @@ int ClassLoader::loadMethods() {
 				}
 			
 				int exception_table_length = (int)(att_data[i][j][code_length+8] * 256 + att_data[i][j][code_length+9]);
-				printf("method %d exc table length: %d\n", i, exception_table_length);
+				//printf("method %d exc table length: %d\n", i, exception_table_length);
 				//m->exceptionTable = ExceptionTable(exception_table_length);
 				for (int i1 = 0; i1 < exception_table_length; i1++)
 				{
@@ -643,10 +649,14 @@ int ClassLoader::loadMethods() {
 					int handler_pc = (int)(att_data[i][j][code_length + 14 + i1 * 8] * 256 + att_data[i][j][code_length + 15 + i1 * 8]);
 					int catch_type = (int)(att_data[i][j][code_length + 16 + i1 * 8] * 256 + att_data[i][j][code_length + 17 + i1 * 8]);
 					//m->exceptionTable.setException(i1,start_pc,end_pc, handler_pc, catch_type);
+					int n_i = thisClass->constantPool->get(catch_type)->classInfo.name_index;
+					
+					Utf8String exc_name = Utf8String(thisClass->constantPool->get(n_i)->utf8Info.bytes, thisClass->constantPool->get(n_i)->utf8Info.length);
+					m->exceptionTable.addException(exc_name, start_pc, end_pc, handler_pc, catch_type);
 				}
 
 				int code_attributes_count = (int)(att_data[i][j][code_length + 10 + exception_table_length * 8] * 256 + att_data[i][j][code_length + 11 + exception_table_length * 8]);
-				printf("method %d code att count: %d\n", i, code_attributes_count);
+				//printf("method %d code att count: %d\n", i, code_attributes_count);
 				int r = 0;
 				/*
 				for (int i1 = 0; i1 < code_attributes_count; i1++)
@@ -700,7 +710,7 @@ int ClassLoader::loadMethods() {
 				for (int k = 0; k < number_of_exceptions; k++)
 				{
 					int exception_index = (int)(att_data[i][j][2 + k*2] * 256 + att_data[i][j][3+ k*2]);
-					//add exception to exception table
+					//add exception to exception table?
 				}
 			}
 			else if (n_length == 16 && n[0] == 'M' &&n[1] == 'e' &&n[2] == 't' &&n[3] == 'h' &&n[4] == 'o' &&n[5] == 'd' &&n[6] == 'P' &&n[7] == 'a' &&n[8] == 'r' &&n[9] == 'a'&&n[10] == 'm'&&n[11] == 'e'&&n[12] == 't'&&n[13] == 'e'&&n[14] == 'r'&&n[15] == 's')// MethodParameters
@@ -727,7 +737,7 @@ int ClassLoader::loadAttributes()
 		return -1;
 	}
 	int attributes_count = (int)(data[0] * 256 + data[1]);
-	printf("attributes count:%d\n", attributes_count);
+	//printf("attributes count:%d\n", attributes_count);
 
 	//attributes[attributes_count]
 	//attributes[attributes_count]
@@ -752,8 +762,8 @@ int ClassLoader::loadAttributes()
 		attribute_name_index = (int)(data[0] * 256 + data[1]);
 		attribute_length = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
 
-		printf("attribute_name_index:%d\n", attribute_name_index);
-		printf("attribute lenght:%d\n", attribute_length);
+		//printf("attribute_name_index:%d\n", attribute_name_index);
+		//printf("attribute lenght:%d\n", attribute_length);
 
 		if (reader(attribute_length))
 		{
@@ -777,9 +787,9 @@ int ClassLoader::reader(int nob)
 		for (int i = 0; i < nob; i++)
 		{
 			data[i] = (unsigned char)sdata[i];
-			printf("%X", data[i]);
+			//printf("%X", data[i]);
 		}
-		printf("\n");
+		//printf("\n");
 		delete[] sdata;
 		return 0;
 	}
@@ -789,17 +799,18 @@ int ClassLoader::reader(int nob)
 	}
 
 }
-void ClassLoader::consolidatePool()
+void ClassLoader::resolvePool()
 {
 	int constant_pool_size = thisClass->constantPool->GetSize();
 	for (int i = 1; i < constant_pool_size; i++)
 	{
 		
 		int item_tag = thisClass->constantPool->get(i)->tag;
-		printf("com %d %d\n",i,item_tag);
+		//printf("com %d %d\n",i,item_tag);
 		switch (item_tag)
 		{
 		case 7: {
+			
 			if (thisClass->constantPool->get(i)->classInfo.classPtr == nullptr)
 			{
 				resolveClassPointer(i);
@@ -813,22 +824,26 @@ void ClassLoader::consolidatePool()
 			{
 				resolveClassPointer(class_index);
 			}
-
-			thisClass->constantPool->setClassPtr(i, thisClass->constantPool->get(class_index)->classInfo.classPtr);
+			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
+			thisClass->constantPool->setClassPtr(i, myClass);
 			//field ptr
-			int name_index = thisClass->constantPool->get(i)->fieldInfo.name_and_type_index;
-			int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
-			name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
-			Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
-			Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
-
-			for (int j = 0; j < thisClass->countFields; j++)
+			if (myClass != nullptr)
 			{
-				if (thisClass->fields[i]->descriptor == item_descriptor && thisClass->fields[i]->name == item_name)
+				int name_index = thisClass->constantPool->get(i)->fieldInfo.name_and_type_index;
+				int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
+				name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
+				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
+				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
+
+				for (int j = 0; j < myClass->countFields; j++)
 				{
-					thisClass->constantPool->setFieldPtr(i,thisClass->fields[i]);
+					if (myClass->fields[i]->descriptor == item_descriptor && myClass->fields[i]->name == item_name)
+					{
+						thisClass->constantPool->setFieldPtr(i, myClass->fields[i]);
+					}
 				}
 			}
+			
 
 			break;}
 		case 10: {
@@ -840,17 +855,22 @@ void ClassLoader::consolidatePool()
 				resolveClassPointer(class_index);
 				
 			}
-
-			thisClass->constantPool->setClassPtr(i, thisClass->constantPool->get(class_index)->classInfo.classPtr);
+			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
+			thisClass->constantPool->setClassPtr(i, myClass);
 			//merhod ptr
-			
-			int name_index = thisClass->constantPool->get(i)->methodInfo.name_and_type_index;
-			int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
-			name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
-			Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
-			Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
-			thisClass->constantPool->setMethodPtr(i, thisClass->methodArea.getMethod(item_name, item_descriptor));
-			
+
+			if (myClass != nullptr)
+			{
+				
+
+				int name_index = thisClass->constantPool->get(i)->methodInfo.name_and_type_index;
+				int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
+				name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
+				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
+				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
+				thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
+			}
+
 
 			break;}
 		case 11: {
@@ -860,16 +880,18 @@ void ClassLoader::consolidatePool()
 			{
 				resolveClassPointer(class_index);
 			}
-
-			thisClass->constantPool->setClassPtr(i, thisClass->constantPool->get(class_index)->classInfo.classPtr);
+			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
+			thisClass->constantPool->setClassPtr(i, myClass);
 			//method ptr
-			int name_index = thisClass->constantPool->get(i)->interfaceMethodInfo.name_and_type_index;
-			int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
-			name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
-			Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
-			Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
-			thisClass->constantPool->setMethodPtr(i, thisClass->methodArea.getMethod(item_name, item_descriptor));
-
+			if (myClass != nullptr)
+			{
+				int name_index = thisClass->constantPool->get(i)->interfaceMethodInfo.name_and_type_index;
+				int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
+				name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
+				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
+				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
+				thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
+			}
 
 			break;}
 		default:
@@ -881,17 +903,16 @@ void ClassLoader::resolveClassPointer(int i)
 {
 	int name_index = thisClass->constantPool->get(i)->classInfo.name_index;
 	Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
-	printf("0");
 
-	try 
+	Class* class_pointer = classMap->getClass(item_name);
+
+	if (class_pointer == nullptr)
 	{
-		Class* class_pointer = classMap->getClass(item_name);
-		printf("1");
-		thisClass->constantPool->setClassPtr(i, class_pointer);
+		//reurzivne zavolej classloader pro tridu co nenasel
 	}
-	catch (ItemNotFoundException e)
+	else
 	{
-		// rekurzivni volani
+		thisClass->constantPool->setClassPtr(i, class_pointer);
 	}
 }
 ClassLoader::~ClassLoader()
