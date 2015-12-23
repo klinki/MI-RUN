@@ -27,6 +27,7 @@ visibility:
 	NativeMethodPtr nativeMethod;
 
 public:
+	Method():flags(0) {};
 	Method(FLAG f) : flags(f) {};
 	~Method();
 
