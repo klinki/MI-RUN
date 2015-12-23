@@ -88,12 +88,6 @@
     <ClCompile Include="gc\Baker\BakerObjectTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gc\Marker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="runtime\ArrayObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gc\MS\Marker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -250,6 +244,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gc\MS\Marker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\MS\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\HeapInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

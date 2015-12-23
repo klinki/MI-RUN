@@ -1,19 +1,24 @@
 #pragma once
 #include <stdlib.h>
-class Heap
+#include "interfaces/HeapInterface.h"
+class Heap : public HeapInterface
 {
 	const int DEFAULT_HEAP_SIZE = 64 * 1024; // 64kB
 
 protected:
-	unsigned int allocatedBytes;
-	unsigned int usedBytes;
+	size_t allocatedBytes;
+	size_t usedBytes;
 	unsigned char * data;
 	unsigned char * freeMemory;
 
 	void resize();
 public:
 	Heap();
+	Heap(size_t size);
 	~Heap();
 
-	unsigned char* allocate(size_t size);
+	virtual unsigned char* allocate(size_t size);
+	virtual void clear();
+
+	friend class BakerObjectTable;
 };

@@ -50,7 +50,7 @@ void MethodFrame::accept(ObjectVisitorInterface * visitor)
 		visitor->visit((*this->operandStack)[i]);
 	}
 
-	for (size_t i = 0; i < this->localVariables->index; i++)
+	for (size_t i = 0; i < this->localVariables->allocatedSize; i++)
 	{
 		visitor->visit((*this->localVariables)[i]);
 	}

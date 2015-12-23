@@ -1,6 +1,7 @@
 #pragma once
+#include "../types/types.h"
 class Object;
-
+class MethodFrame;
 
 class ObjectVisitorInterface
 {

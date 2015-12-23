@@ -165,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArrayTest.cpp" />
+    <ClCompile Include="BakerTest.cpp" />
     <ClCompile Include="ConstTest.cpp" />
     <ClCompile Include="ConstantPoolTest.cpp" />
     <ClCompile Include="DoubleTest.cpp" />

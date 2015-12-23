@@ -8,10 +8,10 @@
 class Runtime
 {
 protected:
-//	ConstantPool constantPool;
+//	ConstantPool constantPool; // TODO: Uncomment when ready and compileable!
 	Heap heap;
 	FrameStack frameStack;
-	MethodArea methodArea;
+	ClassMap classTable;
 	ExecutionEngine executionEngine;
 
 public:

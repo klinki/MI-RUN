@@ -9,7 +9,7 @@ ObjectTable::~ObjectTable()
 {
 }
 
-size_t ObjectTable::insert(Object * obj)
+size_t ObjectTable::insert(void * obj)
 {
 	if (this->objectArray.index >= this->objectArray.allocatedSize)
 	{
@@ -17,14 +17,9 @@ size_t ObjectTable::insert(Object * obj)
 	}
 
 	size_t index = this->objectArray.index++;
-	this->objectArray.allocatedArray[index] = obj;
+	this->objectArray.allocatedArray[index] = (Object*)obj;
 
 	return index;
-}
-
-size_t ObjectTable::insert(intptr_t ptr)
-{
-	return this->insert((Object*)ptr);
 }
 
 Object * ObjectTable::get(size_t index)
