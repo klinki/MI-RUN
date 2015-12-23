@@ -13,30 +13,39 @@ ClassMap::~ClassMap()
 
 Class* ClassMap::getClass(const Utf8String & name)
 {
-	auto iterator = this->hashmap.getIterator(name);
-	
-	if (this->hashmap.count(name) > 1)
+	try
 	{
-		for ( ; iterator != this->hashmap.endIterator(); ++iterator)
+		auto iterator = this->hashmap.getIterator(name);
+
+		if (this->hashmap.count(name) > 1)
 		{
-			Class* value = (Class*)iterator->second;
-			if (value->fullyQualifiedName.equals(name))
+			for (; iterator != this->hashmap.endIterator(); ++iterator)
 			{
-				return value;
+				Class* value = (Class*)iterator->second;
+				if (value->fullyQualifiedName.equals(name))
+				{
+					return value;
+				}
 			}
 		}
-	}
-	else
-	{
-		Class* value = (Class*)iterator->second;
-		return value;
-	}
+		else
+		{
+			Class* value = (Class*)iterator->second;
+			return value;
+		}
 
-	return nullptr;
+		return nullptr;
+	}
+	catch (const ItemNotFoundException&)
+	{
+		return nullptr;
+	}
+	
 }
 
 
 void ClassMap::addClass(Class* classRef)
 {
-
+	Utf8String name = classRef->fullyQualifiedName;
+	hashmap.insert(name, classRef);
 }

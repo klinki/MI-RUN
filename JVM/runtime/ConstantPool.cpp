@@ -32,52 +32,7 @@ ConstantPool::~ConstantPool()
 	*/
 	delete[] constantPool;
 }
-/*
-void ConstantPool::consolidate()
-{
-	for (int  i = 0; i < constant_pool_count; i++)
-	{
-		switch (constantPool[i].tag)
-		{
-		case 7:
-			break;
-		case 9:
-			break;
-		case 10:
-			break;
-		case 11:
-			break;
-		case 8:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
-		case 6:
-			break;
-		case 12:
-			break;
-		case 1:
-			break;
-		case 15:
-			break;
-		case 16:
-			break;
-		case 18:
-			break;
 
-
-
-
-		default:
-			break;
-		}
-	}
-
-}
-*/
 
 int ConstantPool::GetSize()
 {
@@ -85,7 +40,7 @@ int ConstantPool::GetSize()
 }
 int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 {
-	printf("zapis %d\n",type);
+	//printf("zapis %d\n",type);
 	switch (type)
 	{
 	case 7:{//class
@@ -217,7 +172,7 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		return -1;
 	}
 	int i = pos;
-	
+	/*
 	printf("%d\n", constantPool[i].tag);
 	switch (constantPool[i].tag)
 	{
@@ -279,105 +234,10 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 	default:
 		printf("ERROR Constant pool (print) unknown tag %d\n",constantPool[i].tag);
 	}
-
+	*/
 	return 0;
 }
-/*
-int ConstantPool::add(int pos, unsigned char type, int length, unsigned char * data)
-{
-	delete[] constPool[pos];
-	constPool[pos] = new unsigned char[9];
-	if ((int)type == 1)
-	{
-		delete[] constPool[pos];
-		constPool[pos] = new unsigned char [length+1];
-		
-	}
-	printf("%d\n", pos);
-	
-	constPool[pos][0] = type;
-	for (int i = 0; i < length; i++)
-	{
-			
-		constPool[pos][i+1] = data[i];
-		printf("%c", data[i]);
-	}
-	printf("\n\n");
-	return 0;
-}*/
-/*
-unsigned char * ConstantPool::getElem(int pos)
-{
-	int l;
-	return getElem(pos, l);
-}
-*/
-/*
-unsigned char * ConstantPool::getElem(int pos, int & length)
-{
-	//printf("pos:%d\n",pos);
-	
-	if (pos == 0 || pos > constant_pool_count)
-	{
-		return 0;
-	}
-	//printf("type:%d\n", (int)constPool[pos][0]);
-	switch ((int)constPool[pos][0])
-	{
-	case 1:
-		length = ((int)constPool[pos][1]) * 256 + ((int)constPool[pos][2]);
-		break;
-	case 3:
-		length = 4;
-		break;
-	case 4:
-		length = 4;
-		break;
-	case 5:
-		length = 8;
-		break;
-	case 6:
-		length = 8;
-		break;
-	case 7:
-		length = 2;
-		break;
-	case 8:
-		length = 2;
-		break;
-	case 9:
-		length = 4;
-		break;
-	case 10:
-		length = 4;
-		break;
-	case 11:
-		length = 4;
-		break;
-	case 12:
-		length = 4;
-	default:
-		length = 0;
-		return 0;
-	}
-	
-	unsigned char * ret = new unsigned char[length];
-	for (int i = 0; i < length; i++)
-	{
-		if (constPool[pos][0]==1)
-		{
-			ret[i] = constPool[pos][i + 3];
-		}
-		else
-		{
-			ret[i] = constPool[pos][i + 1];
-			
-		}	
-	}
 
-	return ret;
-}
-*/
 ConstantPoolItem *ConstantPool::get(int index)
 {
 	return & constantPool[index];
