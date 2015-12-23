@@ -101,12 +101,8 @@ unsigned char * BakerObjectTable::allocate(size_t size)
 		this->collect();		
 	}
 
-	unsigned char* memory = this->memorySlots[this->activeSlot]->allocate(bytesAllocated);
-	memory += 3 * sizeof(int);
-
-	this->setDataSize(memory, size);
-
-	return memory;
+	MemoryHeader* memory = (MemoryHeader*) new(this->memorySlots[this->activeSlot]->allocate(bytesAllocated)) MemoryHeader(size);
+	return (unsigned char*)memory->data;
 }
 
 unsigned char * BakerObjectTable::allocateOnPermanentSpace(size_t size)
@@ -124,12 +120,8 @@ unsigned char * BakerObjectTable::allocateOnPermanentSpace(size_t size)
 		// Thats bad - time for FULL old space garbage collection!!
 	}
 
-	unsigned char* memory = this->permanentSpace->allocate(bytesAllocated);
-	memory += 3 * sizeof(int);
-
-	this->setDataSize(memory, size);
-
-	return memory;
+	MemoryHeader* memory = (MemoryHeader*) new(this->permanentSpace->allocate(bytesAllocated)) MemoryHeader(size);
+	return (unsigned char*)memory->data;
 }
 
 void BakerObjectTable::updateAddress(size_t index, void * newAddress)
@@ -168,7 +160,10 @@ void BakerObjectTable::finalize()
 		if (this->getColor(ptr) != Color::BAKER_MOVED)
 		{
 			// finalize object
-			Method* method = objPtr->objectClass->methodArea.getMethod("finalize", "()");
+			if (objPtr->objectClass != NULL)
+			{
+				Method* method = objPtr->objectClass->methodArea.getMethod("finalize", "()");
+			}
 			// TODO: Finalize object
 
 			this->hashMap.erase(this->getKey(ptr));

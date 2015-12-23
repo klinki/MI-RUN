@@ -21,7 +21,16 @@ visibility:
 	{
 		size_t size;
 		size_t accessCounter; // or color for perm. generation
-		unsigned char data[8]; // minimal size is 8 to keep 16B alignment
+		size_t key;
+		unsigned char * data; 
+
+		MemoryHeader(size_t size)
+		{
+			this->size = size;
+			this->accessCounter = 0;
+			this->key = 0;
+			this->data = (unsigned char*)(&this->data + sizeof(this->data));
+		}
 	};
 
 	Heap* memorySlots[2];
