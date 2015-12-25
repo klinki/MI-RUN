@@ -795,6 +795,7 @@ int ClassLoader::reader(int nob)
 	}
 	else
 	{
+		throw;
 		return -1;
 	}
 
