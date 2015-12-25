@@ -8,13 +8,13 @@ class Class;
 class MethodArea
 {
 protected:
-	HashMap<Utf8String, Class*> hashmap;
+	HashMap<Utf8String, Method*> hashmap;
 public:
 	MethodArea();
 	~MethodArea();
 
-	void addClass(Class* classRef);
-	Class* getClass(const Utf8String & name);
+	//void addClass(Class* classRef);
+	//Class* getClass(const Utf8String & name);
 
 	Method* getMethod(const Utf8String & name, const Utf8String & descriptor);
 	void addMethod(Method* method);

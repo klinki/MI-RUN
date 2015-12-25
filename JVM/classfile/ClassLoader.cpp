@@ -97,7 +97,7 @@ int ClassLoader::loadConstPool()
 		switch (cpType)
 		{
 
-		case 1://utf8
+		case ConstantPoolTag::CONSTANT_Utf8://utf8
 			if (reader(2))
 			{
 				printf("ERROR IN READ FILE");
@@ -133,7 +133,7 @@ int ClassLoader::loadConstPool()
 			printf("ERROR WRONG CPTYPE 2\n");
 			
 			break;
-		case 3://integer
+		case ConstantPoolTag::CONSTANT_Integer ://integer
 			if (reader(4))
 			{
 				printf("ERROR IN READ FILE");
@@ -142,7 +142,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 4://float
+		case ConstantPoolTag::CONSTANT_Float://float
 			
 			if (reader(4))
 			{
@@ -152,7 +152,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 5://long
+		case ConstantPoolTag::CONSTANT_Long://long
 			
 			if (reader(8))
 			{
@@ -162,7 +162,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 8, data);
 			constantPool->add(k, cpType, 8, data);
 			break;
-		case 6://double
+		case ConstantPoolTag::CONSTANT_Double://double
 			
 			if (reader(8))
 			{
@@ -172,7 +172,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 8, data);
 			constantPool->add(k, cpType, 8, data);
 			break;
-		case 7://class
+		case ConstantPoolTag::CONSTANT_Class://class
 			
 			if (reader(2))
 			{
@@ -182,7 +182,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case 8://string
+		case ConstantPoolTag::CONSTANT_String://string
 			
 			if (reader(2))
 			{
@@ -192,7 +192,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType,2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case 9://fieldref
+		case ConstantPoolTag::CONSTANT_Fieldref://fieldref
 			
 			if (reader(4))
 			{
@@ -202,7 +202,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 10://methodref
+		case ConstantPoolTag::CONSTANT_Methodref://methodref
 			
 			if (reader(4))
 			{
@@ -212,7 +212,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 11://interfacemethodref
+		case ConstantPoolTag::CONSTANT_InterfaceMethodref://interfacemethodref
 			
 			if (reader(4))
 			{
@@ -222,7 +222,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 12://nameandtype
+		case ConstantPoolTag::CONSTANT_NameAndType://nameandtype
 			
 			if (reader(4))
 			{
@@ -232,7 +232,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 4, data);
 			constantPool->add(k, cpType, 4, data);
 			break;
-		case 15://_MethodHandle
+		case ConstantPoolTag::CONSTANT_MethodHandle://_MethodHandle
 
 			if (reader(3))
 			{
@@ -242,7 +242,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType, 3, data);
 			constantPool->add(k, cpType, 3, data);
 			break;
-		case 16://_MethodType
+		case ConstantPoolTag::CONSTANT_MethodType://_MethodType
 
 			if (reader(2))
 			{
@@ -252,7 +252,7 @@ int ClassLoader::loadConstPool()
 			//CPool->add(k, (unsigned char)cpType,2, data);
 			constantPool->add(k, cpType, 2, data);
 			break;
-		case 18://InvokeDynamic
+		case ConstantPoolTag::CONSTANT_InvokeDynamic://InvokeDynamic
 
 			if (reader(4))
 			{
@@ -809,7 +809,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 		//printf("com %d %d\n",i,item_tag);
 		switch (item_tag)
 		{
-		case 7: {
+		case  ConstantPoolTag::CONSTANT_Utf8 : {
 			
 			if (thisClass->constantPool->get(i)->classInfo.classPtr == nullptr)
 			{
@@ -817,7 +817,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 			}
 			
 			break;}
-		case 9: {
+		case  ConstantPoolTag::CONSTANT_Fieldref: {
 			//classptr
 			int class_index = thisClass->constantPool->get(i)->fieldInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
@@ -846,7 +846,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 			
 
 			break;}
-		case 10: {
+		case  ConstantPoolTag::CONSTANT_Methodref: {
 			//classptr
 			int class_index = thisClass->constantPool->get(i)->methodInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
@@ -873,7 +873,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 
 
 			break;}
-		case 11: {
+		case  ConstantPoolTag::CONSTANT_InterfaceMethodref: {
 			//classptr
 			int class_index = thisClass->constantPool->get(i)->interfaceMethodInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
