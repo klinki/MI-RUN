@@ -1,12 +1,13 @@
 #pragma once
-#include <map>
-#include "../runtime/Object.h"
-#include "../utils/HashMap.h"
+#include <unordered_map>
+
+class Object;
 
 class ObjectTable
 {
 protected:
 	std::unordered_map<int, void*> hashMap;
+
 public:
 	ObjectTable(size_t size = 10);
 	~ObjectTable();

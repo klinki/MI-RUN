@@ -51,9 +51,7 @@ public:
 		return this->arrayData[index];
 	}
 
-
-	static size_t getMemorySize();
-	static size_t getMemorySize(size_t fields)
+	static size_t getMemorySize(size_t fields = 0)
 	{
 		return sizeof(ArrayObject<T>) + sizeof(T) * fields; // already included in size;
 	}

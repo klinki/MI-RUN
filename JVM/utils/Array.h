@@ -6,55 +6,26 @@
 template <class T> 
 class Array
 {
-	static const int DEFAULT_ARRAY_SIZE = 64;
 visibility:
 	size_t allocatedSize;
-	size_t index;
-	bool preallocated = false;
 	T * allocatedArray;
 
 public:
-	Array() : Array(DEFAULT_ARRAY_SIZE) {};
+	Array()
+	{
+		this->allocatedArray = NULL;
+		this->allocatedSize = 0;
+	};
 	
 	Array(size_t size)
 	{
-		this->allocatedArray = new T[size];
-		this->allocatedSize = size;
-		this->index = 0;
-	}
-
-	Array(size_t size, byte * address)
-	{
-		this->preallocated = true;
-		this->index = 0;
 		this->allocatedSize = size;
 		this->allocatedArray = (T*) (&this->allocatedArray + 1);//address;
 	}
 
 	~Array()
 	{
-		if (!this->preallocated)
-		{
-			delete[] this->allocatedArray;
-		}
-
 		this->allocatedArray = NULL;
-	}
-
-	void resize()
-	{
-		int oldSize = this->allocatedSize;
-		this->allocatedSize *= 2;
-
-		T * oldArray = this->allocatedArray;
-		this->allocatedArray = new T[this->allocatedSize];
-
-		for (int i = 0; i < oldSize; i++)
-		{
-			this->allocatedArray[i] = oldArray[i];
-		}
-
-		delete[] oldArray;
 	}
 
 	T & operator[] (size_t index)
@@ -81,6 +52,16 @@ public:
 	{
 		return sizeof(Array<T>) + items * sizeof(T);
 	}
+
+
+
+#ifdef _DEBUG
+	Array(size_t size, bool debugging)
+	{
+		this->allocatedSize = size;
+		this->allocatedArray = new T[size];
+	}
+#endif
 };
 
 class IndexOutOfBoundsException {};

@@ -1,7 +1,13 @@
 #include "OperandStack.h"
 #include <cstdlib>
 
-OperandStack::OperandStack(): OperandStack(OperandStack::DEFAULT_STACK_SIZE) {}
+OperandStack::OperandStack(): Array() 
+{
+}
+
+OperandStack::OperandStack(size_t size, bool debugging) : Array(size, debugging)
+{
+}
 
 OperandStack::OperandStack(size_t size): Array(size)
 {
@@ -35,11 +41,6 @@ word OperandStack::pop()
 	}
 
 	return this->allocatedArray[--this->index];
-	/*
-	JavaType & val = this->allocatedArray[this->index- 1];
-	this->sp--;
-	return val;
-	*/
 }
 
 doubleWord OperandStack::pop2()

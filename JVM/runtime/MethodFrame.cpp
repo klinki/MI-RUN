@@ -1,7 +1,6 @@
 #include "MethodFrame.h"
 #include "Class.h"
 
-
 MethodFrame::MethodFrame()
 {
 }
@@ -65,7 +64,16 @@ void MethodFrame::accept(ObjectVisitorInterface & visitor)
 	this->accept(&visitor);
 }
 
+
 bool MethodFrame::requiresFinalization()
 {
 	return false;
 }
+
+#ifdef _DEBUG
+MethodFrame::MethodFrame(size_t stackSize, size_t localVariablesSize, bool debugging) 
+{
+	this->operandStack = new OperandStack(stackSize, debugging);
+	this->localVariables = new LocalVariablesArray(localVariablesSize, debugging);
+}
+#endif

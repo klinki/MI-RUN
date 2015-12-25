@@ -1,4 +1,5 @@
 #include "ObjectTable.h"
+#include "../runtime/Object.h"
 
 ObjectTable::ObjectTable(size_t size)
 {
