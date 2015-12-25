@@ -3,7 +3,7 @@
 #include "../JVM/runtime/MethodArea.h"
 #include "../JVM/runtime/ExecutionEngine.h"
 #include "../JVM/runtime/TypeDescriptors.h"
-#include "../JVM/gc/ObjectVisitorInterface.h"
+#include "../JVM/gc/interfaces/ObjectVisitorInterface.h"
 
 class TestVisitor : public ObjectVisitorInterface
 {

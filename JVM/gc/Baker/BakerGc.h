@@ -1,11 +1,13 @@
 #pragma once
 #include "../ObjectTable.h"
 #include "../MS/Color.h"
-#include "../ObjectVisitorInterface.h"
+#include "../interfaces/ObjectVisitorInterface.h"
 #include "../interfaces/HeapInterface.h"
 #include "../Heap.h"
 
-class BakerObjectTable : public ObjectTable, public ObjectVisitorInterface, public HeapInterface
+class ExecutionEngine;
+
+class BakerGc : public ObjectTable, public ObjectVisitorInterface, public HeapInterface
 {
 	const int MEMORY_ALIGNMENT = 16;
 	const int TENURATION_THRESHOLD = 50;
@@ -29,7 +31,11 @@ visibility:
 			this->size = size;
 			this->accessCounter = 0;
 			this->key = 0;
-			this->data = (unsigned char*)(&this->data + sizeof(this->data));
+			this->data = (unsigned char*)(&this->data + 1);
+
+#if _DEBUG
+			memset(this->data, 0, size);
+#endif
 		}
 	};
 
@@ -41,46 +47,35 @@ visibility:
 	word edenSpaceRoot;
 	word permanentSpaceRoot;
 
-	void updateAddress(size_t index, void* newAddress);
+	ExecutionEngine * engine;
 
-	static void setDataSize(void * memory, size_t size)
-	{
-		int* intPtr = (int*)memory;
-		intPtr--;
-		*intPtr = 0; // int table
-		intPtr--;
-		*intPtr = 0; // accesses
-		intPtr--;
-		*intPtr = size;
-	}
+
+	void updateAddress(size_t index, void* newAddress);
 
 	static void incrementAccessCounter(void* memory, size_t value = 1)
 	{
-		int* intPtr = (int*)memory;
-		intPtr -= 2;
-		(*intPtr) += value; // accesses
+		MemoryHeader * header = getHeader((char*)memory);
+		header->accessCounter += value;
 	}
 
 	static void setColor(void* memory, Color color)
 	{
-		int* intPtr = (int*)memory;
-		intPtr -= 2;
-		(*intPtr) = color; // color
+		MemoryHeader * header = getHeader((char*)memory);
+		header->accessCounter = color; 
 	}
 
 	static void setKey(void* memory, size_t key)
 	{
-		int* intPtr = (int*)memory;
-		intPtr--;
-		*intPtr = key;
+		MemoryHeader * header = getHeader((char*)memory);
+		header->key = key; 
 	}
 
 	void finalize();
 
 public:
-	BakerObjectTable();
-	BakerObjectTable(size_t memorySize, size_t permSize);
-	~BakerObjectTable();
+	BakerGc();
+	BakerGc(size_t memorySize, size_t permSize);
+	~BakerGc();
 
 	virtual void visit(MethodFrame* methodFrame);
 	virtual void visit(Object* object);
@@ -98,11 +93,16 @@ public:
 
 	virtual size_t insert(void * ptr);
 
+	static MemoryHeader * getHeader(char* memory)
+	{
+		memory -= sizeof(MemoryHeader);
+		return (MemoryHeader*)memory;
+	}
+
 	static int getAccessCounter(void * memory)
 	{
-		int* intPtr = (int*)memory;
-		intPtr -= 2;
-		return *intPtr;
+		MemoryHeader* memHeader = getHeader((char*)memory);
+		return memHeader->accessCounter;
 	}
 
 	static Color getColor(void* memory)
@@ -112,15 +112,13 @@ public:
 
 	static size_t getDataSize(void * memory)
 	{
-		int* intPtr = (int*)memory;
-		intPtr -= 3;
-		return *intPtr;
+		MemoryHeader* memHeader = getHeader((char*)memory);
+		return memHeader->size;
 	}
 
 	static int getKey(void * memory)
 	{
-		int* intPtr = (int*)memory;
-		intPtr--;
-		return *intPtr;
+		MemoryHeader* memHeader = getHeader((char*)memory);
+		return memHeader->key;
 	}
 };

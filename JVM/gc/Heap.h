@@ -20,5 +20,5 @@ public:
 	virtual unsigned char* allocate(size_t size);
 	virtual void clear();
 
-	friend class BakerObjectTable;
+	friend class BakerGc;
 };

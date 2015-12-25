@@ -3,7 +3,7 @@
 #include "../JVM/runtime/MethodArea.h"
 #include "../JVM/runtime/ExecutionEngine.h"
 #include "../JVM/runtime/TypeDescriptors.h"
-#include "../JVM/gc/ObjectVisitorInterface.h"
+#include "../JVM/gc/interfaces/ObjectVisitorInterface.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -114,7 +114,7 @@ namespace Tests
 
 
 		template <class T>
-		ObjectTable * getObjectTableWithArray(int size, T defaultValue, Heap * heap)
+		ObjectTable * getObjectTableWithArray(int size, T defaultValue, HeapInterface * heap)
 		{
 			unsigned char* address = heap->allocate(ArrayObject<T>::getMemorySize(size));
 			ArrayObject<T> * arrayObject = new(address) ArrayObject<T>(size, defaultValue, NULL, NULL);

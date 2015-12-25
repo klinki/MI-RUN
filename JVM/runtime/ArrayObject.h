@@ -1,10 +1,10 @@
 #pragma once
 #include "Object.h"
 #include "../exceptions/RuntimeExceptions.h"
-#include "../gc/VisitableInterface.h"
+#include "../gc/interfaces/GarbageCollectableInterface.h"
 
 template<class T>
-class ArrayObject : public VisitableInterface
+class ArrayObject : public GarbageCollectableInterface 
 {
 protected:
 	Class* objectClass;
@@ -64,6 +64,16 @@ public:
 
 	void accept(ObjectVisitorInterface & visitor)
 	{}
+
+	virtual bool requiresFinalization()
+	{
+		return false;
+	}
+
+	virtual Method* getFinalizationMethod()
+	{
+		return NULL;
+	}
 };
 
 
@@ -80,4 +90,16 @@ template <>
 void ArrayObject<Object*>::accept(ObjectVisitorInterface & visitor)
 {
 	this->accept(&visitor);
+}
+
+template <>
+bool ArrayObject<Object*>::requiresFinalization()
+{
+	return true;
+}
+
+template <>
+Method* ArrayObject<Object*>::getFinalizationMethod()
+{
+	return this->objectClass->getMethod("finalize", "()V");
 }

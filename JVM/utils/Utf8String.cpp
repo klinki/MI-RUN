@@ -15,8 +15,10 @@ Utf8String::Utf8String(const char * string): Utf8String(string, strlen(string))
 
 Utf8String::Utf8String(const char* data, size_t length)
 {
+	this->value = string(data);
 	this->data = new unsigned char[length + 1];
 	memcpy(this->data, data, length);
+	this->data[length] = '\0';
 	this->dataLength = length + 1;
 	this->stringLength = length;
 }
@@ -56,10 +58,14 @@ bool Utf8String::equals(const Utf8String & b) const
 
 Utf8String& Utf8String::operator=(const Utf8String & u)
 {
-	
 	delete[] data;
-	this->data = u.data;
+	this->value = u.value;
+	this->data = new unsigned char[u.dataLength];
+	memcpy(this->data, u.data, u.dataLength);
 	this->dataLength = u.dataLength;
+	this->stringLength = u.stringLength;
+
 	return *this;
 }
+
 

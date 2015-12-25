@@ -1,12 +1,16 @@
 #include <iostream>
-#include "classfile\ClassLoader.h"
 #include <string>
 #include <iostream>
-#include "gc\experiments.h"
+#include "gc/experiments.h"
+#include "classfile/ClassLoader.h"
+#include "natives/natives.h"
 
 int main(int argc, const char argv[])
 {
 	ClassMap * classMap = new ClassMap();
+
+	InitializeNatives(classMap);
+	
 	ClassLoader classLoader(classMap);
 	classLoader.load("Arithmetics.class");
 

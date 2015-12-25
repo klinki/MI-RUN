@@ -27,14 +27,14 @@ void  Class::setName(Utf8String name) {
 */
 
 
-Method * Class::getMethod(const Utf8String & methodName, Utf8String & descriptor)
+Method * Class::getMethod(const Utf8String & methodName, const Utf8String & descriptor)
 {
 	Class* lookupClass = this;
 	Method* method = nullptr;
 
 	while (lookupClass != nullptr)
 	{
-		// method = lookupClass->methodArea.getMethod(methodName);
+		method = lookupClass->methodArea.getMethod(methodName, descriptor);
 
 		if (method != nullptr)
 		{

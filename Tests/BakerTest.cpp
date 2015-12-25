@@ -3,18 +3,24 @@
 #include "../JVM/runtime/MethodArea.h"
 #include "../JVM/runtime/ExecutionEngine.h"
 #include "../JVM/runtime/TypeDescriptors.h"
-#include "../JVM/gc/ObjectVisitorInterface.h"
-#include "../JVM/gc/Baker/BakerObjectTable.h"
+#include "../JVM/gc/interfaces/ObjectVisitorInterface.h"
+#include "../JVM/gc/Baker/BakerGc.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
 {
+	bool finalizationCalled = false;
+	void testFinalizationCalled(Object* obj, MethodFrame* frame)
+	{
+		finalizationCalled = true;
+	}
+
 	TEST_CLASS(BakerTest)
 	{
 		TEST_METHOD(testAllocation)
 		{
-			BakerObjectTable * baker = new BakerObjectTable(1 * 1024, 10 * 1024);
+			BakerGc * baker = new BakerGc(1 * 1024, 10 * 1024);
 
 			unsigned char* address = baker->allocate(MethodFrame::getMemorySize(10, 10));
 			MethodFrame * frame = new(address) MethodFrame(10, 10, NULL, NULL, NULL, NULL);
@@ -22,9 +28,27 @@ namespace Tests
 			baker->insert((Object*)frame);
 		}
 
-		BakerObjectTable * testScrub(int numAllocations, int arraySize = 64)
+		void allocataGarbage(BakerGc * baker, int numAllocations, int arraySize)
 		{
-			BakerObjectTable * baker = new BakerObjectTable(1 * 1024, 10 * 1024);
+			for (int i = 0; i < numAllocations; i++)
+			{
+				unsigned char* address = baker->allocate(MethodFrame::getMemorySize(10, 10)); // allocate some garbage
+				MethodFrame * frame = new(address) MethodFrame(10, 10, NULL, NULL, NULL, NULL);
+			}
+		}
+
+		void allocateFinalizableGarbage(BakerGc * baker, int numAllocations, int arraySize, Class* aClass)
+		{
+			for (int i = 0; i < numAllocations; i++)
+			{
+				unsigned char* address = baker->allocate(ArrayObject<Object*>::getMemorySize(arraySize)); // allocate some garbage
+				ArrayObject<Object*> * obj = new(address) ArrayObject<Object*>(arraySize, NULL, aClass, NULL);
+			}
+		}
+
+		BakerGc * testScrub(int numAllocations, int arraySize = 64)
+		{
+			BakerGc * baker = new BakerGc(1 * 1024, 10 * 1024);
 
 			unsigned char* address = baker->allocate(MethodFrame::getMemorySize(10, 10));
 			MethodFrame * frame = new(address) MethodFrame(10, 10, NULL, NULL, NULL, NULL);
@@ -44,10 +68,7 @@ namespace Tests
 
 			baker->setGCRoot(getReferenceAddress(methodFrameIndex));
 
-			for (int i = 0; i < numAllocations; i++)
-			{
-				baker->allocate(MethodFrame::getMemorySize(10, 10)); // allocate some garbage
-			}
+			this->allocataGarbage(baker, numAllocations, arraySize);
 
 			MethodFrame* newMethodFrameAddress = (MethodFrame*)baker->get(methodFrameIndex);
 			ArrayObject<int>* newArrayObj = (ArrayObject<int>*)baker->get(arrayIndex);
@@ -68,6 +89,34 @@ namespace Tests
 			return baker;
 		}
 
+		TEST_METHOD(testFinalization)
+		{
+			BakerGc * baker = new BakerGc(1 * 1024, 10 * 1024);
+
+			ExecutionEngine * engine = new ExecutionEngine();
+			engine->classMap = new ClassMap();
+			engine->objectTable = baker;
+			engine->heap = baker;
+
+			Class* newClass = new Class(0);
+			newClass->fullyQualifiedName = "java.lang.Test";
+			
+			Method* method = new Method();
+			method->nativeMethod = testFinalizationCalled;
+			method->descriptor = "()V";
+			method->name = "finalize";
+			method->classPtr = newClass;
+
+			newClass->methodArea.addMethod(method);
+			engine->classMap->addClass(newClass);
+		
+			this->allocateFinalizableGarbage(baker, 5, 64, newClass);
+
+			baker->engine = engine;
+
+			baker->finalize();
+		}
+		
 		TEST_METHOD(testSimpleGc)
 		{
 			testScrub(47);
@@ -75,7 +124,7 @@ namespace Tests
 
 		TEST_METHOD(testMovingToPermSpace)
 		{
-			BakerObjectTable * baker = testScrub(500);
+			BakerGc * baker = testScrub(500);
 
 			Assert::AreNotEqual(0, (int)baker->permanentSpace);
 		}

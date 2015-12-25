@@ -36,7 +36,7 @@ visibility:
 	MethodArea* methodArea;
 	ClassMap* classMap;
 	ObjectTable* objectTable;
-	Heap* heap;
+	HeapInterface* heap;
 
 	struct {
 		size_t constantPoolIndex;

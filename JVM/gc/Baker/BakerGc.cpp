@@ -1,9 +1,10 @@
-#include "BakerObjectTable.h"
+#include "BakerGc.h"
 #include "../../runtime/MethodFrame.h"
+#include "../../runtime/ExecutionEngine.h"
 
-BakerObjectTable::BakerObjectTable() : BakerObjectTable(10 * 1024 * 1024, 50 * 1024 * 1024) {};
+BakerGc::BakerGc() : BakerGc(10 * 1024 * 1024, 50 * 1024 * 1024) {};
 
-BakerObjectTable::BakerObjectTable(size_t memorySize, size_t permSize)
+BakerGc::BakerGc(size_t memorySize, size_t permSize)
 {
 	this->memorySlots[0] = new Heap(memorySize);
 	this->memorySlots[1] = new Heap(memorySize);
@@ -13,38 +14,38 @@ BakerObjectTable::BakerObjectTable(size_t memorySize, size_t permSize)
 	this->activeSlot = 0;
 }
 
-BakerObjectTable::~BakerObjectTable()
+BakerGc::~BakerGc()
 {
 	delete this->memorySlots[0];
 	delete this->memorySlots[1];
 	delete this->permanentSpace;
 }
 
-void BakerObjectTable::visit(MethodFrame* methodFrame)
+void BakerGc::visit(MethodFrame* methodFrame)
 {
 }
 
-void BakerObjectTable::visit(Object* object)
+void BakerGc::visit(Object* object)
 {
 }
 
-void BakerObjectTable::visit(size_t address)
+void BakerGc::visit(size_t address)
 {
 }
 
-void BakerObjectTable::switchMemorySlot()
+void BakerGc::switchMemorySlot()
 {
 	this->activeSlot = this->activeSlot == 0 ? 1 : 0;
 	this->finalize();
 	this->memorySlots[this->activeSlot]->clear();
 }
 
-void BakerObjectTable::setGCRoot(word currentFrame)
+void BakerGc::setGCRoot(word currentFrame)
 {
 	this->edenSpaceRoot = currentFrame;
 }
 
-void BakerObjectTable::visit(word address)
+void BakerGc::visit(word address)
 {
 	if (isReferenceAddress(address))
 	{
@@ -52,7 +53,7 @@ void BakerObjectTable::visit(word address)
 
 		try 
 		{
-			VisitableInterface* pointer = this->get(refAddress);
+			GarbageCollectableInterface* pointer = this->get(refAddress);
 
 			size_t dataSize = this->getDataSize(pointer);
 
@@ -85,14 +86,16 @@ void BakerObjectTable::visit(word address)
 	}
 }
 
-unsigned char * BakerObjectTable::allocate(size_t size)
+unsigned char * BakerGc::allocate(size_t size)
 {
 	if (size == 0)
 	{
 		return NULL; // TODO: Throw exception
 	}
 
-	int slots = size / MEMORY_ALIGNMENT + 1;
+	int totalAllocated = size + sizeof(MemoryHeader);
+
+	int slots = totalAllocated / MEMORY_ALIGNMENT + 1;
 	size_t bytesAllocated = slots * MEMORY_ALIGNMENT;
 	
 	if ((this->memorySlots[this->activeSlot]->usedBytes + bytesAllocated) >= this->memorySlots[this->activeSlot]->allocatedBytes)
@@ -105,7 +108,7 @@ unsigned char * BakerObjectTable::allocate(size_t size)
 	return (unsigned char*)memory->data;
 }
 
-unsigned char * BakerObjectTable::allocateOnPermanentSpace(size_t size)
+unsigned char * BakerGc::allocateOnPermanentSpace(size_t size)
 {
 	if (size == 0)
 	{
@@ -124,12 +127,12 @@ unsigned char * BakerObjectTable::allocateOnPermanentSpace(size_t size)
 	return (unsigned char*)memory->data;
 }
 
-void BakerObjectTable::updateAddress(size_t index, void * newAddress)
+void BakerGc::updateAddress(size_t index, void * newAddress)
 {
 	this->objectArray.allocatedArray[index] = (Object*)newAddress;
 }
 
-void BakerObjectTable::collect()
+void BakerGc::collect()
 {
 	this->switchMemorySlot();
 
@@ -139,36 +142,40 @@ void BakerObjectTable::collect()
 	}
 }
 
-size_t BakerObjectTable::insert(void * ptr)
+size_t BakerGc::insert(void * ptr)
 {
 	size_t index = ObjectTable::insert(ptr);
 	this->setKey(ptr, index);
 	return index;
 }
 
-void BakerObjectTable::finalize()
+void BakerGc::finalize()
 {
-	int* ptr = (int*)this->memorySlots[this->activeSlot]->data;
-	int*endPtr = ptr + this->memorySlots[this->activeSlot]->allocatedBytes / sizeof(int);
+	unsigned char* ptr = (unsigned char*)this->memorySlots[this->activeSlot]->data;
+	unsigned char* endPtr = ptr + this->memorySlots[this->activeSlot]->usedBytes;
 
 	while (ptr != endPtr)
 	{
-		ptr += 3;
+		ptr += sizeof(MemoryHeader);
 		int size = this->getDataSize(ptr);
-		Object* objPtr = (Object*)ptr;
+		GarbageCollectableInterface* objPtr = (GarbageCollectableInterface*)ptr;
 
 		if (this->getColor(ptr) != Color::BAKER_MOVED)
 		{
 			// finalize object
-			if (objPtr->objectClass != NULL)
+			if (objPtr->requiresFinalization())
 			{
-				Method* method = objPtr->objectClass->methodArea.getMethod("finalize", "()");
+				Method* method = objPtr->getFinalizationMethod(); // objectClass->getMethod("finalize", "()V");
+				unsigned char* frameMemory = this->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
+				MethodFrame * frame = new(frameMemory) MethodFrame(method->operandStackSize, method->localVariablesArraySize, NULL, NULL, NULL, NULL);
+				this->engine->execute(frame);
 			}
 			// TODO: Finalize object
 
 			this->hashMap.erase(this->getKey(ptr));
 
-			ptr += size / sizeof(int);
+			ptr += size;
+			ptr += size % MEMORY_ALIGNMENT;
 		}
 	}
 }

@@ -5,6 +5,7 @@
 #include "../runtime/MethodArea.h"
 #include "../types/Descriptors.h"
 #include "../runtime/Object.h"
+#include "Declarations.h"
 
 using namespace TypeDescriptors;
 
@@ -21,19 +22,19 @@ namespace Java
 				newClass->parentClass = NULL;
 				newClass->fullyQualifiedName = Utf8String("java/lang/Object");
 				newClass->type = Class::Type::CLASS;
-
-//				newClass->methodArea.addMethod(getNativeMethod("toString", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/String;")), &toString));
-				// newClass->methodArea.addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
-//				newClass->methodArea.addMethod(getNativeMethod("equals", getMethodDescriptor(TypeTag::BOOL, JavaType(TypeTag::REFERENCE, "java/lang/Object;")), &equals));
-//				newClass->methodArea.addMethod(getNativeMethod("finalize", getMethodDescriptor(), &finalize));
-//				newClass->methodArea.addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), &getClass));
-//				newClass->methodArea.addMethod(getNativeMethod("hashCode", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::INT), &hashCode));
-//				newClass->methodArea.addMethod(getNativeMethod("notify", getMethodDescriptor(), &notify));
-//				newClass->methodArea.addMethod(getNativeMethod("notifyAll", getMethodDescriptor(), &notifyAll));
-//				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(), &waitEmpty));
-//				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), &waitTimeout));
-//				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
-
+				/*
+				newClass->methodArea.addMethod(getNativeMethod("toString", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/String;")), (void*)&toString));
+				newClass->methodArea.addMethod(getNativeMethod("clone", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&clone));
+				newClass->methodArea.addMethod(getNativeMethod("equals", getMethodDescriptor(TypeTag::BOOL, JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&equals));
+				newClass->methodArea.addMethod(getNativeMethod("finalize", getMethodDescriptor(), (void*)&finalize));
+				newClass->methodArea.addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), (void*)&getClass));
+				newClass->methodArea.addMethod(getNativeMethod("hashCode", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::INT), (void*)&hashCode));
+				newClass->methodArea.addMethod(getNativeMethod("notify", getMethodDescriptor(), (void*)&notify));
+				newClass->methodArea.addMethod(getNativeMethod("notifyAll", getMethodDescriptor(), (void*)&notifyAll));
+				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(), (void*)&waitEmpty));
+				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), (void*)&waitTimeout));
+				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
+			*/
 				return newClass;
 			}
 

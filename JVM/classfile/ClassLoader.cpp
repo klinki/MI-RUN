@@ -9,6 +9,7 @@ ClassLoader::ClassLoader()
 ClassLoader::ClassLoader(ClassMap * cm)
 {
 	this->classMap = cm;
+	this->constantPool = new ConstantPool(1000);
 }
 
 Class* ClassLoader::load(char * filename)

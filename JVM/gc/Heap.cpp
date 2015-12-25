@@ -1,7 +1,5 @@
 #include "Heap.h"
 
-
-
 Heap::Heap(): Heap(DEFAULT_HEAP_SIZE)
 {
 
@@ -17,8 +15,8 @@ Heap::Heap(size_t size)
 
 Heap::~Heap()
 {
+	free(this->data);
 }
-
 
 void Heap::resize()
 {

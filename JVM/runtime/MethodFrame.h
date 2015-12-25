@@ -2,12 +2,11 @@
 #include "OperandStack.h"
 #include "Method.h"
 #include "LocalVariablesArray.h"
-#include "../gc/MemoryCell.h"
-#include "../gc/VisitableInterface.h"
+#include "../gc/interfaces/GarbageCollectableInterface.h"
 
 class Method;
 
-class MethodFrame : VisitableInterface
+class MethodFrame : public GarbageCollectableInterface
 {
 visibility:
 	ProgramCounter pc;
@@ -22,14 +21,16 @@ visibility:
 public:
 	MethodFrame();
 	MethodFrame(size_t stackSize, size_t localVariablesSize);
+	MethodFrame(Method * method, MethodFrame* parent = NULL);
 	MethodFrame(size_t stackSize, size_t localVariablesSize, MethodFrame * parent, ConstantPool * constantPool, Method * method, byte * address);
 	~MethodFrame();
 
-	static size_t getMemorySize();
-	static size_t getMemorySize(size_t stackSize, size_t localVariblesSize);
+	static size_t getMemorySize(size_t stackSize = 0, size_t localVariblesSize = 0);
 
 	virtual void accept(ObjectVisitorInterface * visitor);
 	virtual void accept(ObjectVisitorInterface & visitor);
+
+	virtual bool requiresFinalization();
 
 	friend class ExecutionEngine;
 	friend class Method;

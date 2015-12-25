@@ -52,7 +52,7 @@ public:
 	size_t getCountFields() const;
 	bool isFlagSet(FLAG flag) const;
 
-	Method* getMethod(const Utf8String & methodName, Utf8String & descriptor);
+	Method* getMethod(const Utf8String & methodName, const Utf8String & descriptor);
 
 	friend class ClassLoader;
 };

@@ -55,9 +55,6 @@
     <ClCompile Include="gc\experiments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utils\Utf16String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -85,10 +82,10 @@
     <ClCompile Include="gc\ObjectTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gc\Baker\BakerObjectTable.cpp">
+    <ClCompile Include="gc\MS\Marker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gc\MS\Marker.cpp">
+    <ClCompile Include="gc\Baker\BakerGc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -231,16 +228,7 @@
     <ClInclude Include="gc\ObjectTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gc\Baker\BakerObjectTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gc\Marker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\ObjectVisitorInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\VisitableInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gc\MS\Marker.h">
@@ -250,6 +238,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gc\interfaces\HeapInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\VisitableInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\ObjectVisitorInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\Baker\BakerGc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\FinalizableInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\GarbageCollectableInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

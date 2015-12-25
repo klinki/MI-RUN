@@ -1,5 +1,5 @@
 #include "MethodFrame.h"
-
+#include "Class.h"
 
 
 MethodFrame::MethodFrame()
@@ -10,6 +10,12 @@ MethodFrame::MethodFrame(size_t stackSize, size_t localVariablesSize)
 {
 	this->operandStack = new OperandStack(stackSize);
 	this->localVariables = new LocalVariablesArray(localVariablesSize);
+}
+
+MethodFrame::MethodFrame(Method * method, MethodFrame * parent): 
+	MethodFrame(method->operandStackSize, method->localVariablesArraySize, parent, 
+		method->classPtr->constantPool, method, NULL)
+{
 }
 
 MethodFrame::MethodFrame(size_t stackSize, size_t localVariablesSize, MethodFrame * parent, ConstantPool * constantPool, Method * method, byte * address)
@@ -29,18 +35,11 @@ MethodFrame::~MethodFrame()
 {
 }
 
-
-size_t MethodFrame::getMemorySize()
-{
-	return sizeof(MethodFrame);
-}
-
 size_t MethodFrame::getMemorySize(size_t stackSize, size_t localVariblesSize)
 {
 	return sizeof(MethodFrame)
 		+ LocalVariablesArray::getMemorySize(localVariblesSize)
 		+ OperandStack::getMemorySize(stackSize);
-	// already included in size;
 }
 
 void MethodFrame::accept(ObjectVisitorInterface * visitor)
@@ -64,4 +63,9 @@ void MethodFrame::accept(ObjectVisitorInterface * visitor)
 void MethodFrame::accept(ObjectVisitorInterface & visitor)
 {
 	this->accept(&visitor);
+}
+
+bool MethodFrame::requiresFinalization()
+{
+	return false;
 }

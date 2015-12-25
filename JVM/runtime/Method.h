@@ -25,6 +25,7 @@ visibility:
 	ExceptionTable exceptionTable;
 
 	NativeMethodPtr nativeMethod;
+	Class*  classPtr;
 
 public:
 	Method():flags(0) {};
