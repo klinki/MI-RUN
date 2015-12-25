@@ -496,7 +496,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->frame->operandStack->push(a * b);
+			this->frame->operandStack->push(a / b);
 		}
 		break;
 

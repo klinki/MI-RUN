@@ -11,7 +11,32 @@ namespace Tests
 	public:
 		TEST_METHOD(testFMUL)
 		{
-			throw NotImplementedException();
+			ExecutionEngine eng;
+			Method m;
+
+			float a[] = { 3.14, 0, 1, -1, -1, 0.0/0.0, INT_MAX, ULLONG_MAX,  1.012 };
+			float b[] = { 1/0.0, 0, +1/0.0, +1.0/0.0, -1.0/0.0, -1, INT_MAX, ULLONG_MAX, 1.012 };
+
+			for (int i = 0; i < 8; i++)
+			{
+				float expected = a[i] * b[i];
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::FMUL;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(2, 2, true);
+				frm.operandStack->push(a[i]);
+				frm.operandStack->push(b[i]);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				float result = frm.operandStack->pop();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testFDivByZero)

@@ -23,7 +23,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::ILOAD_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			(*frm.localVariables)[0] = expected;
 			frm.method = &m;
@@ -45,7 +45,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::FLOAD_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			(*frm.localVariables)[0] = expected;
 			frm.method = &m;
@@ -67,7 +67,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::LLOAD_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			(*frm.localVariables)[0] = highWord(expected);
 			(*frm.localVariables)[1] = lowWord(expected);
@@ -94,7 +94,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DLOAD_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			(*frm.localVariables)[0] = highWord(expected);
 			(*frm.localVariables)[1] = lowWord(expected);
@@ -120,7 +120,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::ALOAD_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			(*frm.localVariables)[0] = expected;
 			frm.method = &m;

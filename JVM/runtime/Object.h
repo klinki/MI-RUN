@@ -38,7 +38,7 @@ public:
 
 	virtual void accept(ObjectVisitorInterface * visitor)
 	{
-		for (int i = 0; i < this->fields.index; i++)
+		for (int i = 0; i < this->fields.allocatedSize; i++)
 		{
 			visitor->visit(this->fields[i]);
 		}

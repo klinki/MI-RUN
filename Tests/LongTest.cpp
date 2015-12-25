@@ -25,7 +25,7 @@ namespace Tests
 				m.byteCode[0] = (Instruction)InstructionSet::LMUL;
 				m.byteCodeLength = 1;
 
-				MethodFrame frm(2, 2);
+				MethodFrame frm(2, 2, true);
 				frm.operandStack->push(a[i]);
 				frm.operandStack->push(b[i]);
 
@@ -45,10 +45,10 @@ namespace Tests
 			Method m;
 
 			m.byteCode = new Instruction[1];
-			m.byteCode[0] = (Instruction)InstructionSet::IDIV;
+			m.byteCode[0] = (Instruction)InstructionSet::LDIV;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.operandStack->push(1);
 			frm.operandStack->push(0);
 
@@ -77,10 +77,10 @@ namespace Tests
 			Method m;
 
 			m.byteCode = new Instruction[1];
-			m.byteCode[0] = (Instruction)InstructionSet::IREM;
+			m.byteCode[0] = (Instruction)InstructionSet::LREM;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.operandStack->push(1);
 			frm.operandStack->push(0);
 
@@ -129,6 +129,34 @@ namespace Tests
 
 		TEST_METHOD(testLINC)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long expected = UINT_MAX + 255LL;
+			int increment = 255;
+			int value = expected - increment;
+			int index = 0;
+
+			m.byteCode = new Instruction[3];
+			m.byteCode[0] = (Instruction)InstructionSet::IINC;
+			m.byteCode[1] = index;
+			m.byteCode[2] = increment;
+			m.byteCodeLength = 3;
+
+			MethodFrame frm(1, 1, true);
+			frm.pc = 0;
+			(*frm.localVariables)[0] = highWord(expected);
+			(*frm.localVariables)[1] = lowWord(expected);
+
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			unsigned int high = (*frm.localVariables)[0];
+			unsigned int low = (*frm.localVariables)[1]; 
+
+			long long result = longFromStack(high, low);
+			Assert::AreEqual(expected, result);
 		}
 
 	};

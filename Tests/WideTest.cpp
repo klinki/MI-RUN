@@ -27,7 +27,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1025, 1025);
+			MethodFrame frm(1025, 1025, true);
 			frm.pc = 0;
 			(*frm.localVariables)[1024] = expected;
 			frm.method = &m;
@@ -54,7 +54,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1025, 1025);
+			MethodFrame frm(1025, 1025, true);
 			frm.pc = 0;
 			(*frm.localVariables)[1024] = expected;
 			frm.method = &m;
@@ -80,7 +80,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1026, 1026);
+			MethodFrame frm(1026, 1026, true);
 			frm.pc = 0;
 			(*frm.localVariables)[1024] = highWord(expected);
 			(*frm.localVariables)[1025] = lowWord(expected);
@@ -112,7 +112,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1026, 1026);
+			MethodFrame frm(1026, 1026, true);
 			frm.pc = 0;
 			(*frm.localVariables)[1024] = highWord(expected);
 			(*frm.localVariables)[1025] = lowWord(expected);
@@ -143,7 +143,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1025, 1025);
+			MethodFrame frm(1025, 1025, true);
 			frm.pc = 0;
 			(*frm.localVariables)[1024] = expected;
 			frm.method = &m;
@@ -170,7 +170,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1025, 1025);
+			MethodFrame frm(1025, 1025, true);
 			frm.pc = 0;
 			frm.method = &m;
 			frm.operandStack->push(expected);
@@ -197,7 +197,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1025, 1025);
+			MethodFrame frm(1025, 1025, true);
 			frm.pc = 0;
 			frm.method = &m;
 			frm.operandStack->push(expected);
@@ -223,7 +223,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1026, 1026);
+			MethodFrame frm(1026, 1026, true);
 			frm.pc = 0;
 			frm.method = &m;
 			frm.operandStack->push2(expected);
@@ -253,7 +253,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1026, 1026);
+			MethodFrame frm(1026, 1026, true);
 			frm.pc = 0;
 			frm.method = &m;
 			frm.operandStack->push2(expected);
@@ -283,7 +283,7 @@ namespace Tests
 			m.byteCode[3] = lowByte(index);
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(1025, 1025);
+			MethodFrame frm(1025, 1025, true);
 			frm.pc = 0;
 			frm.method = &m;
 			frm.operandStack->push(expected);

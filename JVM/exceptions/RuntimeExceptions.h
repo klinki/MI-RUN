@@ -14,8 +14,8 @@ namespace Exceptions
 		class ArrayStoreException : public RuntimeException {};
 		class ClassCastException : public RuntimeException {};
 
-	}
-}
+	};
+};
 
 namespace Errors
 {
@@ -25,4 +25,4 @@ namespace Errors
 	class NoSuchMethodError : public Error {};
 	class IllegalAccessError : public Error {};
 	class UnsatisfiedLinkError : public Error {};
-}
+};

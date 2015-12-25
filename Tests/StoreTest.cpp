@@ -23,7 +23,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::ISTORE_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			frm.operandStack->push(expected);
 			frm.method = &m;
@@ -45,7 +45,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::FSTORE_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			frm.operandStack->push(expected);
 			frm.method = &m;
@@ -67,7 +67,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::LSTORE_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);;
 			frm.pc = 0;
 			frm.operandStack->push(highWord(expected));
 			frm.operandStack->push(lowWord(expected));
@@ -94,7 +94,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DSTORE_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);;
 			frm.pc = 0;
 			frm.operandStack->push(highWord(expected));
 			frm.operandStack->push(lowWord(expected));
@@ -121,7 +121,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::ASTORE_0;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			frm.operandStack->push(expected);
 			frm.method = &m;

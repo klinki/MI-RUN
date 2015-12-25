@@ -22,7 +22,7 @@ namespace Tests
 			m.byteCode[1] = (Instruction)expected;
 			m.byteCodeLength = 2;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			frm.method = &m;
 
@@ -45,7 +45,7 @@ namespace Tests
 			m.byteCode[2] = (Instruction)lowByte(expected);
 			m.byteCodeLength = 3;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.pc = 0;
 			frm.method = &m;
 

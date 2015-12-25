@@ -4,6 +4,7 @@
 #include "../interfaces/ObjectVisitorInterface.h"
 #include "../interfaces/HeapInterface.h"
 #include "../Heap.h"
+#include "../../utils/Macros.h"
 
 class ExecutionEngine;
 

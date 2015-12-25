@@ -26,15 +26,15 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DUP;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(expected);
 			frm.method = &m;
 
 			eng.execute(&frm);
 
-			Assert::AreEqual(expected, (int)frm.operandStack->allocatedArray[0]);
-			Assert::AreEqual(expected, (int)frm.operandStack->allocatedArray[1]);
+			Assert::AreEqual(expected, (int)frm.operandStack->array->allocatedArray[0]);
+			Assert::AreEqual(expected, (int)frm.operandStack->array->allocatedArray[1]);
 		}
 
 		TEST_METHOD(DUP_X1)
@@ -51,7 +51,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DUP_X1;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(3, 3);
+			MethodFrame frm(3, 3, true);
 			frm.pc = 0;
 			frm.operandStack->push(b);
 			frm.operandStack->push(a);
@@ -59,9 +59,9 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[0]);
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[1]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[2]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[0]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[1]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[2]);
 		}
 
 		TEST_METHOD(DUP_X2)
@@ -79,7 +79,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DUP_X2;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(4, 4);
+			MethodFrame frm(4, 4, true);
 			frm.pc = 0;
 			frm.operandStack->push(c);
 			frm.operandStack->push(b);
@@ -88,10 +88,10 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[0]);
-			Assert::AreEqual(c, (int)frm.operandStack->allocatedArray[1]);
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[2]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[3]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[0]);
+			Assert::AreEqual(c, (int)frm.operandStack->array->allocatedArray[1]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[2]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[3]);
 		}
 
 		TEST_METHOD(DUP2)
@@ -108,7 +108,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DUP2;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(4, 4);
+			MethodFrame frm(4, 4, true);
 			frm.pc = 0;
 			frm.operandStack->push(b);
 			frm.operandStack->push(a);
@@ -116,10 +116,10 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[0]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[1]);
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[2]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[3]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[0]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[1]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[2]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[3]);
 		}
 
 		TEST_METHOD(DUP2_X1)
@@ -137,7 +137,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DUP2_X1;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(5, 5);
+			MethodFrame frm(5, 5, true);
 			frm.pc = 0;
 			frm.operandStack->push(c);
 			frm.operandStack->push(b);
@@ -146,11 +146,11 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[0]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[1]);
-			Assert::AreEqual(c, (int)frm.operandStack->allocatedArray[2]);
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[3]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[4]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[0]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[1]);
+			Assert::AreEqual(c, (int)frm.operandStack->array->allocatedArray[2]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[3]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[4]);
 		}
 
 		TEST_METHOD(DUP2_X2)
@@ -169,7 +169,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DUP2_X2;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(6, 6);
+			MethodFrame frm(6, 6, true);
 			frm.pc = 0;
 			frm.operandStack->push(d);
 			frm.operandStack->push(c);
@@ -179,12 +179,12 @@ namespace Tests
 
 			eng.execute(&frm);
 
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[0]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[1]);
-			Assert::AreEqual(d, (int)frm.operandStack->allocatedArray[2]);
-			Assert::AreEqual(c, (int)frm.operandStack->allocatedArray[3]);
-			Assert::AreEqual(b, (int)frm.operandStack->allocatedArray[4]);
-			Assert::AreEqual(a, (int)frm.operandStack->allocatedArray[5]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[0]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[1]);
+			Assert::AreEqual(d, (int)frm.operandStack->array->allocatedArray[2]);
+			Assert::AreEqual(c, (int)frm.operandStack->array->allocatedArray[3]);
+			Assert::AreEqual(b, (int)frm.operandStack->array->allocatedArray[4]);
+			Assert::AreEqual(a, (int)frm.operandStack->array->allocatedArray[5]);
 		}
 	};
 }

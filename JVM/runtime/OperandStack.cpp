@@ -1,16 +1,21 @@
 #include "OperandStack.h"
 #include <cstdlib>
 
-OperandStack::OperandStack(): Array() 
+OperandStack::OperandStack(): array()
 {
+	this->index = 0;
 }
 
-OperandStack::OperandStack(size_t size, bool debugging) : Array(size, debugging)
+OperandStack::OperandStack(size_t size, bool debugging)
 {
+	this->index = 0;
+	this->array = new Array<word>(size, debugging);
 }
 
-OperandStack::OperandStack(size_t size): Array(size)
+OperandStack::OperandStack(size_t size)
 {
+	this->index = 0;
+	this->array = new (&this->array + 1) Array<word>(size);
 }
 
 OperandStack::~OperandStack()
@@ -24,7 +29,7 @@ void OperandStack::push(word value)
 		throw StackOverflowException();
 	}
 
-	this->allocatedArray[this->index++] = value;
+	this->array->allocatedArray[this->index++] = value;
 }
 
 void OperandStack::push2(doubleWord value)
@@ -40,7 +45,7 @@ word OperandStack::pop()
 		throw StackEmtpyException();
 	}
 
-	return this->allocatedArray[--this->index];
+	return this->array->allocatedArray[--this->index];
 }
 
 doubleWord OperandStack::pop2()
@@ -57,7 +62,7 @@ bool OperandStack::isEmpty() const
 
 bool OperandStack::isFull() const
 {
-	return this->index >= this->allocatedSize;
+	return this->index >= this->array->allocatedSize;
 }
 
 word & OperandStack::operator[] (size_t index)
@@ -67,7 +72,7 @@ word & OperandStack::operator[] (size_t index)
 		throw IndexOutOfBoundsException();
 	}
 
-	return this->allocatedArray[index];
+	return this->array->allocatedArray[index];
 }
 
 const word & OperandStack::operator[] (size_t index) const
@@ -77,5 +82,5 @@ const word & OperandStack::operator[] (size_t index) const
 		throw IndexOutOfBoundsException();
 	}
 
-	return this->allocatedArray[index];
+	return this->array->allocatedArray[index];
 }

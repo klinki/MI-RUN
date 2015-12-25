@@ -25,7 +25,7 @@ namespace Tests
 			m.byteCode[1] = (Instruction)type;
 			m.byteCodeLength = 2;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.operandStack->push(arraySize);
 
 			frm.pc = 0;
@@ -102,7 +102,7 @@ namespace Tests
 			m.byteCode[1] = (Instruction)ArrayType::T_INT;
 			m.byteCodeLength = 2;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.operandStack->push(-1);
 
 			frm.pc = 0;
@@ -139,7 +139,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::ARRAYLENGTH;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.operandStack->push(arrayIndex);
 
 			frm.pc = 0;
@@ -168,7 +168,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::ARRAYLENGTH;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.operandStack->push(0);
 
 			frm.pc = 0;
@@ -196,7 +196,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::LASTORE;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(6, 6);
+			MethodFrame frm(6, 6, true);
 			frm.operandStack->push(arrPtr);
 			frm.operandStack->push(arrayIndex);
 			frm.operandStack->push2(value);
@@ -228,7 +228,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::DALOAD;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(4, 4);
+			MethodFrame frm(4, 4, true);
 			frm.operandStack->push(arrayIndex);
 			frm.operandStack->push(9);
 
@@ -256,7 +256,7 @@ namespace Tests
 			m.byteCode[3] = 3;
 			m.byteCodeLength = 4;
 
-			MethodFrame frm(3, 3);
+			MethodFrame frm(3, 3, true);
 			frm.operandStack->push(2);
 			frm.operandStack->push(3);
 			frm.operandStack->push(4);

@@ -88,7 +88,7 @@ namespace Tests
 
 			for (int i = 0; i < 10; i++)
 			{
-				frm->operandStack->allocatedArray[i] = i;
+				frm->operandStack->array->allocatedArray[i] = i;
 				frm->localVariables->allocatedArray[i] = 10 - i;
 			}
 

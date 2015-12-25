@@ -27,7 +27,7 @@ namespace Tests
 
 			m.byteCodeLength = byteCodeLength;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.operandStack->push(a);
 			frm.operandStack->push(b);
 
@@ -68,7 +68,7 @@ namespace Tests
 			
 			m.byteCodeLength = byteCodeLength;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.operandStack->push(a);
 			frm.operandStack->push(b);
 
@@ -102,7 +102,7 @@ namespace Tests
 
 			m.byteCodeLength = byteCodeLength;
 
-			MethodFrame frm(3, 3);
+			MethodFrame frm(3, 3, true);
 			frm.operandStack->push(a);
 			frm.operandStack->push(b);
 			
@@ -417,7 +417,7 @@ namespace Tests
 
 			m.byteCodeLength = byteCodeLength;
 
-			MethodFrame frm(4, 4);
+			MethodFrame frm(4, 4, true);
 			frm.operandStack->push(0);
 			frm.operandStack->push(a);
 			frm.operandStack->push(b);
@@ -447,7 +447,7 @@ namespace Tests
 
 			m.byteCodeLength = byteCodeLength;
 
-			MethodFrame frm(5, 5);
+			MethodFrame frm(5, 5, true);
 			frm.operandStack->push(0);
 			frm.operandStack->push(a);
 			frm.operandStack->push(b);

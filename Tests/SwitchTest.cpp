@@ -150,7 +150,7 @@ namespace Tests
 
 			m.byteCodeLength = byteCodeLength;
 
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.operandStack->push(stack);
 
 			frm.pc = 0;
@@ -213,12 +213,6 @@ namespace Tests
 				m.byteCode[i++] = lowByte(highShort(indices[i]));
 				m.byteCode[i++] = highByte(lowShort(indices[i]));
 				m.byteCode[i++] = lowByte(lowShort(indices[i]));
-/*
-				m.byteCode[i++] = highByte(highShort(indices[i]));
-				m.byteCode[i++] = lowByte(highShort(indices[i]));
-				m.byteCode[i++] = highByte(lowShort(indices[i]));
-				m.byteCode[i++] = lowByte(lowShort(indices[i]));
-*/
 			}
 
 			for (int j = 0; j < 6; j++)
@@ -235,7 +229,7 @@ namespace Tests
 
 			m.byteCodeLength = byteCodeLength;
 
-			MethodFrame frm(4, 4);
+			MethodFrame frm(4, 4, true);
 			frm.operandStack->push(stack);
 
 			frm.pc = 0;

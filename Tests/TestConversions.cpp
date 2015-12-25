@@ -21,7 +21,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::I2L;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -46,7 +46,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::I2B;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -71,7 +71,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::I2C;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -95,7 +95,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::I2S;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -119,7 +119,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::I2F;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -143,7 +143,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::I2D;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -176,7 +176,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::F2D;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -203,7 +203,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::F2I;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -227,7 +227,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::F2L;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(value);
 			frm.method = &m;
@@ -255,7 +255,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::D2I;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(high);
 			frm.operandStack->push(low);
@@ -280,7 +280,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::D2L;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push2(value);
 			frm.method = &m;
@@ -307,7 +307,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::D2F;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(high);
 			frm.operandStack->push(low);
@@ -333,7 +333,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::L2I;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push2(value);
 			frm.method = &m;
@@ -359,7 +359,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::L2D;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push(high);
 			frm.operandStack->push(low);
@@ -385,7 +385,7 @@ namespace Tests
 			m.byteCode[0] = (Instruction)InstructionSet::L2F;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.pc = 0;
 			frm.operandStack->push2(value);
 			frm.method = &m;

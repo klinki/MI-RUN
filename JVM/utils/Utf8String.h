@@ -45,14 +45,14 @@ namespace std
 			return x.hash;
 		}
 	};
-}
+};
 
 inline bool operator==(const Utf8String & a, const Utf8String & b)
 {
 	return a.length() == b.length() && a.hash == b.hash;
-}
+};
 
 inline bool operator!=(const Utf8String & a, const Utf8String & b)
 {
 	return !(a == b);
-}
+};

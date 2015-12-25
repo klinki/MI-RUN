@@ -17,7 +17,7 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 			m.byteCode = new Instruction[1];
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.method = &m;
 
 			frm.pc = 0;
@@ -39,7 +39,7 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 			m.byteCode = new Instruction[1];
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.method = &m;
 
 			Instruction instructions[] = { ICONST_M1, ICONST_0, ICONST_1, ICONST_2, ICONST_3, ICONST_4, ICONST_5 };
@@ -66,7 +66,7 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 			m.byteCode = new Instruction[1];
-			MethodFrame frm(1, 1);
+			MethodFrame frm(1, 1, true);
 			frm.method = &m;
 
 			Instruction instructions[] = { FCONST_0, FCONST_1, FCONST_2 };
@@ -92,7 +92,7 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 			m.byteCode = new Instruction[1];
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.method = &m;
 
 			Instruction instructions[] = { LCONST_0, LCONST_1 };
@@ -122,7 +122,7 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 			m.byteCode = new Instruction[1];
-			MethodFrame frm(2, 2);
+			MethodFrame frm(2, 2, true);
 			frm.method = &m;
 
 			Instruction instructions[] = { DCONST_0, DCONST_1 };

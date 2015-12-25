@@ -22,7 +22,7 @@ namespace Tests
 
 		TEST_METHOD(pushFullStack)
 		{
-			OperandStack stack(1);
+			OperandStack stack(1, true);
 			stack.push(0);
 			auto callback = [&stack] { stack.push(0); };
 			Assert::ExpectException<StackOverflowException>(callback);
@@ -30,7 +30,7 @@ namespace Tests
 
 		TEST_METHOD(pushAndPopTest)
 		{
-			OperandStack stack(1);
+			OperandStack stack(1, true);
 			int input = 42;
 			stack.push(input);
 			int poppedWord = stack.pop();
@@ -39,7 +39,7 @@ namespace Tests
 
 		TEST_METHOD(fullStack)
 		{
-			OperandStack stack(1);
+			OperandStack stack(1, true);
 			stack.push(0);
 			bool result = stack.isFull();
 			bool expected = true;
@@ -48,7 +48,7 @@ namespace Tests
 
 		TEST_METHOD(emptyStack)
 		{
-			OperandStack stack(1);
+			OperandStack stack(1, true);
 			bool result = stack.isEmpty();
 			bool expected = true;
 			Assert::AreEqual(expected, result);
