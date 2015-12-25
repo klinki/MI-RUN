@@ -30,17 +30,14 @@ public:
 
 	auto getIterator(const Key & k)
 	{
-		
-			auto iterator = this->multimap.find(k);
+		auto iterator = this->multimap.find(k);
 
-			if (iterator == this->multimap.end())
-			{
-				throw ItemNotFoundException();
-			}
+		if (iterator == this->multimap.end())
+		{
+			throw ItemNotFoundException();
+		}
 
-			return iterator;
-
-		
+		return iterator;
 	}
 
 	int count(const Key & k)
