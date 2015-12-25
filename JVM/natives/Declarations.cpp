@@ -21,6 +21,7 @@ Method* getNativeMethod(const std::string & name, const std::string & descriptor
 	return method;
 }
 
+/*
 Method* getNativeMethod(const std::string & name, const std::string & descriptor, NativeMethodPtr nativeMethod)
 {
 	return getNativeMethod(name, descriptor, (void*)nativeMethod);
@@ -42,6 +43,12 @@ Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, 
 }
 
 Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod)
+{
+	return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
+}
+*/
+
+Method* getNativeMethod(const std::string & name, void* nativeMethod)
 {
 	return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
 }

@@ -13,6 +13,8 @@ Utf8String::Utf8String(const char * string): Utf8String(string, strlen(string))
 {
 }
 
+Utf8String::Utf8String(const std::string & str): Utf8String(str.c_str(), str.length()) {}
+
 Utf8String::Utf8String(const char* data, size_t length)
 {
 	this->value = string(data);
@@ -21,6 +23,9 @@ Utf8String::Utf8String(const char* data, size_t length)
 	this->data[length] = '\0';
 	this->dataLength = length + 1;
 	this->stringLength = length;
+
+//	std::hash<std::string> hash;
+	this->hash = this->calculateHash();
 }
 
 Utf8String::Utf8String(const unsigned char* data, size_t length): Utf8String((char*) data, length)
@@ -31,6 +36,21 @@ Utf8String::Utf8String(const unsigned char* data, size_t length): Utf8String((ch
 Utf8String::~Utf8String()
 {
 	delete[] this->data;
+}
+
+size_t Utf8String::calculateHash()
+{
+	// FNV-1a hash
+	// http://www.isthe.com/chongo/tech/comp/fnv/#FNV-1a 
+
+	size_t hash = 2166136261;
+
+	for (size_t i = 0; i < this->dataLength; i++)
+	{
+		hash = (hash * 16777619) ^ this->data[i];
+	}
+
+	return hash;
 }
 
 string Utf8String::toAsciiString()
@@ -64,6 +84,7 @@ Utf8String& Utf8String::operator=(const Utf8String & u)
 	memcpy(this->data, u.data, u.dataLength);
 	this->dataLength = u.dataLength;
 	this->stringLength = u.stringLength;
+	this->hash = u.hash;
 
 	return *this;
 }

@@ -15,6 +15,27 @@ namespace Java
 	{
 		namespace Object
 		{
+
+			Method* getNativeMethod(const std::string & name, const std::string & descriptor, void* nativeMethod)
+			{
+				Method * method = new Method();
+				method->name = Utf8String(name);
+				method->descriptor = Utf8String(descriptor);
+				method->byteCode = NULL;
+				method->byteCodeLength = 0;
+				method->localVariablesArraySize = 0;
+				method->operandStackSize = 0;
+				method->nativeMethod = (NativeMethodPtr)nativeMethod;
+
+				return method;
+			}
+
+			Method* getNativeMethod(const std::string & name, void* nativeMethod)
+			{
+				return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
+			}
+
+
 			Class* initialize()
 			{
 				Class * newClass = new Class(NULL);
@@ -22,7 +43,9 @@ namespace Java
 				newClass->parentClass = NULL;
 				newClass->fullyQualifiedName = Utf8String("java/lang/Object");
 				newClass->type = Class::Type::CLASS;
-				/*
+				
+				newClass->methodArea.addMethod(getNativeMethod(std::string("<init>"),  (void*) &toString));
+/*
 				newClass->methodArea.addMethod(getNativeMethod("toString", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/String;")), (void*)&toString));
 				newClass->methodArea.addMethod(getNativeMethod("clone", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&clone));
 				newClass->methodArea.addMethod(getNativeMethod("equals", getMethodDescriptor(TypeTag::BOOL, JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&equals));
@@ -33,8 +56,10 @@ namespace Java
 				newClass->methodArea.addMethod(getNativeMethod("notifyAll", getMethodDescriptor(), (void*)&notifyAll));
 				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(), (void*)&waitEmpty));
 				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), (void*)&waitTimeout));
-				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
+			//	newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
 			*/
+				newClass->methodArea.addMethod(getNativeMethod(std::string("finalize"), (void*) &toString));
+
 				return newClass;
 			}
 

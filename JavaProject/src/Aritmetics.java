@@ -19,4 +19,10 @@ public class Aritmetics
     {
         return a/b;
     }
+
+	public static void main()
+	{
+		Aritmetics calc = new Aritmetics();
+		double plus = calc.add(1.0, 3.14);
+	}
 }

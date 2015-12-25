@@ -5,6 +5,7 @@
 #include "../JVM/runtime/TypeDescriptors.h"
 #include "../JVM/gc/interfaces/ObjectVisitorInterface.h"
 #include "../JVM/gc/Baker/BakerGc.h"
+#include "../JVM/utils/Utf8String.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

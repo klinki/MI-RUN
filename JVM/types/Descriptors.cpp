@@ -114,7 +114,7 @@ namespace TypeDescriptors
 
 	std::string getMethodDescriptor()
 	{
-		return "()";
+		return "()V";
 	}
 
 }
