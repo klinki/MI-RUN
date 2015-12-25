@@ -35,8 +35,9 @@ void BakerGc::visit(size_t address)
 
 void BakerGc::switchMemorySlot()
 {
+	Heap* oldSlot = this->memorySlots[this->activeSlot];
 	this->activeSlot = this->activeSlot == 0 ? 1 : 0;
-	this->finalize();
+	this->finalize(oldSlot);
 	this->memorySlots[this->activeSlot]->clear();
 }
 
@@ -129,7 +130,7 @@ unsigned char * BakerGc::allocateOnPermanentSpace(size_t size)
 
 void BakerGc::updateAddress(size_t index, void * newAddress)
 {
-	this->objectArray.allocatedArray[index] = (Object*)newAddress;
+	this->hashMap[index] = newAddress;
 }
 
 void BakerGc::collect()
@@ -149,10 +150,10 @@ size_t BakerGc::insert(void * ptr)
 	return index;
 }
 
-void BakerGc::finalize()
+void BakerGc::finalize(Heap* slot)
 {
-	unsigned char* ptr = (unsigned char*)this->memorySlots[this->activeSlot]->data;
-	unsigned char* endPtr = ptr + this->memorySlots[this->activeSlot]->usedBytes;
+	unsigned char* ptr = (unsigned char*)slot->data;
+	unsigned char* endPtr = ptr + slot->usedBytes;
 
 	while (ptr != endPtr)
 	{
@@ -167,15 +168,23 @@ void BakerGc::finalize()
 			{
 				Method* method = objPtr->getFinalizationMethod(); // objectClass->getMethod("finalize", "()V");
 				unsigned char* frameMemory = this->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
-				MethodFrame * frame = new(frameMemory) MethodFrame(method->operandStackSize, method->localVariablesArraySize, NULL, NULL, NULL, NULL);
-				this->engine->execute(frame);
+				MethodFrame * frame = new(frameMemory) MethodFrame(method->operandStackSize, method->localVariablesArraySize, NULL, NULL, method, NULL);
+			
+				if (method->isNative())
+				{
+					method->nativeMethod((Object*)objPtr, frame);
+				}
+				else
+				{
+					this->engine->execute(frame);
+				}
 			}
 			// TODO: Finalize object
 
 			this->hashMap.erase(this->getKey(ptr));
 
 			ptr += size;
-			ptr += size % MEMORY_ALIGNMENT;
+			ptr += MEMORY_ALIGNMENT - (size % MEMORY_ALIGNMENT);
 		}
 	}
 }

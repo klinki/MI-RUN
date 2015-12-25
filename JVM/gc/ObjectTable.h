@@ -7,7 +7,6 @@ class ObjectTable
 {
 protected:
 	std::unordered_map<int, void*> hashMap;
-	Array<Object*> objectArray;
 public:
 	ObjectTable(size_t size = 10);
 	~ObjectTable();

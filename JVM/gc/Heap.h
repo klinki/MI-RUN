@@ -3,7 +3,7 @@
 #include "interfaces/HeapInterface.h"
 class Heap : public HeapInterface
 {
-	const int DEFAULT_HEAP_SIZE = 64 * 1024; // 64kB
+	static const int DEFAULT_HEAP_SIZE = 64 * 1024; // 64kB
 
 protected:
 	size_t allocatedBytes;

@@ -28,16 +28,25 @@ visibility:
 	Class*  classPtr;
 
 public:
-	Method():flags(0) {};
-	Method(FLAG f) : flags(f) {};
+	Method() : Method(0) {};
+	Method(FLAG f) : flags(f)
+	{
+		this->operandStackSize = 0;
+		this->localVariablesArraySize = 0;
+		this->nativeMethod = nullptr;
+	};
 	~Method();
 
-	Utf8String getName();
+	bool isNative() const
+	{
+		return this->nativeMethod != nullptr;
+	}
+
 	const Instruction* getBytecode() const
 	{
 		return this->byteCode;
 	}
-	
+
 	const size_t getByteCodeLength() const
 	{
 		return this->byteCodeLength;

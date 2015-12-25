@@ -1,9 +1,6 @@
 #include "Method.h"
 
-Utf8String Method::getName()
-{
-	return this->name;
-}
+
 
 
 Method::~Method()

@@ -58,7 +58,7 @@ namespace Tests
 			}
 
 			int* intPtr = (int*)obj;
-			intPtr++; // virtual table address
+			intPtr += 2; // virtual table address
 			intPtr++; // for sake of test
 
 			Assert::AreEqual(NULL, * (intPtr - 1));
@@ -84,7 +84,7 @@ namespace Tests
 			MethodFrame * frm = (MethodFrame*) new(objPtr) MethodFrame(10, 10, NULL, NULL, NULL, objPtr);
 
 			int* intPtr = (int*)frm;
-			intPtr++; // virtual table
+			intPtr += 2; // virtual table
 
 			for (int i = 0; i < 10; i++)
 			{
@@ -122,7 +122,7 @@ namespace Tests
 				Assert::AreEqual(i, intPtr[26 + i]); // stack values
 			}
 
-			int canaryIndex = MethodFrame::getMemorySize(10, 10) / 4 - 1; // -1 is because of virtual table (we already moved intPtr)
+			int canaryIndex = MethodFrame::getMemorySize(10, 10) / 4 - 2; // -1 is because of virtual table (we already moved intPtr)
 
 			Assert::AreEqual(0xFDFDFDFD, (unsigned int)intPtr[canaryIndex]); // canary
 		}
@@ -141,7 +141,7 @@ namespace Tests
 			}
 
 			int* intPtr = (int*)test;
-			intPtr++; // virtual table
+			intPtr += 2; // virtual table
 
 			Assert::AreEqual(0, *intPtr);
 			Assert::AreEqual(10, intPtr[1]);
