@@ -46,6 +46,7 @@ Class* ClassLoader::load(char * filename)
 	this->resolvePool(thisClass);
 	delete[] data;
 	classMap->addClass(thisClass);
+	printf("loading finnished\n");
 	return thisClass;
 }
 int ClassLoader::loadMinVersion()
@@ -604,7 +605,7 @@ int ClassLoader::loadMethods(Class * thisClass) {
 		Method * m = new Method(flags[i]);
 		m->name = Utf8String(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
 		m->descriptor = Utf8String(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
-		
+
 		//printf("method %d flags: %d\n", i, flags[i]);
 		//printf("method %d name: %d\n", i, name_indexes[i]);
 		//printf("method %d descriptor: %d\n", i, descriptor_indexes[i]);
@@ -811,7 +812,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 		//printf("com %d %d\n",i,item_tag);
 		switch (item_tag)
 		{
-		case  ConstantPoolTag::CONSTANT_Utf8 : {
+		case  ConstantPoolTag::CONSTANT_Class : {
 			
 			if (thisClass->constantPool->get(i)->classInfo.classPtr == nullptr)
 			{
@@ -829,22 +830,32 @@ void ClassLoader::resolvePool(Class * thisClass)
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
 			thisClass->constantPool->setClassPtr(i, myClass);
 			//field ptr
-			if (myClass != nullptr)
-			{
+			//if (myClass != nullptr)
+			//{
 				int name_index = thisClass->constantPool->get(i)->fieldInfo.name_and_type_index;
 				int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
 				name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
 				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
-
-				for (int j = 0; j < myClass->countFields; j++)
+				
+				for (int j = 0; j < thisClass->countFields; j++)
 				{
-					if (myClass->fields[i]->descriptor == item_descriptor && myClass->fields[i]->name == item_name)
+					if (thisClass->fields[i]->descriptor == item_descriptor && thisClass->fields[i]->name == item_name)
 					{
-						thisClass->constantPool->setFieldPtr(i, myClass->fields[i]);
+						thisClass->constantPool->setFieldPtr(i, thisClass->fields[i]);
 					}
 				}
-			}
+				if (thisClass->constantPool->get(i)->fieldInfo.fieldPtr==nullptr && myClass != nullptr )
+				{
+					for (int j = 0; j < myClass->countFields; j++)
+					{
+						if (myClass->fields[i]->descriptor == item_descriptor && myClass->fields[i]->name == item_name)
+						{
+							thisClass->constantPool->setFieldPtr(i, myClass->fields[i]);
+						}
+					}
+				}
+			//}
 			
 
 			break;}
@@ -860,9 +871,6 @@ void ClassLoader::resolvePool(Class * thisClass)
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
 			thisClass->constantPool->setClassPtr(i, myClass);
 			//merhod ptr
-
-			if (myClass != nullptr)
-			{
 				
 
 				int name_index = thisClass->constantPool->get(i)->methodInfo.name_and_type_index;
@@ -870,9 +878,16 @@ void ClassLoader::resolvePool(Class * thisClass)
 				name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
 				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
-				thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
-			}
-
+				
+				if (thisClass->methodArea.getMethod(item_name, item_descriptor)!= nullptr)
+				{
+					thisClass->constantPool->setMethodPtr(i, thisClass->methodArea.getMethod(item_name, item_descriptor));
+				}
+				else if (myClass != nullptr &&  myClass->methodArea.getMethod(item_name, item_descriptor) != nullptr)
+				{ 
+					thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
+				}
+				
 
 			break;}
 		case  ConstantPoolTag::CONSTANT_InterfaceMethodref: {
@@ -885,15 +900,22 @@ void ClassLoader::resolvePool(Class * thisClass)
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
 			thisClass->constantPool->setClassPtr(i, myClass);
 			//method ptr
-			if (myClass != nullptr)
-			{
+			//if (myClass != nullptr)
+			//{
 				int name_index = thisClass->constantPool->get(i)->interfaceMethodInfo.name_and_type_index;
 				int descriptor_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.descriptor_index;
 				name_index = thisClass->constantPool->get(name_index)->nameAndTypeInfo.name_index;
 				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
-				thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
-			}
+				if (thisClass->methodArea.getMethod(item_name, item_descriptor) != nullptr)
+				{
+					thisClass->constantPool->setMethodPtr(i, thisClass->methodArea.getMethod(item_name, item_descriptor));
+				}
+				else if (myClass != nullptr &&  myClass->methodArea.getMethod(item_name, item_descriptor) != nullptr)
+				{
+					thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
+				}
+			//}
 
 			break;}
 		default:

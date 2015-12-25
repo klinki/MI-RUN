@@ -332,21 +332,23 @@ void ConstantPool::resolveStringRef()
 
 void ConstantPool::setClassPtr(int index, Class * c)
 {
-	if (constantPool[index].tag == 7)
+	switch (constantPool[index].tag)
 	{
+	case ConstantPoolTag::CONSTANT_Class:
 		constantPool[index].classInfo.classPtr = c;
-	}
-	else if (constantPool[index].tag == 9)
-	{
+		break;
+	case ConstantPoolTag::CONSTANT_Fieldref:
 		constantPool[index].fieldInfo.classPtr = c;
-	}
-	else if (constantPool[index].tag == 10)
-	{
+		break;
+	case ConstantPoolTag::CONSTANT_Methodref:
 		constantPool[index].methodInfo.classPtr = c;
-	}
-	else if (constantPool[index].tag == 11)
-	{
+		break;
+	case ConstantPoolTag::CONSTANT_InterfaceMethodref:
 		constantPool[index].interfaceMethodInfo.classPtr = c;
+		break;
+
+	default:
+		break;
 	}
 }
 void ConstantPool::setFieldPtr(int index, Field * f)
