@@ -47,7 +47,7 @@ namespace Tests
 		void checkAllocatedValues(ArrayObject<T> * objectPtr, size_t arraySize, T expectedValue)
 		{
 			int* intPtr = (int*)objectPtr;
-			intPtr++; // virtual table
+			intPtr += 2; // virtual table
 			T* typePtr = (T*)(intPtr + 3);
 			
 
@@ -61,7 +61,7 @@ namespace Tests
 		void checkProperties(ArrayObject<T> * objectPtr, int size, Class* expClass)
 		{
 			int* intPtr = (int*)objectPtr;
-			intPtr++; // virtual table
+			intPtr += 2; // virtual table
 
 			Assert::AreEqual((int)expClass, (int)*intPtr);
 			Assert::AreEqual(size, intPtr[1]);

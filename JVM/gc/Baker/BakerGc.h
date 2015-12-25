@@ -70,7 +70,7 @@ visibility:
 		header->key = key; 
 	}
 
-	void finalize();
+	void finalize(Heap* slot);
 
 public:
 	BakerGc();

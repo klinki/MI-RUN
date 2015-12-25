@@ -1,6 +1,6 @@
 #include "Heap.h"
 
-Heap::Heap(): Heap(DEFAULT_HEAP_SIZE)
+Heap::Heap(): Heap(Heap::DEFAULT_HEAP_SIZE)
 {
 
 }

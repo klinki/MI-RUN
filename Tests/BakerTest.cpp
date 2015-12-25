@@ -11,10 +11,10 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
 {
-	bool finalizationCalled = false;
+	int finalizationCalled = 0;
 	void testFinalizationCalled(Object* obj, MethodFrame* frame)
 	{
-		finalizationCalled = true;
+		finalizationCalled++;
 	}
 
 	TEST_CLASS(BakerTest)
@@ -90,7 +90,7 @@ namespace Tests
 			return baker;
 		}
 
-		TEST_METHOD(testFinalization)
+		TEST_METHOD(testFinalizationNative)
 		{
 			BakerGc * baker = new BakerGc(1 * 1024, 10 * 1024);
 
@@ -98,6 +98,8 @@ namespace Tests
 			engine->classMap = new ClassMap();
 			engine->objectTable = baker;
 			engine->heap = baker;
+
+			baker->engine = engine;
 
 			Class* newClass = new Class(0);
 			newClass->fullyQualifiedName = "java.lang.Test";
@@ -111,12 +113,46 @@ namespace Tests
 			newClass->methodArea.addMethod(method);
 			engine->classMap->addClass(newClass);
 		
-			this->allocateFinalizableGarbage(baker, 5, 64, newClass);
+			this->allocateFinalizableGarbage(baker, 3, 64, newClass);
+
+			baker->switchMemorySlot();
+			
+			Assert::AreEqual(3, finalizationCalled);
+		}
+
+		TEST_METHOD(testFinalizationByteCode)
+		{
+			BakerGc * baker = new BakerGc(1 * 1024, 10 * 1024);
+
+			ExecutionEngine * engine = new ExecutionEngine();
+			engine->classMap = new ClassMap();
+			engine->objectTable = baker;
+			engine->heap = baker;
 
 			baker->engine = engine;
 
-			baker->finalize();
+			Class* newClass = new Class(0);
+			newClass->fullyQualifiedName = "java.lang.Test";
+
+			Method* method = new Method();
+			method->nativeMethod = nullptr;
+			method->descriptor = "()V";
+			method->name = "finalize";
+			method->classPtr = newClass;
+			method->byteCodeLength = 2;
+			method->byteCode = new Instruction[2];
+			method->byteCode[0] = InstructionSet::ICONST_5;
+			method->byteCodeLength = 1;
+			method->operandStackSize = 1;
+		
+			newClass->methodArea.addMethod(method);
+			engine->classMap->addClass(newClass);
+
+			this->allocateFinalizableGarbage(baker, 3, 64, newClass);
+
+			baker->switchMemorySlot();
 		}
+
 		
 		TEST_METHOD(testSimpleGc)
 		{
