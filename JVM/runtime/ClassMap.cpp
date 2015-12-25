@@ -46,6 +46,7 @@ Class* ClassMap::getClass(const Utf8String & name)
 
 void ClassMap::addClass(Class* classRef)
 {
+
 	Utf8String name = classRef->fullyQualifiedName;
 	hashmap.insert(name, classRef);
 }

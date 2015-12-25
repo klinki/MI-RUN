@@ -43,47 +43,47 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 	//printf("zapis %d\n",type);
 	switch (type)
 	{
-	case 7:{//class
+	case ConstantPoolTag::CONSTANT_Class:{//class
 		unsigned short index = (unsigned short)(data[0] * 256 + data[1]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Class);
 		spi.classInfo = CONSTANT_Class_info(index);
 		constantPool[pos] = spi;
 		break;
 	}
-	case 9: {//field ref
+	case ConstantPoolTag::CONSTANT_Fieldref: {//field ref
 		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
 		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Fieldref);
 		spi.fieldInfo = CONSTANT_Fieldref_info(i1, i2);
 		constantPool[pos] = spi;
 		break;}
-	case 10: {//method ref
+	case ConstantPoolTag::CONSTANT_Methodref: {//method ref
 		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
 		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Methodref);
 		spi.methodInfo = CONSTANT_Methodref_info(i1, i2);
 		constantPool[pos] = spi;
 		break;}
-	case 11: {//interface method ref
+	case ConstantPoolTag::CONSTANT_InterfaceMethodref: {//interface method ref
 		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
 		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_InterfaceMethodref);
 		spi.interfaceMethodInfo = CONSTANT_InterfaceMethodref_info(i1, i2);
 		constantPool[pos] = spi;
 		break;}
-	case 8: {//string
+	case ConstantPoolTag::CONSTANT_String: {//string
 		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_String);
 		spi.stringInfo = CONSTANT_String_info(i1);
 		constantPool[pos] = spi;
 		break;}
-	case 3: {//integer
+	case ConstantPoolTag::CONSTANT_Integer: {//integer
 		int v = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Integer);
 		spi.integerInfo = CONSTANT_Integer_info(v);
 		constantPool[pos] = spi;
 		break;}
-	case 4: {//float
+	case ConstantPoolTag::CONSTANT_Float: {//float
 		/*  TODO float value:  If bits is 0x7f800000, the float value will be positive infinity.
 
 			If bits is 0xff800000, the float value will be negative infinity.
@@ -105,33 +105,33 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		spi.floatInfo = CONSTANT_Float_info(v);
 		constantPool[pos] = spi;
 		break;}
-	case 5: {//long // TODO value
+	case  ConstantPoolTag::CONSTANT_Long: {//long // TODO value
 		int v1 = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
 		int v2 = (int)(data[4] * 256 * 256 * 256 + data[5] * 256 * 256 + data[6] * 256 + data[7]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Long);
 		spi.longInfo = CONSTANT_Long_info(v1, v2);
 		constantPool[pos] = spi;
 		break;}
-	case 6: {//double // TODO value
+	case  ConstantPoolTag::CONSTANT_Double: {//double // TODO value
 		int v1 = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
 		int v2 = (int)(data[4] * 256 * 256 * 256 + data[5] * 256 * 256 + data[6] * 256 + data[7]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Double);
 		spi.doubleInfo = CONSTANT_Double_info(v1, v2);
 		constantPool[pos] =spi;
 		break;}
-	case 12: {//nameandtype
+	case  ConstantPoolTag::CONSTANT_NameAndType: {//nameandtype
 		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
 		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_NameAndType);
 		spi.nameAndTypeInfo = CONSTANT_NameAndType_info(i1, i2);
 		constantPool[pos] = spi;
 		break;}
-	case 1: {//utf8
+	case  ConstantPoolTag::CONSTANT_Utf8: {//utf8
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Utf8);
 		spi.utf8Info = CONSTANT_Utf8_info((unsigned short)length, data);
 		constantPool[pos] = spi;
 		break;}
-	case 15: {//methodhandle
+	case  ConstantPoolTag::CONSTANT_MethodHandle: {//methodhandle
 		unsigned short i1 = (unsigned short)(data[0]);
 		ReferenceType rt;
 		switch (i1)
@@ -154,13 +154,13 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		spi.methodHandleInfo = CONSTANT_MethodHandle_info(rt, i2);
 		constantPool[pos] = spi;
 		break;}
-	case 16: {//methodtype
+	case  ConstantPoolTag::CONSTANT_MethodType: {//methodtype
 		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_MethodType);
 		spi.methodTypeInfo = CONSTANT_MethodType_info(i1);
 		constantPool[pos] = spi;
 		break;}
-	case 18: {//invokedynamic
+	case  ConstantPoolTag::CONSTANT_InvokeDynamic: {//invokedynamic
 		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
 		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_InvokeDynamic);
@@ -172,69 +172,7 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		return -1;
 	}
 	int i = pos;
-	/*
-	printf("%d\n", constantPool[i].tag);
-	switch (constantPool[i].tag)
-	{
-	case 7: //class
-		printf("class name_index:%d ", constantPool[i].classInfo.name_index);
-		break;
-	case 9: //field ref
-		printf("field class_index:%d ", constantPool[i].fieldInfo.class_index);
-		printf(" name_and_type_index:%d ", constantPool[i].fieldInfo.name_and_type_index);
-		break;
-	case 10: //method ref
-		printf("method class_index:%d ", constantPool[i].methodInfo.class_index);
-		printf(" name_and_type_index:%d ", constantPool[i].methodInfo.name_and_type_index);
-		break;
-	case 11://interface method ref
-		printf("interface class_index:%d ", constantPool[i].interfaceMethodInfo.class_index);
-		printf(" name_and_type_index:%d ", constantPool[i].interfaceMethodInfo.name_and_type_index);
-		break;
-	case 8: //string
-		printf("string string_index:%d ", constantPool[i].stringInfo.string_index);
-		break;
-	case 3: //integer
-		printf("integer value:%d ", constantPool[i].integerInfo.value);
-		break;
-	case 4: //float
-		printf("float value:%f ", constantPool[i].floatInfo.value);
-		break;
-	case 5: //long 
-		printf("long high_bytes:%d ", constantPool[i].longInfo.high_bytes);
-		printf(" low_bytes:%d ", constantPool[i].longInfo.low_bytes);
-		break;
-	case 6: //double 
-		printf("double high_bytes:%d ", constantPool[i].doubleInfo.high_bytes);
-		printf(" low_bytes:%d ", constantPool[i].doubleInfo.low_bytes);
-		break;
-	case 12: //nameandtype
-		printf("nameandtype name_index:%d ", constantPool[i].nameAndTypeInfo.name_index);
-		printf(" descriptor_index:%d ", constantPool[i].nameAndTypeInfo.descriptor_index);
-
-		break;
-	case 1://utf8
-		for (int k = 0; k < constantPool[i].utf8Info.length;k++)
-		{
-			printf("%c", constantPool[i].utf8Info.bytes[k]);
-		}
-
-		break;
-	case 15: //methodhandle
-		printf("methodHandleInfo reference_kind:%d ", constantPool[i].methodHandleInfo.reference_kind);
-		printf(" reference_index:%d ", constantPool[i].methodHandleInfo.reference_index);
-		break;
-	case 16: //methodtype
-		printf("methodTypeInfo descriptor_index:%d ", constantPool[i].methodTypeInfo.descriptor_index);
-		break;
-	case 18: //invokedynamic
-		printf("invokeDynamicInfo bootstrap_method_attr_index:%d ", constantPool[i].invokeDynamicInfo.bootstrap_method_attr_index);
-		printf("name_and_type_index:%d ", constantPool[i].invokeDynamicInfo.name_and_type_index);
-		break;
-	default:
-		printf("ERROR Constant pool (print) unknown tag %d\n",constantPool[i].tag);
-	}
-	*/
+	
 	return 0;
 }
 
