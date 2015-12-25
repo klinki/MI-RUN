@@ -218,10 +218,12 @@ void ConstantPool::print()
 		case CONSTANT_Long: //long 
 			printf("long high_bytes:%d ", constantPool[i].longInfo.high_bytes);
 			printf(" low_bytes:%d ", constantPool[i].longInfo.low_bytes);
+			i++;
 			break;
 		case CONSTANT_Double: //double 
 			printf("double high_bytes:%d ", constantPool[i].doubleInfo.high_bytes);
 			printf(" low_bytes:%d ", constantPool[i].doubleInfo.low_bytes);
+			i++;
 			break;
 		case CONSTANT_NameAndType: //nameandtype
 			printf("nameandtype name_index:%d ", constantPool[i].nameAndTypeInfo.name_index);

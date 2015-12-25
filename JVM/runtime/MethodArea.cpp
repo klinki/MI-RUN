@@ -13,7 +13,7 @@ MethodArea::~MethodArea()
 
 Method* MethodArea::getMethod(const Utf8String & name, const Utf8String & descriptor)
 {
-	
+
 	try
 	{
 		auto iterator = this->hashmap.getIterator(name);
@@ -43,13 +43,15 @@ Method* MethodArea::getMethod(const Utf8String & name, const Utf8String & descri
 	{
 		return nullptr;
 	}
+
 	return nullptr;
 }
 
 
 void MethodArea::addMethod(Method* method)
 {
-	printf("add method\n");
+	printf("add method \n");
+
 	this->hashmap.insert(method->name,method);
 
 }

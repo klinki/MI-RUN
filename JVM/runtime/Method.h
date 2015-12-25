@@ -32,6 +32,7 @@ public:
 	Method(FLAG f) : flags(f) {};
 	~Method();
 
+	Utf8String getName();
 	const Instruction* getBytecode() const
 	{
 		return this->byteCode;

@@ -19,6 +19,7 @@ Class* ClassLoader::load(char * filename)
 	myfile = ifstream (filename, ios::in | ios::binary);
 	data = new unsigned char[0];
 	//thisClass = Class();
+	printf("loading class\n");
 	if (reader(4))//read CAFEBABE
 	{
 		printf("ERROR IN READ FILE");
@@ -57,8 +58,8 @@ int ClassLoader::loadMinVersion()
 		return -1;
 	}
 
-	//minor_version = (int)(data[0] * 256 + data[1]);
-	//printf("min_ver:%d\n", minor_version);
+	int minor_version = (int)(data[0] * 256 + data[1]);
+	printf("min_ver:%d\n", minor_version);
 	return 0; 
 }
 int ClassLoader::loadMajVersion()
@@ -69,8 +70,8 @@ int ClassLoader::loadMajVersion()
 		return -1;
 	}
 
-	//major_version = (int)(data[0] * 256 + data[1]);
-	//printf("maj_ver:%d\n", major_version);
+	int major_version = (int)(data[0] * 256 + data[1]);
+	printf("maj_ver:%d\n", major_version);
 	return 0;
 }
 int ClassLoader::loadConstPool()
@@ -81,13 +82,13 @@ int ClassLoader::loadConstPool()
 		return -1;
 	}
 	int constant_pool_count = (int)(data[0] * 256 + data[1]);
-	//printf("constant_pool_count:%d\n", constant_pool_count);
+	printf("constant_pool_count:%d\n", constant_pool_count);
 	//CPool = new ConstantPool(constant_pool_count);
 	constantPool = new ConstantPool(constant_pool_count);
 	
 	for (int k = 1; k < constant_pool_count; k++)
 	{
-
+		printf("tag:");
 		if (reader(1))
 		{
 			printf("ERROR IN READ FILE");
@@ -162,7 +163,7 @@ int ClassLoader::loadConstPool()
 				return -1;
 			}
 			//CPool->add(k, (unsigned char)cpType, 8, data);
-			constantPool->add(k, cpType, 8, data);
+			constantPool->add(k++, cpType, 8, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Double://double
 			
@@ -172,7 +173,7 @@ int ClassLoader::loadConstPool()
 				return -1;
 			}
 			//CPool->add(k, (unsigned char)cpType, 8, data);
-			constantPool->add(k, cpType, 8, data);
+			constantPool->add(k++, cpType, 8, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Class://class
 			
@@ -283,7 +284,7 @@ unsigned short ClassLoader::loadFlags()
 		return -1;
 	}
 	unsigned short access_flags = (unsigned short)(data[0] * 256 + data[1]);
-	//printf("access flags:%X\n", access_flags);
+	printf("access flags:%X\n", access_flags);
 	return access_flags;
 }
 int ClassLoader::loadThisClass(Class * thisClass)
@@ -296,7 +297,7 @@ int ClassLoader::loadThisClass(Class * thisClass)
 	}
 	int thisClassIndex=(int)(data[0] * 256 + data[1]);
 	thisClass->constantPool->setClassPtr(thisClassIndex,thisClass);
-	//printf("-%d/n",thisClassIndex);
+	printf("this class:%d\n",thisClassIndex);
 	int nameptr = thisClass->constantPool->get(thisClassIndex)->classInfo.name_index;
 	thisClass ->fullyQualifiedName= Utf8String(thisClass->constantPool->get(nameptr)->utf8Info.bytes,thisClass->constantPool->get(nameptr)->utf8Info.length);
 	/*
@@ -789,9 +790,9 @@ int ClassLoader::reader(int nob)
 		for (int i = 0; i < nob; i++)
 		{
 			data[i] = (unsigned char)sdata[i];
-			//printf("%X", data[i]);
+			printf("%X", data[i]);
 		}
-		//printf("\n");
+		printf("\n");
 		delete[] sdata;
 		return 0;
 	}
@@ -879,12 +880,12 @@ void ClassLoader::resolvePool(Class * thisClass)
 				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
 				
-				if (thisClass->methodArea.getMethod(item_name, item_descriptor)!= nullptr)
+				if (thisClass->methodArea.getMethod(item_name, item_descriptor) != nullptr)
 				{
 					thisClass->constantPool->setMethodPtr(i, thisClass->methodArea.getMethod(item_name, item_descriptor));
 				}
 				else if (myClass != nullptr &&  myClass->methodArea.getMethod(item_name, item_descriptor) != nullptr)
-				{ 
+				{
 					thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
 				}
 				
@@ -936,6 +937,7 @@ void ClassLoader::resolveClassPointer(Class * thisClass,int i)
 	}
 	else
 	{
+		printf("set class ptr %d\n",i);
 		thisClass->constantPool->setClassPtr(i, class_pointer);
 	}
 }
