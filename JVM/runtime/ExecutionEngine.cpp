@@ -420,7 +420,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LADD:
 		{
-			LONG_OPERATION(+);
+			DOUBLE_WORD_OPERATION(long long, +);
 		}
 		break;
 
@@ -432,7 +432,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DADD:
 		{
-			DOUBLE_OPERATION(+);
+			DOUBLE_WORD_OPERATION(double, +);
 		}
 		break;
 
@@ -444,19 +444,19 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LSUB:
 		{
-			LONG_OPERATION(-);
+			DOUBLE_WORD_OPERATION(long long, -);
 		}
 		break;
 
 		case FSUB:
 		{
-			SINGLE_WORD_OPERATION(float, +);
+			SINGLE_WORD_OPERATION(float, -);
 		}
 		break;
 
 		case DSUB:
 		{
-			DOUBLE_OPERATION(-);
+			DOUBLE_WORD_OPERATION(double, -);
 		}
 		break;
 
@@ -469,7 +469,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LMUL:
 		{
-			LONG_OPERATION(*);
+			DOUBLE_WORD_OPERATION(long long, *);
 		}
 		break;
 
@@ -481,7 +481,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DMUL:
 		{
-			DOUBLE_OPERATION(*);
+			DOUBLE_WORD_OPERATION(double, *);
 		}
 		break;
 
@@ -496,7 +496,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->frame->operandStack->push(a * b);
+			this->frame->operandStack->push(a / b);
 		}
 		break;
 
@@ -509,6 +509,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			if (b == 0)
 			{
 				// exception! 
+				throw Exceptions::Runtime::ArithmeticException();
 			}
 
 			this->frame->operandStack->push2(a / b);
@@ -523,7 +524,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DDIV:
 		{
-			DOUBLE_OPERATION(/ );
+			DOUBLE_WORD_OPERATION(double, / );
 		}
 		break;
 
@@ -612,8 +613,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LSHL:
 		{
-			long long a = this->frame->operandStack->pop2();
 			int b = this->frame->operandStack->pop();
+			long long a = this->frame->operandStack->pop2();
 			this->frame->operandStack->push2(a << b);
 		}
 		break;
@@ -627,8 +628,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case LSHR:
 		{
 			// shift right
-			long long a = this->frame->operandStack->pop2();
 			int b = this->frame->operandStack->pop();
+			long long a = this->frame->operandStack->pop2();
 			this->frame->operandStack->push2(a >> b);
 		}
 		break;
@@ -656,7 +657,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LAND:
 		{
-			LONG_OPERATION(&);
+			DOUBLE_WORD_OPERATION(long long, &);
 		}
 		break;
 
@@ -668,7 +669,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LOR:
 		{
-			LONG_OPERATION(| );
+			DOUBLE_WORD_OPERATION(long long, | );
 		}
 		break;
 
@@ -680,7 +681,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LXOR:
 		{
-			LONG_OPERATION(^);
+			DOUBLE_WORD_OPERATION(long long, ^);
 		}
 		break;
 
@@ -1090,6 +1091,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case INVOKEVIRTUAL:
 		{
 			Method* method = nullptr;
+			Class* classPtr = nullptr;
 			Object* reference = this->frame->operandStack->pop();
 			unsigned short index = this->getShort();
 
@@ -1101,8 +1103,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				ConstantPoolItem * item = this->frame->constantPool->get(index);
 
-				Class* classPtr = item->methodInfo.classPtr;
+				classPtr = item->methodInfo.classPtr;
 				Method* methodPtr = item->methodInfo.methodPtr;
+				method = methodPtr;
 
 				int classIndex = item->methodInfo.class_index;
 				int nameAndTypeIndex = item->methodInfo.name_and_type_index;
@@ -1121,10 +1124,49 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				method->nativeMethod(reference, this->frame);
 			}
+			else
+			{
+				unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
+				MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize);
+
+				newFrame->parentFrame = frame;
+				frame->childFrame = newFrame;
+
+				newFrame->method = method;
+				newFrame->constantPool = classPtr->constantPool;
+				(*newFrame->localVariables)[0] = reference;
+
+				size_t varPos = 1;
+
+				for (size_t i = 0; i < method->countIntputArgs; i++)
+				{
+					TypeTag type = method->inputArgs[i];
+
+					switch (type)
+					{
+					case TypeTag::LONG:
+					case TypeTag::DOUBLE:
+						{
+							word low = this->frame->operandStack->pop();
+							word high = this->frame->operandStack->pop();
+
+							(*newFrame->localVariables)[varPos++] = low;
+							(*newFrame->localVariables)[varPos++] = high;
+						}
+						break;
+
+					default:
+						(*newFrame->localVariables)[varPos++] = this->frame->operandStack->pop();
+						break;
+					}
+				}
+
+
+				this->execute(newFrame);
+			}
 
 			// if method is native, execute native code
 			// else create new framestack and execute method
-
 		} 
 		break;
 

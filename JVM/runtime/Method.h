@@ -27,6 +27,9 @@ visibility:
 	NativeMethodPtr nativeMethod;
 	Class*  classPtr;
 
+	TypeTag * inputArgs;
+	size_t countIntputArgs;
+
 public:
 	Method() : Method(0) {};
 	Method(FLAG f) : flags(f)
@@ -51,5 +54,44 @@ public:
 	{
 		return this->byteCodeLength;
 	}
+
+	bool returnsData() const
+	{
+		return this->descriptor != "V";
+	}
+
+	void initInputArgs()
+	{
+		std::string descr = this->descriptor.toAsciiString();
+
+		int i = 1;
+
+		this->inputArgs = new TypeTag[100];
+
+		int index = 0;
+
+		while (descr[i++] != ')')
+		{
+			switch (descr[i])
+			{
+			case 'L':
+				while (descr[i++] != ';');
+				this->inputArgs[index++] = TypeTag::REFERENCE;
+				break;
+			case 'D':
+				this->inputArgs[index++] = TypeTag::DOUBLE;
+				break;
+			case 'J':
+				this->inputArgs[index++] = TypeTag::LONG;
+				break;
+			default:
+				this->inputArgs[index++] = TypeTag::INT;
+				break;
+			}
+		}
+
+		this->countIntputArgs = index;
+	}
+
 	friend class ClassLoader;
 };

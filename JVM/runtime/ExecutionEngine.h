@@ -17,16 +17,10 @@
 	type a = this->frame->operandStack->pop(); \
 	this->frame->operandStack->push(a op b)
 
-#define DOUBLE_OPERATION(op) \
- 	double a = this->frame->operandStack->pop2(); \
-	double b = this->frame->operandStack->pop2(); \
-	this->frame->operandStack->push2((double)(a op b));
-
-
-#define LONG_OPERATION(op) \
- 	long long a = this->frame->operandStack->pop2(); \
-	long long b = this->frame->operandStack->pop2(); \
-	this->frame->operandStack->push2((long long)(a op b));
+#define DOUBLE_WORD_OPERATION(type, op) \
+	type b = this->frame->operandStack->pop2(); \
+	type a = this->frame->operandStack->pop2(); \
+	this->frame->operandStack->push2((type)(a op b));
 
 
 class ExecutionEngine
@@ -232,17 +226,6 @@ public:
 			this->jumpWithOffset(offset);
 		}
 	}
-
-	inline void singleAdd()
-	{
-
-	}
-
-	inline void doubleAdd()
-	{
-
-	}
-
 
 	template<class T>
 	inline void fdcmp(T a, T b, Instruction currentInstruction)

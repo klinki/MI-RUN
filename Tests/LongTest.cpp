@@ -14,27 +14,27 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 
-			int a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
-			int b[] = { 0, 1, -1, INT_MAX, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
+			long long a[] = { 0, 1, -1, LLONG_MAX, -1, LLONG_MIN, INT_MAX, UINT_MAX};
+			long long b[] = { 0, 1, -1, LLONG_MAX, LLONG_MAX, LLONG_MIN, INT_MAX, UINT_MAX };
 
-			for (int i = 0; i < 8; i++)
+			for (long long i = 0; i < 8; i++)
 			{
-				int expected = a[i] * b[i];
+				long long expected = a[i] * b[i];
 
 				m.byteCode = new Instruction[1];
 				m.byteCode[0] = (Instruction)InstructionSet::LMUL;
 				m.byteCodeLength = 1;
 
-				MethodFrame frm(2, 2);
-				frm.operandStack->push(a[i]);
-				frm.operandStack->push(b[i]);
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a[i]);
+				frm.operandStack->push2(b[i]);
 
 				frm.pc = 0;
 				frm.method = &m;
 
 				eng.execute(&frm);
 
-				int result = frm.operandStack->pop();
+				long long result = frm.operandStack->pop2();
 				Assert::AreEqual(expected, result);
 			}
 		}
@@ -45,12 +45,12 @@ namespace Tests
 			Method m;
 
 			m.byteCode = new Instruction[1];
-			m.byteCode[0] = (Instruction)InstructionSet::IDIV;
+			m.byteCode[0] = (Instruction)InstructionSet::LDIV;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
-			frm.operandStack->push(1);
-			frm.operandStack->push(0);
+			MethodFrame frm(4, 4);
+			frm.operandStack->push2(1LL);
+			frm.operandStack->push2(0LL);
 
 			frm.pc = 0;
 			frm.method = &m;
@@ -61,13 +61,49 @@ namespace Tests
 
 		TEST_METHOD(testLDIV)
 		{
+			ExecutionEngine eng;
+			Method m;
 
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::LDIV;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(4, 4);
+			frm.operandStack->push2(100LL);
+			frm.operandStack->push2(3LL);
+
+			frm.pc = 0;
+			frm.method = &m;
+			eng.execute(&frm);
+
+			long long expected = 100 / 3;
+
+			long long result = frm.operandStack->pop2();
+			Assert::AreEqual(expected, result);
 		}
 
 
 		TEST_METHOD(testLREM)
 		{
+			ExecutionEngine eng;
+			Method m;
 
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::LREM;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(4, 4);
+			frm.operandStack->push2(100LL);
+			frm.operandStack->push2(3LL);
+
+			frm.pc = 0;
+			frm.method = &m;
+			eng.execute(&frm);
+
+			long long expected = 100 % 3;
+
+			long long result = frm.operandStack->pop2();
+			Assert::AreEqual(expected, result);
 		}
 
 
@@ -77,12 +113,12 @@ namespace Tests
 			Method m;
 
 			m.byteCode = new Instruction[1];
-			m.byteCode[0] = (Instruction)InstructionSet::IREM;
+			m.byteCode[0] = (Instruction)InstructionSet::LREM;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
-			frm.operandStack->push(1);
-			frm.operandStack->push(0);
+			MethodFrame frm(4, 4);
+			frm.operandStack->push2(1LL);
+			frm.operandStack->push2(0LL);
 
 			frm.pc = 0;
 			frm.method = &m;
@@ -93,43 +129,260 @@ namespace Tests
 
 		TEST_METHOD(testLADD)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
+			long long b[] = { 0, -1, 1, INT_MIN, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
+
+			for (long long i = 0; i < 8; i++)
+			{
+				long long expected = a[i] + b[i];
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::LADD;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a[i]);
+				frm.operandStack->push2(b[i]);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				long long result = frm.operandStack->pop2();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testLSUB)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
+			long long b[] = { 0, -1, 1, INT_MIN, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
+
+			for (long long i = 0; i < 8; i++)
+			{
+				long long expected = a[i] - b[i];
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::LSUB;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a[i]);
+				frm.operandStack->push2(b[i]);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				long long result = frm.operandStack->pop2();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testLNEG)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a[] = { 1, -1, INT_MAX, INT_MIN };
+
+			for (long long i = 0; i < 32; i++)
+			{
+				long long expected = -i;
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::LNEG;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a[i]);
+				frm.operandStack->push2(i);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				long long result = frm.operandStack->pop2();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testLSHL)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a = 1;
+
+			for (long long i = 0; i < 64; i++)
+			{
+				long long expected = a << i;
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::LSHL;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a);
+				frm.operandStack->push((int)i);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				long long result = frm.operandStack->pop2();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testLSHR)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a = 1 << 64;
+
+			for (long long i = 0; i < 64; i++)
+			{
+				long long expected = a >> i;
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::LSHR;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a);
+				frm.operandStack->push2(i);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				long long result = frm.operandStack->pop2();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testLUSHR)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a = 1 << 64;
+
+			for (long long i = 0; i < 64; i++)
+			{
+				long long expected = a >> i;
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::LSHR;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a);
+				frm.operandStack->push2(i);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				long long result = frm.operandStack->pop2();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testLAND)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a = LLONG_MAX;;
+
+			for (long long i = 0; i < 64; i++)
+			{
+				long long expected = a & (a >> i);
+
+				m.byteCode = new Instruction[1];
+				m.byteCode[0] = (Instruction)InstructionSet::LAND;
+				m.byteCodeLength = 1;
+
+				MethodFrame frm(4, 4);
+				frm.operandStack->push2(a);
+				frm.operandStack->push2(a >> i);
+
+				frm.pc = 0;
+				frm.method = &m;
+
+				eng.execute(&frm);
+
+				long long result = frm.operandStack->pop2();
+				Assert::AreEqual(expected, result);
+			}
 		}
 
 		TEST_METHOD(testLOR)
 		{
+			ExecutionEngine eng;
+			Method m;
+
+			long long a = 0x0BAFBAF;
+			long long b = 0xEEAABBEE;
+
+			long long expected = a | b;
+			long long index = 0;
+
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::LOR;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(4, 4);
+			frm.pc = 0;
+			frm.operandStack->push2(a);
+			frm.operandStack->push2(b);
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			long long result = frm.operandStack->pop2();
+			Assert::AreEqual(expected, result);
 		}
 
 		TEST_METHOD(testLXOR)
 		{
-		}
+			ExecutionEngine eng;
+			Method m;
+			long long a = 0x0BAFBAF;
+			long long b = 0xEEAABBEE;
 
-		TEST_METHOD(testLINC)
-		{
-		}
+			long long expected = a ^ b;
+			long long index = 0;
 
+			m.byteCode = new Instruction[1];
+			m.byteCode[0] = (Instruction)InstructionSet::LXOR;
+			m.byteCodeLength = 1;
+
+			MethodFrame frm(4, 4);
+			frm.pc = 0;
+			frm.operandStack->push2(a);
+			frm.operandStack->push2(b);
+			frm.method = &m;
+
+			eng.execute(&frm);
+
+			long long result = frm.operandStack->pop2();
+			Assert::AreEqual(expected, result);
+		}
 	};
 }
