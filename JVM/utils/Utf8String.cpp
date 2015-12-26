@@ -54,7 +54,7 @@ size_t Utf8String::calculateHash()
 
 string Utf8String::toAsciiString()
 {
-	return "";
+	return std::string((char*)this->data);
 }
 
 bool Utf8String::equals(const Utf8String & b) const

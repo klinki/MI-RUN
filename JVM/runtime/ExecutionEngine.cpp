@@ -1091,6 +1091,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case INVOKEVIRTUAL:
 		{
 			Method* method = nullptr;
+			Class* classPtr = nullptr;
 			Object* reference = this->frame->operandStack->pop();
 			unsigned short index = this->getShort();
 
@@ -1102,8 +1103,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				ConstantPoolItem * item = this->frame->constantPool->get(index);
 
-				Class* classPtr = item->methodInfo.classPtr;
+				classPtr = item->methodInfo.classPtr;
 				Method* methodPtr = item->methodInfo.methodPtr;
+				method = methodPtr;
 
 				int classIndex = item->methodInfo.class_index;
 				int nameAndTypeIndex = item->methodInfo.name_and_type_index;
@@ -1122,10 +1124,49 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				method->nativeMethod(reference, this->frame);
 			}
+			else
+			{
+				unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
+				MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize);
+
+				newFrame->parentFrame = frame;
+				frame->childFrame = newFrame;
+
+				newFrame->method = method;
+				newFrame->constantPool = classPtr->constantPool;
+				(*newFrame->localVariables)[0] = reference;
+
+				size_t varPos = 1;
+
+				for (size_t i = 0; i < method->countIntputArgs; i++)
+				{
+					TypeTag type = method->inputArgs[i];
+
+					switch (type)
+					{
+					case TypeTag::LONG:
+					case TypeTag::DOUBLE:
+						{
+							word low = this->frame->operandStack->pop();
+							word high = this->frame->operandStack->pop();
+
+							(*newFrame->localVariables)[varPos++] = low;
+							(*newFrame->localVariables)[varPos++] = high;
+						}
+						break;
+
+					default:
+						(*newFrame->localVariables)[varPos++] = this->frame->operandStack->pop();
+						break;
+					}
+				}
+
+
+				this->execute(newFrame);
+			}
 
 			// if method is native, execute native code
 			// else create new framestack and execute method
-
 		} 
 		break;
 

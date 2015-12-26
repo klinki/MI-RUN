@@ -372,3 +372,8 @@ void ConstantPool::setMethodPtr(int index, Method * m)
 		constantPool[index].interfaceMethodInfo.methodPtr = m;
 	}
 }
+
+void ConstantPool::add(int pos, ConstantPoolItem * item)
+{
+	this->constantPool[pos] = *item;
+}
