@@ -13,9 +13,6 @@ public:
 	MethodArea();
 	~MethodArea();
 
-	//void addClass(Class* classRef);
-	//Class* getClass(const Utf8String & name);
-
 	Method* getMethod(const Utf8String & name, const Utf8String & descriptor);
 	void addMethod(Method* method);
 };

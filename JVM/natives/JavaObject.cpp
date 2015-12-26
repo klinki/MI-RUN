@@ -35,7 +35,6 @@ namespace Java
 				return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
 			}
 
-
 			Class* initialize()
 			{
 				Class * newClass = new Class(NULL);
@@ -62,7 +61,6 @@ namespace Java
 
 				return newClass;
 			}
-
 
 			void clone(::Object* object, MethodFrame * frame)
 			{

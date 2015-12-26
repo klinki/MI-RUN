@@ -1,18 +1,17 @@
 #pragma once
 #include "ConstantPool.h"
 #include "../gc/Heap.h"
-#include "FrameStack.h"
 #include "MethodArea.h"
 #include "ExecutionEngine.h"
+#include "../utils/Macros.h"
 
 class Runtime
 {
-protected:
+visibility:
 //	ConstantPool constantPool; // TODO: Uncomment when ready and compileable!
-	Heap heap;
-	FrameStack frameStack;
-	ClassMap classTable;
-	ExecutionEngine executionEngine;
+	HeapInterface * heap;
+	ClassMap * classTable;
+	ExecutionEngine * executionEngine;
 
 public:
 	Runtime();

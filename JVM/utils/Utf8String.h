@@ -3,7 +3,6 @@
 class Utf8String
 {
 protected:
-	std::string value;
 	unsigned char* data;
 	size_t dataLength;
 	size_t stringLength;

@@ -25,7 +25,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -141,7 +141,6 @@
     <ClCompile Include="runtime\MethodFrame.cpp" />
     <ClCompile Include="runtime\Class.cpp" />
     <ClCompile Include="runtime\ExecutionEngine.cpp" />
-    <ClCompile Include="runtime\FrameStack.cpp" />
     <ClCompile Include="gc\Heap.cpp" />
     <ClCompile Include="runtime\Method.cpp" />
     <ClCompile Include="runtime\MethodArea.cpp" />
@@ -193,7 +192,6 @@
     <ClInclude Include="runtime\Class.h" />
     <ClInclude Include="jvm_structures\JavaConstantPool.h" />
     <ClInclude Include="runtime\ExecutionEngine.h" />
-    <ClInclude Include="runtime\FrameStack.h" />
     <ClInclude Include="gc\Heap.h" />
     <ClInclude Include="runtime\InstructionSet.h" />
     <ClInclude Include="runtime\Method.h" />

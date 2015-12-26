@@ -1104,8 +1104,6 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				Class* classPtr = item->methodInfo.classPtr;
 				Method* methodPtr = item->methodInfo.methodPtr;
 
-
-
 				int classIndex = item->methodInfo.class_index;
 				int nameAndTypeIndex = item->methodInfo.name_and_type_index;
 
@@ -1157,6 +1155,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			// TODO: Class resolution and object allocation
 		};
+		break;
 
 		case NEWARRAY:
 		{

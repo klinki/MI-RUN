@@ -16,9 +16,6 @@
     <ClCompile Include="runtime\ExecutionEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\FrameStack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtime\Method.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,9 +103,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\ExecutionEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="runtime\FrameStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\InstructionSet.h">
