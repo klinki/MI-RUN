@@ -17,7 +17,6 @@ Utf8String::Utf8String(const std::string & str): Utf8String(str.c_str(), str.len
 
 Utf8String::Utf8String(const char* data, size_t length)
 {
-	this->value = string(data);
 	this->data = new unsigned char[length + 1];
 	memcpy(this->data, data, length);
 	this->data[length] = '\0';
@@ -79,7 +78,6 @@ bool Utf8String::equals(const Utf8String & b) const
 Utf8String& Utf8String::operator=(const Utf8String & u)
 {
 	delete[] data;
-	this->value = u.value;
 	this->data = new unsigned char[u.dataLength];
 	memcpy(this->data, u.data, u.dataLength);
 	this->dataLength = u.dataLength;
