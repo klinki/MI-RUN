@@ -420,7 +420,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LADD:
 		{
-			LONG_OPERATION(+);
+			DOUBLE_WORD_OPERATION(long long, +);
 		}
 		break;
 
@@ -432,7 +432,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DADD:
 		{
-			DOUBLE_OPERATION(+);
+			DOUBLE_WORD_OPERATION(double, +);
 		}
 		break;
 
@@ -444,19 +444,19 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LSUB:
 		{
-			LONG_OPERATION(-);
+			DOUBLE_WORD_OPERATION(long long, -);
 		}
 		break;
 
 		case FSUB:
 		{
-			SINGLE_WORD_OPERATION(float, +);
+			SINGLE_WORD_OPERATION(float, -);
 		}
 		break;
 
 		case DSUB:
 		{
-			DOUBLE_OPERATION(-);
+			DOUBLE_WORD_OPERATION(double, -);
 		}
 		break;
 
@@ -469,7 +469,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LMUL:
 		{
-			LONG_OPERATION(*);
+			DOUBLE_WORD_OPERATION(long long, *);
 		}
 		break;
 
@@ -481,7 +481,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DMUL:
 		{
-			DOUBLE_OPERATION(*);
+			DOUBLE_WORD_OPERATION(double, *);
 		}
 		break;
 
@@ -523,7 +523,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case DDIV:
 		{
-			DOUBLE_OPERATION(/ );
+			DOUBLE_WORD_OPERATION(double, / );
 		}
 		break;
 
@@ -656,7 +656,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LAND:
 		{
-			LONG_OPERATION(&);
+			DOUBLE_WORD_OPERATION(long long, &);
 		}
 		break;
 
@@ -668,7 +668,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LOR:
 		{
-			LONG_OPERATION(| );
+			DOUBLE_WORD_OPERATION(long long, | );
 		}
 		break;
 
@@ -680,7 +680,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LXOR:
 		{
-			LONG_OPERATION(^);
+			DOUBLE_WORD_OPERATION(long long, ^);
 		}
 		break;
 
