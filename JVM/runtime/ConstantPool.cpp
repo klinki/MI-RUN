@@ -100,19 +100,30 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 
 
 		Then the float value equals the result of the mathematical expression s · m · 2e-150*/
-		float v = (float)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
+		//float v = (float)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
+		int bits = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
+		int s = ((bits >> 31) == 0) ? 1 : -1;
+		int e = ((bits >> 23) & 0xff);
+		int m = (e == 0) ?
+			(bits & 0x7fffff) << 1 :
+			(bits & 0x7fffff) | 0x800000;
+		int twotoe = 1;
+		for (int i = 0; i < e-150; i++)
+		{
+			twotoe *= 2;
+		}
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Float);
-		spi.floatInfo = CONSTANT_Float_info(v);
+		spi.floatInfo = CONSTANT_Float_info(s*m*twotoe);
 		constantPool[pos] = spi;
 		break;}
-	case  ConstantPoolTag::CONSTANT_Long: {//long // TODO value
+	case  ConstantPoolTag::CONSTANT_Long: {//long 
 		int v1 = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
 		int v2 = (int)(data[4] * 256 * 256 * 256 + data[5] * 256 * 256 + data[6] * 256 + data[7]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Long);
 		spi.longInfo = CONSTANT_Long_info(v1, v2);
 		constantPool[pos] = spi;
 		break;}
-	case  ConstantPoolTag::CONSTANT_Double: {//double // TODO value
+	case  ConstantPoolTag::CONSTANT_Double: {//double 
 		int v1 = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
 		int v2 = (int)(data[4] * 256 * 256 * 256 + data[5] * 256 * 256 + data[6] * 256 + data[7]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Double);
