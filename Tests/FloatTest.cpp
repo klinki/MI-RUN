@@ -14,10 +14,10 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 
-			float a[] = { 3.14, 0, 1, -1, -1, NAN, INT_MAX, ULLONG_MAX,  1.012, 2 };
-			float b[] = { INFINITY, 0, INFINITY, INFINITY, -INFINITY, -1, INT_MAX, ULLONG_MAX, 1.012, NAN };
+			float a[] = { 3.14, 0, 1, -1, -1, INT_MAX, ULLONG_MAX,  1.012 };
+			float b[] = { INFINITY, 0, INFINITY, INFINITY, -INFINITY, INT_MAX, ULLONG_MAX, 1.012 };
 
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 8; i++)
 			{
 				float expected = a[i] * b[i];
 
@@ -72,8 +72,8 @@ namespace Tests
 			m.byteCodeLength = 1;
 
 			MethodFrame frm(2, 2);
-			frm.operandStack->push(-1);
-			frm.operandStack->push(0);
+			frm.operandStack->push(-1.0f);
+			frm.operandStack->push(0.0f);
 
 			frm.pc = 0;
 			frm.method = &m;
@@ -87,7 +87,6 @@ namespace Tests
 
 		TEST_METHOD(testFDIV)
 		{
-
 			ExecutionEngine eng;
 			Method m;
 
@@ -96,8 +95,8 @@ namespace Tests
 			m.byteCodeLength = 1;
 
 			MethodFrame frm(2, 2);
-			frm.operandStack->push(1);
-			frm.operandStack->push(3);
+			frm.operandStack->push(1.0f);
+			frm.operandStack->push(3.0f);
 
 			frm.pc = 0;
 			frm.method = &m;
@@ -115,18 +114,18 @@ namespace Tests
 			Method m;
 
 			m.byteCode = new Instruction[1];
-			m.byteCode[0] = (Instruction)InstructionSet::FDIV;
+			m.byteCode[0] = (Instruction)InstructionSet::FREM;
 			m.byteCodeLength = 1;
 
 			MethodFrame frm(2, 2);
-			frm.operandStack->push(10);
-			frm.operandStack->push(3);
+			frm.operandStack->push(10.0f);
+			frm.operandStack->push(3.0f);
 
 			frm.pc = 0;
 			frm.method = &m;
 			eng.execute(&frm);
 
-			float expected = 10 / 3;
+			float expected = fmodf(10.0, 3.0);
 
 			float result = frm.operandStack->pop();
 			Assert::AreEqual(expected, result);
@@ -142,17 +141,15 @@ namespace Tests
 			m.byteCodeLength = 1;
 
 			MethodFrame frm(2, 2);
-			frm.operandStack->push(1);
-			frm.operandStack->push(0);
+			frm.operandStack->push(1.0f);
+			frm.operandStack->push(0.0f);
 
 			frm.pc = 0;
 			frm.method = &m;
 			eng.execute(&frm);
 
-			float expected = INFINITY;
-
 			float result = frm.operandStack->pop();
-			Assert::AreEqual(expected, result);
+			Assert::IsTrue(isnan(result));
 		}
 
 		TEST_METHOD(testFADD)
@@ -190,8 +187,8 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 
-			float a[] = {  INFINITY, -INFINITY, INFINITY, NAN };
-			float b[] = { INFINITY, -INFINITY, -INFINITY, NAN };
+			float a[] = {  INFINITY, -INFINITY };
+			float b[] = { INFINITY, -INFINITY };
 
 			for (int i = 0; i < 3; i++)
 			{
@@ -245,15 +242,15 @@ namespace Tests
 			}
 		}
 
-		TEST_METHOD(testFSUBNaN)
+		TEST_METHOD(testFSUBInf)
 		{
 			ExecutionEngine eng;
 			Method m;
 
-			float a[] = {  INFINITY, -INFINITY, INFINITY,  NAN };
-			float b[] = {  INFINITY, -INFINITY, -INFINITY, NAN };
+			float a[] = { INFINITY, -INFINITY };
+			float b[] = { -INFINITY, INFINITY };
 
-			for (int i = 0; i < 13; i++)
+			for (int i = 0; i < 2; i++)
 			{
 				float expected = a[i] - b[i];
 
@@ -261,7 +258,7 @@ namespace Tests
 				m.byteCode[0] = (Instruction)InstructionSet::FSUB;
 				m.byteCodeLength = 1;
 
-				MethodFrame frm(2, 2);
+				MethodFrame frm(4, 4);
 				frm.operandStack->push(a[i]);
 				frm.operandStack->push(b[i]);
 
@@ -310,13 +307,11 @@ namespace Tests
 
 			float a = NAN;
 
-			float expected = NAN;
-
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::FNEG;
 			m.byteCodeLength = 1;
 
-			MethodFrame frm(2, 2);
+			MethodFrame frm(4, 4);
 			frm.operandStack->push(a);
 
 			frm.pc = 0;

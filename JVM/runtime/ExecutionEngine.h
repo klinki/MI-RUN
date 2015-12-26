@@ -227,17 +227,6 @@ public:
 		}
 	}
 
-	inline void singleAdd()
-	{
-
-	}
-
-	inline void doubleAdd()
-	{
-
-	}
-
-
 	template<class T>
 	inline void fdcmp(T a, T b, Instruction currentInstruction)
 	{

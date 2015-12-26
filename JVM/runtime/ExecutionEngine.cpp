@@ -496,7 +496,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw Exceptions::Runtime::ArithmeticException();
 			}
 
-			this->frame->operandStack->push(a * b);
+			this->frame->operandStack->push(a / b);
 		}
 		break;
 
@@ -509,6 +509,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			if (b == 0)
 			{
 				// exception! 
+				throw Exceptions::Runtime::ArithmeticException();
 			}
 
 			this->frame->operandStack->push2(a / b);
@@ -612,8 +613,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 		case LSHL:
 		{
-			long long a = this->frame->operandStack->pop2();
 			int b = this->frame->operandStack->pop();
+			long long a = this->frame->operandStack->pop2();
 			this->frame->operandStack->push2(a << b);
 		}
 		break;
@@ -627,8 +628,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		case LSHR:
 		{
 			// shift right
-			long long a = this->frame->operandStack->pop2();
 			int b = this->frame->operandStack->pop();
+			long long a = this->frame->operandStack->pop2();
 			this->frame->operandStack->push2(a >> b);
 		}
 		break;

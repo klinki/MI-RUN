@@ -14,10 +14,10 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 
-			double a[] = { 3.14, 0, 1, -1, -1, NAN, INT_MAX, ULLONG_MAX,  1.012, 2 };
-			double b[] = { INFINITY, 0, INFINITY, INFINITY, -INFINITY, -1, INT_MAX, ULLONG_MAX, 1.012, NAN };
+			double a[] = { 3.14, 0, 1, -1, -1, INT_MAX, ULLONG_MAX,  1.012 };
+			double b[] = { INFINITY, 0, INFINITY, INFINITY, -INFINITY, INT_MAX, ULLONG_MAX, 1.012 };
 
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 8; i++)
 			{
 				double expected = a[i] * b[i];
 
@@ -115,7 +115,7 @@ namespace Tests
 			Method m;
 
 			m.byteCode = new Instruction[1];
-			m.byteCode[0] = (Instruction)InstructionSet::DDIV;
+			m.byteCode[0] = (Instruction)InstructionSet::DREM;
 			m.byteCodeLength = 1;
 
 			MethodFrame frm(4, 4);
@@ -126,7 +126,7 @@ namespace Tests
 			frm.method = &m;
 			eng.execute(&frm);
 
-			double expected = 10 / 3;
+			double expected = fmod(10.0, 3.0); // TODO: Add test
 
 			double result = frm.operandStack->pop2();
 			Assert::AreEqual(expected, result);
@@ -149,10 +149,8 @@ namespace Tests
 			frm.method = &m;
 			eng.execute(&frm);
 
-			double expected = INFINITY;
-
 			double result = frm.operandStack->pop2();
-			Assert::AreEqual(expected, result);
+			Assert::IsTrue(isnan(result));
 		}
 
 		TEST_METHOD(testDADD)
@@ -190,10 +188,10 @@ namespace Tests
 			ExecutionEngine eng;
 			Method m;
 
-			double a[] = { INFINITY, -INFINITY, INFINITY, NAN };
-			double b[] = { INFINITY, -INFINITY, -INFINITY, NAN };
+			double a[] = { INFINITY, -INFINITY };
+			double b[] = { INFINITY, -INFINITY };
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 2; i++)
 			{
 				double expected = a[i] + b[i];
 
@@ -245,15 +243,15 @@ namespace Tests
 			}
 		}
 
-		TEST_METHOD(testDSUBNaN)
+		TEST_METHOD(testDSUBInf)
 		{
 			ExecutionEngine eng;
 			Method m;
 
-			double a[] = { INFINITY, -INFINITY, INFINITY,  NAN };
-			double b[] = { INFINITY, -INFINITY, -INFINITY, NAN };
+			double a[] = { INFINITY, -INFINITY };
+			double b[] = { -INFINITY, INFINITY };
 
-			for (int i = 0; i < 13; i++)
+			for (int i = 0; i < 2; i++)
 			{
 				double expected = a[i] - b[i];
 
@@ -310,8 +308,6 @@ namespace Tests
 
 			double a = NAN;
 
-			double expected = -NAN;
-
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::DNEG;
 			m.byteCodeLength = 1;
@@ -325,7 +321,7 @@ namespace Tests
 			eng.execute(&frm);
 
 			double result = frm.operandStack->pop2();
-			Assert::AreEqual(expected, result);
+			Assert::IsTrue(isnan(result));
 		}
 	};
 }
