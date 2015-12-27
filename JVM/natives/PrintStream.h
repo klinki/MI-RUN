@@ -4,6 +4,13 @@
 #include "../runtime/MethodFrame.h"
 #include "../runtime/ArrayObject.h"
 
+class ClassMap;
+
+namespace PrintStr
+{
+	Class* initialize(ClassMap* map);
+};
+
 class PrintStream
 {
 	std::ostream * output;
@@ -14,6 +21,7 @@ public:
 	void close();
 	void flush();
 	void println();
+	void println(double d);
 	void println(Utf8String);
 	void write(java_byte);
 	void write(ArrayObject<java_byte> * arr);

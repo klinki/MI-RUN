@@ -27,9 +27,9 @@ int main(int argc, const char argv[])
 
 	Method* method = aClass->methodArea.getMethod("main", "()V");
 
-	unsigned char* memory = runtime->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize + 1, method->localVariablesArraySize));
+	unsigned char* memory = runtime->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize + 2, method->localVariablesArraySize));
 	MethodFrame * frame = new (memory) MethodFrame(
-		method->operandStackSize + 1,
+		method->operandStackSize + 2,
 		method->localVariablesArraySize,
 		NULL,
 		aClass->constantPool,

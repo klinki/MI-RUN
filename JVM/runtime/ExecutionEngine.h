@@ -366,6 +366,13 @@ public:
 			ConstantPoolItem * name = this->getCurrentMethodFrame()->constantPool->get(nameAndType->nameAndTypeInfo.name_index);
 			ConstantPoolItem * descr = this->getCurrentMethodFrame()->constantPool->get(nameAndType->nameAndTypeInfo.descriptor_index);
 
+			ConstantPoolItem * classConst = this->getCurrentMethodFrame()->constantPool->get(classIndex);
+			ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classConst->classInfo.name_index);
+
+			classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
+
+			methodPtr = classPtr->getMethod(Utf8String(name->utf8Info.bytes, name->utf8Info.length), Utf8String(descr->utf8Info.bytes, descr->utf8Info.length));
+
 			if (classIndex == this->inlineCache.cpClassIndex)
 			{
 				this->inlineCache.cpClassIndex = 0;
@@ -392,6 +399,8 @@ public:
 		{
 			(*newFrame->localVariables)[varPos++] = reference;
 		}
+
+		method->initInputArgs();
 
 		for (size_t i = 0; i < method->countIntputArgs; i++)
 		{

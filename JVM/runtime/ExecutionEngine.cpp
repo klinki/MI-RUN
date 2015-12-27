@@ -22,7 +22,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 	ProgramCounter & pc = frame->pc;
 	
-	while (pc != length)
+	while (pc < length)
 	{
 		try
 		{
@@ -1030,7 +1030,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				word reference = frame->operandStack->pop();
 				frame->parentFrame->operandStack->push(reference);
-				return 0;
+
+				pc++;
 			}
 			break;
 
@@ -1043,23 +1044,39 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				frame->parentFrame->operandStack->push(high);
 				frame->parentFrame->operandStack->push(low);
-				return 0;
+
+				pc++;
 			};
+			break;
 
 			case RETURN:
 			{
-				return 0;
+				pc++;
 			};
+			break;
 
 			case GETSTATIC:
 			{
 				// TODO: 
+				int index = this->getShort();
+				ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
+				ConstantPoolItem * classItem = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.class_index);
+				ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classItem->classInfo.name_index);
+
+
+				Class* classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
+				//item->fieldInfo.
+
+				// TODO: Hardcoded for print
+				frame->operandStack->push(classPtr->staticVariables->operator[](0));
 			};
+			break;
 
 			case PUTSTATIC:
 			{
 				// TODO: 
 			};
+			break;
 
 			case GETFIELD:
 			{
@@ -1100,11 +1117,6 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				unsigned short index = this->getShort();
 				Object* reference = NULL;
 
-				if (currentInstruction != INVOKESTATIC)
-				{
-					reference = frame->operandStack->pop();
-				}
-
 				Method* methodPtr = this->resolveMethod(index);
 				Class* classPtr = methodPtr->classPtr;
 
@@ -1115,6 +1127,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				else
 				{
 					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, reference);
+
+					if (currentInstruction != INVOKESTATIC)
+					{
+						reference = frame->operandStack->pop();
+					}
+
 					newFrame->parentFrame = frame;
 					frame->childFrame = newFrame;
 					this->execute(newFrame);
@@ -1371,10 +1389,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		}
 		catch (Object* e) // user defined exceptions
 		{
-
+			this->callStack->pop();
 		}
 		catch (Exception e) // runtime exceptions
 		{
+			this->callStack->pop();
+
 			if (false)
 			{
 			}
@@ -1384,6 +1404,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 		}
 	}
+
+	this->callStack->pop();
 
 	return 0;
 }

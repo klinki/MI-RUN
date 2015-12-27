@@ -43,6 +43,7 @@ visibility:
 	
 	LocalVariablesArray * staticVariables;
 
+	bool isNative;
 
 public:
 	Class(FLAG flag) : flags(flag) {};
