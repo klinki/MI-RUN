@@ -15,8 +15,17 @@ ClassLoader::ClassLoader(ClassMap * cm)
 Class* ClassLoader::load(char * filename)
 {
 	
+	if (myfile.is_open())
+	{
+		myfile.close();
+	}
 
-	myfile = ifstream (filename, ios::in | ios::binary);
+	myfile = ifstream(filename, ios::in | ios::binary);
+	
+	if (!myfile.is_open())
+	{
+		throw;
+	}
 	data = new unsigned char[0];
 	//thisClass = Class();
 	printf("loading class\n");
@@ -45,7 +54,8 @@ Class* ClassLoader::load(char * filename)
 
 	myfile.close();
 	this->resolvePool(thisClass);
-	delete[] data;
+	//delete[] data;
+	
 	classMap->addClass(thisClass);
 	printf("loading finnished\n");
 	return thisClass;
@@ -71,7 +81,7 @@ int ClassLoader::loadMajVersion()
 	}
 
 	int major_version = (int)(data[0] * 256 + data[1]);
-	printf("maj_ver:%d\n", major_version);
+	//printf("maj_ver:%d\n", major_version);
 	return 0;
 }
 int ClassLoader::loadConstPool()
@@ -82,13 +92,12 @@ int ClassLoader::loadConstPool()
 		return -1;
 	}
 	int constant_pool_count = (int)(data[0] * 256 + data[1]);
-	printf("constant_pool_count:%d\n", constant_pool_count);
-	//CPool = new ConstantPool(constant_pool_count);
+	//printf("constant_pool_count:%d\n", constant_pool_count);
 	constantPool = new ConstantPool(constant_pool_count);
 	
 	for (int k = 1; k < constant_pool_count; k++)
 	{
-		printf("tag:");
+		//printf("tag:");
 		if (reader(1))
 		{
 			printf("ERROR IN READ FILE");
@@ -112,8 +121,6 @@ int ClassLoader::loadConstPool()
 			
 				int utflength = (int)(data[0] * 256 + data[1]);
 				utfdata = new unsigned char[utflength + 1];
-				//utfdata[0] = data[0];
-				//utfdata[1] = data[1];
 				if (reader(utflength))
 				{
 					printf("ERROR IN READ FILE");
@@ -127,14 +134,9 @@ int ClassLoader::loadConstPool()
 
 				utfdata[utflength] = '\0';
 
-				//CPool->add(k,(unsigned char)cpType,utflength+2,utfdata);
+				
 				constantPool->add(k, cpType, utflength, utfdata);
 			}
-			break;
-		case 2:
-			//is not in table of types
-			printf("ERROR WRONG CPTYPE 2\n");
-			
 			break;
 		case ConstantPoolTag::CONSTANT_Integer ://integer
 			if (reader(4))
@@ -142,7 +144,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 4, data);
+			
 			constantPool->add(k, cpType, 4, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Float://float
@@ -152,7 +154,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 4, data);
+			
 			constantPool->add(k, cpType, 4, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Long://long
@@ -162,7 +164,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 8, data);
+			
 			constantPool->add(k++, cpType, 8, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Double://double
@@ -172,7 +174,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 8, data);
+			
 			constantPool->add(k++, cpType, 8, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Class://class
@@ -182,7 +184,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 2, data);
+			
 			constantPool->add(k, cpType, 2, data);
 			break;
 		case ConstantPoolTag::CONSTANT_String://string
@@ -192,7 +194,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType,2, data);
+			
 			constantPool->add(k, cpType, 2, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Fieldref://fieldref
@@ -202,7 +204,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 4, data);
+			
 			constantPool->add(k, cpType, 4, data);
 			break;
 		case ConstantPoolTag::CONSTANT_Methodref://methodref
@@ -212,7 +214,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 4, data);
+			
 			constantPool->add(k, cpType, 4, data);
 			break;
 		case ConstantPoolTag::CONSTANT_InterfaceMethodref://interfacemethodref
@@ -222,7 +224,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 4, data);
+			
 			constantPool->add(k, cpType, 4, data);
 			break;
 		case ConstantPoolTag::CONSTANT_NameAndType://nameandtype
@@ -232,7 +234,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 4, data);
+			
 			constantPool->add(k, cpType, 4, data);
 			break;
 		case ConstantPoolTag::CONSTANT_MethodHandle://_MethodHandle
@@ -242,7 +244,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 3, data);
+			
 			constantPool->add(k, cpType, 3, data);
 			break;
 		case ConstantPoolTag::CONSTANT_MethodType://_MethodType
@@ -252,7 +254,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType,2, data);
+		
 			constantPool->add(k, cpType, 2, data);
 			break;
 		case ConstantPoolTag::CONSTANT_InvokeDynamic://InvokeDynamic
@@ -262,7 +264,7 @@ int ClassLoader::loadConstPool()
 				printf("ERROR IN READ FILE");
 				return -1;
 			}
-			//CPool->add(k, (unsigned char)cpType, 4, data);
+			
 			constantPool->add(k, cpType, 4, data);
 			break;
 
@@ -272,7 +274,7 @@ int ClassLoader::loadConstPool()
 		}
 
 	}
-	//CPool->print();
+	
 
 	return 0; 
 }
@@ -284,7 +286,7 @@ unsigned short ClassLoader::loadFlags()
 		return -1;
 	}
 	unsigned short access_flags = (unsigned short)(data[0] * 256 + data[1]);
-	printf("access flags:%X\n", access_flags);
+	//printf("access flags:%X\n", access_flags);
 	return access_flags;
 }
 int ClassLoader::loadThisClass(Class * thisClass)
@@ -300,24 +302,7 @@ int ClassLoader::loadThisClass(Class * thisClass)
 	printf("this class:%d\n",thisClassIndex);
 	int nameptr = thisClass->constantPool->get(thisClassIndex)->classInfo.name_index;
 	thisClass ->fullyQualifiedName= Utf8String(thisClass->constantPool->get(nameptr)->utf8Info.bytes,thisClass->constantPool->get(nameptr)->utf8Info.length);
-	/*
-	int l;
-	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]),l);
-
-	thisClassName = CPool->getElem((int)(adr[0] * 256 +adr[1]),l);
-	char * nameAux = new char[l];
-	printf("this: ");
-	for (int i = 0; i < l; i++)
-	{
-		printf("%c", thisClassName[i]);
-		nameAux[i] = thisClassName[i];
-	}
-	printf("\n");
-	size_t lAux = l;
-
-	Utf8String name = Utf8String(nameAux, lAux);
-	thisClass->fullyQualifiedName = name;
-	*/
+	
 	return 0; 
 }
 int ClassLoader::loadSuperClass(Class * thisClass)
@@ -329,17 +314,7 @@ int ClassLoader::loadSuperClass(Class * thisClass)
 	}
 	int superClassIndex = (int)(data[0] * 256 + data[1]);
 
-	/*
-	unsigned char * adr = CPool->getElem((int)(data[0] * 256 + data[1]));
-	int l;
-	superClassName = CPool->getElem((int)(adr[0] * 256 + adr[1]), l);
-	printf("super: ");
-	for (int i = 0; i < l; i++)
-	{
-		printf("%c", superClassName[i]);
-	}
-	printf("\n");
-	*/
+	
 	return 0;
 }
 int ClassLoader::loadInterfaces(Class * thisClass) // TODO write interefaces, where? //references to const pool
@@ -390,9 +365,9 @@ int ClassLoader::loadFields(Class * thisClass)
 	}
 	int fields_count = (int)(data[0] * 256 + data[1]);
 	thisClass->countFields = (unsigned int)(data[0] * 256 + data[1]);
-	//thisClass->fields = new Field[thisClass->countFields];
+	
 	//printf("fields count:%d\n", fields_count);
-	//thisClass->staticFields = new Field[fields_count];
+
 	unsigned short* flags;
 	flags = new unsigned short[fields_count];
 
@@ -426,7 +401,6 @@ int ClassLoader::loadFields(Class * thisClass)
 			return -1;
 		}
 		access_flags = (int)(data[0] * 256 + data[1]);
-		//thisClass->fields[i].flags = (const unsigned short)(data[0] * 256 + data[1]);	
 		name_index = (int)(data[2] * 256 + data[3]);
 		descriptor_index = (int)(data[4] * 256 + data[5]);
 		attributes_count = (int)(data[6] * 256 + data[7]);
@@ -607,21 +581,20 @@ int ClassLoader::loadMethods(Class * thisClass) {
 		m->name = Utf8String(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
 		m->descriptor = Utf8String(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
 
-		//printf("method %d flags: %d\n", i, flags[i]);
-		//printf("method %d name: %d\n", i, name_indexes[i]);
-		//printf("method %d descriptor: %d\n", i, descriptor_indexes[i]);
-		//printf("method %d att count: %d\n", i, att_counts[i]);
+		printf("method %d flags: %d\n", i, flags[i]);
+		printf("method %d name: %d\n", i, name_indexes[i]);
+		printf("method %d descriptor: %d\n", i, descriptor_indexes[i]);
+		printf("method %d att count: %d\n", i, att_counts[i]);
 
 		for (int j = 0; j < att_counts[i]; j++)
 		{
-			//Utf8String attName(thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes, (int)thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.length);
 			unsigned char* n= thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.bytes;
 			int n_length = (int)thisClass->constantPool->get(att_name_indexes[i][j])->utf8Info.length;
 			
-			//printf("method %d att %d name: %d\n", i,j, att_name_indexes[i][j]);
 			
 			if (n_length == 4 && n[0]=='C'&&n[1] == 'o'&&n[2] == 'd'&&n[3] == 'e'&& n[4]=='\0') // zmenit na porovnani utf8
 			{
+				printf("method %d CODE:\n", i);
 				int max_stack = (int)(att_data[i][j][0] *256 + att_data[i][j][1]);
 				m->operandStackSize = max_stack;
 				int max_variables = (int)(att_data[i][j][2] *256 + att_data[i][j][3]);
@@ -631,9 +604,9 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				//unsigned char * code = new unsigned char[code_length];
 				m->byteCode = new Instruction[code_length];
 
-				//printf("method %d max stack: %d\n", i, max_stack);
-				//printf("method %d max var: %d\n", i, max_variables);
-				//printf("method %d code length: %d\n", i, code_length);
+				printf("method %d max stack: %d\n", i, max_stack);
+				printf("method %d max var: %d\n", i, max_variables);
+				printf("method %d code length: %d\n", i, code_length);
 
 
 				for (int i1 = 0; i1 < code_length; i1++)
@@ -706,9 +679,8 @@ int ClassLoader::loadMethods(Class * thisClass) {
 			}
 			else if (n_length == 11 &&n[0]=='E' &&n[1] == 'x' &&n[2] == 'c' &&n[3] == 'e' &&n[4] == 'p' &&n[5] == 't' &&n[6] == 'i' &&n[7] == 'o' &&n[8] == 'n' &&n[9] == 's')// Exceptions
 			{
+				printf("method %d EXCEPTIONS:\n", i);
 
-				//u2 number_of_exceptions;
-				//u2 exception_index_table[number_of_exceptions];
 				int number_of_exceptions = (int)(att_data[i][j][0] * 256 + att_data[i][j][1]);
 				for (int k = 0; k < number_of_exceptions; k++)
 				{
@@ -718,6 +690,7 @@ int ClassLoader::loadMethods(Class * thisClass) {
 			}
 			else if (n_length == 16 && n[0] == 'M' &&n[1] == 'e' &&n[2] == 't' &&n[3] == 'h' &&n[4] == 'o' &&n[5] == 'd' &&n[6] == 'P' &&n[7] == 'a' &&n[8] == 'r' &&n[9] == 'a'&&n[10] == 'm'&&n[11] == 'e'&&n[12] == 't'&&n[13] == 'e'&&n[14] == 'r'&&n[15] == 's')// MethodParameters
 			{
+
 				//u2 attribute_name_index;
 				//u4 attribute_length;
 				//u1 parameters_count;
@@ -740,7 +713,7 @@ int ClassLoader::loadAttributes(Class * thisClass)
 		return -1;
 	}
 	int attributes_count = (int)(data[0] * 256 + data[1]);
-	//printf("attributes count:%d\n", attributes_count);
+	printf("attributes count:%d\n", attributes_count);
 
 	//attributes[attributes_count]
 	//attributes[attributes_count]
@@ -765,8 +738,8 @@ int ClassLoader::loadAttributes(Class * thisClass)
 		attribute_name_index = (int)(data[0] * 256 + data[1]);
 		attribute_length = (int)(data[2] * 256 * 256 * 256 + data[3] * 256 * 256 + data[4] * 256 + data[5]);
 
-		//printf("attribute_name_index:%d\n", attribute_name_index);
-		//printf("attribute lenght:%d\n", attribute_length);
+		printf("attribute_name_index:%d\n", attribute_name_index);
+		printf("attribute lenght:%d\n", attribute_length);
 
 		if (reader(attribute_length))
 		{
@@ -790,9 +763,9 @@ int ClassLoader::reader(int nob)
 		for (int i = 0; i < nob; i++)
 		{
 			data[i] = (unsigned char)sdata[i];
-			printf("%X", data[i]);
+			//printf("%X", data[i]);
 		}
-		printf("\n");
+		//printf("\n");
 		delete[] sdata;
 		return 0;
 	}
@@ -808,9 +781,9 @@ void ClassLoader::resolvePool(Class * thisClass)
 	int constant_pool_size = thisClass->constantPool->GetSize();
 	for (int i = 1; i < constant_pool_size; i++)
 	{
-		
+				
 		int item_tag = thisClass->constantPool->get(i)->tag;
-		//printf("com %d %d\n",i,item_tag);
+		printf("resolve pool %d %d\n",i,item_tag);
 		switch (item_tag)
 		{
 		case  ConstantPoolTag::CONSTANT_Class : {
@@ -919,13 +892,19 @@ void ClassLoader::resolvePool(Class * thisClass)
 			//}
 
 			break;}
+		case  ConstantPoolTag::CONSTANT_Double:
+		case  ConstantPoolTag::CONSTANT_Long:
+			i++;
+			break;
 		default:
 			break;
 		}
 	}
+	//printf("resolving finnished\n");
 }
 void ClassLoader::resolveClassPointer(Class * thisClass,int i)
 {
+	printf("resolve class pointer %d\n",i);
 	int name_index = thisClass->constantPool->get(i)->classInfo.name_index;
 	Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 
@@ -934,12 +913,36 @@ void ClassLoader::resolveClassPointer(Class * thisClass,int i)
 	if (class_pointer == nullptr)
 	{
 		//reurzivne zavolej classloader pro tridu co nenasel
+		
+		unsigned char *a =  thisClass->constantPool->get(name_index)->utf8Info.bytes;
+		size_t alen = thisClass->constantPool->get(name_index)->utf8Info.length;
+		char *r = new char[alen+6];
+
+		for (size_t i = 0; i < alen; i++)
+		{
+			r[i] = (char)a[i];
+			
+		}
+		r[alen] = '.';
+		r[alen+1] = 'c';
+		r[alen+2] = 'l';
+		r[alen+3] = 'a';
+		r[alen+4] = 's';
+		r[alen+5] = 's';
+		for (size_t i = alen +6; i < strlen(r); i++)
+		{
+			r[i] = ' ';
+		}
+		
+		this->load(r);
+
+		class_pointer = classMap->getClass(item_name);
+		
 	}
-	else
-	{
+	
 		printf("set class ptr %d\n",i);
 		thisClass->constantPool->setClassPtr(i, class_pointer);
-	}
+	
 }
 ClassLoader::~ClassLoader()
 {
