@@ -101,18 +101,18 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 
 		Then the float value equals the result of the mathematical expression s · m · 2e-150*/
 		//float v = (float)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
-		printf("float %X %X %X %X\n",data[0],data[1],data[2],data[3]);
+		
 
 		unsigned int bits = (unsigned int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
-		printf("float bits %X %d\n", bits,bits);
+		
 		int s = ((bits >> 31) == 0) ? 1 : -1;
-		printf("float sign %d\n", s);
+		
 		int e = ((bits >> 23) & 0xff);
-		printf("float exponent %X %d\n", bits >> 23 & 0xff, e);
+		
 		int m = (e == 0) ?
 			(bits & 0x7fffff) << 1 :
 			(bits & 0x7fffff) | 0x800000;
-		printf("float mantis %X %d\n", m,m);
+		
 		double twotoe = 1;
 		if (e -150 > 0)
 		{

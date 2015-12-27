@@ -24,7 +24,7 @@ Class* ClassLoader::load(char * filename)
 	
 	if (!myfile.is_open())
 	{
-		throw;
+		throw FileNotFoundException();
 	}
 	data = new unsigned char[0];
 	//thisClass = Class();
@@ -771,7 +771,7 @@ int ClassLoader::reader(int nob)
 	}
 	else
 	{
-		throw;
+		throw FileNotFoundException();
 		return -1;
 	}
 
