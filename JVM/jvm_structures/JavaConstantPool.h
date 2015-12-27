@@ -180,12 +180,15 @@ struct CONSTANT_Utf8_info
 	{
 		length = l;
 		bytes = d;
+
 		/*
 		bytes = new unsigned char[length];
 		for (unsigned short i = 0; i < length; i++)
 		{
 			bytes[i] = d[i];
 		}*/
+		string = new Utf8String(bytes, length);
+
 	}
 };
 
