@@ -17,7 +17,7 @@ Utf8String::Utf8String(const std::string & str): Utf8String(str.c_str(), str.len
 
 Utf8String::Utf8String(const char* data, size_t length)
 {
-	this->data = new unsigned char[length + 1];
+	this->data = new char[length + 1];
 	memcpy(this->data, data, length);
 	this->data[length] = '\0';
 	this->dataLength = length + 1;
@@ -31,6 +31,11 @@ Utf8String::Utf8String(const unsigned char* data, size_t length): Utf8String((ch
 {
 }
 
+Utf8String::Utf8String(const Utf8String & copy)
+{
+	this->data = NULL;
+	this->operator=(copy);
+}
 
 Utf8String::~Utf8String()
 {
@@ -52,9 +57,9 @@ size_t Utf8String::calculateHash()
 	return hash;
 }
 
-string Utf8String::toAsciiString()
+const char* Utf8String::toAsciiString() const
 {
-	return std::string((char*)this->data);
+	return this->data;
 }
 
 bool Utf8String::equals(const Utf8String & b) const
@@ -77,8 +82,8 @@ bool Utf8String::equals(const Utf8String & b) const
 
 Utf8String& Utf8String::operator=(const Utf8String & u)
 {
-	delete[] data;
-	this->data = new unsigned char[u.dataLength];
+	delete[] this->data;
+	this->data = new char[u.dataLength];
 	memcpy(this->data, u.data, u.dataLength);
 	this->dataLength = u.dataLength;
 	this->stringLength = u.stringLength;

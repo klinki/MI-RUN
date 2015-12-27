@@ -133,7 +133,6 @@
     <ClCompile Include="natives\System.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
     <ClCompile Include="utils\Utf16String.cpp" />
-    <ClCompile Include="runtime\Field.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
     <ClCompile Include="runtime\ConstantPool.cpp" />
     <ClCompile Include="gc\GarbageCollector.cpp" />
@@ -150,6 +149,8 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="runtime\ClassMember.h" />
+    <ClInclude Include="runtime\ClassMemberMap.h" />
     <ClInclude Include="gc\Baker\BakerGc.h" />
     <ClInclude Include="gc\interfaces\FinalizableInterface.h" />
     <ClInclude Include="gc\interfaces\GarbageCollectableInterface.h" />

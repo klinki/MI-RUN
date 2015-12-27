@@ -8,14 +8,11 @@
 #include "../utils/Macros.h"
 #include "../natives/Declarations.h"
 #include "AccessFlags.h"
+#include "ClassMember.h"
 
-class Method
+class Method : public ClassMember
 {
 visibility:
-	const FLAG flags;
-	Utf8String name;
-	Utf8String descriptor;
-
 	Instruction* byteCode;
 	size_t byteCodeLength;
 
@@ -32,8 +29,9 @@ visibility:
 
 public:
 	Method() : Method(0) {};
-	Method(FLAG f) : flags(f)
+	Method(FLAG f) : ClassMember()
 	{
+		this->flags = f;
 		this->operandStackSize = 0;
 		this->localVariablesArraySize = 0;
 		this->nativeMethod = nullptr;

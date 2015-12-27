@@ -20,6 +20,11 @@ namespace Java
 				system->staticVariables = new LocalVariablesArray(3);
 				(*system->staticVariables)[0] = (word)out;
 
+				Field* field = new Field((int)FieldAccessFlags::STATIC | (int)FieldAccessFlags::PUBLIC, Utf8String("out"), Utf8String("Ljava/io/PrintStream;"));
+				field->value[0] = (word)out;
+
+				system->staticVariablesMap.add(field);
+
 				return system;
 			}
 		}

@@ -55,7 +55,5 @@ int main(int argc, const char argv[])
 			4) run while loop with instructions switch
 	*/
 
-	experiments();
-
 	return 0;
 }

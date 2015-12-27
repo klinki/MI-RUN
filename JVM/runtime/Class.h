@@ -5,6 +5,7 @@
 #include "Field.h"
 #include "MethodArea.h"
 #include "LocalVariablesArray.h"
+#include "ClassMemberMap.h"
 
 class Class
 {
@@ -18,7 +19,6 @@ public:
 visibility:
 	Utf8String fullyQualifiedName;
 	Type type;
-	// modifiers
 	FLAG flags;
 	
 	ConstantPool * constantPool;
@@ -31,25 +31,22 @@ visibility:
 	size_t countStaticFields;
 
 	MethodArea methodArea;
-//	Method * methods;
+
 	size_t countMethods;
 
 	Class * parentClass;
-
-	// For bootstrap loader NULL
-	Class * classLoader;
+	Class * classLoader; 	// For bootstrap loader NULL
 
 	Class * classMetaClass;
 	
 	LocalVariablesArray * staticVariables;
+	ClassMemberMap staticVariablesMap;
 
 	bool isNative;
 
 public:
 	Class(FLAG flag) : flags(flag) {};
 	~Class();
-	//void setConstantPool(ConstantPool CP);
-	//void setName(Utf8String name);
 	size_t getCountFields() const;
 	bool isFlagSet(FLAG flag) const;
 

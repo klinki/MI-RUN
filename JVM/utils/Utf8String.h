@@ -3,7 +3,7 @@
 class Utf8String
 {
 protected:
-	unsigned char* data;
+	char* data;
 	size_t dataLength;
 	size_t stringLength;
 	size_t hash;
@@ -16,10 +16,11 @@ public:
 	Utf8String(const char* bytes, size_t length);
 	Utf8String(const unsigned char* bytes, size_t length);
 	Utf8String(const std::string & string);
+	Utf8String(const Utf8String &);
 	Utf8String& operator=(const Utf8String & u);
 	~Utf8String();
 
-	std::string toAsciiString();
+	const char* toAsciiString() const;
 	
 	size_t length() const
 	{

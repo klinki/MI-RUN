@@ -1,24 +1,24 @@
 #pragma once
-typedef const unsigned short FLAG;
+typedef unsigned short FLAG;
 
-static FLAG ACC_PUBLIC			= 0x0001;
-static FLAG ACC_PRIVATE			= 0x0002;
-static FLAG ACC_PROTECTED		= 0x0004;
-static FLAG ACC_STATIC			= 0x0008;
-static FLAG ACC_FINAL			= 0x0010;
-static FLAG ACC_SUPER			= 0x0020;
-static FLAG ACC_SYNCHRONIZED	= 0x0020; // too bad, duplicate
-static FLAG ACC_VOLATILE		= 0x0040;
-static FLAG ACC_BRIDGE			= 0x0040;
-static FLAG ACC_TRANSIENT		= 0x0080;
-static FLAG ACC_VARARGS			= 0x0080;
-static FLAG ACC_NATIVE			= 0x0100;
-static FLAG ACC_INTERFACE		= 0x0200;
-static FLAG ACC_ABSTRACT		= 0x0400;
-static FLAG ACC_STRICT			= 0x0800;
-static FLAG ACC_SYNTHETIC		= 0x1000;
-static FLAG ACC_ANNOTATION		= 0x2000;
-static FLAG ACC_ENUM			= 0x4000;
+static const FLAG ACC_PUBLIC		= 0x0001;
+static const FLAG ACC_PRIVATE		= 0x0002;
+static const FLAG ACC_PROTECTED		= 0x0004;
+static const FLAG ACC_STATIC		= 0x0008;
+static const FLAG ACC_FINAL			= 0x0010;
+static const FLAG ACC_SUPER			= 0x0020;
+static const FLAG ACC_SYNCHRONIZED	= 0x0020; // too bad, duplicate
+static const FLAG ACC_VOLATILE		= 0x0040;
+static const FLAG ACC_BRIDGE		= 0x0040;
+static const FLAG ACC_TRANSIENT		= 0x0080;
+static const FLAG ACC_VARARGS		= 0x0080;
+static const FLAG ACC_NATIVE		= 0x0100;
+static const FLAG ACC_INTERFACE		= 0x0200;
+static const FLAG ACC_ABSTRACT		= 0x0400;
+static const FLAG ACC_STRICT		= 0x0800;
+static const FLAG ACC_SYNTHETIC		= 0x1000;
+static const FLAG ACC_ANNOTATION	= 0x2000;
+static const FLAG ACC_ENUM			= 0x4000;
 
 enum class AccessFlags
 {

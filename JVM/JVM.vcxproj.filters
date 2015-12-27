@@ -37,9 +37,6 @@
     <ClCompile Include="runtime\MethodFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\Field.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utils\Utf8String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -247,6 +244,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gc\interfaces\GarbageCollectableInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\ClassMemberMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime\ClassMember.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

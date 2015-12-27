@@ -1060,15 +1060,28 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				// TODO: 
 				int index = this->getShort();
 				ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
+
 				ConstantPoolItem * classItem = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.class_index);
 				ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classItem->classInfo.name_index);
-
-
+				
 				Class* classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
-				//item->fieldInfo.
 
-				// TODO: Hardcoded for print
-				frame->operandStack->push(classPtr->staticVariables->operator[](0));
+				ConstantPoolItem * fieldNameAndType = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.name_and_type_index);
+				ConstantPoolItem * fieldName = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.name_index);
+				ConstantPoolItem * fieldType = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.descriptor_index);
+
+				Field* field = (Field*)classPtr->staticVariablesMap.get(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
+
+				switch (field->type)
+				{
+				case TypeTag::DOUBLE:
+				case TypeTag::LONG:
+					frame->operandStack->push2(field->getValue2());
+					break;
+				default:
+					frame->operandStack->push(field->getValue());
+					break;
+				}
 			};
 			break;
 

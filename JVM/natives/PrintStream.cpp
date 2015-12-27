@@ -28,8 +28,9 @@ namespace PrintStr
 {
 	void println(::Object * obj, MethodFrame * frm)
 	{
-		PrintStream * printStream = (PrintStream*)obj;
-		printStream->println(frm->operandStack->pop2());
+		double value = frm->operandStack->pop2();
+		PrintStream * printStream = (PrintStream*)frm->operandStack->pop();
+		printStream->println(value);
 	}
 
 	Class* initialize(ClassMap* classMap)

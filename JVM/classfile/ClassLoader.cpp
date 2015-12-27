@@ -2,6 +2,9 @@
 
 using namespace std;
 
+class FileNotFoundException {};
+
+
 ClassLoader::ClassLoader()
 {
 	
@@ -451,13 +454,14 @@ int ClassLoader::loadFields(Class * thisClass)
 		thisClass->fields = new Field*[thisClass->countFields];
 		Utf8String name(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
 		Utf8String descriptor(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
-		thisClass->fields[i] = new Field(flags[i], name, descriptor, att_counts[i]);
+		thisClass->fields[i] = new Field(flags[i], name, descriptor);
 
 		for (int j = 0; j < att_counts[i]; j++)
 		{
 			if (att_lengts[i][j] == 2)
 			{
-				thisClass->fields[i]->setAttribute(j, att_data[i][j][0] * 256 + att_data[i][j][1]);
+				// TODO: Remove all code related to field attributes
+				// thisClass->fields[i]->setAttribute(j, att_data[i][j][0] * 256 + att_data[i][j][1]);
 			}
 		}
 
@@ -608,7 +612,8 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				printf("method %d max var: %d\n", i, max_variables);
 				printf("method %d code length: %d\n", i, code_length);
 
-
+				myfile.read(m->byteCode, code_length);
+				
 				for (int i1 = 0; i1 < code_length; i1++)
 				{
 					m->byteCode[i1] = att_data[i][j][i1+8];

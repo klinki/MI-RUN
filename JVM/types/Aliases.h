@@ -25,16 +25,17 @@ typedef unsigned char byte;
 
 enum class TypeTag
 {
-	JAVA_VOID,
-	BOOL,
-	BYTE,
-	CHAR,
-	SHORT,
-	INT,
-	LONG,
-	FLOAT,
-	DOUBLE,
-	REFERENCE
+	JAVA_VOID = 'V',
+	BOOL = 'B',
+	BYTE = 'Z',
+	CHAR = 'C',
+	SHORT = 'S',
+	INT = 'I',
+	LONG = 'J',
+	FLOAT = 'F',
+	DOUBLE = 'D',
+	REFERENCE = 'L',
+	ARRAY = '['
 };
 
 struct JavaType
