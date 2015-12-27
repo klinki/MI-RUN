@@ -363,8 +363,7 @@ int ClassLoader::loadFields(Class * thisClass)
 		printf("ERROR IN READ FILE");
 		return -1;
 	}
-	int fields_count = (int)(data[0] * 256 + data[1]);
-	thisClass->countFields = (unsigned int)(data[0] * 256 + data[1]);
+	size_t fields_count = (int)(data[0] * 256 + data[1]);
 	
 	//printf("fields count:%d\n", fields_count);
 
@@ -448,19 +447,24 @@ int ClassLoader::loadFields(Class * thisClass)
 	}
 	for (int i = 0; i < fields_count; i++)
 	{
-		thisClass->fields = new Field*[thisClass->countFields];
 		Utf8String name(thisClass->constantPool->get(name_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(name_indexes[i])->utf8Info.length);
 		Utf8String descriptor(thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_indexes[i])->utf8Info.length);
-		thisClass->fields[i] = new Field(flags[i], name, descriptor);
+		
+		Field * field = new Field(flags[i], name, descriptor);
+		thisClass->addField(field);
+
+		/*
+		 * TODO: Remove all code related to field attributes
 
 		for (int j = 0; j < att_counts[i]; j++)
 		{
 			if (att_lengts[i][j] == 2)
 			{
-				// TODO: Remove all code related to field attributes
+
 				// thisClass->fields[i]->setAttribute(j, att_data[i][j][0] * 256 + att_data[i][j][1]);
 			}
 		}
+		*/
 
 	}
 
@@ -474,25 +478,6 @@ int ClassLoader::loadMethods(Class * thisClass) {
 		return -1;
 	}
 	int methods_count = (int)(data[0] * 256 + data[1]);
-	thisClass->countMethods = methods_count;
-	//printf("methods count:%d\n", methods_count);
-	
-	//methods[methods_count]
-	//{
-	//u2 access_flags;
-	//u2 name_index;
-	//u2 descriptor_index;
-	//u2 attributes_count;
-	//attributes[attributes_count]
-	//{
-	//u2 attribute_name_index;
-	//u4 attribute_length;
-	//info[attribute_length]
-	//{
-	//[attribute data, see Table 13]
-	//}
-	//}
-	//}
 
 	unsigned short* flags;
 	flags = new unsigned short[methods_count];
@@ -794,15 +779,18 @@ void ClassLoader::resolvePool(Class * thisClass)
 			}
 			
 			break;}
-		case  ConstantPoolTag::CONSTANT_Fieldref: {
+		case  ConstantPoolTag::CONSTANT_Fieldref: 
+		{
 			//classptr
 			int class_index = thisClass->constantPool->get(i)->fieldInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
 			{
 				resolveClassPointer(thisClass, class_index);
 			}
+
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
 			thisClass->constantPool->setClassPtr(i, myClass);
+
 			//field ptr
 			//if (myClass != nullptr)
 			//{
@@ -812,27 +800,11 @@ void ClassLoader::resolvePool(Class * thisClass)
 				Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 				Utf8String item_descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, thisClass->constantPool->get(descriptor_index)->utf8Info.length);
 				
-				for (int j = 0; j < thisClass->countFields; j++)
-				{
-					if (thisClass->fields[i]->descriptor == item_descriptor && thisClass->fields[i]->name == item_name)
-					{
-						thisClass->constantPool->setFieldPtr(i, thisClass->fields[i]);
-					}
-				}
-				if (thisClass->constantPool->get(i)->fieldInfo.fieldPtr==nullptr && myClass != nullptr )
-				{
-					for (int j = 0; j < myClass->countFields; j++)
-					{
-						if (myClass->fields[i]->descriptor == item_descriptor && myClass->fields[i]->name == item_name)
-						{
-							thisClass->constantPool->setFieldPtr(i, myClass->fields[i]);
-						}
-					}
-				}
+				Field* field = myClass->getField(item_name, item_descriptor);
+				thisClass->constantPool->setFieldPtr(i, field);
 			//}
-			
-
-			break;}
+		}
+		break;
 		case  ConstantPoolTag::CONSTANT_Methodref: {
 			//classptr
 			int class_index = thisClass->constantPool->get(i)->methodInfo.class_index;

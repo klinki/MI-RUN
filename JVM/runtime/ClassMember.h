@@ -16,5 +16,10 @@ public:
 	ClassMember(const Utf8String & name, const Utf8String & descriptor) : name(name), descriptor(descriptor) {}
 	virtual ~ClassMember() {}
 
+	bool isStatic() const
+	{
+		return (this->flags & (int)FieldAccessFlags::STATIC) == (int)FieldAccessFlags::STATIC;
+	}
+
 	friend class ClassLoader;
 };

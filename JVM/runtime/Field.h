@@ -10,13 +10,13 @@
 class Field : public ClassMember
 {
 visibility:
+	size_t fieldIndex;
 	word value[2];
-	TypeTag type;
+	const TypeTag type;
 
 public:
-	Field(FLAG flags, const Utf8String & name, const Utf8String & descriptor) : ClassMember(name, descriptor)
+	Field(FLAG flags, const Utf8String & name, const Utf8String & descriptor) : ClassMember(name, descriptor), type((TypeTag)descriptor.toAsciiString()[0])
 	{
-		this->type = (TypeTag)descriptor.toAsciiString()[0];
 	}
 
 	~Field() {}

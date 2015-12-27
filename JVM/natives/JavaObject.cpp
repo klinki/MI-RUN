@@ -41,7 +41,6 @@ namespace Java
 				newClass->classLoader = NULL;
 				newClass->parentClass = NULL;
 				newClass->fullyQualifiedName = Utf8String("java/lang/Object");
-				newClass->type = Class::Type::CLASS;
 				
 				newClass->methodArea.addMethod(getNativeMethod(std::string("<init>"),  (void*) &toString));
 /*

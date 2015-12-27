@@ -5,6 +5,7 @@
 ExecutionEngine::ExecutionEngine()
 {
 	this->callStack = new OperandStack(1024);
+	this->objectTable = new ObjectTable();
 }
 
 
@@ -1070,16 +1071,16 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				ConstantPoolItem * fieldName = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.name_index);
 				ConstantPoolItem * fieldType = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.descriptor_index);
 
-				Field* field = (Field*)classPtr->staticVariablesMap.get(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
+				Field* field = (Field*)classPtr->fieldsMap.get(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
 
 				switch (field->type)
 				{
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
-					frame->operandStack->push2(field->getValue2());
+					frame->operandStack->push2(classPtr->staticVariablesValues->get2(field->fieldIndex));
 					break;
 				default:
-					frame->operandStack->push(field->getValue());
+					frame->operandStack->push(classPtr->staticVariablesValues->get(field->fieldIndex));
 					break;
 				}
 			};
@@ -1179,9 +1180,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				int classIndex = item->classInfo.name_index;
 				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
 
-
-				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countFields));
-				Object* objPtr = new (memory) Object(classPtr->countFields, classPtr);
+				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countNonStaticFields));
+				Object* objPtr = new (memory) Object(classPtr->countNonStaticFields, classPtr);
 				word idx = this->objectTable->insert(objPtr);
 				frame->operandStack->push(idx);
 			};

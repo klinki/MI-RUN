@@ -41,7 +41,6 @@ namespace PrintStr
 		aClass->parentClass = objectClass;
 		aClass->classLoader = NULL;
 		aClass->fullyQualifiedName = "java/io/PrintStream";
-		aClass->isNative = true;
 
 		aClass->methodArea.addMethod(getNativeMethod(std::string("println"), std::string("(D)V"), (void*)&println));
 

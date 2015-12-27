@@ -49,4 +49,9 @@ public:
 	{
 		return this->multimap.cend();
 	}
+
+	size_t size() const
+	{
+		return this->multimap.size();
+	}
 };

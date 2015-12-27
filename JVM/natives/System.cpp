@@ -17,13 +17,13 @@ namespace Java
 
 				PrintStream * out = new PrintStream(&std::cout);
 
-				system->staticVariables = new LocalVariablesArray(3);
-				(*system->staticVariables)[0] = (word)out;
+				system->staticVariablesValues = new LocalVariablesArray(3);
+				(*system->staticVariablesValues)[0] = (word)out;
 
 				Field* field = new Field((int)FieldAccessFlags::STATIC | (int)FieldAccessFlags::PUBLIC, Utf8String("out"), Utf8String("Ljava/io/PrintStream;"));
-				field->value[0] = (word)out;
+				field->fieldIndex = 0;
 
-				system->staticVariablesMap.add(field);
+				system->fieldsMap.add(field);
 
 				return system;
 			}
