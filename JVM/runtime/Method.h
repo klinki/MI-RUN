@@ -70,9 +70,9 @@ public:
 
 		int index = 0;
 
-		while (descr[i++] != ')')
+		while (descr[i] != ')')
 		{
-			switch (descr[i])
+			switch (descr[i++])
 			{
 			case 'L':
 				while (descr[i++] != ';');

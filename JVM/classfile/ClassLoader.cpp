@@ -598,7 +598,7 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				int max_stack = (int)(att_data[i][j][0] *256 + att_data[i][j][1]);
 				m->operandStackSize = max_stack;
 				int max_variables = (int)(att_data[i][j][2] *256 + att_data[i][j][3]);
-				m->localVariablesArraySize;
+				m->localVariablesArraySize = max_variables;
 				int code_length = (int)(att_data[i][j][4] * 256 *256 * 256 + att_data[i][j][5] *256 *256 + att_data[i][j][6] * 256 + att_data[i][j][7]);
 				m->byteCodeLength = code_length;
 				//unsigned char * code = new unsigned char[code_length];

@@ -1,13 +1,15 @@
 #pragma once
 #include "../runtime/Class.h"
 
+class ClassMap;
+
 namespace Java
 {
 	namespace Lang
 	{
 		namespace System
 		{
-			Class* initialize();
+			Class* initialize(ClassMap* classMap);
 		}
 	}
 }

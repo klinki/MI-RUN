@@ -4,6 +4,7 @@
 
 ExecutionEngine::ExecutionEngine()
 {
+	this->callStack = new OperandStack(1024);
 }
 
 
@@ -13,1404 +14,1398 @@ ExecutionEngine::~ExecutionEngine()
 
 int ExecutionEngine::execute(MethodFrame * frame)
 {
-	this->frame = frame;
-	Instruction * instructions = (Instruction*)this->frame->method->getBytecode();
-	unsigned int length = this->frame->method->getByteCodeLength();
+	word index = this->objectTable->insert(frame);
+	this->callStack->push(index);
 
-	ProgramCounter & pc = this->frame->pc;
+	Instruction * instructions = (Instruction*)frame->method->getBytecode();
+	unsigned int length = frame->method->getByteCodeLength();
+
+	ProgramCounter & pc = frame->pc;
 	
-	while (pc != length)
+	while (pc < length)
 	{
-		Instruction currentInstruction = instructions[pc++];
-
-		switch (currentInstruction)
+		try
 		{
-		case ACONST_NULL:
-			this->frame->operandStack->push(NULL);
+			Instruction currentInstruction = instructions[pc++];
+
+			switch (currentInstruction)
+			{
+			case ACONST_NULL:
+				frame->operandStack->push(NULL);
+				break;
+
+				// FALL THROUGH:
+			case ICONST_M1:
+			case ICONST_0:
+			case ICONST_1:
+			case ICONST_2:
+			case ICONST_3:
+			case ICONST_4:
+			case ICONST_5:
+				frame->operandStack->push(currentInstruction - ICONST_0);
+				break;
+
+				// FALL THROUGH:
+			case LCONST_0:
+			case LCONST_1:
+				frame->operandStack->push2((long long)(currentInstruction - LCONST_0));
+				break;
+
+				// FALL THROUGH:
+			case FCONST_0:
+			case FCONST_1:
+			case FCONST_2:
+				frame->operandStack->push((float)(currentInstruction - FCONST_0));
+				break;
+
+				// FALL THROUGH:
+			case DCONST_0:
+			case DCONST_1:
+				frame->operandStack->push2((double)(currentInstruction - DCONST_0));
+				break;
+
+			case BIPUSH:
+			{
+				// push byte
+				word byte = instructions[pc++];
+				frame->operandStack->push(byte);
+			}
+			break;
+
+			case SIPUSH:
+			{
+				// push short
+				// byte 1
+				// byte 2
+				unsigned short index = getShort();
+				frame->operandStack->push(index);
+			}
+			break;
+
+			case LDC:
+			{
+				unsigned char index = instructions[pc++];
+				this->pushFromConstantPool(index);
+			}
+			break;
+
+			case LDC_W:
+			{
+				unsigned short index = getShort();
+				this->pushFromConstantPool(index);
+			}
+			break;
+
+			case LDC2_W:
+			{
+				// push long/double from constant-pool
+				unsigned short index = getShort();
+				this->pushFromConstantPool(index);
+			}
+			break;
+
+			case ILOAD:
+			{
+				// load from local variable 
+				// index
+				unsigned char index = instructions[pc++];
+				this->singleWordLoad(index);
+			}
+			break;
+
+			// FALL THROUGH
+			case ILOAD_0:
+			case ILOAD_1:
+			case ILOAD_2:
+			case ILOAD_3:
+				this->singleWordLoad(currentInstruction - ILOAD_0);
+				break;
+
+			case LLOAD:
+			{
+				unsigned char index = instructions[pc++];
+				this->lload(index);
+			}
 			break;
 
 			// FALL THROUGH:
-		case ICONST_M1:
-		case ICONST_0:
-		case ICONST_1:
-		case ICONST_2:
-		case ICONST_3:
-		case ICONST_4:
-		case ICONST_5:
-			this->frame->operandStack->push(currentInstruction - ICONST_0);
+			case LLOAD_0:
+			case LLOAD_1:
+			case LLOAD_2:
+			case LLOAD_3:
+				this->lload(currentInstruction - LLOAD_0);
+				break;
+
+			case FLOAD:
+			{
+				unsigned char index = instructions[pc++];
+				this->singleWordLoad(index);
+			}
 			break;
 
 			// FALL THROUGH:
-		case LCONST_0:
-		case LCONST_1:
-			this->frame->operandStack->push2((long long)(currentInstruction - LCONST_0));
+			case FLOAD_0:
+			case FLOAD_1:
+			case FLOAD_2:
+			case FLOAD_3:
+				this->singleWordLoad(currentInstruction - FLOAD_0);
+				break;
+
+			case DLOAD:
+			{
+				unsigned char index = instructions[pc++];
+				this->dload(index);
+			}
 			break;
 
 			// FALL THROUGH:
-		case FCONST_0:
-		case FCONST_1:
-		case FCONST_2:
-			this->frame->operandStack->push((float)(currentInstruction - FCONST_0));
+			case DLOAD_0:
+			case DLOAD_1:
+			case DLOAD_2:
+			case DLOAD_3:
+				this->dload(currentInstruction - DLOAD_0);
+				break;
+
+			case ALOAD:
+			{
+				unsigned char index = instructions[pc++];
+				this->singleWordLoad(index);
+			}
 			break;
 
 			// FALL THROUGH:
-		case DCONST_0:
-		case DCONST_1:
-			this->frame->operandStack->push2((double)(currentInstruction - DCONST_0));
-			break;
-
-		case BIPUSH:
-		{
-			// push byte
-			word byte = instructions[pc++];
-			this->frame->operandStack->push(byte);
-		}
-		break;
-
-		case SIPUSH:
-		{
-			// push short
-			// byte 1
-			// byte 2
-			unsigned short index = getShort();
-			this->frame->operandStack->push(index);
-		}
-		break;
-
-		case LDC:
-		{
-			unsigned char index = instructions[pc++];
-			this->pushFromConstantPool(index);
-		}
-		break;
-
-		case LDC_W:
-		{
-			unsigned short index = getShort();
-			this->pushFromConstantPool(index);
-		}
-		break;
-
-		case LDC2_W:
-		{
-			// push long/double from constant-pool
-			unsigned short index = getShort();
-			this->pushFromConstantPool(index);
-		}
-		break;
-
-		case ILOAD:
-		{
-			// load from local variable 
-			// index
-			unsigned char index = instructions[pc++];
-			this->singleWordLoad(index);
-		}
-		break;
-
-		// FALL THROUGH
-		case ILOAD_0:
-		case ILOAD_1:
-		case ILOAD_2:
-		case ILOAD_3:
-			this->singleWordLoad(currentInstruction - ILOAD_0);
-			break;
-
-		case LLOAD:
-		{
-			unsigned char index = instructions[pc++];
-			this->lload(index);
-		}
-		break;
-
-		// FALL THROUGH:
-		case LLOAD_0:
-		case LLOAD_1:
-		case LLOAD_2:
-		case LLOAD_3:
-			this->lload(currentInstruction - LLOAD_0);
-			break;
-
-		case FLOAD:
-		{
-			unsigned char index = instructions[pc++];
-			this->singleWordLoad(index);
-		}
-		break;
-
-		// FALL THROUGH:
-		case FLOAD_0:
-		case FLOAD_1:
-		case FLOAD_2:
-		case FLOAD_3:
-			this->singleWordLoad(currentInstruction - FLOAD_0);
-			break;
-
-		case DLOAD:
-		{
-			unsigned char index = instructions[pc++];
-			this->dload(index);
-		}
-		break;
-
-		// FALL THROUGH:
-		case DLOAD_0:
-		case DLOAD_1:
-		case DLOAD_2:
-		case DLOAD_3:
-			this->dload(currentInstruction - DLOAD_0);
-			break;
-
-		case ALOAD:
-		{
-			unsigned char index = instructions[pc++];
-			this->singleWordLoad(index);
-		}
-		break;
-
-		// FALL THROUGH:
-		case ALOAD_0:
-		case ALOAD_1:
-		case ALOAD_2:
-		case ALOAD_3:
-			this->singleWordLoad(currentInstruction - ALOAD_0);
-			break;
-
-		case IALOAD:
-			this->arrayLoad<int>();
-			break;
-
-		case LALOAD:
-			this->arrayLoad2<java_long>();
-			break;
-
-		case FALOAD:
-			this->arrayLoad<float>();
-			break;
-
-		case DALOAD:
-			this->arrayLoad2<java_double>();
-			break;
-
-		case AALOAD:
-			this->arrayLoad<int>();
-			break;
-
-		case BALOAD:
-			this->arrayLoad<bool>();
-			break;
-
-		case CALOAD:
-			this->arrayLoad<java_char>();
-			break;
-
-		case SALOAD:
-			this->arrayLoad<java_short>();
-			break;
-
-		case ISTORE:
-		{
-			unsigned char index = instructions[pc++];
-			this->singleWordStore(index);
-			// store int into local variable
-		}
-		break;
-
-		// FALL THROUGH:
-		case ISTORE_0:
-		case ISTORE_1:
-		case ISTORE_2:
-		case ISTORE_3:
-			this->singleWordStore(currentInstruction - ISTORE_0);
-			break;
-
-		case LSTORE:
-		{
-			unsigned char index = instructions[pc++];
-			this->lstore(index);
-		}
-		break;
-
-		case LSTORE_0:
-		case LSTORE_1:
-		case LSTORE_2:
-		case LSTORE_3:
-			this->lstore(currentInstruction - LSTORE_0);
-			break;
-
-		case FSTORE:
-		{
-			unsigned char index = instructions[pc++];
-			this->singleWordStore(index);
-			break;
-		}
-		case FSTORE_0:
-		case FSTORE_1:
-		case FSTORE_2:
-		case FSTORE_3:
-			this->singleWordStore(currentInstruction - FSTORE_0);
-			break;
-
-		case DSTORE:
-		{
-			unsigned char index = instructions[pc++];
-			this->dstore(index);
-		}
-		break;
-		case DSTORE_0:
-		case DSTORE_1:
-		case DSTORE_2:
-		case DSTORE_3:
-			this->dstore(currentInstruction - DSTORE_0);
-			break;
-
-		case ASTORE:
-		{
-			unsigned char index = instructions[pc++];
-			this->singleWordStore(index);
-		}
-		break;
-		case ASTORE_0:
-		case ASTORE_1:
-		case ASTORE_2:
-		case ASTORE_3:
-			this->singleWordStore(currentInstruction - ASTORE_0);
-			break;
-
-		case IASTORE:
-			this->arrayStore<int>();
-			break;
-
-		case FASTORE:
-			this->arrayStore<float>();
-			break;
-
-		case AASTORE:
-			this->arrayStore<int>();
-			break;
-
-		case BASTORE:
-			this->arrayStore<bool>();
-			break;
-
-		case CASTORE:
-			this->arrayStore<java_char>();
-			break;
-
-		case SASTORE:
-			this->arrayStore<short>();
-			break;
-
-		case LASTORE:
-			this->arrayStore2<java_long>();
-			break;
-
-		case DASTORE:
-			this->arrayStore2<double>();
-			break;
-
-		case POP:
-			// pop value from stack
-			this->frame->operandStack->pop();
-			break;
-
-		case POP2:
-			this->frame->operandStack->pop();
-			this->frame->operandStack->pop();
-			break;
-
-		case DUP:
-		{
-			// value
-			// value, value
-			word value = this->frame->operandStack->pop();
-			this->frame->operandStack->push(value);
-			this->frame->operandStack->push(value);
-		}
-		break;
-
-		case DUP_X1:
-		{
-			// value2, value1
-			// value1, value2, value1
-			word a = this->frame->operandStack->pop();
-			word b = this->frame->operandStack->pop();
-			this->frame->operandStack->push(a);
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-		}
-		break;
-
-		case DUP_X2:
-		{
-			// value3, value2, value1
-			// value1, value3, value2, value1
-			word a = this->frame->operandStack->pop();
-			word b = this->frame->operandStack->pop();
-			word c = this->frame->operandStack->pop();
-
-			this->frame->operandStack->push(a);
-			this->frame->operandStack->push(c);
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-		};
-		break;
-
-		case DUP2:
-		{
-			word a = this->frame->operandStack->pop();
-			word b = this->frame->operandStack->pop();
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-		}
-		break;
-
-		case DUP2_X1:
-		{
-			// value3, value2, value1
-			// value2, value1, value3, value2, value1
-			word a = this->frame->operandStack->pop();
-			word b = this->frame->operandStack->pop();
-			word c = this->frame->operandStack->pop();
-
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-			this->frame->operandStack->push(c);
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-		}
-		break;
-
-		case DUP2_X2:
-		{
-			// value4, value3, value2, value1
-			// value2, value1, value4, value3, value2, value1
-			word a = this->frame->operandStack->pop();
-			word b = this->frame->operandStack->pop();
-			word c = this->frame->operandStack->pop();
-			word d = this->frame->operandStack->pop();
-
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-			this->frame->operandStack->push(d);
-			this->frame->operandStack->push(c);
-			this->frame->operandStack->push(b);
-			this->frame->operandStack->push(a);
-		}
-		break;
-
-		case SWAP:
-		{
-			// swap operand-stack values
-			// category 1
-			word low = this->frame->operandStack->pop();
-			word high = this->frame->operandStack->pop();
-			this->frame->operandStack->push(low);
-			this->frame->operandStack->push(high);
-		}
-		break;
-
-		case IADD:
-		{
-			SINGLE_WORD_OPERATION(int, +);
-		}
-		break;
-
-		case LADD:
-		{
-			DOUBLE_WORD_OPERATION(long long, +);
-		}
-		break;
-
-		case FADD:
-		{
-			SINGLE_WORD_OPERATION(float, +);
-		}
-		break;
-
-		case DADD:
-		{
-			DOUBLE_WORD_OPERATION(double, +);
-		}
-		break;
-
-		case ISUB:
-		{
-			SINGLE_WORD_OPERATION(int, -);
-		}
-		break;
-
-		case LSUB:
-		{
-			DOUBLE_WORD_OPERATION(long long, -);
-		}
-		break;
-
-		case FSUB:
-		{
-			SINGLE_WORD_OPERATION(float, -);
-		}
-		break;
-
-		case DSUB:
-		{
-			DOUBLE_WORD_OPERATION(double, -);
-		}
-		break;
-
-		case IMUL:
-		{
-			SINGLE_WORD_OPERATION(int, *);
-		}
-		break;
-
-
-		case LMUL:
-		{
-			DOUBLE_WORD_OPERATION(long long, *);
-		}
-		break;
-
-		case FMUL:
-		{
-			SINGLE_WORD_OPERATION(float, *);
-		}
-		break;
-
-		case DMUL:
-		{
-			DOUBLE_WORD_OPERATION(double, *);
-		}
-		break;
-
-		case IDIV:
-		{
-			int b = this->frame->operandStack->pop();
-			int a = this->frame->operandStack->pop();
-
-			if (b == 0)
+			case ALOAD_0:
+			case ALOAD_1:
+			case ALOAD_2:
+			case ALOAD_3:
+				this->singleWordLoad(currentInstruction - ALOAD_0);
+				break;
+
+			case IALOAD:
+				this->arrayLoad<int>();
+				break;
+
+			case LALOAD:
+				this->arrayLoad2<java_long>();
+				break;
+
+			case FALOAD:
+				this->arrayLoad<float>();
+				break;
+
+			case DALOAD:
+				this->arrayLoad2<java_double>();
+				break;
+
+			case AALOAD:
+				this->arrayLoad<int>();
+				break;
+
+			case BALOAD:
+				this->arrayLoad<bool>();
+				break;
+
+			case CALOAD:
+				this->arrayLoad<java_char>();
+				break;
+
+			case SALOAD:
+				this->arrayLoad<java_short>();
+				break;
+
+			case ISTORE:
 			{
-				// exception! 
-				throw Exceptions::Runtime::ArithmeticException();
+				unsigned char index = instructions[pc++];
+				this->singleWordStore(index);
+				// store int into local variable
 			}
-
-			this->frame->operandStack->push(a / b);
-		}
-		break;
-
-
-		case LDIV:
-		{
-			long long b = this->frame->operandStack->pop2();
-			long long a = this->frame->operandStack->pop2();
-
-			if (b == 0)
-			{
-				// exception! 
-				throw Exceptions::Runtime::ArithmeticException();
-			}
-
-			this->frame->operandStack->push2(a / b);
-		}
-		break;
-
-		case FDIV:
-		{
-			SINGLE_WORD_OPERATION(float, / );
-		}
-		break;
-
-		case DDIV:
-		{
-			DOUBLE_WORD_OPERATION(double, / );
-		}
-		break;
-
-		case IREM:
-		{
-			// returns remainder
-			int b = this->frame->operandStack->pop();
-			int a = this->frame->operandStack->pop();
-
-			if (b == 0)
-			{
-				// exception!
-				throw Exceptions::Runtime::ArithmeticException();
-			}
-
-			this->frame->operandStack->push(a % b);
-		}
-		break;
-
-		case LREM:
-		{
-			long long b = this->frame->operandStack->pop2();
-			long long a = this->frame->operandStack->pop2();
-
-			if (b == 0)
-			{
-				// exception!
-				throw Exceptions::Runtime::ArithmeticException();
-			}
-
-			this->frame->operandStack->push2(a % b);
-		}
-		break;
-
-		case FREM:
-		{
-			float b = this->frame->operandStack->pop();
-			float a = this->frame->operandStack->pop();
-			this->frame->operandStack->push(fmodf(a, b));
-		}
-		break;
-
-		case DREM:
-		{
-			double b = this->frame->operandStack->pop2();
-			double a = this->frame->operandStack->pop2();
-			this->frame->operandStack->push2(fmod(a, b));
-		}
-		break;
-
-		case INEG:
-		{
-			int a = this->frame->operandStack->pop();
-			this->frame->operandStack->push(-a);
-		}
-		break;
-
-		case LNEG:
-		{
-			long long a = this->frame->operandStack->pop2();
-			this->frame->operandStack->push2(-a);
-		}
-		break;
-
-		case FNEG:
-		{
-			float a = this->frame->operandStack->pop();
-			this->frame->operandStack->push(-a);
-		}
-		break;
-
-		case DNEG:
-		{
-			double a = this->frame->operandStack->pop2();
-			this->frame->operandStack->push2(-a);
-		}
-		break;
-
-
-		case ISHL:
-		{
-			SINGLE_WORD_OPERATION(int, << );
-		}
-		// shift left
-		break;
-
-		case LSHL:
-		{
-			int b = this->frame->operandStack->pop();
-			long long a = this->frame->operandStack->pop2();
-			this->frame->operandStack->push2(a << b);
-		}
-		break;
-
-		case ISHR:
-		{
-			SINGLE_WORD_OPERATION(int, >> );
-		}
-		break;
-
-		case LSHR:
-		{
-			// shift right
-			int b = this->frame->operandStack->pop();
-			long long a = this->frame->operandStack->pop2();
-			this->frame->operandStack->push2(a >> b);
-		}
-		break;
-
-		case IUSHR:
-		{
-			SINGLE_WORD_OPERATION(unsigned int, >> );
-			// shift unsigned right
-		}
-		break;
-
-		case LUSHR:
-		{
-			unsigned long long a = (unsigned long long)(long long)this->frame->operandStack->pop2();
-			unsigned int b = this->frame->operandStack->pop();
-			this->frame->operandStack->push2((long long)(a >> b));
 			break;
-		}
 
-		case IAND:
-		{
-			SINGLE_WORD_OPERATION(int, &);
-		}
-		break;
+			// FALL THROUGH:
+			case ISTORE_0:
+			case ISTORE_1:
+			case ISTORE_2:
+			case ISTORE_3:
+				this->singleWordStore(currentInstruction - ISTORE_0);
+				break;
 
-		case LAND:
-		{
-			DOUBLE_WORD_OPERATION(long long, &);
-		}
-		break;
-
-		case IOR:
-		{
-			SINGLE_WORD_OPERATION(int, | );
-		}
-		break;
-
-		case LOR:
-		{
-			DOUBLE_WORD_OPERATION(long long, | );
-		}
-		break;
-
-		case IXOR:
-		{
-			SINGLE_WORD_OPERATION(int, ^);
-		}
-		break;
-
-		case LXOR:
-		{
-			DOUBLE_WORD_OPERATION(long long, ^);
-		}
-		break;
-
-		case IINC:
-		{
-			unsigned char index = instructions[pc++];
-			int value = (int)instructions[pc++];
-			this->iinc(index, value);
-		}
-		break;
-
-		case I2L:
-		{
-			long long val = (long long)(int) this->frame->operandStack->pop();
-			this->frame->operandStack->push2(val);
-		}
-		break;
-
-		case I2F:
-		{
-			float val = (float)(int) this->frame->operandStack->pop();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case I2D:
-		{
-			double val = (double)(int) this->frame->operandStack->pop();
-			this->frame->operandStack->push2(val);
-		}
-		break;
-
-		case L2I:
-		{
-			int val = (int)(long long)this->frame->operandStack->pop2();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case L2F:
-		{
-			float val = (float)(long long)this->frame->operandStack->pop2();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case L2D:
-		{
-			double val = (double)(long long)this->frame->operandStack->pop2();
-			this->frame->operandStack->push2(val);
-		}
-		break;
-
-		case F2I:
-		{
-			int val = (int)(float)this->frame->operandStack->pop();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case F2L:
-		{
-			long long val = (long long)(float)this->frame->operandStack->pop();
-			this->frame->operandStack->push2(val);
-		}
-		break;
-
-		case F2D:
-		{
-			double val = (double)(float) this->frame->operandStack->pop();
-			this->frame->operandStack->push2(val);
-		}
-		break;
-
-		case D2I:
-		{
-			int val = (int)(double)this->frame->operandStack->pop2();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case D2L:
-		{
-			long long val = (long long)((double)this->frame->operandStack->pop2());
-			this->frame->operandStack->push2(val);
-		}
-		break;
-
-		case D2F:
-		{
-			float val = (float)(double)this->frame->operandStack->pop2();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case I2B:
-		{
-			int val = (char)(int)this->frame->operandStack->pop();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case I2C:
-		{
-			int val = (java_char)(int)this->frame->operandStack->pop();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-		case I2S:
-		{
-			int val = (short)(int)this->frame->operandStack->pop();
-			this->frame->operandStack->push(val);
-		}
-		break;
-
-
-		case LCMP:
-		{
-			long long a = this->frame->operandStack->pop2();
-			long long b = this->frame->operandStack->pop2();
-
-			int res = 0;
-
-			if (a > b)
+			case LSTORE:
 			{
-				res = 1;
+				unsigned char index = instructions[pc++];
+				this->lstore(index);
 			}
-			else if (a == b)
+			break;
+
+			case LSTORE_0:
+			case LSTORE_1:
+			case LSTORE_2:
+			case LSTORE_3:
+				this->lstore(currentInstruction - LSTORE_0);
+				break;
+
+			case FSTORE:
 			{
-				res = 0;
+				unsigned char index = instructions[pc++];
+				this->singleWordStore(index);
+				break;
 			}
-			else
+			case FSTORE_0:
+			case FSTORE_1:
+			case FSTORE_2:
+			case FSTORE_3:
+				this->singleWordStore(currentInstruction - FSTORE_0);
+				break;
+
+			case DSTORE:
 			{
-				res = -1;
+				unsigned char index = instructions[pc++];
+				this->dstore(index);
 			}
+			break;
+			case DSTORE_0:
+			case DSTORE_1:
+			case DSTORE_2:
+			case DSTORE_3:
+				this->dstore(currentInstruction - DSTORE_0);
+				break;
 
-			this->frame->operandStack->push(res);
-		}
-		break;
-
-		case FCMPL:
-		case FCMPG:
-		{
-			float a = this->frame->operandStack->pop();
-			float b = this->frame->operandStack->pop();
-
-			this->fdcmp<float>(a, b, currentInstruction);
-		}
-		break;
-
-
-
-		case DCMPL:
-		case DCMPG:
-		{
-			double a = this->frame->operandStack->pop2();
-			double b = this->frame->operandStack->pop2();
-
-			this->fdcmp<double>(a, b, currentInstruction);
-		}
-		break;
-
-		// THESE ARE FALL-THROUGH
-		case IFEQ:
-		case IFNE:
-		case IFLT:
-		case IFGE:
-		case IFGT:
-		case IFLE:
-		{
-			int value = this->frame->operandStack->pop();
-			this->jumpIfEq(currentInstruction, value);
-		}
-		break;
-
-		// THESE ARE FALL-THROUGH
-		case IF_ICMPEQ:
-		case IF_ICMPNE:
-		case IF_ICMPLT:
-		case IF_ICMPGE:
-		case IF_ICMPGT:
-		case IF_ICMPLE:
-		{
-			int b = this->frame->operandStack->pop();
-			int a = this->frame->operandStack->pop();
-
-			int res = a - b;
-			this->jumpIfEq(currentInstruction - (IF_ICMPEQ - IFEQ), res);
-		}
-		break;
-
-
-		// references eq - FALL-THROUGH
-		case IF_ACMPEQ:
-		case IF_ACMPNE:
-		{
-			short offset = this->getShort();
-			unsigned short b = this->frame->operandStack->pop();
-			unsigned short a = this->frame->operandStack->pop();
-
-			if ((a == b && currentInstruction == IF_ACMPEQ) || (a != b && currentInstruction == IF_ACMPNE))
+			case ASTORE:
 			{
-				this->jumpWithOffset(offset);
+				unsigned char index = instructions[pc++];
+				this->singleWordStore(index);
 			}
-		}
-		break;
+			break;
+			case ASTORE_0:
+			case ASTORE_1:
+			case ASTORE_2:
+			case ASTORE_3:
+				this->singleWordStore(currentInstruction - ASTORE_0);
+				break;
 
-		// fall through
-		case IFNULL:
-		case IFNONNULL:
-		{
-			short offset = this->getShort();
-			unsigned short ref = this->frame->operandStack->pop();
+			case IASTORE:
+				this->arrayStore<int>();
+				break;
 
-			if ((ref == NULL && currentInstruction == IFNULL) || (ref != NULL && currentInstruction == IFNONNULL) )
+			case FASTORE:
+				this->arrayStore<float>();
+				break;
+
+			case AASTORE:
+				this->arrayStore<int>();
+				break;
+
+			case BASTORE:
+				this->arrayStore<bool>();
+				break;
+
+			case CASTORE:
+				this->arrayStore<java_char>();
+				break;
+
+			case SASTORE:
+				this->arrayStore<short>();
+				break;
+
+			case LASTORE:
+				this->arrayStore2<java_long>();
+				break;
+
+			case DASTORE:
+				this->arrayStore2<double>();
+				break;
+
+			case POP:
+				// pop value from stack
+				frame->operandStack->pop();
+				break;
+
+			case POP2:
+				frame->operandStack->pop();
+				frame->operandStack->pop();
+				break;
+
+			case DUP:
 			{
-				this->jumpWithOffset(offset);
+				// value
+				// value, value
+				word value = frame->operandStack->pop();
+				frame->operandStack->push(value);
+				frame->operandStack->push(value);
 			}
-		}
-		break;
+			break;
 
-		case GOTO:
-		{
-			short offset = this->getShort();
-			this->jumpWithOffset(offset);
-		}
-		break;
-
-		case GOTO_W:
-		{
-			int offset = (int)this->getInt();
-			this->jumpWithOffset(offset);
-		}
-		break;
-
-		case JSR:
-		{
-			short offset = this->getShort();
-			this->frame->operandStack->push(pc);
-			this->jumpWithOffset(offset);
-		}
-		break;
-
-		case JSR_W:
-		{
-			int offset = (int)this->getInt();
-			this->frame->operandStack->push(pc);
-			this->jumpWithOffset(offset);
-		}
-		break;
-
-
-		case RET:
-		{
-			unsigned char index = instructions[pc];
-			int restoredPc = this->frame->localVariables->operator[](index);
-			pc = restoredPc;
-		}
-		break;
-
-		case TABLESWITCH:
-		{
-			int switchPc = pc;
-
-			// figure out padding
-			while (pc % 4 != 0)
+			case DUP_X1:
 			{
-				pc++;
+				// value2, value1
+				// value1, value2, value1
+				word a = frame->operandStack->pop();
+				word b = frame->operandStack->pop();
+				frame->operandStack->push(a);
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
 			}
+			break;
 
-			int def = this->getInt();
-			int low = this->getInt();
-			int high = this->getInt();
-
-			int index = this->frame->operandStack->pop();
-
-			int offset = 0;
-
-			if (index < low || index > high)
+			case DUP_X2:
 			{
-				// default
-				offset = def;
+				// value3, value2, value1
+				// value1, value3, value2, value1
+				word a = frame->operandStack->pop();
+				word b = frame->operandStack->pop();
+				word c = frame->operandStack->pop();
+
+				frame->operandStack->push(a);
+				frame->operandStack->push(c);
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
+			};
+			break;
+
+			case DUP2:
+			{
+				word a = frame->operandStack->pop();
+				word b = frame->operandStack->pop();
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
 			}
-			else
+			break;
+
+			case DUP2_X1:
 			{
-				pc += (index - low) * 4;
-				offset = this->getInt();
+				// value3, value2, value1
+				// value2, value1, value3, value2, value1
+				word a = frame->operandStack->pop();
+				word b = frame->operandStack->pop();
+				word c = frame->operandStack->pop();
+
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
+				frame->operandStack->push(c);
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
 			}
+			break;
 
-			// high - low + 1
-			pc = switchPc;
-			this->jumpWithOffset(offset);
-		}
-		break;
-
-		case LOOKUPSWITCH:
-		{
-			int switchPc = pc;
-
-			// figure out padding
-			while (pc % 4 != 0)
+			case DUP2_X2:
 			{
-				pc++;
+				// value4, value3, value2, value1
+				// value2, value1, value4, value3, value2, value1
+				word a = frame->operandStack->pop();
+				word b = frame->operandStack->pop();
+				word c = frame->operandStack->pop();
+				word d = frame->operandStack->pop();
+
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
+				frame->operandStack->push(d);
+				frame->operandStack->push(c);
+				frame->operandStack->push(b);
+				frame->operandStack->push(a);
 			}
+			break;
 
-			int def = this->getInt();
-			int n = this->getInt();
-
-			int key = this->frame->operandStack->pop();
-			bool matched = false;
-
-			int offset = 0;
-
-			for (int i = 0; i < n; i++)
+			case SWAP:
 			{
-				int value = this->getInt();
-				int currentOffset = this->getInt();
+				// swap operand-stack values
+				// category 1
+				word low = frame->operandStack->pop();
+				word high = frame->operandStack->pop();
+				frame->operandStack->push(low);
+				frame->operandStack->push(high);
+			}
+			break;
 
-				if (value == key)
+			case IADD:
+			{
+				SINGLE_WORD_OPERATION(int, +);
+			}
+			break;
+
+			case LADD:
+			{
+				DOUBLE_WORD_OPERATION(long long, +);
+			}
+			break;
+
+			case FADD:
+			{
+				SINGLE_WORD_OPERATION(float, +);
+			}
+			break;
+
+			case DADD:
+			{
+				DOUBLE_WORD_OPERATION(double, +);
+			}
+			break;
+
+			case ISUB:
+			{
+				SINGLE_WORD_OPERATION(int, -);
+			}
+			break;
+
+			case LSUB:
+			{
+				DOUBLE_WORD_OPERATION(long long, -);
+			}
+			break;
+
+			case FSUB:
+			{
+				SINGLE_WORD_OPERATION(float, -);
+			}
+			break;
+
+			case DSUB:
+			{
+				DOUBLE_WORD_OPERATION(double, -);
+			}
+			break;
+
+			case IMUL:
+			{
+				SINGLE_WORD_OPERATION(int, *);
+			}
+			break;
+
+
+			case LMUL:
+			{
+				DOUBLE_WORD_OPERATION(long long, *);
+			}
+			break;
+
+			case FMUL:
+			{
+				SINGLE_WORD_OPERATION(float, *);
+			}
+			break;
+
+			case DMUL:
+			{
+				DOUBLE_WORD_OPERATION(double, *);
+			}
+			break;
+
+			case IDIV:
+			{
+				int b = frame->operandStack->pop();
+				int a = frame->operandStack->pop();
+
+				if (b == 0)
 				{
-					matched = true;
-					offset = currentOffset;
-					break;
+					// exception! 
+					throw Exceptions::Runtime::ArithmeticException();
+				}
+
+				frame->operandStack->push(a / b);
+			}
+			break;
+
+
+			case LDIV:
+			{
+				long long b = frame->operandStack->pop2();
+				long long a = frame->operandStack->pop2();
+
+				if (b == 0)
+				{
+					// exception! 
+					throw Exceptions::Runtime::ArithmeticException();
+				}
+
+				frame->operandStack->push2(a / b);
+			}
+			break;
+
+			case FDIV:
+			{
+				SINGLE_WORD_OPERATION(float, / );
+			}
+			break;
+
+			case DDIV:
+			{
+				DOUBLE_WORD_OPERATION(double, / );
+			}
+			break;
+
+			case IREM:
+			{
+				// returns remainder
+				int b = frame->operandStack->pop();
+				int a = frame->operandStack->pop();
+
+				if (b == 0)
+				{
+					// exception!
+					throw Exceptions::Runtime::ArithmeticException();
+				}
+
+				frame->operandStack->push(a % b);
+			}
+			break;
+
+			case LREM:
+			{
+				long long b = frame->operandStack->pop2();
+				long long a = frame->operandStack->pop2();
+
+				if (b == 0)
+				{
+					// exception!
+					throw Exceptions::Runtime::ArithmeticException();
+				}
+
+				frame->operandStack->push2(a % b);
+			}
+			break;
+
+			case FREM:
+			{
+				float b = frame->operandStack->pop();
+				float a = frame->operandStack->pop();
+				frame->operandStack->push(fmodf(a, b));
+			}
+			break;
+
+			case DREM:
+			{
+				double b = frame->operandStack->pop2();
+				double a = frame->operandStack->pop2();
+				frame->operandStack->push2(fmod(a, b));
+			}
+			break;
+
+			case INEG:
+			{
+				int a = frame->operandStack->pop();
+				frame->operandStack->push(-a);
+			}
+			break;
+
+			case LNEG:
+			{
+				long long a = frame->operandStack->pop2();
+				frame->operandStack->push2(-a);
+			}
+			break;
+
+			case FNEG:
+			{
+				float a = frame->operandStack->pop();
+				frame->operandStack->push(-a);
+			}
+			break;
+
+			case DNEG:
+			{
+				double a = frame->operandStack->pop2();
+				frame->operandStack->push2(-a);
+			}
+			break;
+
+
+			case ISHL:
+			{
+				SINGLE_WORD_OPERATION(int, << );
+			}
+			// shift left
+			break;
+
+			case LSHL:
+			{
+				int b = frame->operandStack->pop();
+				long long a = frame->operandStack->pop2();
+				frame->operandStack->push2(a << b);
+			}
+			break;
+
+			case ISHR:
+			{
+				SINGLE_WORD_OPERATION(int, >> );
+			}
+			break;
+
+			case LSHR:
+			{
+				// shift right
+				int b = frame->operandStack->pop();
+				long long a = frame->operandStack->pop2();
+				frame->operandStack->push2(a >> b);
+			}
+			break;
+
+			case IUSHR:
+			{
+				SINGLE_WORD_OPERATION(unsigned int, >> );
+				// shift unsigned right
+			}
+			break;
+
+			case LUSHR:
+			{
+				unsigned long long a = (unsigned long long)(long long)frame->operandStack->pop2();
+				unsigned int b = frame->operandStack->pop();
+				frame->operandStack->push2((long long)(a >> b));
+				break;
+			}
+
+			case IAND:
+			{
+				SINGLE_WORD_OPERATION(int, &);
+			}
+			break;
+
+			case LAND:
+			{
+				DOUBLE_WORD_OPERATION(long long, &);
+			}
+			break;
+
+			case IOR:
+			{
+				SINGLE_WORD_OPERATION(int, | );
+			}
+			break;
+
+			case LOR:
+			{
+				DOUBLE_WORD_OPERATION(long long, | );
+			}
+			break;
+
+			case IXOR:
+			{
+				SINGLE_WORD_OPERATION(int, ^);
+			}
+			break;
+
+			case LXOR:
+			{
+				DOUBLE_WORD_OPERATION(long long, ^);
+			}
+			break;
+
+			case IINC:
+			{
+				unsigned char index = instructions[pc++];
+				int value = (int)instructions[pc++];
+				this->iinc(index, value);
+			}
+			break;
+
+			case I2L:
+			{
+				long long val = (long long)(int) frame->operandStack->pop();
+				frame->operandStack->push2(val);
+			}
+			break;
+
+			case I2F:
+			{
+				float val = (float)(int) frame->operandStack->pop();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case I2D:
+			{
+				double val = (double)(int) frame->operandStack->pop();
+				frame->operandStack->push2(val);
+			}
+			break;
+
+			case L2I:
+			{
+				int val = (int)(long long)frame->operandStack->pop2();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case L2F:
+			{
+				float val = (float)(long long)frame->operandStack->pop2();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case L2D:
+			{
+				double val = (double)(long long)frame->operandStack->pop2();
+				frame->operandStack->push2(val);
+			}
+			break;
+
+			case F2I:
+			{
+				int val = (int)(float)frame->operandStack->pop();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case F2L:
+			{
+				long long val = (long long)(float)frame->operandStack->pop();
+				frame->operandStack->push2(val);
+			}
+			break;
+
+			case F2D:
+			{
+				double val = (double)(float) frame->operandStack->pop();
+				frame->operandStack->push2(val);
+			}
+			break;
+
+			case D2I:
+			{
+				int val = (int)(double)frame->operandStack->pop2();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case D2L:
+			{
+				long long val = (long long)((double)frame->operandStack->pop2());
+				frame->operandStack->push2(val);
+			}
+			break;
+
+			case D2F:
+			{
+				float val = (float)(double)frame->operandStack->pop2();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case I2B:
+			{
+				int val = (char)(int)frame->operandStack->pop();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case I2C:
+			{
+				int val = (java_char)(int)frame->operandStack->pop();
+				frame->operandStack->push(val);
+			}
+			break;
+
+			case I2S:
+			{
+				int val = (short)(int)frame->operandStack->pop();
+				frame->operandStack->push(val);
+			}
+			break;
+
+
+			case LCMP:
+			{
+				long long a = frame->operandStack->pop2();
+				long long b = frame->operandStack->pop2();
+
+				int res = 0;
+
+				if (a > b)
+				{
+					res = 1;
+				}
+				else if (a == b)
+				{
+					res = 0;
+				}
+				else
+				{
+					res = -1;
+				}
+
+				frame->operandStack->push(res);
+			}
+			break;
+
+			case FCMPL:
+			case FCMPG:
+			{
+				float a = frame->operandStack->pop();
+				float b = frame->operandStack->pop();
+
+				this->fdcmp<float>(a, b, currentInstruction);
+			}
+			break;
+
+
+
+			case DCMPL:
+			case DCMPG:
+			{
+				double a = frame->operandStack->pop2();
+				double b = frame->operandStack->pop2();
+
+				this->fdcmp<double>(a, b, currentInstruction);
+			}
+			break;
+
+			// THESE ARE FALL-THROUGH
+			case IFEQ:
+			case IFNE:
+			case IFLT:
+			case IFGE:
+			case IFGT:
+			case IFLE:
+			{
+				int value = frame->operandStack->pop();
+				this->jumpIfEq(currentInstruction, value);
+			}
+			break;
+
+			// THESE ARE FALL-THROUGH
+			case IF_ICMPEQ:
+			case IF_ICMPNE:
+			case IF_ICMPLT:
+			case IF_ICMPGE:
+			case IF_ICMPGT:
+			case IF_ICMPLE:
+			{
+				int b = frame->operandStack->pop();
+				int a = frame->operandStack->pop();
+
+				int res = a - b;
+				this->jumpIfEq(currentInstruction - (IF_ICMPEQ - IFEQ), res);
+			}
+			break;
+
+
+			// references eq - FALL-THROUGH
+			case IF_ACMPEQ:
+			case IF_ACMPNE:
+			{
+				short offset = this->getShort();
+				unsigned short b = frame->operandStack->pop();
+				unsigned short a = frame->operandStack->pop();
+
+				if ((a == b && currentInstruction == IF_ACMPEQ) || (a != b && currentInstruction == IF_ACMPNE))
+				{
+					this->jumpWithOffset(offset);
 				}
 			}
+			break;
 
-			if (!matched)
+			// fall through
+			case IFNULL:
+			case IFNONNULL:
 			{
-				offset = def;
-			}
+				short offset = this->getShort();
+				unsigned short ref = frame->operandStack->pop();
 
-			pc = switchPc;
-			this->jumpWithOffset(offset);
-		}
-		break;
-
-		case FRETURN:
-		case IRETURN:
-		case ARETURN:
-		{
-			word reference = this->frame->operandStack->pop();
-			this->frame->parentFrame->operandStack->push(reference);
-			return 0;
-		}
-		break;
-
-
-		case LRETURN:
-		case DRETURN:
-		{
-			word low = this->frame->operandStack->pop();
-			word high = this->frame->operandStack->pop();
-
-			this->frame->parentFrame->operandStack->push(high);
-			this->frame->parentFrame->operandStack->push(low);
-			return 0;
-		};
-
-		case RETURN:
-		{
-			return 0;
-		};
-
-		case GETSTATIC:
-		{
-			// TODO: 
-		};
-
-		case PUTSTATIC:
-		{
-			// TODO: 
-		};
-
-		case GETFIELD:
-		{
-			unsigned short index = this->getShort();
-			Object* reference = (Object*)this->frame->operandStack->pop();
-
-			if (reference == NULL)
-			{
-				throw Exceptions::Runtime::NullPointerException();
-			}
-
-			size_t fieldIndex = 0;
-			reference->fields[index];
-
-		}
-		break;
-
-		case PUTFIELD:
-		{
-			unsigned short index = this->getShort();
-			Object* reference = (Object*)this->frame->operandStack->pop();
-
-			if (reference == NULL)
-			{
-				throw Exceptions::Runtime::NullPointerException();
-			}
-
-			size_t fieldIndex = 0;
-			reference->fields[index];
-		}
-		break;
-
-		// TODO: Invokes!
-		case INVOKEVIRTUAL:
-		{
-			Method* method = nullptr;
-			Class* classPtr = nullptr;
-			Object* reference = this->frame->operandStack->pop();
-			unsigned short index = this->getShort();
-
-			if (index == this->inlineCache.constantPoolIndex)
-			{
-				// best-case scenario
-			}
-			else
-			{
-				ConstantPoolItem * item = this->frame->constantPool->get(index);
-
-				classPtr = item->methodInfo.classPtr;
-				Method* methodPtr = item->methodInfo.methodPtr;
-				method = methodPtr;
-
-				int classIndex = item->methodInfo.class_index;
-				int nameAndTypeIndex = item->methodInfo.name_and_type_index;
-
-				ConstantPoolItem * nameAndType = this->frame->constantPool->get(nameAndTypeIndex);
-				ConstantPoolItem * name = this->frame->constantPool->get(nameAndType->nameAndTypeInfo.name_index);
-				ConstantPoolItem * descr = this->frame->constantPool->get(nameAndType->nameAndTypeInfo.descriptor_index);
-
-				if (classIndex == this->inlineCache.cpClassIndex)
+				if ((ref == NULL && currentInstruction == IFNULL) || (ref != NULL && currentInstruction == IFNONNULL) )
 				{
-					//method = this->inlineCache.classPtr->getMethod(name->utf8Info);
+					this->jumpWithOffset(offset);
 				}
 			}
+			break;
 
-			if (method->nativeMethod != nullptr)
+			case GOTO:
 			{
-				method->nativeMethod(reference, this->frame);
+				short offset = this->getShort();
+				this->jumpWithOffset(offset);
 			}
-			else
+			break;
+
+			case GOTO_W:
 			{
-				unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
-				MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize);
+				int offset = (int)this->getInt();
+				this->jumpWithOffset(offset);
+			}
+			break;
 
-				newFrame->parentFrame = frame;
-				frame->childFrame = newFrame;
+			case JSR:
+			{
+				short offset = this->getShort();
+				frame->operandStack->push(pc);
+				this->jumpWithOffset(offset);
+			}
+			break;
 
-				newFrame->method = method;
-				newFrame->constantPool = classPtr->constantPool;
-				(*newFrame->localVariables)[0] = reference;
+			case JSR_W:
+			{
+				int offset = (int)this->getInt();
+				frame->operandStack->push(pc);
+				this->jumpWithOffset(offset);
+			}
+			break;
 
-				size_t varPos = 1;
 
-				for (size_t i = 0; i < method->countIntputArgs; i++)
+			case RET:
+			{
+				unsigned char index = instructions[pc];
+				int restoredPc = frame->localVariables->operator[](index);
+				pc = restoredPc;
+			}
+			break;
+
+			case TABLESWITCH:
+			{
+				int switchPc = pc;
+
+				// figure out padding
+				while (pc % 4 != 0)
 				{
-					TypeTag type = method->inputArgs[i];
+					pc++;
+				}
 
-					switch (type)
+				int def = this->getInt();
+				int low = this->getInt();
+				int high = this->getInt();
+
+				int index = frame->operandStack->pop();
+
+				int offset = 0;
+
+				if (index < low || index > high)
+				{
+					// default
+					offset = def;
+				}
+				else
+				{
+					pc += (index - low) * 4;
+					offset = this->getInt();
+				}
+
+				// high - low + 1
+				pc = switchPc;
+				this->jumpWithOffset(offset);
+			}
+			break;
+
+			case LOOKUPSWITCH:
+			{
+				int switchPc = pc;
+
+				// figure out padding
+				while (pc % 4 != 0)
+				{
+					pc++;
+				}
+
+				int def = this->getInt();
+				int n = this->getInt();
+
+				int key = frame->operandStack->pop();
+				bool matched = false;
+
+				int offset = 0;
+
+				for (int i = 0; i < n; i++)
+				{
+					int value = this->getInt();
+					int currentOffset = this->getInt();
+
+					if (value == key)
 					{
-					case TypeTag::LONG:
-					case TypeTag::DOUBLE:
-						{
-							word low = this->frame->operandStack->pop();
-							word high = this->frame->operandStack->pop();
-
-							(*newFrame->localVariables)[varPos++] = low;
-							(*newFrame->localVariables)[varPos++] = high;
-						}
-						break;
-
-					default:
-						(*newFrame->localVariables)[varPos++] = this->frame->operandStack->pop();
+						matched = true;
+						offset = currentOffset;
 						break;
 					}
 				}
 
+				if (!matched)
+				{
+					offset = def;
+				}
 
-				this->execute(newFrame);
+				pc = switchPc;
+				this->jumpWithOffset(offset);
 			}
+			break;
 
-			// if method is native, execute native code
-			// else create new framestack and execute method
-		} 
-		break;
+			case FRETURN:
+			case IRETURN:
+			case ARETURN:
+			{
+				word reference = frame->operandStack->pop();
+				frame->parentFrame->operandStack->push(reference);
 
-		case INVOKESPECIAL:
-		{
-		}
-		break;
-
-		case INVOKESTATIC:
-		{
-			unsigned short index = this->getShort();
+				pc++;
+			}
+			break;
 
 
-		}
-		break;
+			case LRETURN:
+			case DRETURN:
+			{
+				word low = frame->operandStack->pop();
+				word high = frame->operandStack->pop();
+
+				frame->parentFrame->operandStack->push(high);
+				frame->parentFrame->operandStack->push(low);
+
+				pc++;
+			};
+			break;
+
+			case RETURN:
+			{
+				pc++;
+			};
+			break;
+
+			case GETSTATIC:
+			{
+				// TODO: 
+				int index = this->getShort();
+				ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
+				ConstantPoolItem * classItem = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.class_index);
+				ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classItem->classInfo.name_index);
+
+
+				Class* classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
+				//item->fieldInfo.
+
+				// TODO: Hardcoded for print
+				frame->operandStack->push(classPtr->staticVariables->operator[](0));
+			};
+			break;
+
+			case PUTSTATIC:
+			{
+				// TODO: 
+			};
+			break;
+
+			case GETFIELD:
+			{
+				unsigned short index = this->getShort();
+				Object* reference = (Object*)frame->operandStack->pop();
+
+				if (reference == NULL)
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
+
+				size_t fieldIndex = 0;
+				reference->fields[index];
+
+			}
+			break;
+
+			case PUTFIELD:
+			{
+				unsigned short index = this->getShort();
+				Object* reference = (Object*)frame->operandStack->pop();
+
+				if (reference == NULL)
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
+
+				size_t fieldIndex = 0;
+				reference->fields[index];
+			}
+			break;
+
+			// TODO: Invokes!
+			case INVOKEVIRTUAL:
+			case INVOKESPECIAL: // TODO: Should have its own handler			
+			case INVOKESTATIC: // TODO: Add another handler for static methods
+			{
+				unsigned short index = this->getShort();
+				Object* reference = NULL;
+
+				Method* methodPtr = this->resolveMethod(index);
+				Class* classPtr = methodPtr->classPtr;
+
+				if (methodPtr->nativeMethod != nullptr)
+				{
+					methodPtr->nativeMethod(reference, frame);
+				}
+				else
+				{
+					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, reference);
+
+					if (currentInstruction != INVOKESTATIC)
+					{
+						reference = frame->operandStack->pop();
+					}
+
+					newFrame->parentFrame = frame;
+					frame->childFrame = newFrame;
+					this->execute(newFrame);
+				}
+			}
+			break;
+	
+			case INVOKEINTERFACE:
+			{
+				size_t index = this->getShort();
+				size_t count = instructions[pc++]; // information about parameters, could be determined from const pool
+				pc++; // Reserved 0
+
+
+			}
+			break;
+
+			case INVOKEDYNAMIC:
+			{
+				// NOT IMPLEMENTED
+			}
+			break;
+
+			case NEW:
+			{
+				int index = this->getShort();
+				// TODO: Class resolution and object allocation
+				ConstantPoolItem * item = frame->constantPool->get(index);
+
+				Class* classPtr = item->classInfo.classPtr;
+				int classIndex = item->classInfo.name_index;
+				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
+
+
+				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countFields));
+				Object* objPtr = new (memory) Object(classPtr->countFields, classPtr);
+				word idx = this->objectTable->insert(objPtr);
+				frame->operandStack->push(idx);
+			};
+			break;
+
+			case NEWARRAY:
+			{
+				ArrayType type = (ArrayType)instructions[pc++];
+				int size = frame->operandStack->pop();
+
+				if (size < 0)
+				{
+					throw Exceptions::Runtime::NegativeArraySizeException();
+				}
+
+				unsigned char* ptr = nullptr;
+				void * object = nullptr;
+
+				switch (type) 
+				{
+				case ArrayType::T_BOOLEAN:
+					ptr = this->heap->allocate(ArrayObject<bool>::getMemorySize(size));
+					object = new (ptr) ArrayObject<bool>(size, false, NULL, ptr);
+					break;
+				case ArrayType::T_BYTE:
+					ptr = this->heap->allocate(ArrayObject<java_byte>::getMemorySize(size));
+					object = new (ptr) ArrayObject<java_byte>(size, 0, NULL, ptr);
+					break;
+				case ArrayType::T_CHAR:
+					ptr = this->heap->allocate(ArrayObject<java_char>::getMemorySize(size));
+					object = new (ptr) ArrayObject<java_char>(size, '\u0000', NULL, ptr);
+					break;
+				case ArrayType::T_DOUBLE:
+					ptr = this->heap->allocate(ArrayObject<java_double>::getMemorySize(size));
+					object = new (ptr) ArrayObject<double>(size, +0.0, NULL, ptr);
+					break;
+				case ArrayType::T_FLOAT:
+					ptr = this->heap->allocate(ArrayObject<java_float>::getMemorySize(size));
+					object = new (ptr) ArrayObject<float>(size, +0.0, NULL, ptr);
+					break;
+				case ArrayType::T_INT:
+					ptr = this->heap->allocate(ArrayObject<java_int>::getMemorySize(size));
+					object = new (ptr) ArrayObject<int>(size, 0, NULL, ptr);
+					break;
+				case ArrayType::T_LONG:
+					ptr = this->heap->allocate(ArrayObject<java_long>::getMemorySize(size));
+					object = new (ptr) ArrayObject<long long>(size, 0, NULL, ptr);
+					break;
+				case ArrayType::T_SHORT:
+					ptr = this->heap->allocate(ArrayObject<java_short>::getMemorySize(size));
+					object = new (ptr) ArrayObject<short>(size, 0, NULL, ptr);
+					break;
+				}
+
+				int objectIndex = this->objectTable->insert((Object*)object);
+
+				frame->operandStack->push(objectIndex);
+			}
+			break;
+
+
+			case ANEWARRAY:
+			{
+				short index = this->getShort();
+				int size = frame->operandStack->pop();
+
+				if (size < 0)
+				{
+					throw Exceptions::Runtime::NegativeArraySizeException();
+				}
+
+				// TODO: Resolve class!
+
+
+				unsigned char* ptr = nullptr;
+				void * object = new (ptr) ArrayObject<Object*>(size, 0, NULL, ptr);
+
+				int objectIndex = this->objectTable->insert((Object*)object);
+
+				frame->operandStack->push(objectIndex);
+			}
+			break;
+
+			case MULTIANEWARRAY:
+			{
+				// TODO: Check class
+				int index = this->getShort();
+				int dimensions = (int)instructions[pc++];
+
+				if (dimensions < 1) 
+				{
+					// throw exception
+				}
+
+				int arrayDimensions[255];
+
+				for (int i = 0; i < dimensions; i++)
+				{
+					arrayDimensions[i] = frame->operandStack->pop();
+				}
+
+				int object = (int)this->recursiveAllocateArray(dimensions, arrayDimensions);
+			
+				frame->operandStack->push(object);
+			}
+			break;
+
+			case ARRAYLENGTH:
+			{
+				int index = frame->operandStack->pop();
+			
+				if (index == 0) 
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
+
+				ArrayObject<int>* object = (ArrayObject<int>*)this->objectTable->get(index);
+			
+				if (object == NULL)
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
+
+				frame->operandStack->push(object->getSize());
+			}
+			break;
+
+			case ATHROW:
+
+
+			case CHECKCAST:
+			case INSTANCEOF:
+			{
+				Object* ref = NULL;
+				Object* resolved = NULL;
+
+				if (ref->objectClass == resolved->objectClass)
+				{
+					// same classes
+				}
+
+				// if ref is class
+					// if resolved is class -> same or parent of ref
+					// resolved is interface -> ref implements resolved
+				// if res is interface
+					// if resolved is class -> resolved is object
+					// if resolved is interface -> ref is same or extends resolved
+				// ref is array
+					// if resolved is class -> object
+					// if resolved is interface -> must be implemented by array
+					// if resolved is array -> same primitive array type
+					//  ref and resolved are reference arrays - ref item must be castable to resolved item
+			}
+			break;
+
+			// currently not implemented! 
+			case MONITORENTER:
+			case MONITOREXIT:
+				break;
+
+			case WIDE:
+			{
+				Instruction modifiedInstruction = instructions[pc++];
+				size_t index = this->getShort();
+
+				switch (modifiedInstruction)
+				{
+				case ILOAD:
+				case FLOAD:
+				case ALOAD:
+					this->singleWordLoad(index);
+					break;
+				case DLOAD:
+					this->dload(index);
+					break;
+				case LLOAD:
+					this->lload(index);
+					break;
+				case ISTORE:
+				case FSTORE:
+				case ASTORE:
+					this->singleWordStore(index);
+					break;
+				case DSTORE:
+					this->dstore(index);
+					break;
+				case LSTORE:
+					this->lstore(index);
+					break;
+				case RET: 
+					{
+						int restoredPc = frame->localVariables->operator[](index);
+						pc = restoredPc;
+					}
+					break;
+				case IINC:
+					{
+						word value = this->getShort();
+						this->iinc(index, value);
+					}
+					break;
+				}
+			}
+			break;
+
+			default:
+			case NOP:
+				break;
+
+			// Reserved: (should not be loaded in classFile)
+			case BREAKPOINT:
+			//(NO NAME) = 0xCB - 0xFD,
+			case IMPDEP1:
+			case IMPDEP2:
+				break;
+			} 
 		
-		case INVOKEINTERFACE:
-		{
 		}
-		break;
-
-		case INVOKEDYNAMIC:
+		catch (Object* e) // user defined exceptions
 		{
+			this->callStack->pop();
 		}
-		break;
-
-		case NEW:
+		catch (Exception e) // runtime exceptions
 		{
-			// TODO: Class resolution and object allocation
-		};
-		break;
+			this->callStack->pop();
 
-		case NEWARRAY:
-		{
-			ArrayType type = (ArrayType)instructions[pc++];
-			int size = this->frame->operandStack->pop();
-
-			if (size < 0)
+			if (false)
 			{
-				throw Exceptions::Runtime::NegativeArraySizeException();
 			}
-
-			unsigned char* ptr = nullptr;
-			void * object = nullptr;
-
-			switch (type) 
+			else
 			{
-			case ArrayType::T_BOOLEAN:
-				ptr = this->heap->allocate(ArrayObject<bool>::getMemorySize(size));
-				object = new (ptr) ArrayObject<bool>(size, false, NULL, ptr);
-				break;
-			case ArrayType::T_BYTE:
-				ptr = this->heap->allocate(ArrayObject<java_byte>::getMemorySize(size));
-				object = new (ptr) ArrayObject<java_byte>(size, 0, NULL, ptr);
-				break;
-			case ArrayType::T_CHAR:
-				ptr = this->heap->allocate(ArrayObject<java_char>::getMemorySize(size));
-				object = new (ptr) ArrayObject<java_char>(size, '\u0000', NULL, ptr);
-				break;
-			case ArrayType::T_DOUBLE:
-				ptr = this->heap->allocate(ArrayObject<java_double>::getMemorySize(size));
-				object = new (ptr) ArrayObject<double>(size, +0.0, NULL, ptr);
-				break;
-			case ArrayType::T_FLOAT:
-				ptr = this->heap->allocate(ArrayObject<java_float>::getMemorySize(size));
-				object = new (ptr) ArrayObject<float>(size, +0.0, NULL, ptr);
-				break;
-			case ArrayType::T_INT:
-				ptr = this->heap->allocate(ArrayObject<java_int>::getMemorySize(size));
-				object = new (ptr) ArrayObject<int>(size, 0, NULL, ptr);
-				break;
-			case ArrayType::T_LONG:
-				ptr = this->heap->allocate(ArrayObject<java_long>::getMemorySize(size));
-				object = new (ptr) ArrayObject<long long>(size, 0, NULL, ptr);
-				break;
-			case ArrayType::T_SHORT:
-				ptr = this->heap->allocate(ArrayObject<java_short>::getMemorySize(size));
-				object = new (ptr) ArrayObject<short>(size, 0, NULL, ptr);
-				break;
+				throw;
 			}
-
-			int objectIndex = this->objectTable->insert((Object*)object);
-
-			this->frame->operandStack->push(objectIndex);
-		}
-		break;
-
-
-		case ANEWARRAY:
-		{
-			short index = this->getShort();
-			int size = this->frame->operandStack->pop();
-
-			if (size < 0)
-			{
-				throw Exceptions::Runtime::NegativeArraySizeException();
-			}
-
-			// TODO: Resolve class!
-
-
-			unsigned char* ptr = nullptr;
-			void * object = new (ptr) ArrayObject<Object*>(size, 0, NULL, ptr);
-
-			int objectIndex = this->objectTable->insert((Object*)object);
-
-			this->frame->operandStack->push(objectIndex);
-		}
-		break;
-
-		case MULTIANEWARRAY:
-		{
-			// TODO: Check class
-			int index = this->getShort();
-			int dimensions = (int)instructions[pc++];
-
-			if (dimensions < 1) 
-			{
-				// throw exception
-			}
-
-			int arrayDimensions[255];
-
-			for (int i = 0; i < dimensions; i++)
-			{
-				arrayDimensions[i] = this->frame->operandStack->pop();
-			}
-
-			int object = (int)this->recursiveAllocateArray(dimensions, arrayDimensions);
-			
-			this->frame->operandStack->push(object);
-		}
-		break;
-
-		case ARRAYLENGTH:
-		{
-			int index = this->frame->operandStack->pop();
-			
-			if (index == 0) 
-			{
-				throw Exceptions::Runtime::NullPointerException();
-			}
-
-			ArrayObject<int>* object = (ArrayObject<int>*)this->objectTable->get(index);
-			
-			if (object == NULL)
-			{
-				throw Exceptions::Runtime::NullPointerException();
-			}
-
-			this->frame->operandStack->push(object->getSize());
-		}
-		break;
-
-		case ATHROW:
-
-
-		case CHECKCAST:
-		case INSTANCEOF:
-		{
-			Object* ref = NULL;
-			Object* resolved = NULL;
-
-			if (ref->objectClass == resolved->objectClass)
-			{
-				// same classes
-			}
-
-			// if ref is class
-				// if resolved is class -> same or parent of ref
-				// resolved is interface -> ref implements resolved
-			// if res is interface
-				// if resolved is class -> resolved is object
-				// if resolved is interface -> ref is same or extends resolved
-			// ref is array
-				// if resolved is class -> object
-				// if resolved is interface -> must be implemented by array
-				// if resolved is array -> same primitive array type
-				//  ref and resolved are reference arrays - ref item must be castable to resolved item
-		}
-		break;
-
-		// currently not implemented! 
-		case MONITORENTER:
-		case MONITOREXIT:
-			break;
-
-		case WIDE:
-		{
-			Instruction modifiedInstruction = instructions[pc++];
-			size_t index = this->getShort();
-
-			switch (modifiedInstruction)
-			{
-			case ILOAD:
-			case FLOAD:
-			case ALOAD:
-				this->singleWordLoad(index);
-				break;
-			case DLOAD:
-				this->dload(index);
-				break;
-			case LLOAD:
-				this->lload(index);
-				break;
-			case ISTORE:
-			case FSTORE:
-			case ASTORE:
-				this->singleWordStore(index);
-				break;
-			case DSTORE:
-				this->dstore(index);
-				break;
-			case LSTORE:
-				this->lstore(index);
-				break;
-			case RET: 
-				{
-					int restoredPc = this->frame->localVariables->operator[](index);
-					pc = restoredPc;
-				}
-				break;
-			case IINC:
-				{
-					word value = this->getShort();
-					this->iinc(index, value);
-				}
-				break;
-			}
-		}
-		break;
-
-		default:
-		case NOP:
-			break;
-
-		// Reserved: (should not be loaded in classFile)
-		case BREAKPOINT:
-		//(NO NAME) = 0xCB - 0xFD,
-		case IMPDEP1:
-		case IMPDEP2:
-			break;
 		}
 	}
+
+	this->callStack->pop();
 
 	return 0;
 }

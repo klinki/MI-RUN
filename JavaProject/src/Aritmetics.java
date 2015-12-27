@@ -24,5 +24,6 @@ public class Aritmetics
 	{
 		Aritmetics calc = new Aritmetics();
 		double plus = calc.add(1.0, 3.14);
+		System.out.println(plus);
 	}
 }

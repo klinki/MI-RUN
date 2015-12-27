@@ -10,6 +10,8 @@ MethodFrame::MethodFrame(size_t stackSize, size_t localVariablesSize)
 {
 	this->operandStack = new OperandStack(stackSize);
 	this->localVariables = new LocalVariablesArray(localVariablesSize);
+	this->pc = 0;
+	this->sp = 0;
 }
 
 MethodFrame::MethodFrame(Method * method, MethodFrame * parent): 

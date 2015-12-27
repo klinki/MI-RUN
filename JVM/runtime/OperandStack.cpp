@@ -78,3 +78,13 @@ const word & OperandStack::operator[] (size_t index) const
 
 	return this->allocatedArray[index];
 }
+
+const word & OperandStack::top() const
+{
+	if (index == 0)
+	{
+		throw IndexOutOfBoundsException();
+	}
+
+	return this->allocatedArray[this->index - 1];
+}

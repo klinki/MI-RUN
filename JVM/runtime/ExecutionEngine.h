@@ -13,24 +13,25 @@
 #include "../gc/Heap.h"
 
 #define SINGLE_WORD_OPERATION(type, op) \
-	type b = this->frame->operandStack->pop(); \
-	type a = this->frame->operandStack->pop(); \
-	this->frame->operandStack->push(a op b)
+	type b = this->getCurrentMethodFrame()->operandStack->pop(); \
+	type a = this->getCurrentMethodFrame()->operandStack->pop(); \
+	this->getCurrentMethodFrame()->operandStack->push(a op b);
 
 #define DOUBLE_WORD_OPERATION(type, op) \
-	type b = this->frame->operandStack->pop2(); \
-	type a = this->frame->operandStack->pop2(); \
-	this->frame->operandStack->push2((type)(a op b));
+	type b = this->getCurrentMethodFrame()->operandStack->pop2(); \
+	type a = this->getCurrentMethodFrame()->operandStack->pop2(); \
+	this->getCurrentMethodFrame()->operandStack->push2((type)(a op b));
 
 
 class ExecutionEngine
 {
 visibility:
 	MethodFrame* frame;
-	MethodArea* methodArea;
 	ClassMap* classMap;
 	ObjectTable* objectTable;
 	HeapInterface* heap;
+
+	OperandStack * callStack;
 
 	struct {
 		size_t constantPoolIndex;
@@ -39,6 +40,12 @@ visibility:
 		Class* classPtr;
 		Method* methodPtr;
 	} inlineCache;
+
+	MethodFrame* getCurrentMethodFrame()
+	{
+		size_t index = this->callStack->top();
+		return (MethodFrame*)this->objectTable->get(index);
+	}
 
 public:
 	ExecutionEngine();
@@ -49,9 +56,9 @@ public:
 	template <class T>
 	inline void arrayStore()
 	{
-		word value = this->frame->operandStack->pop();
-		int index = this->frame->operandStack->pop();
-		int ref = this->frame->operandStack->pop();
+		word value = this->getCurrentMethodFrame()->operandStack->pop();
+		int index = this->getCurrentMethodFrame()->operandStack->pop();
+		int ref = this->getCurrentMethodFrame()->operandStack->pop();
 
 		if (ref == NULL)
 		{
@@ -71,9 +78,9 @@ public:
 	template <class T>
 	inline void arrayStore2()
 	{
-		doubleWord value = this->frame->operandStack->pop2();
-		int index = this->frame->operandStack->pop();
-		int ref = this->frame->operandStack->pop();
+		doubleWord value = this->getCurrentMethodFrame()->operandStack->pop2();
+		int index = this->getCurrentMethodFrame()->operandStack->pop();
+		int ref = this->getCurrentMethodFrame()->operandStack->pop();
 
 		if (ref == NULL)
 		{
@@ -92,8 +99,8 @@ public:
 	template <class T>
 	inline void arrayLoad()
 	{
-		int index = this->frame->operandStack->pop();
-		int ref = this->frame->operandStack->pop();
+		int index = this->getCurrentMethodFrame()->operandStack->pop();
+		int ref = this->getCurrentMethodFrame()->operandStack->pop();
 
 		if (ref == NULL)
 		{
@@ -107,14 +114,14 @@ public:
 			throw Exceptions::Runtime::NullPointerException();
 		}
 
-		this->frame->operandStack->push(ptr->operator[](index));
+		this->getCurrentMethodFrame()->operandStack->push(ptr->operator[](index));
 	}
 
 	template <class T>
 	inline void arrayLoad2()
 	{
-		int index = this->frame->operandStack->pop();
-		int ref = this->frame->operandStack->pop();
+		int index = this->getCurrentMethodFrame()->operandStack->pop();
+		int ref = this->getCurrentMethodFrame()->operandStack->pop();
 
 		if (ref == NULL)
 		{
@@ -128,87 +135,87 @@ public:
 			throw Exceptions::Runtime::NullPointerException();
 		}
 
-		this->frame->operandStack->push2(ptr->operator[](index));
+		this->getCurrentMethodFrame()->operandStack->push2(ptr->operator[](index));
 	}
 
 	inline void singleWordLoad(size_t index)
 	{
-		word ptr = (*this->frame->localVariables)[index];
-		this->frame->operandStack->push(ptr);
+		word ptr = (*this->getCurrentMethodFrame()->localVariables)[index];
+		this->getCurrentMethodFrame()->operandStack->push(ptr);
 	}
 
 	inline void singleWordStore(size_t index)
 	{
-		word val = this->frame->operandStack->pop();
-		(*this->frame->localVariables)[index] = val;
+		word val = this->getCurrentMethodFrame()->operandStack->pop();
+		(*this->getCurrentMethodFrame()->localVariables)[index] = val;
 	}
 
 	inline void wload()
 	{
-		unsigned char index = this->frame->method->getBytecode()[this->frame->pc++];
+		unsigned char index = this->getCurrentMethodFrame()->method->getBytecode()[this->getCurrentMethodFrame()->pc++];
 		this->wload(index);
 	}
 
 	inline void wload(size_t index)
 	{
-		word val = (*this->frame->localVariables)[index];
-		this->frame->operandStack->push(val);
+		word val = (*this->getCurrentMethodFrame()->localVariables)[index];
+		this->getCurrentMethodFrame()->operandStack->push(val);
 	}
 
 
 	inline void lload(size_t index)
 	{
-		word high = (*this->frame->localVariables)[index];
-		word low = (*this->frame->localVariables)[index + 1];
+		word high = (*this->getCurrentMethodFrame()->localVariables)[index];
+		word low = (*this->getCurrentMethodFrame()->localVariables)[index + 1];
 
-		this->frame->operandStack->push(high);
-		this->frame->operandStack->push(low);
+		this->getCurrentMethodFrame()->operandStack->push(high);
+		this->getCurrentMethodFrame()->operandStack->push(low);
 	}
 
 	inline void lstore(size_t index)
 	{
-		word low = this->frame->operandStack->pop();
-		word high = this->frame->operandStack->pop();
+		word low = this->getCurrentMethodFrame()->operandStack->pop();
+		word high = this->getCurrentMethodFrame()->operandStack->pop();
 
-		(*this->frame->localVariables)[index] = high;
-		(*this->frame->localVariables)[index + 1] = low;
+		(*this->getCurrentMethodFrame()->localVariables)[index] = high;
+		(*this->getCurrentMethodFrame()->localVariables)[index + 1] = low;
 	}
 
 
 	inline void dload(size_t index)
 	{
-		word high = (*this->frame->localVariables)[index];
-		word low = (*this->frame->localVariables)[index + 1];
+		word high = (*this->getCurrentMethodFrame()->localVariables)[index];
+		word low = (*this->getCurrentMethodFrame()->localVariables)[index + 1];
 
-		this->frame->operandStack->push(high);
-		this->frame->operandStack->push(low);
+		this->getCurrentMethodFrame()->operandStack->push(high);
+		this->getCurrentMethodFrame()->operandStack->push(low);
 	}
 
 	inline void dstore(size_t index)
 	{
-		word low = this->frame->operandStack->pop();
-		word high = this->frame->operandStack->pop();
+		word low = this->getCurrentMethodFrame()->operandStack->pop();
+		word high = this->getCurrentMethodFrame()->operandStack->pop();
 
-		 (*this->frame->localVariables)[index] = high;
-		 (*this->frame->localVariables)[index + 1] = low;
+		 (*this->getCurrentMethodFrame()->localVariables)[index] = high;
+		 (*this->getCurrentMethodFrame()->localVariables)[index + 1] = low;
 	}
 
 	inline unsigned short getShort()
 	{
-		const Instruction * instructions = this->frame->method->getBytecode();
-		unsigned char HIGH = instructions[this->frame->pc++];
-		unsigned char LOW = instructions[this->frame->pc++];
+		const Instruction * instructions = this->getCurrentMethodFrame()->method->getBytecode();
+		unsigned char HIGH = instructions[this->getCurrentMethodFrame()->pc++];
+		unsigned char LOW = instructions[this->getCurrentMethodFrame()->pc++];
 		unsigned short value = shortFromStack(HIGH, LOW);
 		return value;
 	}
 	
 	inline unsigned int getInt()
 	{
-		const Instruction * instructions = this->frame->method->getBytecode();
-		unsigned char HIGH_HIGH = instructions[this->frame->pc++];
-		unsigned char HIGH_LOW = instructions[this->frame->pc++];
-		unsigned char LOW_HIGH = instructions[this->frame->pc++];
-		unsigned char LOW_LOW = instructions[this->frame->pc++];
+		const Instruction * instructions = this->getCurrentMethodFrame()->method->getBytecode();
+		unsigned char HIGH_HIGH = instructions[this->getCurrentMethodFrame()->pc++];
+		unsigned char HIGH_LOW = instructions[this->getCurrentMethodFrame()->pc++];
+		unsigned char LOW_HIGH = instructions[this->getCurrentMethodFrame()->pc++];
+		unsigned char LOW_LOW = instructions[this->getCurrentMethodFrame()->pc++];
 
 		int value = intFromBytes(HIGH_HIGH, HIGH_LOW, LOW_HIGH, LOW_LOW);
 		return value;
@@ -250,12 +257,12 @@ public:
 			res = (currentInstruction == DCMPG || currentInstruction == FCMPG) ? 1 : -1;
 		}
 
-		this->frame->operandStack->push(res);
+		this->getCurrentMethodFrame()->operandStack->push(res);
 	}
 
 	inline void jumpWithOffset(int offset)
 	{
-		this->frame->pc += offset - 1;
+		this->getCurrentMethodFrame()->pc += offset - 1;
 	}
 
 	inline void pushFromConstantPool(int index)
@@ -264,28 +271,28 @@ public:
 		int or float, or a reference to a string literal, or a symbolic reference to a class, method type, or method handle
 		*/
 
-		ConstantPoolItem * item = this->frame->constantPool->get(index);
+		ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
 		word value;
 
 		switch (item->tag)
 		{
 		case CONSTANT_Float:
 			value = item->floatInfo.value;
-			this->frame->operandStack->push(value);
+			this->getCurrentMethodFrame()->operandStack->push(value);
 			break;
 		case CONSTANT_Integer:
 			value = item->integerInfo.value;
-			this->frame->operandStack->push(value);
+			this->getCurrentMethodFrame()->operandStack->push(value);
 			break;
 		case CONSTANT_Class:
 			// TODO: Resolve class name, find class object
 			break;
 		case CONSTANT_MethodType:
 
-			this->frame->operandStack->push(value);
+			this->getCurrentMethodFrame()->operandStack->push(value);
 			break;
 		case CONSTANT_MethodHandle:
-			this->frame->operandStack->push(value);
+			this->getCurrentMethodFrame()->operandStack->push(value);
 			break;
 
 			// LDC_W
@@ -294,8 +301,8 @@ public:
 				word high = item->longInfo.high_bytes;
 				word low = item->longInfo.low_bytes;
 
-				this->frame->operandStack->push(high);
-				this->frame->operandStack->push(low);
+				this->getCurrentMethodFrame()->operandStack->push(high);
+				this->getCurrentMethodFrame()->operandStack->push(low);
 			}
 			break;
 		case CONSTANT_Double:
@@ -303,8 +310,8 @@ public:
 				word high = item->doubleInfo.high_bytes;
 				word low = item->doubleInfo.low_bytes;
 
-				this->frame->operandStack->push(high);
-				this->frame->operandStack->push(low);
+				this->getCurrentMethodFrame()->operandStack->push(high);
+				this->getCurrentMethodFrame()->operandStack->push(low);
 			}
 			break;
 		}
@@ -312,7 +319,7 @@ public:
 
 	inline void iinc(size_t index, word value)
 	{
-		(*this->frame->localVariables)[index] += value;
+		(*this->getCurrentMethodFrame()->localVariables)[index] += value;
 	}
 
 
@@ -334,5 +341,90 @@ public:
 		}
 
 		return index;
+	}
+
+	inline Method* resolveMethod(size_t index)
+	{
+		Method* methodPtr = nullptr;
+		Class * classPtr = nullptr;
+
+		if (index == this->inlineCache.constantPoolIndex)
+		{
+			// best-case scenario
+		}
+		else
+		{
+			ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
+
+			classPtr = item->methodInfo.classPtr;
+			methodPtr = item->methodInfo.methodPtr;
+
+			int classIndex = item->methodInfo.class_index;
+			int nameAndTypeIndex = item->methodInfo.name_and_type_index;
+
+			ConstantPoolItem * nameAndType = this->getCurrentMethodFrame()->constantPool->get(nameAndTypeIndex);
+			ConstantPoolItem * name = this->getCurrentMethodFrame()->constantPool->get(nameAndType->nameAndTypeInfo.name_index);
+			ConstantPoolItem * descr = this->getCurrentMethodFrame()->constantPool->get(nameAndType->nameAndTypeInfo.descriptor_index);
+
+			ConstantPoolItem * classConst = this->getCurrentMethodFrame()->constantPool->get(classIndex);
+			ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classConst->classInfo.name_index);
+
+			classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
+
+			methodPtr = classPtr->getMethod(Utf8String(name->utf8Info.bytes, name->utf8Info.length), Utf8String(descr->utf8Info.bytes, descr->utf8Info.length));
+
+			if (classIndex == this->inlineCache.cpClassIndex)
+			{
+				this->inlineCache.cpClassIndex = 0;
+				//method = this->inlineCache.classPtr->getMethod(name->utf8Info);
+			}
+		}
+
+		methodPtr->classPtr = classPtr;
+
+		return methodPtr;
+	}
+
+	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, Object* reference = NULL)
+	{
+		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize + 1));
+		MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize + 1);
+
+		newFrame->method = method;
+		newFrame->constantPool = classPtr->constantPool;
+
+		size_t varPos = 0;
+
+		if (reference != NULL)
+		{
+			(*newFrame->localVariables)[varPos++] = reference;
+		}
+
+		method->initInputArgs();
+
+		for (size_t i = 0; i < method->countIntputArgs; i++)
+		{
+			TypeTag type = method->inputArgs[i];
+
+			switch (type)
+			{
+			case TypeTag::LONG:
+			case TypeTag::DOUBLE:
+			{
+				word low = this->getCurrentMethodFrame()->operandStack->pop();
+				word high = this->getCurrentMethodFrame()->operandStack->pop();
+
+				(*newFrame->localVariables)[varPos++] = low;
+				(*newFrame->localVariables)[varPos++] = high;
+			}
+			break;
+
+			default:
+				(*newFrame->localVariables)[varPos++] = this->getCurrentMethodFrame()->operandStack->pop();
+				break;
+			}
+		}
+
+		return newFrame;
 	}
 };

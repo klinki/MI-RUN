@@ -6,12 +6,14 @@
 #include "natives/natives.h"
 #include "runtime/Runtime.h"
 
+using namespace std;
+
 int main(int argc, const char argv[])
 {
 	ClassMap * classMap = new ClassMap();
 
 	InitializeNatives(classMap);
-	
+
 	ClassLoader classLoader(classMap);
 	Class* aClass = classLoader.load("Arithmetics.class");
 
@@ -22,21 +24,28 @@ int main(int argc, const char argv[])
 	runtime->executionEngine->classMap = classMap;
 	runtime->executionEngine->heap = runtime->heap;
 	runtime->executionEngine->objectTable = new ObjectTable();
-	
+
 	Method* method = aClass->methodArea.getMethod("main", "()V");
 
-	unsigned char* memory = runtime->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
+	unsigned char* memory = runtime->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize + 2, method->localVariablesArraySize));
 	MethodFrame * frame = new (memory) MethodFrame(
-		method->operandStackSize,
+		method->operandStackSize + 2,
 		method->localVariablesArraySize,
 		NULL,
 		aClass->constantPool,
 		method,
 		NULL
-	);
-		
-	runtime->executionEngine->execute(frame);
+		);
 
+	try
+	{
+		runtime->executionEngine->execute(frame);
+	}
+	catch (Exception e)
+	{
+		cerr << "Unhandled exception: " << endl;
+		return -1;
+	}
 
 	/*
 		Structure:
