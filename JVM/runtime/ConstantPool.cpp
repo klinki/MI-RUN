@@ -101,17 +101,34 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 
 		Then the float value equals the result of the mathematical expression s · m · 2e-150*/
 		//float v = (float)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
-		int bits = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
+		
+
+		unsigned int bits = (unsigned int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
+		
 		int s = ((bits >> 31) == 0) ? 1 : -1;
+		
 		int e = ((bits >> 23) & 0xff);
+		
 		int m = (e == 0) ?
 			(bits & 0x7fffff) << 1 :
 			(bits & 0x7fffff) | 0x800000;
-		int twotoe = 1;
-		for (int i = 0; i < e-150; i++)
+		
+		double twotoe = 1;
+		if (e -150 > 0)
 		{
-			twotoe *= 2;
+			for (int i = 0; i < e - 150; i++)
+			{
+				twotoe *= 2;
+			}
 		}
+		else
+		{
+			for (int i = 0; i >e- 150; i--)
+			{
+				twotoe /= 2;
+			}
+		}
+		
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Float);
 		spi.floatInfo = CONSTANT_Float_info(s*m*twotoe);
 		constantPool[pos] = spi;
@@ -229,11 +246,13 @@ void ConstantPool::print()
 		case CONSTANT_Long: //long 
 			printf("long high_bytes:%d ", constantPool[i].longInfo.high_bytes);
 			printf(" low_bytes:%d ", constantPool[i].longInfo.low_bytes);
+			printf(" value:%d ", constantPool[i].longInfo.value);
 			i++;
 			break;
 		case CONSTANT_Double: //double 
 			printf("double high_bytes:%d ", constantPool[i].doubleInfo.high_bytes);
 			printf(" low_bytes:%d ", constantPool[i].doubleInfo.low_bytes);
+			printf(" value:%f ", constantPool[i].doubleInfo.value);
 			i++;
 			break;
 		case CONSTANT_NameAndType: //nameandtype
