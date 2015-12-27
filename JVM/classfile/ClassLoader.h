@@ -3,11 +3,13 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+#include <stdexcept>
 #include "../runtime/ConstantPool.h"
 #include "../runtime/Class.h"
 #include "../runtime/ClassMap.h"
 #include "../utils/Utf8String.h"
 
+using std::runtime_error;
 
 class ClassLoader
 {
@@ -40,4 +42,11 @@ public:
 	void resolvePool(Class * thisClass);
 	void resolveClassPointer(Class * thisClass,int i);
 	~ClassLoader();
+};
+
+
+class FileNotFoundException : public runtime_error
+{
+public:
+	FileNotFoundException::FileNotFoundException() : runtime_error("failed to open file" ) {}
 };
