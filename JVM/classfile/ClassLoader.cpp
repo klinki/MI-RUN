@@ -2,9 +2,6 @@
 
 using namespace std;
 
-class FileNotFoundException {};
-
-
 ClassLoader::ClassLoader()
 {
 	
@@ -611,9 +608,7 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				printf("method %d max stack: %d\n", i, max_stack);
 				printf("method %d max var: %d\n", i, max_variables);
 				printf("method %d code length: %d\n", i, code_length);
-
-				myfile.read(m->byteCode, code_length);
-				
+			
 				for (int i1 = 0; i1 < code_length; i1++)
 				{
 					m->byteCode[i1] = att_data[i][j][i1+8];

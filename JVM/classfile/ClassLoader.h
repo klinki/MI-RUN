@@ -48,5 +48,5 @@ public:
 class FileNotFoundException : public runtime_error
 {
 public:
-	FileNotFoundException::FileNotFoundException() : runtime_error("failed to open file" ) {}
+	FileNotFoundException() : runtime_error("failed to open file" ) {}
 };
