@@ -51,16 +51,26 @@ namespace Tests
 			classPtr->constantPool->add(pos++, nameAndType);
 
 			ConstantPoolItem * nameItem = new ConstantPoolItem(ConstantPoolTag::CONSTANT_Utf8);
-			nameAndType->utf8Info.string = new Utf8String(name);
+			nameItem->utf8Info.length = strlen(name);
+			nameItem->utf8Info.bytes = new unsigned char[nameItem->utf8Info.length + 1];
+			memcpy((char*)nameItem->utf8Info.bytes, name, nameItem->utf8Info.length + 1);
+//			strncpy_s((char*)nameItem->utf8Info.bytes, nameItem->utf8Info.length + 1, name, (size_t)nameItem->utf8Info.length);
+			nameItem->utf8Info.string = new Utf8String(name);
 
 			classPtr->constantPool->add(pos++, nameItem);
 
 			ConstantPoolItem * descriptorItem = new ConstantPoolItem(ConstantPoolTag::CONSTANT_Utf8);
-			nameAndType->utf8Info.string = new Utf8String(method->descriptor);
+			descriptorItem->utf8Info.length = strlen(descriptor);
+			descriptorItem->utf8Info.bytes = new unsigned char[descriptorItem->utf8Info.length + 1];
+			memcpy((char*)descriptorItem->utf8Info.bytes, descriptor, descriptorItem->utf8Info.length + 1);
+//			strncpy_s((char*)descriptorItem->utf8Info.bytes, descriptorItem->utf8Info.length + 1, descriptor, (size_t)descriptorItem->utf8Info.length);
+			descriptorItem->utf8Info.string = new Utf8String(method->descriptor);
 
 			classPtr->constantPool->add(pos++, descriptorItem);
 
 			method->initInputArgs();
+			
+			classPtr->methodArea.addMethod(method);
 
 			return method;
 		}
@@ -116,6 +126,9 @@ namespace Tests
 			newClass->constantPool->add(pos++, item);
 
 			ConstantPoolItem * className = new ConstantPoolItem(ConstantPoolTag::CONSTANT_Utf8);
+			className->utf8Info.length = newClass->fullyQualifiedName.length();
+			className->utf8Info.bytes = new unsigned char[newClass->fullyQualifiedName.bytes()];
+			memcpy(className->utf8Info.bytes, newClass->fullyQualifiedName.toAsciiString(), newClass->fullyQualifiedName.bytes());
 			className->utf8Info.string = new Utf8String(newClass->fullyQualifiedName);
 			
 			newClass->constantPool->add(pos++, className);

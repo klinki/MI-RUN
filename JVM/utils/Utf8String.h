@@ -27,7 +27,10 @@ public:
 		return this->stringLength;
 	}
 
-	size_t bytes() const;
+	size_t bytes() const
+	{
+		return this->dataLength;
+	}
 
 	bool equals(const Utf8String & b) const;
 
