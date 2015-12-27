@@ -15,6 +15,7 @@ public:
 	void push(word value);
 	void push2(doubleWord value);
 
+	const word & top() const;
 	word pop();
 	doubleWord pop2();
 
