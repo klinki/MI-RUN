@@ -56,5 +56,8 @@ public:
 		return (this->flags & (int)ClassAccessFlags::ABSTRACT) == (int)ClassAccessFlags::ABSTRACT;
 	}
 
+	bool isSubclassOf(Class* parent);
+	bool implementsInterface(Class* parentInterface);
+
 	friend class ClassLoader;
 };

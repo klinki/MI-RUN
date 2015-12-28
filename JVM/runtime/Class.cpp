@@ -89,3 +89,28 @@ void Class::addField(Field * field)
 
 	this->fieldsMap.add(field);
 }
+
+bool Class::isSubclassOf(Class* parent)
+{
+	if (this->parentClass == NULL)
+	{
+		return false;
+	}
+	else
+	{
+		return this->parentClass->fullyQualifiedName == parent->fullyQualifiedName || this->parentClass->isSubclassOf(parent);
+	}
+}
+
+bool Class::implementsInterface(Class* parentInterface)
+{
+	for (int i = 0; i < this->countInterfaces; i++)
+	{
+		if (this->implementedInterfaces[i]->fullyQualifiedName == parentInterface->fullyQualifiedName || this->implementedInterfaces[i]->isSubclassOf(parentInterface))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
