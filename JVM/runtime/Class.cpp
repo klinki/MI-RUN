@@ -82,10 +82,75 @@ Field * Class::getField(const Utf8String & name, const Utf8String & descriptor)
 
 void Class::addField(Field * field)
 {
+	int size = 1;
+
+	if (field->type == TypeTag::DOUBLE || field->type == TypeTag::LONG)
+	{
+		size = 2;
+	}
+
 	if (!field->isStatic())
 	{
-		this->countNonStaticFields++;
+		field->fieldIndex = this->countNonStaticFields;
+		this->countNonStaticFields += size;
+		this->hierarchicalCountNonStaticFields += size;
+	}
+	else
+	{
+		field->fieldIndex = this->countStaticFields;
+		this->countStaticFields += size;
 	}
 
 	this->fieldsMap.add(field);
+}
+
+bool Class::isSubclassOf(Class* parent)
+{
+	if (this->parentClass == NULL)
+	{
+		return false;
+	}
+	else
+	{
+		return this->parentClass->fullyQualifiedName == parent->fullyQualifiedName || this->parentClass->isSubclassOf(parent);
+	}
+}
+
+bool Class::implementsInterface(Class* parentInterface)
+{
+	for (int i = 0; i < this->countInterfaces; i++)
+	{
+		if (this->implementedInterfaces[i]->fullyQualifiedName == parentInterface->fullyQualifiedName || this->implementedInterfaces[i]->isSubclassOf(parentInterface))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+size_t Class::getHierarchicalCountNonStaticFields()
+{
+	if (this->hierarchicalCountNonStaticFields == -1)
+	{
+		Class* currentClass = this;
+
+		this->hierarchicalCountNonStaticFields = 0;
+
+		while (currentClass != nullptr)
+		{
+			this->hierarchicalCountNonStaticFields += currentClass->countNonStaticFields; 
+			currentClass = currentClass->parentClass;
+		}
+	}
+
+	return this->hierarchicalCountNonStaticFields;
+}
+
+void Class::setParent(Class* parent)
+{
+	this->hierarchicalCountNonStaticFields = -1;
+	this->parentClass = parent;
+	
+	this->getHierarchicalCountNonStaticFields();
 }

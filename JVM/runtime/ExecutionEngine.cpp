@@ -1032,7 +1032,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				word reference = frame->operandStack->pop();
 				frame->parentFrame->operandStack->push(reference);
 
-				pc++;
+				pc++; // TODO: Check
 			}
 			break;
 
@@ -1040,11 +1040,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case LRETURN:
 			case DRETURN:
 			{
-				word low = frame->operandStack->pop();
-				word high = frame->operandStack->pop();
-
-				frame->parentFrame->operandStack->push(high);
-				frame->parentFrame->operandStack->push(low);
+				doubleWord word = frame->operandStack->pop2();
+				frame->parentFrame->operandStack->push2(word);
 
 				pc++;
 			};
@@ -1058,21 +1055,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case GETSTATIC:
 			{
-				// TODO: 
 				int index = this->getShort();
-				ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
-
-				ConstantPoolItem * classItem = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.class_index);
-				ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classItem->classInfo.name_index);
 				
-				Class* classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
-
-				ConstantPoolItem * fieldNameAndType = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.name_and_type_index);
-				ConstantPoolItem * fieldName = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.name_index);
-				ConstantPoolItem * fieldType = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.descriptor_index);
-
-				Field* field = (Field*)classPtr->fieldsMap.get(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
-
+				Class* classPtr = this->resolveClass(index);
+				Field* field = this->resolveField(index);
+				
 				switch (field->type)
 				{
 				case TypeTag::DOUBLE:
@@ -1088,7 +1075,21 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case PUTSTATIC:
 			{
-				// TODO: 
+				int index = this->getShort();
+
+				Class* classPtr = this->resolveClass(index);
+				Field* field = this->resolveField(index);
+
+				switch (field->type)
+				{
+				case TypeTag::DOUBLE:
+				case TypeTag::LONG:
+					classPtr->staticVariablesValues->set2(field->fieldIndex, frame->operandStack->pop2());
+					break;
+				default:
+					classPtr->staticVariablesValues->set(field->fieldIndex, frame->operandStack->pop());
+					break;
+				}
 			};
 			break;
 
@@ -1102,9 +1103,19 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::NullPointerException();
 				}
 
-				size_t fieldIndex = 0;
-				reference->fields[index];
+				Class* classPtr = this->resolveClass(index);
+				Field* field = this->resolveField(index);
 
+				switch (field->type)
+				{
+				case TypeTag::DOUBLE:
+				case TypeTag::LONG:
+					frame->operandStack->push2(reference->fields.get2(field->fieldIndex));
+					break;
+				default:
+					frame->operandStack->push(reference->fields.get(field->fieldIndex));
+					break;
+				}
 			}
 			break;
 
@@ -1118,8 +1129,19 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::NullPointerException();
 				}
 
-				size_t fieldIndex = 0;
-				reference->fields[index];
+				Class* classPtr = this->resolveClass(index);
+				Field* field = this->resolveField(index);
+
+				switch (field->type)
+				{
+				case TypeTag::DOUBLE:
+				case TypeTag::LONG:
+					reference->fields.set2(field->fieldIndex, frame->operandStack->pop2());
+					break;
+				default:
+					reference->fields.set(field->fieldIndex, frame->operandStack->pop());
+					break;
+				}
 			}
 			break;
 
@@ -1136,17 +1158,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				if (methodPtr->nativeMethod != nullptr)
 				{
-					methodPtr->nativeMethod(reference, frame);
+					methodPtr->nativeMethod(reference, this);
 				}
 				else
 				{
-					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, reference);
-
-					if (currentInstruction != INVOKESTATIC)
-					{
-						reference = frame->operandStack->pop();
-					}
-
+					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction == INVOKESTATIC);
 					newFrame->parentFrame = frame;
 					frame->childFrame = newFrame;
 					this->execute(newFrame);
@@ -1160,7 +1176,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				size_t count = instructions[pc++]; // information about parameters, could be determined from const pool
 				pc++; // Reserved 0
 
-
+				// TODO: Implement
 			}
 			break;
 
@@ -1180,10 +1196,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				int classIndex = item->classInfo.name_index;
 				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
 
-				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countNonStaticFields));
-				Object* objPtr = new (memory) Object(classPtr->countNonStaticFields, classPtr);
-				word idx = this->objectTable->insert(objPtr);
-				frame->operandStack->push(idx);
+//				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countNonStaticFields));
+//				Object* objPtr = new (memory) Object(classPtr->countNonStaticFields, classPtr);
+				word idx = this->objectTable->insert(classPtr);
+				frame->operandStack->push(makeReferenceAddress(idx));
 			};
 			break;
 
@@ -1310,30 +1326,44 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 			case ATHROW:
-
+			{
+				// TODO: Exceptions!
+			}
+			break;
 
 			case CHECKCAST:
+			{
+				Object* ref = frame->operandStack->top();
+				size_t index = this->getShort();
+
+				if (ref != NULL)
+				{
+					Class* classPtr = this->resolveClass(index);
+					if (! this->isInstanceOf(ref->objectClass, classPtr))
+					{
+						throw Exceptions::Runtime::RuntimeException();
+					}
+				}
+			};
+			break;
+
 			case INSTANCEOF:
 			{
-				Object* ref = NULL;
-				Object* resolved = NULL;
+				Object* ref = frame->operandStack->pop();
+				size_t index = this->getShort();
 
-				if (ref->objectClass == resolved->objectClass)
+				if (ref != NULL)
 				{
-					// same classes
+					Class* classPtr = this->resolveClass(index);
+
+					bool result = this->isInstanceOf(ref->objectClass, classPtr);				
+					frame->operandStack->push((int)result);
+				}
+				else
+				{
+					frame->operandStack->push(0);
 				}
 
-				// if ref is class
-					// if resolved is class -> same or parent of ref
-					// resolved is interface -> ref implements resolved
-				// if res is interface
-					// if resolved is class -> resolved is object
-					// if resolved is interface -> ref is same or extends resolved
-				// ref is array
-					// if resolved is class -> object
-					// if resolved is interface -> must be implemented by array
-					// if resolved is array -> same primitive array type
-					//  ref and resolved are reference arrays - ref item must be castable to resolved item
 			}
 			break;
 

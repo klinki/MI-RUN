@@ -71,7 +71,7 @@ public:
 		{
 			throw Exceptions::Runtime::NullPointerException();
 		}
-		
+
 		ptr->operator[](index) = (T)value;
 	}
 
@@ -196,8 +196,8 @@ public:
 		word low = this->getCurrentMethodFrame()->operandStack->pop();
 		word high = this->getCurrentMethodFrame()->operandStack->pop();
 
-		 (*this->getCurrentMethodFrame()->localVariables)[index] = high;
-		 (*this->getCurrentMethodFrame()->localVariables)[index + 1] = low;
+		(*this->getCurrentMethodFrame()->localVariables)[index] = high;
+		(*this->getCurrentMethodFrame()->localVariables)[index + 1] = low;
 	}
 
 	inline unsigned short getShort()
@@ -208,7 +208,7 @@ public:
 		unsigned short value = shortFromStack(HIGH, LOW);
 		return value;
 	}
-	
+
 	inline unsigned int getInt()
 	{
 		const Instruction * instructions = this->getCurrentMethodFrame()->method->getBytecode();
@@ -225,10 +225,10 @@ public:
 	{
 		unsigned short offset = this->getShort();
 
-		if ( (value == 0 && (currentInstruction == IFEQ || currentInstruction == IFGE || currentInstruction == IFLE) ) ||
-			 (value != 0 && currentInstruction == IFNE) || 
-			 (value > 0 && (currentInstruction == IFGT || currentInstruction == IFGE) ) ||
-			 (value < 0 && (currentInstruction == IFLE || currentInstruction == IFLT) ) )
+		if ((value == 0 && (currentInstruction == IFEQ || currentInstruction == IFGE || currentInstruction == IFLE)) ||
+			(value != 0 && currentInstruction == IFNE) ||
+			(value > 0 && (currentInstruction == IFGT || currentInstruction == IFGE)) ||
+			(value < 0 && (currentInstruction == IFLE || currentInstruction == IFLT)))
 		{
 			this->jumpWithOffset(offset);
 		}
@@ -297,23 +297,23 @@ public:
 
 			// LDC_W
 		case CONSTANT_Long:
-			{
-				word high = item->longInfo.high_bytes;
-				word low = item->longInfo.low_bytes;
+		{
+			word high = item->longInfo.high_bytes;
+			word low = item->longInfo.low_bytes;
 
-				this->getCurrentMethodFrame()->operandStack->push(high);
-				this->getCurrentMethodFrame()->operandStack->push(low);
-			}
-			break;
+			this->getCurrentMethodFrame()->operandStack->push(high);
+			this->getCurrentMethodFrame()->operandStack->push(low);
+		}
+		break;
 		case CONSTANT_Double:
-			{
-				word high = item->doubleInfo.high_bytes;
-				word low = item->doubleInfo.low_bytes;
+		{
+			word high = item->doubleInfo.high_bytes;
+			word low = item->doubleInfo.low_bytes;
 
-				this->getCurrentMethodFrame()->operandStack->push(high);
-				this->getCurrentMethodFrame()->operandStack->push(low);
-			}
-			break;
+			this->getCurrentMethodFrame()->operandStack->push(high);
+			this->getCurrentMethodFrame()->operandStack->push(low);
+		}
+		break;
 		}
 	}
 
@@ -322,6 +322,34 @@ public:
 		(*this->getCurrentMethodFrame()->localVariables)[index] += value;
 	}
 
+	inline bool isInstanceOf(Class* ref, Class* resolvedClass)
+	{
+		// 1) if ref is class
+		//	if resolved is class -> same or parent of ref
+		//	resolved is interface -> ref implements resolved
+		// 2) if res is interface
+		//	if resolved is class -> resolved is object
+		//	if resolved is interface -> ref is same or extends resolved
+		// 3) ref is array
+		//	if resolved is class -> object
+		//	if resolved is interface -> must be implemented by array
+		//	if resolved is array -> same primitive array type
+		//  ref and resolved are reference arrays - ref item must be castable to resolved item
+
+		if (ref->fullyQualifiedName == resolvedClass->fullyQualifiedName)
+		{
+			return true;
+		}
+			
+		if (ref->isClass())
+		{
+
+		}
+
+		//if (ref->isSubclassOf(resolvedClass))
+
+		return ref->isSubclassOf(resolvedClass) || ref->implementsInterface(resolvedClass);
+	}
 
 	inline int recursiveAllocateArray(int dimensions, int dimensionsArray[], int currentLevel = 0, ArrayObject<Object*> * previousLevel = NULL)
 	{
@@ -385,7 +413,38 @@ public:
 		return methodPtr;
 	}
 
-	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, Object* reference = NULL)
+	inline Field* resolveField(size_t index)
+	{
+		ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
+
+		ConstantPoolItem * classItem = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.class_index);
+		ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classItem->classInfo.name_index);
+
+		Class* classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
+
+		ConstantPoolItem * fieldNameAndType = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.name_and_type_index);
+		ConstantPoolItem * fieldName = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.name_index);
+		ConstantPoolItem * fieldType = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.descriptor_index);
+
+		Field* field = (Field*)classPtr->fieldsMap.get(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
+
+		return field;
+	}
+
+	inline Class* resolveClass(size_t index)
+	{
+		ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
+
+		ConstantPoolItem * classItem = this->getCurrentMethodFrame()->constantPool->get(item->fieldInfo.class_index);
+		ConstantPoolItem * className = this->getCurrentMethodFrame()->constantPool->get(classItem->classInfo.name_index);
+
+		Class* classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
+
+		return classPtr;
+	}
+
+
+	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, bool isStatic)
 	{
 		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize + 1));
 		MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize + 1);
@@ -393,18 +452,18 @@ public:
 		newFrame->method = method;
 		newFrame->constantPool = classPtr->constantPool;
 
-		size_t varPos = 0;
-
-		if (reference != NULL)
-		{
-			(*newFrame->localVariables)[varPos++] = reference;
-		}
-
 		method->initInputArgs();
 
-		for (size_t i = 0; i < method->countIntputArgs; i++)
+		size_t varPos = method->inputArgsSize;
+
+		if (isStatic)
 		{
-			TypeTag type = method->inputArgs[i];
+			varPos--;
+		}
+
+		for (size_t i = method->countIntputArgs; i > 0; i--)
+		{
+			TypeTag type = method->inputArgs[i-1];
 
 			switch (type)
 			{
@@ -414,15 +473,20 @@ public:
 				word low = this->getCurrentMethodFrame()->operandStack->pop();
 				word high = this->getCurrentMethodFrame()->operandStack->pop();
 
-				(*newFrame->localVariables)[varPos++] = low;
-				(*newFrame->localVariables)[varPos++] = high;
+				(*newFrame->localVariables)[varPos--] = low;
+				(*newFrame->localVariables)[varPos--] = high;
 			}
 			break;
 
 			default:
-				(*newFrame->localVariables)[varPos++] = this->getCurrentMethodFrame()->operandStack->pop();
+				(*newFrame->localVariables)[varPos--] = this->getCurrentMethodFrame()->operandStack->pop();
 				break;
 			}
+		}
+
+		if (!isStatic)
+		{
+			(*newFrame->localVariables)[0] = this->getCurrentMethodFrame()->operandStack->pop();
 		}
 
 		return newFrame;

@@ -13,4 +13,5 @@ public:
 
 	virtual size_t insert(void * ptr);
 	virtual Object* get(size_t index);
+	virtual void updateAddress(size_t index, void* newAddress);
 };
