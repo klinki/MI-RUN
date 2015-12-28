@@ -83,6 +83,11 @@ public:
 	virtual void visit(word address);
 
 	virtual unsigned char* allocate(size_t size);
+	virtual unsigned char* allocateOnSystemMemory(size_t size)
+	{
+		return this->allocateOnPermanentSpace(size);
+	}
+
 	unsigned char* allocateOnPermanentSpace(size_t size);
 
 	void switchMemorySlot();

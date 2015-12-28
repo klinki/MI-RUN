@@ -18,6 +18,11 @@ public:
 	~Heap();
 
 	virtual unsigned char* allocate(size_t size);
+	virtual unsigned char* allocateOnSystemMemory(size_t size)
+	{
+		return this->allocate(size);
+	}
+
 	virtual void clear();
 
 	friend class BakerGc;

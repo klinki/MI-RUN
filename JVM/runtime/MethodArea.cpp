@@ -13,7 +13,6 @@ MethodArea::~MethodArea()
 
 Method* MethodArea::getMethod(const Utf8String & name, const Utf8String & descriptor)
 {
-
 	try
 	{
 		auto iterator = this->hashmap.getIterator(name);

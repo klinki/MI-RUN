@@ -1,18 +1,18 @@
 #include "ClassLoader.h"
+#include "../runtime/Runtime.h"
 
 using namespace std;
 
-
-ClassLoader::ClassLoader(ClassMap * cm)
+ClassLoader::ClassLoader(Runtime * runtime)
 {
-	this->classMap = cm;
+	this->runtime = runtime;
+	this->classMap = runtime->classTable;
 	this->constantPool = new ConstantPool(1000);
 	data = new char[1024];
 }
 
-Class* ClassLoader::load(char * filename)
+Class* ClassLoader::load(const char * filename)
 {
-	
 	if (myfile.is_open())
 	{
 		myfile.close();
@@ -776,4 +776,3 @@ ClassLoader::~ClassLoader()
 {
 	delete[] data;
 }
-

@@ -20,7 +20,7 @@ public class Aritmetics
         return a/b;
     }
 
-	public static void main()
+	public static void main(String[] args)
 	{
 		Aritmetics calc = new Aritmetics();
 		double plus = calc.add(1.0, 3.14);

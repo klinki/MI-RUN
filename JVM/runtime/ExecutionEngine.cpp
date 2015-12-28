@@ -1,6 +1,7 @@
 #include "ExecutionEngine.h"
 #include "../jvm_structures/JavaConstantPool.h"
 #include "../runtime/TypeDescriptors.h"
+#include "Runtime.h"
 
 ExecutionEngine::ExecutionEngine()
 {
@@ -8,9 +9,32 @@ ExecutionEngine::ExecutionEngine()
 	this->objectTable = new ObjectTable();
 }
 
+ExecutionEngine::ExecutionEngine(Runtime * runtime)
+{
+	this->runtime = runtime;
+	this->objectTable = runtime->objectTable;
+	this->heap = runtime->heap;
+	this->classMap = runtime->classTable;
+
+	this->callStack = new OperandStack(1024);
+}
 
 ExecutionEngine::~ExecutionEngine()
 {
+}
+
+void ExecutionEngine::execute(Method* method)
+{
+	unsigned char* memory = this->runtime->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
+	MethodFrame * frame = new (memory) MethodFrame(
+		method->operandStackSize,
+		method->localVariablesArraySize,
+		NULL,
+		method->classPtr->constantPool,
+		method,
+		NULL
+		);
+	this->execute(frame);
 }
 
 int ExecutionEngine::execute(MethodFrame * frame)
@@ -1196,8 +1220,6 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				int classIndex = item->classInfo.name_index;
 				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
 
-//				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countNonStaticFields));
-//				Object* objPtr = new (memory) Object(classPtr->countNonStaticFields, classPtr);
 				word idx = this->objectTable->insert(classPtr);
 				frame->operandStack->push(makeReferenceAddress(idx));
 			};

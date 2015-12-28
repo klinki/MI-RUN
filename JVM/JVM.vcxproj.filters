@@ -25,9 +25,6 @@
     <ClCompile Include="runtime\OperandStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\Runtime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtime\ConstantPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

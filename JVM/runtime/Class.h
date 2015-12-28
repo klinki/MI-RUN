@@ -16,7 +16,7 @@ visibility:
 	
 	ConstantPool * constantPool;
 
-	size_t countNonStaticFields; // This is used for object creation
+	size_t countNonStaticFields;			   // This is used for object creation
 	int hierarchicalCountNonStaticFields = -1; // Again, used for object creation. Overall value containing all parents
 
 	size_t countStaticFields;

@@ -144,7 +144,6 @@
     <ClCompile Include="runtime\Method.cpp" />
     <ClCompile Include="runtime\MethodArea.cpp" />
     <ClCompile Include="runtime\OperandStack.cpp" />
-    <ClCompile Include="runtime\Runtime.cpp" />
     <ClCompile Include="gc\TreadMillGc.cpp" />
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>

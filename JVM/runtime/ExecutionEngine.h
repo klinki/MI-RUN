@@ -1,16 +1,16 @@
 #pragma once
-
-#include "../types/ConversionFunctions.h"
 #include "InstructionSet.h"
-#include "../types/types.h"
 #include "MethodFrame.h"
 #include "Class.h"
-#include "../exceptions/RuntimeExceptions.h"
 #include "ArrayObject.h"
 #include "MethodArea.h"
 #include "ClassMap.h"
+#include "../types/types.h"
+#include "../types/ConversionFunctions.h"
+#include "../exceptions/RuntimeExceptions.h"
 #include "../gc/ObjectTable.h"
 #include "../gc/Heap.h"
+
 
 #define SINGLE_WORD_OPERATION(type, op) \
 	type b = this->getCurrentMethodFrame()->operandStack->pop(); \
@@ -23,6 +23,8 @@
 	this->getCurrentMethodFrame()->operandStack->push2((type)(a op b));
 
 
+class Runtime;
+
 class ExecutionEngine
 {
 visibility:
@@ -32,6 +34,8 @@ visibility:
 	HeapInterface* heap;
 
 	OperandStack * callStack;
+
+	Runtime * runtime;
 
 	struct {
 		size_t constantPoolIndex;
@@ -49,8 +53,11 @@ visibility:
 
 public:
 	ExecutionEngine();
+	ExecutionEngine(Runtime* runtime);
+
 	~ExecutionEngine();
 
+	void execute(Method* method);
 	int execute(MethodFrame * frame); // Instruction instructions[], unsigned int length);
 
 	template <class T>
