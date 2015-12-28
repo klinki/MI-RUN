@@ -34,6 +34,7 @@ visibility:
 	LocalVariablesArray * staticVariablesValues;
 
 	void addField(Field* field);
+	void setParent(Class* parent);
 
 public:
 	Class(FLAG flag) : flags(flag) {};

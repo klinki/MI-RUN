@@ -146,3 +146,11 @@ size_t Class::getHierarchicalCountNonStaticFields()
 
 	return this->hierarchicalCountNonStaticFields;
 }
+
+void Class::setParent(Class* parent)
+{
+	this->hierarchicalCountNonStaticFields = -1;
+	this->parentClass = parent;
+	
+	this->getHierarchicalCountNonStaticFields();
+}

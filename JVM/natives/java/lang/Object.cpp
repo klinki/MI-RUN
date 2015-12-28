@@ -1,12 +1,5 @@
 #include "Object.h"
-#include "../../../runtime/Class.h"
-#include "../../../runtime/MethodFrame.h"
-#include "../../../runtime/Method.h"
-#include "../../../runtime/MethodArea.h"
-#include "../../../runtime/Object.h"
-#include "../../Declarations.h"
-#include "../../../types/Descriptors.h"
-#include "../../../exceptions/RuntimeExceptions.h"
+#include "../../includes.h"
 
 using namespace TypeDescriptors;
 
@@ -64,75 +57,83 @@ namespace Java
 			NATIVE_METHOD_HEADER(init)
 			{
 				// pointer is not object, but ref. to class
-				Class* classPtr = (Class*)object;
+				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				Class* classPtr = (Class*)engine->objectTable->get(index);
+
+				size_t fields = classPtr->getHierarchicalCountNonStaticFields();
+				size_t size = ::Object::getMemorySize(fields);
+				unsigned char* memory = engine->heap->allocate(size);
+				::Object* objPtr = new(memory) ::Object(fields, classPtr);
+
+				engine->objectTable->updateAddress(index, objPtr);
 			}
 
-			void clone(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(clone)
 			{
 				throw Exceptions::CloneNotSupportedException();
 			}
 
-			void equals(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(equals)
 			{
-				::Object* anotherObj = frame->operandStack->pop();
+				::Object* anotherObj = engine->getCurrentMethodFrame()->operandStack->pop();
 
 				if (anotherObj == nullptr)
 				{
-					frame->operandStack->push(false);
+					engine->getCurrentMethodFrame()->operandStack->push(false);
 				}
 				else
 				{
-					hashCode(object, frame);
-					hashCode(anotherObj, frame);
+					hashCode(object, engine);
+					hashCode(anotherObj, engine);
 
-					int secondHash = frame->operandStack->pop();
-					int firstHash = frame->operandStack->pop();
+					int secondHash = engine->getCurrentMethodFrame()->operandStack->pop();
+					int firstHash = engine->getCurrentMethodFrame()->operandStack->pop();
 
-					frame->operandStack->push(firstHash == secondHash);
+					engine->getCurrentMethodFrame()->operandStack->push(firstHash == secondHash);
 				}
 			}
 
-			void toString(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(toString)
 			{
 				// return JavaString(); // TODO
 			}
 
-			void finalize(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(finalize)
 			{
 
 			}
 
-			void getClass(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(getClass)
 			{
-				frame->operandStack->push((int)object->objectClass);
+				engine->getCurrentMethodFrame()->operandStack->push((int)object->objectClass);
 			}
 
-			void hashCode(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(hashCode)
 			{
-				frame->operandStack->push((int)object);
+				engine->getCurrentMethodFrame()->operandStack->push((int)object);
 			}
 
-			void notify(::Object* object, MethodFrame * frame)
-			{
-			}
-
-			void notifyAll(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(notify)
 			{
 			}
 
-			void waitEmpty(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(notifyAll)
 			{
 			}
 
-			void waitTimeout(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(waitEmpty)
 			{
-				long long timeout = frame->operandStack->pop2();
 			}
 
-			void waitTimeoutNanos(::Object* object, MethodFrame * frame)
+			NATIVE_METHOD_HEADER(waitTimeout)
 			{
-				long long timeout = frame->operandStack->pop2();
-				int nanos = frame->operandStack->pop();
+				long long timeout = engine->getCurrentMethodFrame()->operandStack->pop2();
+			}
+
+			NATIVE_METHOD_HEADER(waitTimeoutNanos)
+			{
+				long long timeout = engine->getCurrentMethodFrame()->operandStack->pop2();
+				int nanos = engine->getCurrentMethodFrame()->operandStack->pop();
 			}
 		}
 	}

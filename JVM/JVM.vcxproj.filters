@@ -76,10 +76,10 @@
     <ClCompile Include="natives\java\io\PrintStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="natives\java\lang\JavaString.cpp">
+    <ClCompile Include="natives\java\lang\System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="natives\java\lang\System.cpp">
+    <ClCompile Include="natives\java\lang\String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -246,10 +246,13 @@
     <ClInclude Include="natives\java\io\PrintStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="natives\java\lang\JavaString.h">
+    <ClInclude Include="natives\java\lang\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="natives\java\lang\System.h">
+    <ClInclude Include="natives\java\lang\String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

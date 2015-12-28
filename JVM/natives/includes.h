@@ -8,6 +8,3 @@
 #include "../runtime/ExecutionEngine.h"
 #include "../types/Descriptors.h"
 #include "../exceptions/RuntimeExceptions.h"
-
-class ClassMap;
-void InitializeNatives(ClassMap* classMap);

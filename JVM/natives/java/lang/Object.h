@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../utils/Macros.h"
+#include "../../Declarations.h"
 
 class Class;
 class Object;

@@ -21,3 +21,8 @@ Object * ObjectTable::get(size_t index)
 {
 	return (Object*)this->hashMap.at(index);
 }
+
+void ObjectTable::updateAddress(size_t index, void* newAddress)
+{
+	this->hashMap[index] = newAddress;
+}

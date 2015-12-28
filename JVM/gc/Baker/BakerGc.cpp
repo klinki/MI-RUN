@@ -172,7 +172,7 @@ void BakerGc::finalize(Heap* slot)
 			
 				if (method->isNative())
 				{
-					method->nativeMethod((Object*)objPtr, frame);
+					method->nativeMethod((Object*)objPtr, engine);
 				}
 				else
 				{

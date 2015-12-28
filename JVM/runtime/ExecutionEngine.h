@@ -444,7 +444,7 @@ public:
 	}
 
 
-	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, Object* reference = NULL)
+	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, bool isStatic)
 	{
 		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize + 1));
 		MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize + 1);
@@ -452,18 +452,18 @@ public:
 		newFrame->method = method;
 		newFrame->constantPool = classPtr->constantPool;
 
-		size_t varPos = 0;
-
-		if (reference != NULL)
-		{
-			(*newFrame->localVariables)[varPos++] = reference;
-		}
-
 		method->initInputArgs();
 
-		for (size_t i = 0; i < method->countIntputArgs; i++)
+		size_t varPos = method->inputArgsSize;
+
+		if (isStatic)
 		{
-			TypeTag type = method->inputArgs[i];
+			varPos--;
+		}
+
+		for (size_t i = method->countIntputArgs; i > 0; i--)
+		{
+			TypeTag type = method->inputArgs[i-1];
 
 			switch (type)
 			{
@@ -473,15 +473,20 @@ public:
 				word low = this->getCurrentMethodFrame()->operandStack->pop();
 				word high = this->getCurrentMethodFrame()->operandStack->pop();
 
-				(*newFrame->localVariables)[varPos++] = low;
-				(*newFrame->localVariables)[varPos++] = high;
+				(*newFrame->localVariables)[varPos--] = low;
+				(*newFrame->localVariables)[varPos--] = high;
 			}
 			break;
 
 			default:
-				(*newFrame->localVariables)[varPos++] = this->getCurrentMethodFrame()->operandStack->pop();
+				(*newFrame->localVariables)[varPos--] = this->getCurrentMethodFrame()->operandStack->pop();
 				break;
 			}
+		}
+
+		if (!isStatic)
+		{
+			(*newFrame->localVariables)[0] = this->getCurrentMethodFrame()->operandStack->pop();
 		}
 
 		return newFrame;

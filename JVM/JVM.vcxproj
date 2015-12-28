@@ -25,7 +25,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -126,7 +126,7 @@
     <ClCompile Include="runtime\ClassMap.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
     <ClCompile Include="natives\java\lang\Object.cpp" />
-    <ClCompile Include="natives\java\lang\JavaString.cpp" />
+    <ClCompile Include="natives\java\lang\String.cpp" />
     <ClCompile Include="natives\natives.cpp" />
     <ClCompile Include="natives\java\io\PrintStream.cpp" />
     <ClCompile Include="gc\ObjectTable.cpp" />
@@ -149,6 +149,7 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="natives\includes.h" />
     <ClInclude Include="runtime\ClassMember.h" />
     <ClInclude Include="runtime\ClassMemberMap.h" />
     <ClInclude Include="gc\Baker\BakerGc.h" />
@@ -161,7 +162,7 @@
     <ClInclude Include="gc\interfaces\ObjectVisitorInterface.h" />
     <ClInclude Include="runtime\ClassMap.h" />
     <ClInclude Include="natives\java\lang\Object.h" />
-    <ClInclude Include="natives\java\lang\JavaString.h" />
+    <ClInclude Include="natives\java\lang\String.h" />
     <ClInclude Include="natives\natives.h" />
     <ClInclude Include="natives\java\io\PrintStream.h" />
     <ClInclude Include="gc\ObjectTable.h" />

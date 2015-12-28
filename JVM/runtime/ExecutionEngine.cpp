@@ -1158,17 +1158,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				if (methodPtr->nativeMethod != nullptr)
 				{
-					methodPtr->nativeMethod(reference, frame);
+					methodPtr->nativeMethod(reference, this);
 				}
 				else
 				{
-					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, reference);
-
-					if (currentInstruction != INVOKESTATIC)
-					{
-						reference = frame->operandStack->pop();
-					}
-
+					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction == INVOKESTATIC);
 					newFrame->parentFrame = frame;
 					frame->childFrame = newFrame;
 					this->execute(newFrame);
@@ -1202,10 +1196,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				int classIndex = item->classInfo.name_index;
 				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
 
-				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countNonStaticFields));
-				Object* objPtr = new (memory) Object(classPtr->countNonStaticFields, classPtr);
-				word idx = this->objectTable->insert(objPtr);
-				frame->operandStack->push(idx);
+//				unsigned char* memory = this->heap->allocate(Object::getMemorySize(classPtr->countNonStaticFields));
+//				Object* objPtr = new (memory) Object(classPtr->countNonStaticFields, classPtr);
+				word idx = this->objectTable->insert(classPtr);
+				frame->operandStack->push(makeReferenceAddress(idx));
 			};
 			break;
 

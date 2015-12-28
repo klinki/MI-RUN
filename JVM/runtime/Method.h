@@ -27,6 +27,8 @@ visibility:
 	TypeTag * inputArgs;
 	size_t countIntputArgs;
 
+	size_t inputArgsSize;
+
 public:
 	Method() : Method(0) {};
 	Method(FLAG f) : ClassMember()
@@ -75,15 +77,19 @@ public:
 			case 'L':
 				while (descr[i++] != ';');
 				this->inputArgs[index++] = TypeTag::REFERENCE;
+				this->inputArgsSize++;
 				break;
 			case 'D':
 				this->inputArgs[index++] = TypeTag::DOUBLE;
+				this->inputArgsSize += 2;
 				break;
 			case 'J':
 				this->inputArgs[index++] = TypeTag::LONG;
+				this->inputArgsSize += 2;
 				break;
 			default:
 				this->inputArgs[index++] = TypeTag::INT;
+				this->inputArgsSize++;
 				break;
 			}
 		}
