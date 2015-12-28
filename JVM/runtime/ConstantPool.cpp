@@ -40,49 +40,39 @@ int ConstantPool::GetSize()
 }
 int ConstantPool::add(int pos, int type, int length, char * data)
 {
-	printf("constant pool add %d:%d %d \n",pos,type, length);
-	for (int i = 0; i < length; i++)
-	{
-		printf("%X",data[i]);
-	}
-	printf("\n");
-	for (int i = 0; i < length; i++)
-	{
-		printf("%X", (unsigned char)data[i]);
-	}
-	printf("\n");
+	
 	switch (type)
 	{
 	case ConstantPoolTag::CONSTANT_Class:{//class
-		unsigned short index = (unsigned short)(data[0] * 256 + data[1]);
+		unsigned short index = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Class);
 		spi.classInfo = CONSTANT_Class_info(index);
 		constantPool[pos] = spi;
 		break;
 	}
 	case ConstantPoolTag::CONSTANT_Fieldref: {//field ref
-		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
-		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
+		unsigned short i1 = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
+		unsigned short i2 = (unsigned short)((unsigned int)data[2] * 256 + (unsigned int)data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Fieldref);
 		spi.fieldInfo = CONSTANT_Fieldref_info(i1, i2);
 		constantPool[pos] = spi;
 		break;}
 	case ConstantPoolTag::CONSTANT_Methodref: {//method ref
-		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
-		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
+		unsigned short i1 = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
+		unsigned short i2 = (unsigned short)((unsigned int)data[2] * 256 + (unsigned int)data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Methodref);
 		spi.methodInfo = CONSTANT_Methodref_info(i1, i2);
 		constantPool[pos] = spi;
 		break;}
 	case ConstantPoolTag::CONSTANT_InterfaceMethodref: {//interface method ref
-		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
-		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
+		unsigned short i1 = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
+		unsigned short i2 = (unsigned short)((unsigned int)data[2] * 256 + (unsigned int)data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_InterfaceMethodref);
 		spi.interfaceMethodInfo = CONSTANT_InterfaceMethodref_info(i1, i2);
 		constantPool[pos] = spi;
 		break;}
 	case ConstantPoolTag::CONSTANT_String: {//string
-		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
+		unsigned short i1 = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_String);
 		spi.stringInfo = CONSTANT_String_info(i1);
 		constantPool[pos] = spi;
@@ -158,8 +148,8 @@ int ConstantPool::add(int pos, int type, int length, char * data)
 		constantPool[pos] =spi;
 		break;}
 	case  ConstantPoolTag::CONSTANT_NameAndType: {//nameandtype
-		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
-		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
+		unsigned short i1 = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
+		unsigned short i2 = (unsigned short)((unsigned int)data[2] * 256 + (unsigned int)data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_NameAndType);
 		spi.nameAndTypeInfo = CONSTANT_NameAndType_info(i1, i2);
 		constantPool[pos] = spi;
@@ -187,20 +177,20 @@ int ConstantPool::add(int pos, int type, int length, char * data)
 			printf("ERROR wrong method ref type\n");
 			return -1;
 		}
-		unsigned short i2 = (unsigned short)(data[1] * 256 + data[2]);
+		unsigned short i2 = (unsigned short)((unsigned int)data[1] * 256 + (unsigned int)data[2]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_MethodHandle);
 		spi.methodHandleInfo = CONSTANT_MethodHandle_info(rt, i2);
 		constantPool[pos] = spi;
 		break;}
 	case  ConstantPoolTag::CONSTANT_MethodType: {//methodtype
-		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
+		unsigned short i1 = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_MethodType);
 		spi.methodTypeInfo = CONSTANT_MethodType_info(i1);
 		constantPool[pos] = spi;
 		break;}
 	case  ConstantPoolTag::CONSTANT_InvokeDynamic: {//invokedynamic
-		unsigned short i1 = (unsigned short)(data[0] * 256 + data[1]);
-		unsigned short i2 = (unsigned short)(data[2] * 256 + data[3]);
+		unsigned short i1 = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
+		unsigned short i2 = (unsigned short)((unsigned int)data[2] * 256 + (unsigned int)data[3]);
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_InvokeDynamic);
 		spi.invokeDynamicInfo = CONSTANT_InvokeDynamic_info(i1, i2);
 		constantPool[pos] = spi;
