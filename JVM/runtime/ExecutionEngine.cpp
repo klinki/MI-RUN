@@ -1032,7 +1032,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				word reference = frame->operandStack->pop();
 				frame->parentFrame->operandStack->push(reference);
 
-				pc++;
+				pc++; // TODO: Check
 			}
 			break;
 
@@ -1040,11 +1040,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case LRETURN:
 			case DRETURN:
 			{
-				word low = frame->operandStack->pop();
-				word high = frame->operandStack->pop();
-
-				frame->parentFrame->operandStack->push(high);
-				frame->parentFrame->operandStack->push(low);
+				doubleWord word = frame->operandStack->pop2();
+				frame->parentFrame->operandStack->push2(word);
 
 				pc++;
 			};
@@ -1347,6 +1344,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				{
 					frame->operandStack->push(0);
 				}
+
 			}
 			break;
 
