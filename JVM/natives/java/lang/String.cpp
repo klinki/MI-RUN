@@ -1,5 +1,5 @@
-#include "JavaString.h"
-#include "../runtime/Object.h"
+#include "String.h"
+#include "../../../runtime/Object.h"
 
 namespace Java
 {

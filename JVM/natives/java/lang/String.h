@@ -1,5 +1,6 @@
 #pragma once
-#include "../runtime/Class.h"
+
+class Class;
 
 namespace Java
 {

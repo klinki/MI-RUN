@@ -1,7 +1,7 @@
 #pragma once
-#include "../runtime/Class.h"
 
 class ClassMap;
+class Class;
 
 namespace Java
 {

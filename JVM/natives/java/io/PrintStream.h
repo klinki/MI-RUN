@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
-#include "../runtime/Class.h"
-#include "../runtime/MethodFrame.h"
-#include "../runtime/ArrayObject.h"
+#include "../../../runtime/Class.h"
+#include "../../../runtime/MethodFrame.h"
+#include "../../../runtime/ArrayObject.h"
 
 class ClassMap;
 

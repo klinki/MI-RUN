@@ -1103,8 +1103,19 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::NullPointerException();
 				}
 
-				size_t fieldIndex = 0;
-				reference->fields[index];
+				Class* classPtr = this->resolveClass(index);
+				Field* field = this->resolveField(index);
+
+				switch (field->type)
+				{
+				case TypeTag::DOUBLE:
+				case TypeTag::LONG:
+					frame->operandStack->push2(reference->fields.get2(field->fieldIndex));
+					break;
+				default:
+					frame->operandStack->push(reference->fields.get(field->fieldIndex));
+					break;
+				}
 			}
 			break;
 
@@ -1118,8 +1129,19 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::NullPointerException();
 				}
 
-				size_t fieldIndex = 0;
-				reference->fields[index];
+				Class* classPtr = this->resolveClass(index);
+				Field* field = this->resolveField(index);
+
+				switch (field->type)
+				{
+				case TypeTag::DOUBLE:
+				case TypeTag::LONG:
+					reference->fields.set2(field->fieldIndex, frame->operandStack->pop2());
+					break;
+				default:
+					reference->fields.set(field->fieldIndex, frame->operandStack->pop());
+					break;
+				}
 			}
 			break;
 
@@ -1160,7 +1182,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				size_t count = instructions[pc++]; // information about parameters, could be determined from const pool
 				pc++; // Reserved 0
 
-
+				// TODO: Implement
 			}
 			break;
 
@@ -1310,7 +1332,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			break;
 
 			case ATHROW:
-
+			{
+				// TODO: Exceptions!
+			}
+			break;
 
 			case CHECKCAST:
 			{

@@ -1,11 +1,12 @@
-#include "JavaObject.h"
-#include "../runtime/Class.h"
-#include "../runtime/MethodFrame.h"
-#include "../runtime/Method.h"
-#include "../runtime/MethodArea.h"
-#include "../types/Descriptors.h"
-#include "../runtime/Object.h"
-#include "Declarations.h"
+#include "Object.h"
+#include "../../../runtime/Class.h"
+#include "../../../runtime/MethodFrame.h"
+#include "../../../runtime/Method.h"
+#include "../../../runtime/MethodArea.h"
+#include "../../../runtime/Object.h"
+#include "../../Declarations.h"
+#include "../../../types/Descriptors.h"
+#include "../../../exceptions/RuntimeExceptions.h"
 
 using namespace TypeDescriptors;
 
@@ -15,7 +16,6 @@ namespace Java
 	{
 		namespace Object
 		{
-
 			Method* getNativeMethod(const std::string & name, const std::string & descriptor, void* nativeMethod)
 			{
 				Method * method = new Method();
@@ -42,7 +42,7 @@ namespace Java
 				newClass->parentClass = NULL;
 				newClass->fullyQualifiedName = Utf8String("java/lang/Object");
 				
-				newClass->methodArea.addMethod(getNativeMethod(std::string("<init>"),  (void*) &toString));
+				newClass->methodArea.addMethod(getNativeMethod(std::string("<init>"),  &init));
 /*
 				newClass->methodArea.addMethod(getNativeMethod("toString", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/String;")), (void*)&toString));
 				newClass->methodArea.addMethod(getNativeMethod("clone", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&clone));
@@ -56,9 +56,15 @@ namespace Java
 				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), (void*)&waitTimeout));
 			//	newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
 			*/
-				newClass->methodArea.addMethod(getNativeMethod(std::string("finalize"), (void*) &toString));
+				newClass->methodArea.addMethod(getNativeMethod(std::string("finalize"), (void*)&finalize));
 
 				return newClass;
+			}
+
+			NATIVE_METHOD_HEADER(init)
+			{
+				// pointer is not object, but ref. to class
+				Class* classPtr = (Class*)object;
 			}
 
 			void clone(::Object* object, MethodFrame * frame)

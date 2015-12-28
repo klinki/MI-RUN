@@ -17,6 +17,9 @@ visibility:
 	ConstantPool * constantPool;
 
 	size_t countNonStaticFields; // This is used for object creation
+	int hierarchicalCountNonStaticFields = -1; // Again, used for object creation. Overall value containing all parents
+
+	size_t countStaticFields;
 
 	MethodArea methodArea;
 	ClassMemberMap fieldsMap;
@@ -58,6 +61,8 @@ public:
 
 	bool isSubclassOf(Class* parent);
 	bool implementsInterface(Class* parentInterface);
+
+	size_t getHierarchicalCountNonStaticFields();
 
 	friend class ClassLoader;
 };

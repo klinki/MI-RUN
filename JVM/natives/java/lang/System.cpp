@@ -1,7 +1,7 @@
 #include "System.h"
-#include "../runtime/Field.h"
-#include "../natives/PrintStream.h"
-#include "../runtime//ClassMap.h"
+#include "../../../runtime/Field.h"
+#include "../../../runtime/ClassMap.h"
+#include "../io/PrintStream.h"
 
 namespace Java
 {

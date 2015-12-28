@@ -17,4 +17,4 @@ Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, 
 Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod, JavaType returnType);
 */
 //Method* getNativeMethod(const std::string & name, NativeMethodPtr nativeMethod);
-Method* getNativeMethod(const std::string & name, void* nativeMethod);
+// Method* getNativeMethod(const std::string & name, void* nativeMethod);

@@ -1,7 +1,7 @@
 #include "PrintStream.h"
-#include "../runtime/ClassMap.h"
-#include "../types/Descriptors.h"
-#include "Declarations.h"
+#include "../../../runtime/ClassMap.h"
+#include "../../../types/Descriptors.h"
+#include "../../Declarations.h"
 
 using namespace TypeDescriptors;
 

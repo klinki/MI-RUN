@@ -82,9 +82,23 @@ Field * Class::getField(const Utf8String & name, const Utf8String & descriptor)
 
 void Class::addField(Field * field)
 {
+	int size = 1;
+
+	if (field->type == TypeTag::DOUBLE || field->type == TypeTag::LONG)
+	{
+		size = 2;
+	}
+
 	if (!field->isStatic())
 	{
-		this->countNonStaticFields++;
+		field->fieldIndex = this->countNonStaticFields;
+		this->countNonStaticFields += size;
+		this->hierarchicalCountNonStaticFields += size;
+	}
+	else
+	{
+		field->fieldIndex = this->countStaticFields;
+		this->countStaticFields += size;
 	}
 
 	this->fieldsMap.add(field);
@@ -113,4 +127,22 @@ bool Class::implementsInterface(Class* parentInterface)
 	}
 
 	return false;
+}
+
+size_t Class::getHierarchicalCountNonStaticFields()
+{
+	if (this->hierarchicalCountNonStaticFields == -1)
+	{
+		Class* currentClass = this;
+
+		this->hierarchicalCountNonStaticFields = 0;
+
+		while (currentClass != nullptr)
+		{
+			this->hierarchicalCountNonStaticFields += currentClass->countNonStaticFields; 
+			currentClass = currentClass->parentClass;
+		}
+	}
+
+	return this->hierarchicalCountNonStaticFields;
 }

@@ -52,22 +52,10 @@
     <ClCompile Include="utils\Utf16String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="natives\JavaObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="natives\JavaString.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="types\Descriptors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="natives\natives.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="natives\PrintStream.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="natives\System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="runtime\ClassMap.cpp">
@@ -80,6 +68,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gc\Baker\BakerGc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="natives\java\lang\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="natives\java\io\PrintStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="natives\java\lang\JavaString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="natives\java\lang\System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -195,22 +195,10 @@
     <ClInclude Include="utils\Utf16String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="natives\JavaObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="natives\JavaString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="types\Descriptors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="natives\natives.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="natives\System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="natives\PrintStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\ClassMap.h">
@@ -250,6 +238,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\ClassMember.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\lang\Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\io\PrintStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\lang\JavaString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\lang\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
