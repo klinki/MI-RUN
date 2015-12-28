@@ -31,8 +31,9 @@ namespace java
 			*this->output << std::endl;
 		}
 
-		void PrintStream::println(Utf8String)
+		void PrintStream::println(const Utf8String & ref)
 		{
+			*this->output << ref.toAsciiString() << std::endl;
 		}
 
 		void PrintStream::println(double d)
@@ -61,26 +62,6 @@ namespace java
 
 		namespace PrintStr
 		{
-			Method* getNativeMethod(const std::string & name, const std::string & descriptor, void* nativeMethod)
-			{
-				Method * method = new Method();
-				method->name = Utf8String(name);
-				method->descriptor = Utf8String(descriptor);
-				method->byteCode = NULL;
-				method->byteCodeLength = 0;
-				method->localVariablesArraySize = 0;
-				method->operandStackSize = 0;
-				method->nativeMethod = (NativeMethodPtr)nativeMethod;
-
-				return method;
-			};
-
-			Method* getNativeMethod(const std::string & name, void* nativeMethod)
-			{
-				return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
-			};
-
-
 			Class* initialize(ClassMap* classMap)
 			{
 				Class * objectClass = classMap->getClass("java/lang/Object");
@@ -90,7 +71,8 @@ namespace java
 				aClass->classLoader = NULL;
 				aClass->fullyQualifiedName = "java/io/PrintStream";
 
-				aClass->methodArea.addMethod(getNativeMethod(std::string("println"), std::string("(D)V"), (void*)&printlnDouble));
+				aClass->methodArea.addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
+				aClass->methodArea.addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
 
 				Class * filterOutputStream = new Class(0);
 				filterOutputStream->fullyQualifiedName = "java.io.FilterOutputStream";
@@ -113,6 +95,15 @@ namespace java
 				double value = engine->getCurrentMethodFrame()->operandStack->pop2();
 				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
 				printStream->println(value);
+			}
+
+			NATIVE_METHOD_HEADER(printlnString)
+			{
+				Utf8String * string = (Utf8String *)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+
+				//Utf8String
+				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				printStream->println(*string);
 			}
 
 			void println(::Object * obj, MethodFrame * frm)

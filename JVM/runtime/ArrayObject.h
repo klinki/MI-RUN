@@ -2,17 +2,17 @@
 #include "Object.h"
 #include "../exceptions/RuntimeExceptions.h"
 #include "../gc/interfaces/GarbageCollectableInterface.h"
+#include "ObjectHeader.h"
 
 template<class T>
-class ArrayObject : public GarbageCollectableInterface 
+class ArrayObject : public ObjectHeader, public GarbageCollectableInterface 
 {
 protected:
-	Class* objectClass;
 	size_t size;
 	T * arrayData;
 
 public:
-	ArrayObject(size_t arraySize, T defaultValue, Class* objectClass, byte* address)
+	ArrayObject(size_t arraySize, T defaultValue, Class* objectClass, byte* address): ObjectHeader(objectClass)
 	{
 		this->size = arraySize;
 		this->objectClass = objectClass;

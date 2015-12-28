@@ -132,6 +132,7 @@
     <ClCompile Include="natives\java\io\PrintStream.cpp" />
     <ClCompile Include="gc\ObjectTable.cpp" />
     <ClCompile Include="natives\java\lang\System.cpp" />
+    <ClCompile Include="natives\java\lang\StringBuilder.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
     <ClCompile Include="utils\Utf16String.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
@@ -168,7 +169,10 @@
     <ClInclude Include="natives\java\io\PrintStream.h" />
     <ClInclude Include="gc\ObjectTable.h" />
     <ClInclude Include="natives\java\lang\System.h" />
+    <ClInclude Include="natives\java\lang\StringBuilder.h" />
+    <ClInclude Include="runtime\ObjectHeader.h" />
     <ClInclude Include="types\Descriptors.h" />
+    <ClInclude Include="utils\debug.h" />
     <ClInclude Include="utils\Utf16String.h" />
     <ClInclude Include="utils\HashMap.h" />
     <ClInclude Include="runtime\ArrayObject.h" />

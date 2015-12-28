@@ -1,5 +1,6 @@
 #include "ClassLoader.h"
 #include "../runtime/Runtime.h"
+#include "../natives/java/lang/String.h"
 
 using namespace std;
 

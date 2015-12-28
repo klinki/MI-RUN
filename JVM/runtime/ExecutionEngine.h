@@ -321,6 +321,14 @@ public:
 			this->getCurrentMethodFrame()->operandStack->push(low);
 		}
 		break;
+		case CONSTANT_String:
+		{
+			size_t index = item->stringInfo.string_index;
+
+			size_t insertedStrIndex = this->objectTable->insert(item->stringInfo.value);
+			this->getCurrentMethodFrame()->operandStack->pushReference(insertedStrIndex);
+		}
+		break;
 		}
 	}
 

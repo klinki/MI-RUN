@@ -1,4 +1,5 @@
 #pragma once
+#include "../runtime/Runtime.h"
 #include "../runtime/Class.h"
 #include "../runtime/MethodFrame.h"
 #include "../runtime/Method.h"
@@ -6,6 +7,7 @@
 #include "../runtime/Object.h"
 #include "../runtime/Classmap.h"
 #include "../runtime/ExecutionEngine.h"
+#include "../runtime/ObjectHeader.h"
 #include "../types/Descriptors.h"
 #include "../exceptions/RuntimeExceptions.h"
 #include "Declarations.h"

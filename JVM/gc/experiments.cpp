@@ -104,7 +104,7 @@ void experiments()
 
 	for (int i = 0; i < 10; i++)
 	{
-		int field = obj->fields[i];
+		int field = (*obj->fields)[i];
 		std::cout << field << std::endl;
 	}
 

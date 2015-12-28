@@ -1,5 +1,6 @@
-#include "OperandStack.h"
 #include <cstdlib>
+#include "OperandStack.h"
+#include "../types/ConversionFunctions.h"
 
 OperandStack::OperandStack(): OperandStack(OperandStack::DEFAULT_STACK_SIZE) {}
 
@@ -27,6 +28,11 @@ void OperandStack::push2(doubleWord value)
 	this->push(value.words[0]); // Low
 }
 
+void OperandStack::pushReference(word value)
+{
+	this->push(makeReferenceAddress(value));
+}
+
 word OperandStack::pop()
 {
 	if (this->isEmpty())
@@ -42,6 +48,11 @@ doubleWord OperandStack::pop2()
 	unsigned int low = this->pop();
 	unsigned int high = this->pop();
 	return doubleWord(high, low);
+}
+
+word OperandStack::popReference()
+{
+	return getReferenceAddress(this->pop());
 }
 
 bool OperandStack::isEmpty() const

@@ -97,6 +97,7 @@ struct CONSTANT_String_info
 	ConstantPoolAddress string_index;
 
 	Utf8String * value; // TODO: Add this
+	//java::lang::String::String * stringObject;
 
 	CONSTANT_String_info(unsigned short index)
 	{

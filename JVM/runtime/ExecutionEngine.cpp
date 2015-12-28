@@ -3,6 +3,11 @@
 #include "../runtime/TypeDescriptors.h"
 #include "Runtime.h"
 
+#ifdef _DEBUG
+	#include "../utils/debug.h"
+	#include <iomanip>
+#endif
+
 ExecutionEngine::ExecutionEngine()
 {
 	this->callStack = new OperandStack(1024);
@@ -53,6 +58,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			Instruction currentInstruction = instructions[pc++];
 
+#ifdef _DEBUG
+			std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK: " << frame->operandStack->index << std::endl;
+#endif
 			switch (currentInstruction)
 			{
 			case ACONST_NULL:
@@ -1134,10 +1142,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				{
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
-					frame->operandStack->push2(reference->fields.get2(field->fieldIndex));
+					frame->operandStack->push2(reference->fields->get2(field->fieldIndex));
 					break;
 				default:
-					frame->operandStack->push(reference->fields.get(field->fieldIndex));
+					frame->operandStack->push(reference->fields->get(field->fieldIndex));
 					break;
 				}
 			}
@@ -1160,10 +1168,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				{
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
-					reference->fields.set2(field->fieldIndex, frame->operandStack->pop2());
+					reference->fields->set2(field->fieldIndex, frame->operandStack->pop2());
 					break;
 				default:
-					reference->fields.set(field->fieldIndex, frame->operandStack->pop());
+					reference->fields->set(field->fieldIndex, frame->operandStack->pop());
 					break;
 				}
 			}

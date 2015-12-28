@@ -294,6 +294,7 @@ void ConstantPool::resolveStringRef()
 	{
 		if (this->constantPool[i].tag == 8)
 		{
+//			this->constantPool[i].stringInfo.stringObject = 
 			this->constantPool[i].stringInfo.value = new Utf8String(constantPool[this->constantPool[i].stringInfo.string_index].utf8Info.bytes, constantPool[this->constantPool[i].stringInfo.string_index].utf8Info.length);
 		}
 	}

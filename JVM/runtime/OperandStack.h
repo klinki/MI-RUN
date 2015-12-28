@@ -14,10 +14,12 @@ public:
 
 	void push(word value);
 	void push2(doubleWord value);
+	void pushReference(word value);
 
 	const word & top() const;
 	word pop();
 	doubleWord pop2();
+	word popReference();
 
 	bool isEmpty() const;
 	bool isFull() const;

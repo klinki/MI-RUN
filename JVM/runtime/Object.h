@@ -2,26 +2,31 @@
 #include "Class.h"
 #include "Field.h"
 #include "LocalVariablesArray.h"
+#include "ObjectHeader.h"
 #include "../gc/interfaces/GarbageCollectableInterface.h"
 
-class Object : public GarbageCollectableInterface
+class Object : public ObjectHeader, public GarbageCollectableInterface
 {
 visibility:
-	Class * objectClass;
-	LocalVariablesArray fields;
+	LocalVariablesArray * fields;
 
 public:
-	Object(size_t fields, Class * objectClass, byte * address) : 
-		objectClass(objectClass), fields(fields, address + sizeof(objectClass))
+	Object(size_t fields, Class * objectClass, byte * address): 
+		ObjectHeader(objectClass)
 	{
+		if (fields > 0)
+		{
+			this->fields = new(this->fields + 1) LocalVariablesArray(fields);
+		}
 	};
 	
 	Object(size_t fields, Class* objectClass) : 
-		objectClass(objectClass), fields(fields) 
+		ObjectHeader(objectClass)
 	{
+		this->fields = new LocalVariablesArray(fields);
 	};
 
-	Object()
+	Object(): ObjectHeader(NULL)
 	{
 	};
 
@@ -38,9 +43,9 @@ public:
 
 	virtual void accept(ObjectVisitorInterface * visitor)
 	{
-		for (int i = 0; i < this->fields.index; i++)
+		for (int i = 0; i < this->fields->index; i++)
 		{
-			visitor->visit(this->fields[i]);
+			visitor->visit(this->fields->get(i));
 		}
 	}
 

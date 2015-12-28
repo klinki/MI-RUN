@@ -22,8 +22,6 @@ Utf8String::Utf8String(const char* data, size_t length)
 	this->data[length] = '\0';
 	this->dataLength = length + 1;
 	this->stringLength = length;
-
-//	std::hash<std::string> hash;
 	this->hash = this->calculateHash();
 }
 
