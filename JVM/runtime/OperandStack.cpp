@@ -35,11 +35,6 @@ word OperandStack::pop()
 	}
 
 	return this->allocatedArray[--this->index];
-	/*
-	JavaType & val = this->allocatedArray[this->index- 1];
-	this->sp--;
-	return val;
-	*/
 }
 
 doubleWord OperandStack::pop2()

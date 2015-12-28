@@ -79,6 +79,9 @@
     <ClCompile Include="natives\java\lang\String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="natives\helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classfile\ClassFile.h">
@@ -252,6 +255,9 @@
     <ClInclude Include="natives\includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="natives\helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -262,8 +268,5 @@
       <UniqueIdentifier>{833b8f6f-a83b-4d9a-81d2-c2a4f63ed654}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="natives\Declarations.cpp" />
   </ItemGroup>
 </Project>

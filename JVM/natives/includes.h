@@ -8,3 +8,5 @@
 #include "../runtime/ExecutionEngine.h"
 #include "../types/Descriptors.h"
 #include "../exceptions/RuntimeExceptions.h"
+#include "Declarations.h"
+#include "helpers.h"

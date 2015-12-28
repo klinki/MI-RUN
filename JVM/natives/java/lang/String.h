@@ -1,24 +1,25 @@
 #pragma once
+#include "../../includes.h"
 
 class Class;
+class Runtime;
 
-namespace Java
+namespace java
 {
-	namespace Lang
+	namespace lang
 	{
 		namespace String
 		{
-			Class* initialize();
+			Class* initialize(Runtime * runtime);
 
-			void String();
-			void StringFromCharArray();
-			void StringCopy();
-			void length();
-			void equals();
-			void format();
-			void hashCode();
-			void toString();
-			void clone();
+			NATIVE_METHOD_HEADER(init);
+			NATIVE_METHOD_HEADER(initFromArray);
+
+			NATIVE_METHOD_HEADER(length);
+			NATIVE_METHOD_HEADER(hashCode);
+			NATIVE_METHOD_HEADER(toString);
+			
+			NATIVE_METHOD_HEADER(clone);
 		}
 	}
 }

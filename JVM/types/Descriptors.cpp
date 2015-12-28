@@ -2,16 +2,6 @@
 
 namespace TypeDescriptors
 {
-	static const char* BYTE = "B";
-	static const char* CHAR = "C";
-	static const char* DOUBLE = "D";
-	static const char* FLOAT = "F";
-	static const char* INT = "I";
-	static const char* LONG = "J";
-	static const char* SHORT = "S";
-	static const char* BOOLEAN = "Z";
-	static const char* ARRAY = "[";
-
 	std::string getClassDescriptor(const std::string & name)
 	{
 		std::string result;
@@ -40,37 +30,12 @@ namespace TypeDescriptors
 	{
 		switch (type.tag)
 		{
-		case TypeTag::JAVA_VOID:
-			return "";
-			break;
-		case TypeTag::BOOL:
-			return BOOLEAN;
-			break;
-		case TypeTag::BYTE:
-			return BYTE;
-			break;
-		case TypeTag::CHAR:
-			return CHAR;
-			break;
-		case TypeTag::DOUBLE:
-			return DOUBLE;
-			break;
-		case TypeTag::FLOAT:
-			return FLOAT;
-			break;
-		case TypeTag::INT:
-			return INT;
-			break;
-		case TypeTag::LONG:
-			return LONG;
-			break;
-		case TypeTag::SHORT:
-			return SHORT;
-			break;
 		case TypeTag::REFERENCE:
 			return getClassDescriptor(type.className);
 			break;
 		}
+
+		return std::string(1, (char)type.tag);
 	}
 
 	std::string getTypeDescriptor(JavaType type)
@@ -87,7 +52,10 @@ namespace TypeDescriptors
 
 	std::string getMethodDescriptor(JavaType returnType, JavaType parameters...)
 	{
-		return "";
+		std::string result = "(";
+
+
+		return result;
 	}
 
 	std::string getMethodDescriptor(JavaType returnType, JavaType * parameters, size_t countParameters)

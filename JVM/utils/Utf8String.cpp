@@ -91,5 +91,3 @@ Utf8String& Utf8String::operator=(const Utf8String & u)
 
 	return *this;
 }
-
-

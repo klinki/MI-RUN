@@ -1,33 +1,12 @@
 #include "Object.h"
 #include "../../includes.h"
 
-using namespace TypeDescriptors;
-
 namespace Java
 {
 	namespace Lang
 	{
 		namespace Object
 		{
-			Method* getNativeMethod(const std::string & name, const std::string & descriptor, void* nativeMethod)
-			{
-				Method * method = new Method();
-				method->name = Utf8String(name);
-				method->descriptor = Utf8String(descriptor);
-				method->byteCode = NULL;
-				method->byteCodeLength = 0;
-				method->localVariablesArraySize = 0;
-				method->operandStackSize = 0;
-				method->nativeMethod = (NativeMethodPtr)nativeMethod;
-
-				return method;
-			}
-
-			Method* getNativeMethod(const std::string & name, void* nativeMethod)
-			{
-				return getNativeMethod(name, getMethodDescriptor(), nativeMethod);
-			}
-
 			Class* initialize()
 			{
 				Class * newClass = new Class(NULL);
@@ -35,21 +14,23 @@ namespace Java
 				newClass->parentClass = NULL;
 				newClass->fullyQualifiedName = Utf8String("java/lang/Object");
 				
-				newClass->methodArea.addMethod(getNativeMethod(std::string("<init>"),  &init));
-/*
-				newClass->methodArea.addMethod(getNativeMethod("toString", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/String;")), (void*)&toString));
-				newClass->methodArea.addMethod(getNativeMethod("clone", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&clone));
-				newClass->methodArea.addMethod(getNativeMethod("equals", getMethodDescriptor(TypeTag::BOOL, JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&equals));
-				newClass->methodArea.addMethod(getNativeMethod("finalize", getMethodDescriptor(), (void*)&finalize));
+				newClass->methodArea.addMethod(::getNativeMethod("<init>", "()V", &init));
+				newClass->methodArea.addMethod(::getNativeMethod("finalize", "()V", &finalize));
+
+				newClass->methodArea.addMethod(::getNativeMethod("toString", "()Ljava/lang/String;", &toString));
+				newClass->methodArea.addMethod(::getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
+				newClass->methodArea.addMethod(::getNativeMethod("equals", "(Ljava/lang/Object;)B", &equals));
+
+				newClass->methodArea.addMethod(::getNativeMethod("hashCode", "()I", &hashCode));
+		
+			/*
 				newClass->methodArea.addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), (void*)&getClass));
-				newClass->methodArea.addMethod(getNativeMethod("hashCode", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::INT), (void*)&hashCode));
 				newClass->methodArea.addMethod(getNativeMethod("notify", getMethodDescriptor(), (void*)&notify));
 				newClass->methodArea.addMethod(getNativeMethod("notifyAll", getMethodDescriptor(), (void*)&notifyAll));
 				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(), (void*)&waitEmpty));
 				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), (void*)&waitTimeout));
-			//	newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
+				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
 			*/
-				newClass->methodArea.addMethod(getNativeMethod(std::string("finalize"), (void*)&finalize));
 
 				return newClass;
 			}
@@ -111,29 +92,6 @@ namespace Java
 			NATIVE_METHOD_HEADER(hashCode)
 			{
 				engine->getCurrentMethodFrame()->operandStack->push((int)object);
-			}
-
-			NATIVE_METHOD_HEADER(notify)
-			{
-			}
-
-			NATIVE_METHOD_HEADER(notifyAll)
-			{
-			}
-
-			NATIVE_METHOD_HEADER(waitEmpty)
-			{
-			}
-
-			NATIVE_METHOD_HEADER(waitTimeout)
-			{
-				long long timeout = engine->getCurrentMethodFrame()->operandStack->pop2();
-			}
-
-			NATIVE_METHOD_HEADER(waitTimeoutNanos)
-			{
-				long long timeout = engine->getCurrentMethodFrame()->operandStack->pop2();
-				int nanos = engine->getCurrentMethodFrame()->operandStack->pop();
 			}
 		}
 	}

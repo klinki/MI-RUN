@@ -1,50 +1,61 @@
 #include "String.h"
+#include "../../../runtime/Runtime.h"
 #include "../../../runtime/Object.h"
 
-namespace Java
+namespace java
 {
-	namespace Lang
+	namespace lang
 	{
 		namespace String
 		{
-			Class* initialize()
+			Class* initialize(Runtime * runtime)
 			{
 				Class * newClass = new Class(NULL);
-/*				newClass->classLoader = NULL;
-				newClass->parentClass = NULL;
+				newClass->classLoader = NULL;
+				newClass->parentClass = runtime->classTable->getClass("java/lang/Object");
 				newClass->fullyQualifiedName = Utf8String("java/lang/System");
-				newClass->type = Class::Type::CLASS;
 
-				newClass->methodArea.addMethod(getNativeMethod(std::string("<init>"), (void*)&toString));
-				/*
-				newClass->methodArea.addMethod(getNativeMethod("toString", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/String;")), (void*)&toString));
-				newClass->methodArea.addMethod(getNativeMethod("clone", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&clone));
-				newClass->methodArea.addMethod(getNativeMethod("equals", getMethodDescriptor(TypeTag::BOOL, JavaType(TypeTag::REFERENCE, "java/lang/Object;")), (void*)&equals));
-				newClass->methodArea.addMethod(getNativeMethod("finalize", getMethodDescriptor(), (void*)&finalize));
-				newClass->methodArea.addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), (void*)&getClass));
-				newClass->methodArea.addMethod(getNativeMethod("hashCode", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::INT), (void*)&hashCode));
-				newClass->methodArea.addMethod(getNativeMethod("notify", getMethodDescriptor(), (void*)&notify));
-				newClass->methodArea.addMethod(getNativeMethod("notifyAll", getMethodDescriptor(), (void*)&notifyAll));
-				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(), (void*)&waitEmpty));
-				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), (void*)&waitTimeout));
-				//	newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
-			
-				newClass->methodArea.addMethod(getNativeMethod(std::string("finalize"), (void*)&toString));
-*/
+				newClass->methodArea.addMethod(getNativeMethod("<init>", "()V", &init));
+
+				newClass->methodArea.addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
+				newClass->methodArea.addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
+
 				return newClass;
 			}
 
-			void String(::Object * obj, MethodFrame * frm)
+			NATIVE_METHOD_HEADER(init)
+			{
+
+			}
+
+			NATIVE_METHOD_HEADER(initFromArray)
+			{
+				// pointer is not object, but ref. to class
+				size_t arrayIndex = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop()); // char array index
+				Array<char>* charArray = (Array<char>*)engine->objectTable->get(arrayIndex);
+
+				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				Class* classPtr = (Class*)engine->objectTable->get(index);
+
+				size_t fields = classPtr->getHierarchicalCountNonStaticFields();
+				size_t size = ::Object::getMemorySize(fields);
+				unsigned char* memory = engine->heap->allocate(size);
+				::Object* objPtr = new(memory) ::Object(fields, classPtr);
+
+				engine->objectTable->updateAddress(index, objPtr);
+			}
+
+			NATIVE_METHOD_HEADER(length)
 			{}
 
-			void StringFromCharArray();
-			void StringCopy();
-			void length();
-			void equals();
-			void format();
-			void hashCode();
-			void toString();
-			void clone();
+			NATIVE_METHOD_HEADER(hashCode)
+			{}
+
+			NATIVE_METHOD_HEADER(toString)
+			{}
+
+			NATIVE_METHOD_HEADER(clone)
+			{}
 		}
 	}
 }

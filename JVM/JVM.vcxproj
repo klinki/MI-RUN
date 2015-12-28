@@ -123,6 +123,7 @@
     <ClCompile Include="gc\Baker\BakerGc.cpp" />
     <ClCompile Include="classfile\ClassLoader.cpp" />
     <ClCompile Include="gc\MS\Marker.cpp" />
+    <ClCompile Include="natives\helpers.cpp" />
     <ClCompile Include="runtime\ClassMap.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
     <ClCompile Include="natives\java\lang\Object.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="natives\helpers.h" />
     <ClInclude Include="natives\includes.h" />
     <ClInclude Include="runtime\ClassMember.h" />
     <ClInclude Include="runtime\ClassMemberMap.h" />
@@ -205,9 +207,6 @@
     <ClInclude Include="jvm_structures\TypeInfo.h" />
     <ClInclude Include="types\types.h" />
     <ClInclude Include="gc\interfaces\VisitableInterface.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="natives\Declarations.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

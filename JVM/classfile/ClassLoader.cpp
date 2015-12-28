@@ -741,27 +741,15 @@ void ClassLoader::resolveClassPointer(Class * thisClass,int i)
 	if (class_pointer == nullptr)
 	{
 		//reurzivne zavolej classloader pro tridu co nenasel
-		
-		unsigned char *a =  thisClass->constantPool->get(name_index)->utf8Info.bytes;
-		size_t alen = thisClass->constantPool->get(name_index)->utf8Info.length;
-		char *r = new char[alen+6];
 
-		for (size_t i = 0; i < alen; i++)
-		{
-			r[i] = (char)a[i];
-			
-		}
-		r[alen] = '.';
-		r[alen+1] = 'c';
-		r[alen+2] = 'l';
-		r[alen+3] = 'a';
-		r[alen+4] = 's';
-		r[alen+5] = 's';
-		for (size_t i = alen +6; i < strlen(r); i++)
-		{
-			r[i] = ' ';
-		}
-		
+		unsigned char *a = thisClass->constantPool->get(name_index)->utf8Info.bytes;
+		size_t alen = thisClass->constantPool->get(name_index)->utf8Info.length;
+		char *r = new char[alen + 7];
+
+		char ext[] = ".class";
+		strcpy_s(r, alen + 7, (char*)a);
+		strncpy_s(r + alen, alen + 7, ext, strlen(ext));
+	
 		this->load(r);
 
 		class_pointer = classMap->getClass(item_name);
