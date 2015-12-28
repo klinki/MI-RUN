@@ -38,9 +38,19 @@ int ConstantPool::GetSize()
 {
 	return constant_pool_count;
 }
-int ConstantPool::add(int pos, int type, int length, unsigned char * data)
+int ConstantPool::add(int pos, int type, int length, char * data)
 {
-	//printf("zapis %d\n",type);
+	printf("constant pool add %d:%d %d \n",pos,type, length);
+	for (int i = 0; i < length; i++)
+	{
+		printf("%X",data[i]);
+	}
+	printf("\n");
+	for (int i = 0; i < length; i++)
+	{
+		printf("%X", (unsigned char)data[i]);
+	}
+	printf("\n");
 	switch (type)
 	{
 	case ConstantPoolTag::CONSTANT_Class:{//class
@@ -78,13 +88,13 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		constantPool[pos] = spi;
 		break;}
 	case ConstantPoolTag::CONSTANT_Integer: {//integer
-		int v = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
+		int v = (int)(((unsigned char)data[0]) * 256 * 256 * 256 + ((unsigned char)data[1]) * 256 * 256 + ((unsigned char)data[2]) * 256 + ((unsigned char)data[3]));
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Integer);
 		spi.integerInfo = CONSTANT_Integer_info(v);
 		constantPool[pos] = spi;
 		break;}
 	case ConstantPoolTag::CONSTANT_Float: {//float
-		/*  TODO float value:  If bits is 0x7f800000, the float value will be positive infinity.
+		/*  float value:  If bits is 0x7f800000, the float value will be positive infinity.
 
 			If bits is 0xff800000, the float value will be negative infinity.
 
@@ -103,7 +113,7 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		//float v = (float)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
 		
 
-		unsigned int bits = (unsigned int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
+		unsigned int bits = (unsigned int)(((unsigned char)data[0]) * 256 * 256 * 256 + ((unsigned char)data[1]) * 256 * 256 + ((unsigned char)data[2]) * 256 + ((unsigned char)data[3]));
 		
 		int s = ((bits >> 31) == 0) ? 1 : -1;
 		
@@ -134,15 +144,15 @@ int ConstantPool::add(int pos, int type, int length, unsigned char * data)
 		constantPool[pos] = spi;
 		break;}
 	case  ConstantPoolTag::CONSTANT_Long: {//long 
-		int v1 = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
-		int v2 = (int)(data[4] * 256 * 256 * 256 + data[5] * 256 * 256 + data[6] * 256 + data[7]);
+		int v1 = (int)(((unsigned char)data[0]) * 256 * 256 * 256 + ((unsigned char)data[1]) * 256 * 256 + ((unsigned char)data[2]) * 256 + ((unsigned char)data[3]));
+		int v2 = (int)(((unsigned char)data[4]) * 256 * 256 * 256 + ((unsigned char)data[5]) * 256 * 256 + ((unsigned char)data[6]) * 256 + ((unsigned char)data[7]));
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Long);
 		spi.longInfo = CONSTANT_Long_info(v1, v2);
 		constantPool[pos] = spi;
 		break;}
 	case  ConstantPoolTag::CONSTANT_Double: {//double 
-		int v1 = (int)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
-		int v2 = (int)(data[4] * 256 * 256 * 256 + data[5] * 256 * 256 + data[6] * 256 + data[7]);
+		int v1 = (int)(((unsigned char)data[0]) * 256 * 256 * 256 + ((unsigned char)data[1]) * 256 * 256 + ((unsigned char)data[2]) * 256 + ((unsigned char)data[3]));
+		int v2 = (int)(((unsigned char)data[4]) * 256 * 256 * 256 + ((unsigned char)data[5]) * 256 * 256 + ((unsigned char)data[6]) * 256 + ((unsigned char)data[7]));
 		ConstantPoolItem spi(ConstantPoolTag::CONSTANT_Double);
 		spi.doubleInfo = CONSTANT_Double_info(v1, v2);
 		constantPool[pos] =spi;
@@ -261,11 +271,12 @@ void ConstantPool::print()
 			
 			break;
 		case CONSTANT_Utf8://utf8
+			
 			for (int k = 0; k < constantPool[i].utf8Info.length;k++)
 			{
 				printf("%c", constantPool[i].utf8Info.bytes[k]);
 			}
-			
+			printf(" %s", constantPool[i].utf8Info.bytes);
 			break;
 		case CONSTANT_MethodHandle: //methodhandle
 			printf("methodHandleInfo reference_kind:%d ", constantPool[i].methodHandleInfo.reference_kind);
@@ -284,68 +295,6 @@ void ConstantPool::print()
 		printf("\n");
 		
 	}
-
-	/*
-	for (int i = 1; i < constant_pool_count; i++)
-	{
-		int type = (int)(constPool[i][0]);
-		printf("%d: ", i);
-		printf("t:%d ", type);
-		int max;
-		int k = 1;
-		switch (type)
-		{
-		case 1:
-			max = ((int)constPool[i][1]) * 256 + ((int)constPool[i][2]) + 2;
-			k = 3;
-			break;
-		case 3:
-			max = 4;
-			break;
-		case 4:
-			max = 4;
-			break;
-		case 5:
-			max = 8;
-			break;
-		case 6:
-			max = 8;
-			break;
-		case 7:
-			max = 2;
-			break;
-		case 8:
-			max = 2;
-			break;
-		case 9:
-			max = 4;
-			break;
-		case 10:
-			max = 4;
-			break;
-		case 11:
-			max = 4;
-			break;
-		case 12:
-			max = 4;
-		default:
-			max = 0;
-		}
-
-		for (; k < max + 1; k++)
-		{
-			if (type != 1)
-			{
-				printf("%X", constPool[i][k]);
-			}
-			else
-			{
-				printf("%c", constPool[i][k]);
-			}
-		}
-		printf("\n");
-	}
-	*/
 
 }
 

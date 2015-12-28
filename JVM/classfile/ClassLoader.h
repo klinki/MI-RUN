@@ -18,14 +18,13 @@ private:
 
 	ConstantPool * constantPool;
 	ClassMap * classMap;
-	unsigned char * data;
+	char * data;
 
 	std::ifstream myfile;
 	
 
 public:
 	ClassLoader(ClassMap * cm);
-	ClassLoader();
 	//bool load(char * filename);
 	Class* load(char * filename);
 	int loadMinVersion();

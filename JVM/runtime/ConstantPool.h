@@ -15,7 +15,7 @@ public:
 	ConstantPool(int size);
 	void print();
 
-	int add(int pos, int type, int length, unsigned char * data);
+	int add(int pos, int type, int length, char * data);
 	int GetSize();
 	void add(int pos, ConstantPoolItem * item);
 

@@ -176,17 +176,15 @@ struct CONSTANT_Utf8_info
 
 	Utf8String * string;
 
-	CONSTANT_Utf8_info(unsigned short l, unsigned char * d)
+	CONSTANT_Utf8_info(unsigned short l, char * d)
 	{
 		length = l;
-		bytes = d;
-
-		/*
-		bytes = new unsigned char[length];
+		bytes = new unsigned char[length+1];
 		for (unsigned short i = 0; i < length; i++)
 		{
-			bytes[i] = d[i];
-		}*/
+			bytes[i] = (unsigned char)d[i];
+		}
+		bytes[length] = '\0';
 		string = new Utf8String(bytes, length);
 
 	}
