@@ -458,7 +458,6 @@ public:
 		return classPtr;
 	}
 
-
 	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, bool isStatic)
 	{
 		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize + 1));
@@ -508,4 +507,9 @@ public:
 	}
 
 	bool handleException(java::lang::Throwable::Throwable* e);
+
+	void dropCurrentFrame()
+	{
+		this->callStack->pop();
+	}
 };

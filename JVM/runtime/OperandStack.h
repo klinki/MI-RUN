@@ -21,6 +21,8 @@ public:
 	doubleWord pop2();
 	word popReference();
 
+	void clear();
+
 	bool isEmpty() const;
 	bool isFull() const;
 

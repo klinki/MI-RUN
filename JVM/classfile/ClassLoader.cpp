@@ -528,7 +528,7 @@ int ClassLoader::loadMethods(Class * thisClass) {
 					int n_i = thisClass->constantPool->get(catch_type)->classInfo.name_index;
 
 					Utf8String exc_name = Utf8String(thisClass->constantPool->get(n_i)->utf8Info.bytes, thisClass->constantPool->get(n_i)->utf8Info.length);
-					Exception exc(start_pc, end_pc, handler_pc, catch_type, thisClass->constantPool->get(catch_type)->classInfo.classPtr);
+					Exception exc(start_pc, end_pc, handler_pc, catch_type, this->runtime->classTable->getClass(exc_name));
 					m->exceptionTable->addException(exc);
 				}
 

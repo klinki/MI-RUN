@@ -19,6 +19,7 @@ int main(int argc, const char * argv[])
 	{
 		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString() << endl;
 		exc->printStackTrace();
+		return -1;
 	}
 	catch (Exceptions::Exception e)
 	{

@@ -31,9 +31,11 @@ ExecutionEngine::~ExecutionEngine()
 
 bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
 {
+	size_t exceptionIndex = this->getCurrentMethodFrame()->operandStack->top();
+
 	e->addStackTrace(this->getCurrentMethodFrame()->method);
 
-	ProgramCounter & pc = this->frame->pc;
+	ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
 
 	ExceptionTable * table = this->getCurrentMethodFrame()->method->exceptionTable;
 	size_t countExceptions = table->getSize();
@@ -45,9 +47,11 @@ bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
 		if (pc >= exception.start_pc && pc <= exception.end_pc)
 		{
 			// We could potentially handle exception
-			if (e->objectClass->isSubclassOf(e->objectClass))
+			if (e->objectClass == exception.classPtr || e->objectClass->isSubclassOf(exception.classPtr))
 			{
 				pc = exception.handler_pc;
+				this->getCurrentMethodFrame()->operandStack->clear();
+				this->getCurrentMethodFrame()->operandStack->push(exceptionIndex);
 				return true;
 			}
 		}
@@ -1091,8 +1095,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				word reference = frame->operandStack->pop();
 				frame->parentFrame->operandStack->push(reference);
-
-				pc++; // TODO: Check
+				this->dropCurrentFrame();
+				return 0;
 			}
 			break;
 
@@ -1102,14 +1106,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				doubleWord word = frame->operandStack->pop2();
 				frame->parentFrame->operandStack->push2(word);
-
-				pc++;
+				this->dropCurrentFrame();
+				return 0;
 			};
 			break;
 
 			case RETURN:
 			{
-				pc++;
+				this->dropCurrentFrame();
+				return 0;
 			};
 			break;
 
@@ -1494,7 +1499,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			if (!this->handleException(e))
 			{
-				this->callStack->pop();
+				size_t exceptionIndex = this->getCurrentMethodFrame()->operandStack->top();
+				MethodFrame* parentFrame = this->getCurrentMethodFrame()->parentFrame;
+
+				if (parentFrame != NULL)
+				{
+					parentFrame->operandStack->push(exceptionIndex);
+					this->dropCurrentFrame();
+				}
+
 				throw; // rethrow exception to parent frame
 			}
 
@@ -1508,13 +1521,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			if (!this->handleException(throwable))
 			{
-				this->callStack->pop();
+				size_t exceptionIndex = this->getCurrentMethodFrame()->operandStack->top();
+				MethodFrame* parentFrame = this->getCurrentMethodFrame()->parentFrame;
+
+				if (parentFrame != NULL)
+				{
+					parentFrame->operandStack->push(exceptionIndex);
+					this->dropCurrentFrame();
+				}
+
 				throw throwable; // rethrow exception to parent frame as java type exception
 			}
 		}
 	}
 
-	this->callStack->pop();
-
+	this->dropCurrentFrame();
 	return 0;
 }

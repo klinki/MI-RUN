@@ -94,3 +94,8 @@ const word & OperandStack::top() const
 
 	return this->allocatedArray[this->index - 1];
 }
+
+void OperandStack::clear()
+{
+	this->index = 0;
+}
