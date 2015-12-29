@@ -77,6 +77,13 @@ namespace Java
 			NATIVE_METHOD_HEADER(toString)
 			{
 				// return JavaString(); // TODO
+				size_t index = engine->getCurrentMethodFrame()->operandStack->popReference();
+				Utf8String* classPtr = (Utf8String*)engine->objectTable->get(index);
+
+				if (classPtr == NULL)
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
 			}
 
 			NATIVE_METHOD_HEADER(finalize)

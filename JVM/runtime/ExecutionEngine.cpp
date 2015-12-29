@@ -65,7 +65,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			switch (currentInstruction)
 			{
 			case ACONST_NULL:
-				frame->operandStack->push(NULL);
+				frame->operandStack->pushReference(NULL);
 				break;
 
 				// FALL THROUGH:
@@ -1494,9 +1494,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throw; // rethrow exception to parent frame
 			}
 		}
-		catch (Exception e) // runtime exceptions
+		catch (Exceptions::Exception e) // runtime exceptions
 		{
 			this->callStack->pop();
+
+			const char* test = e.what();
 
 			if (false)
 			{

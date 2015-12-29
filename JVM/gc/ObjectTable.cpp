@@ -2,7 +2,7 @@
 
 ObjectTable::ObjectTable(size_t size)
 {
-	this->insert((Object*)-1); // this value is reserved
+	this->insert((Object*)NULL); // this value is reserved
 }
 
 ObjectTable::~ObjectTable()
