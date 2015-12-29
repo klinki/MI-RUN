@@ -189,6 +189,7 @@
     <ClInclude Include="runtime\TypeDescriptors.h" />
     <ClInclude Include="gc\TreadMillGc.h" />
     <ClInclude Include="utils\Macros.h" />
+    <ClInclude Include="utils\Parameters.h" />
     <ClInclude Include="utils\Utf8String.h" />
     <ClInclude Include="utils\Array.h" />
     <ClInclude Include="classfile\ClassFile.h" />

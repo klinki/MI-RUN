@@ -9,6 +9,7 @@
 #include "../classfile/ClassLoader.h"
 #include "../natives/natives.h"
 #include "../utils/ArgumentsParser.h"
+#include "../utils/Parameters.h"
 
 class Runtime
 {
@@ -18,6 +19,8 @@ visibility:
 	ExecutionEngine * executionEngine;
 	ClassLoader * classLoader;
 	ObjectTable * objectTable;
+
+	Parameters parameters;
 
 	const char* filePath;
 	int argsIndex = 0;
@@ -36,6 +39,7 @@ public:
 	void run(int argc, const char** argv)
 	{
 		ArgumentsParser parser(this, argc, argv);
+		parser.setParameters();
 
 		initializeNatives(this);
 		

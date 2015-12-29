@@ -4,7 +4,7 @@
 #include "Runtime.h"
 #include "../natives/java/lang/Throwable.h"
 
-#ifdef TRACE
+#ifdef _DEBUG
 	#include "../utils/debug.h"
 	#include <iomanip>
 #endif
@@ -44,10 +44,10 @@ bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
 	{
 		Exception & exception = (*table)[i];
 
-		if (pc >= exception.start_pc && pc <= exception.end_pc)
+		if (pc >= exception.start_pc && pc < exception.end_pc)
 		{
-			// We could potentially handle exception
-			if (e->objectClass == exception.classPtr || e->objectClass->isSubclassOf(exception.classPtr))
+			// NULL objectClass is for finally block
+			if (e->objectClass == NULL || e->objectClass == exception.classPtr || e->objectClass->isSubclassOf(exception.classPtr))
 			{
 				pc = exception.handler_pc;
 				this->getCurrentMethodFrame()->operandStack->clear();
@@ -90,8 +90,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			Instruction currentInstruction = instructions[pc++];
 
-#ifdef TRACE
-			std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK: " << frame->operandStack->index << std::endl;
+#ifdef _DEBUG
+			if (this->runtime->parameters.PrintExecutedInstructions) {
+				std::cerr << std::endl;
+				std::cerr << std::string(this->callStack->index - 1, '\t').c_str();
+				std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK BEFORE: " << frame->operandStack->index;
+			}
 #endif
 			switch (currentInstruction)
 			{
@@ -758,7 +762,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IINC:
 			{
 				unsigned char index = instructions[pc++];
-				int value = (int)instructions[pc++];
+				int value = (char)instructions[pc++];
 				this->iinc(index, value);
 			}
 			break;
@@ -1494,6 +1498,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				break;
 			} 
 		
+#ifdef _DEBUG
+			if (this->runtime->parameters.PrintExecutedInstructions) {
+				std::cerr << "\tSTACK AFTER: " << frame->operandStack->index << std::endl;
+			}
+#endif
+
 		}
 		catch (java::lang::Throwable::Throwable* e) // user defined exceptions
 		{

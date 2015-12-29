@@ -103,6 +103,12 @@ namespace java
 
 				//Utf8String
 				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+
+				if (string == NULL || printStream == NULL)
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
+
 				printStream->println(*string);
 			}
 

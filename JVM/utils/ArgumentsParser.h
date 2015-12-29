@@ -19,4 +19,5 @@ public:
 
 	const char* getClassFile();
 	word getArgumentsArray();
+	void ArgumentsParser::setParameters();
 };

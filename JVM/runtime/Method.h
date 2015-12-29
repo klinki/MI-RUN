@@ -70,6 +70,8 @@ public:
 
 		int index = 0;
 
+		this->inputArgsSize = 0;
+
 		while (descr[i] != ')')
 		{
 			switch (descr[i++])

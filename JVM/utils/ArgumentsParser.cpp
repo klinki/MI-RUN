@@ -7,6 +7,7 @@ ArgumentsParser::ArgumentsParser(Runtime* runtime, int argc, const char** argv)
 	this->argc = argc;
 	this->argv = argv;
 	this->runtime = runtime;
+	this->argsIndex = this->argc - 1;
 }
 
 const char* ArgumentsParser::getClassFile()
@@ -43,4 +44,16 @@ word ArgumentsParser::getArgumentsArray()
 	}
 
 	return makeReferenceAddress(arrayIndex);
+}
+
+void ArgumentsParser::setParameters()
+{
+	this->runtime->parameters.PrintExecutedInstructions;
+
+	for (int i = 0; i < argsIndex; i++)
+	{
+		if (strstr(argv[i], "--verbose")) {
+			this->runtime->parameters.PrintExecutedInstructions = true;
+		}
+	}
 }

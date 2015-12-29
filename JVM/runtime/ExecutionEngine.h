@@ -230,12 +230,12 @@ public:
 
 	inline void jumpIfEq(Instruction currentInstruction, int value)
 	{
-		unsigned short offset = this->getShort();
+		short offset = this->getShort();
 
-		if ((value == 0 && (currentInstruction == IFEQ || currentInstruction == IFGE || currentInstruction == IFLE)) ||
-			(value != 0 && currentInstruction == IFNE) ||
-			(value > 0 && (currentInstruction == IFGT || currentInstruction == IFGE)) ||
-			(value < 0 && (currentInstruction == IFLE || currentInstruction == IFLT)))
+		if (((value == 0) && (currentInstruction == IFEQ || currentInstruction == IFGE || currentInstruction == IFLE)) ||
+			((value != 0) && (currentInstruction == IFNE)) ||
+			((value > 0) && (currentInstruction == IFGT || currentInstruction == IFGE)) ||
+			((value < 0) && (currentInstruction == IFLE || currentInstruction == IFLT)))
 		{
 			this->jumpWithOffset(offset);
 		}
