@@ -45,7 +45,7 @@ Class* ClassLoader::load(const char * filename)
 	thisClass->constantPool->resolveStringRef();
 	thisClass->constantPool->print();
 	loadThisClass(thisClass);
-	loadSuperClass(thisClass);
+	int super = loadSuperClass(thisClass);
 	loadInterfaces(thisClass);
 	loadFields(thisClass);
 	loadMethods(thisClass);
@@ -53,7 +53,8 @@ Class* ClassLoader::load(const char * filename)
 
 	myfile.close();
 	this->resolvePool(thisClass);
-
+	thisClass->parentClass = thisClass->constantPool->get(super)->classInfo.classPtr;
+	
 	classMap->addClass(thisClass);
 	printf("loading finnished\n");
 	return thisClass;
@@ -308,9 +309,9 @@ int ClassLoader::loadSuperClass(Class * thisClass)
 		return -1;
 	}
 	int superClassIndex = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
+	//printf("super: %d\n",superClassIndex);
 
-
-	return 0;
+	return superClassIndex;
 }
 int ClassLoader::loadInterfaces(Class * thisClass) // TODO write interefaces, where? //references to const pool
 {

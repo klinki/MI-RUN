@@ -12,12 +12,14 @@ int main(int argc, const char * argv[])
 
 	try
 	{
+
 		runtime->run(argc, argv);
 	}
 	catch (java::lang::Throwable::Throwable* exc)
 	{
 		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString() << endl;
 		exc->printStackTrace();
+
 	}
 	catch (Exception e)
 	{
