@@ -3,6 +3,7 @@
 #include <iostream>
 #include "runtime/Runtime.h"
 #include "natives/java/lang/Throwable.h"
+#include "exceptions/RuntimeExceptions.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ int main(int argc, const char * argv[])
 		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString() << endl;
 		exc->printStackTrace();
 	}
-	catch (Exception e)
+	catch (Exceptions::Exception e)
 	{
 		cerr << "Unhandled exception: " << endl;
 		return -1;

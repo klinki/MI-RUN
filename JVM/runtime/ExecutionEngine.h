@@ -11,7 +11,6 @@
 #include "../gc/ObjectTable.h"
 #include "../gc/Heap.h"
 
-
 #define SINGLE_WORD_OPERATION(type, op) \
 	type b = this->getCurrentMethodFrame()->operandStack->pop(); \
 	type a = this->getCurrentMethodFrame()->operandStack->pop(); \
@@ -24,6 +23,7 @@
 
 
 class Runtime;
+namespace java { namespace lang { namespace Throwable { class Throwable; } } }
 
 class ExecutionEngine
 {
@@ -506,4 +506,6 @@ public:
 
 		return newFrame;
 	}
+
+	bool handleException(java::lang::Throwable::Throwable* e);
 };

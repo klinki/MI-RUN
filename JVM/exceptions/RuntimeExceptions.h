@@ -1,28 +1,38 @@
 #pragma once
+#include <exception>
+
 namespace Exceptions
 {
-	class Exception {};
-	class CloneNotSupportedException {};
+#define ExceptionClass(name, parent, javaException) \
+	class name : public parent \
+	{\
+		public:\
+		name(): parent(javaException) {}; \
+		name(const char* excName): parent(excName) {}; \
+	};
+
+	ExceptionClass(Exception, std::exception, "java/lang/Throwable");
+	ExceptionClass(CloneNotSupportedException, Exception, "java/lang/CloneNotSupportedException");
 
 	namespace Runtime
 	{
-		class RuntimeException : public Exception {};
-		class NullPointerException : public RuntimeException {};
-		class ArrayIndexOutOfBoundsException : public RuntimeException {};
-		class ArithmeticException : public RuntimeException {};
-		class NegativeArraySizeException : public RuntimeException {};
-		class ArrayStoreException : public RuntimeException {};
-		class ClassCastException : public RuntimeException {};
-
+		ExceptionClass(RuntimeException, Exception, "java/lang/RuntimeException");
+		
+		ExceptionClass(NullPointerException, RuntimeException, "java/lang/NullPointerException");
+		ExceptionClass(ArrayIndexOutOfBoundsException, RuntimeException, "java/lang/ArrayIndexOutOfBoundsException");
+		ExceptionClass(ArithmeticException, RuntimeException, "java/lang/ArithmeticException");
+		ExceptionClass(NegativeArraySizeException, RuntimeException, "java/lang/NegativeArraySizeException");
+		ExceptionClass(ArrayStoreException, RuntimeException, "java/lang/ArrayStoreException");
+		ExceptionClass(ClassCastException, RuntimeException, "java/lang/ClassCastException");
 	}
 }
 
 namespace Errors
 {
-	class Error {};
-	class AbstractMethodError : public Error {};
-	class IncompatibleClassChangeError : public Error {};
-	class NoSuchMethodError : public Error {};
-	class IllegalAccessError : public Error {};
-	class UnsatisfiedLinkError : public Error {};
+	ExceptionClass(Error, std::exception, "java/lang/Throwable");
+	ExceptionClass(AbstractMethodError, Error, "java/lang/AbstractMethodError");
+	ExceptionClass(IncompatibleClassChangeError, Error, "java/lang/IncompatibleClassChangeError");
+	ExceptionClass(NoSuchMethodError, Error, "java/lang/NoSuchMethodError");
+	ExceptionClass(IllegalAccessError, Error, "java/lang/IllegalAccessError");
+	ExceptionClass(UnsatisfiedLinkError, Error, "java/lang/UnsatisfiedLinkError");
 }

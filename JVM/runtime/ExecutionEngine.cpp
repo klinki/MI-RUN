@@ -29,6 +29,33 @@ ExecutionEngine::~ExecutionEngine()
 {
 }
 
+bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
+{
+	e->addStackTrace(this->getCurrentMethodFrame()->method);
+
+	ProgramCounter & pc = this->frame->pc;
+
+	ExceptionTable * table = this->getCurrentMethodFrame()->method->exceptionTable;
+	size_t countExceptions = table->getSize();
+
+	for (size_t i = 0; i < countExceptions; i++)
+	{
+		Exception & exception = (*table)[i];
+
+		if (pc >= exception.start_pc && pc <= exception.end_pc)
+		{
+			// We could potentially handle exception
+			if (e->objectClass->isSubclassOf(e->objectClass))
+			{
+				pc = exception.handler_pc;
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void ExecutionEngine::execute(Method* method)
 {
 	unsigned char* memory = this->runtime->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
@@ -1465,47 +1492,24 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		}
 		catch (java::lang::Throwable::Throwable* e) // user defined exceptions
 		{
-			e->addStackTrace(frame->method);
-
-			bool handled = false;
-
-			ExceptionTable * table = this->getCurrentMethodFrame()->method->exceptionTable;
-			size_t countExceptions = table->getSize();
-
-			for (size_t i = 0; i < countExceptions; i++)
-			{
-				Exception & exception = (*table)[i];
-				
-				if (pc >= exception.start_pc && pc <= exception.end_pc)
-				{
-					// We could potentially handle exception
-					if (e->objectClass->isSubclassOf(e->objectClass))
-					{
-						handled = true;
-						pc = exception.handler_pc;
-						break;
-					}
-				}
-			}
-
-			if (!handled)
+			if (!this->handleException(e))
 			{
 				this->callStack->pop();
 				throw; // rethrow exception to parent frame
 			}
+
 		}
 		catch (Exceptions::Exception e) // runtime exceptions
 		{
-			this->callStack->pop();
+			Class* classPtr = this->classMap->getClass(e.what());
 
-			const char* test = e.what();
+			byte* memory = this->heap->allocate(java::lang::Throwable::Throwable::getMemorySize());
+			java::lang::Throwable::Throwable* throwable = new(memory) java::lang::Throwable::Throwable(classPtr);
 
-			if (false)
+			if (!this->handleException(throwable))
 			{
-			}
-			else
-			{
-				throw;
+				this->callStack->pop();
+				throw throwable; // rethrow exception to parent frame as java type exception
 			}
 		}
 	}

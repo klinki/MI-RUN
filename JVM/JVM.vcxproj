@@ -136,9 +136,6 @@
     <ClCompile Include="natives\java\lang\StringBuilder.cpp" />
     <ClCompile Include="natives\java\lang\Throwable.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
-    <ClCompile Include="utils\ArgumentsParser.cpp" />
-    <ClCompile Include="utils\ArgumentsParser.h" />
-    <ClCompile Include="utils\Utf16String.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
     <ClCompile Include="runtime\ConstantPool.cpp" />
     <ClCompile Include="gc\GarbageCollector.cpp" />
@@ -151,6 +148,7 @@
     <ClCompile Include="runtime\MethodArea.cpp" />
     <ClCompile Include="runtime\OperandStack.cpp" />
     <ClCompile Include="gc\TreadMillGc.cpp" />
+    <ClCompile Include="utils\ArgumentsParser.cpp" />
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,8 +176,8 @@
     <ClInclude Include="runtime\ObjectHeader.h" />
     <ClInclude Include="natives\java\lang\Throwable.h" />
     <ClInclude Include="types\Descriptors.h" />
+    <ClInclude Include="utils\ArgumentsParser.h" />
     <ClInclude Include="utils\debug.h" />
-    <ClInclude Include="utils\Utf16String.h" />
     <ClInclude Include="utils\HashMap.h" />
     <ClInclude Include="runtime\ArrayObject.h" />
     <ClInclude Include="exceptions\RuntimeExceptions.h" />
