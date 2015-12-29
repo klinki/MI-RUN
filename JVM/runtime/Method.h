@@ -19,7 +19,7 @@ visibility:
 	size_t operandStackSize;
 	size_t localVariablesArraySize;
 
-	ExceptionTable exceptionTable;
+	ExceptionTable * exceptionTable;
 
 	NativeMethodPtr nativeMethod;
 	Class*  classPtr;

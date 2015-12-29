@@ -16,9 +16,12 @@ public:
 	Utf8String(size_t length, bool preallocated)
 	{
 		this->dataLength = length;
+		this->data = (char*)(&this->data + 1);
 	}
 
 	Utf8String(const char* string);
+	Utf8String(const char* string, bool preallocated);
+	Utf8String(const char* string, size_t length, bool preallocated);
 	Utf8String(const char* bytes, size_t length);
 	Utf8String(const unsigned char* bytes, size_t length);
 	Utf8String(const std::string & string);

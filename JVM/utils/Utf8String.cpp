@@ -13,16 +13,32 @@ Utf8String::Utf8String(const char * string): Utf8String(string, strlen(string))
 {
 }
 
+Utf8String::Utf8String(const char * string, bool preallocated): Utf8String(string, strlen(string), preallocated)
+{
+}
+
 Utf8String::Utf8String(const std::string & str): Utf8String(str.c_str(), str.length()) {}
 
-Utf8String::Utf8String(const char* data, size_t length)
+Utf8String::Utf8String(const char * string, size_t length, bool preallocated)
 {
-	this->data = new char[length + 1];
-	memcpy(this->data, data, length);
+	if (!preallocated)
+	{
+		this->data = new char[length + 1];
+	}
+	else
+	{
+		this->data = (char*)(&this->data + 1);
+	}
+
+	memcpy(this->data, string, length);
 	this->data[length] = '\0';
 	this->dataLength = length + 1;
 	this->stringLength = length;
 	this->hash = this->calculateHash();
+}
+
+Utf8String::Utf8String(const char* data, size_t length): Utf8String(data, length, false)
+{
 }
 
 Utf8String::Utf8String(const unsigned char* data, size_t length): Utf8String((char*) data, length)

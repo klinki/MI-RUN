@@ -15,6 +15,11 @@ Class* ClassMap::getClass(const Utf8String & name)
 {
 	try
 	{
+		if (name.toAsciiString()[0] == '[')
+		{
+			return this->getClass("java/lang/Object");
+		}
+
 		auto iterator = this->hashmap.getIterator(name);
 
 		if (this->hashmap.count(name) > 1)

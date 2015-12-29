@@ -39,7 +39,7 @@ namespace java
 		{
 			static const int DEFAULT_SIZE = 255;
 
-			Class* initialize(Runtime * runtime);
+			Class* initialize(ClassMap * runtime);
 
 			NATIVE_METHOD_HEADER(init);
 

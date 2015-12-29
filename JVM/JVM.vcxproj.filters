@@ -85,6 +85,18 @@
     <ClCompile Include="natives\java\lang\StringBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utils\ArgumentsParser.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ArgumentsParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="natives\java\lang\Throwable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="natives\java\lang\Exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classfile\ClassFile.h">
@@ -268,6 +280,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\lang\Throwable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\lang\Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

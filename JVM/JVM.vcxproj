@@ -124,6 +124,7 @@
     <ClCompile Include="classfile\ClassLoader.cpp" />
     <ClCompile Include="gc\MS\Marker.cpp" />
     <ClCompile Include="natives\helpers.cpp" />
+    <ClCompile Include="natives\java\lang\Exception.cpp" />
     <ClCompile Include="runtime\ClassMap.cpp" />
     <ClCompile Include="gc\experiments.cpp" />
     <ClCompile Include="natives\java\lang\Object.cpp" />
@@ -133,7 +134,10 @@
     <ClCompile Include="gc\ObjectTable.cpp" />
     <ClCompile Include="natives\java\lang\System.cpp" />
     <ClCompile Include="natives\java\lang\StringBuilder.cpp" />
+    <ClCompile Include="natives\java\lang\Throwable.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
+    <ClCompile Include="utils\ArgumentsParser.cpp" />
+    <ClCompile Include="utils\ArgumentsParser.h" />
     <ClCompile Include="utils\Utf16String.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
     <ClCompile Include="runtime\ConstantPool.cpp" />
@@ -152,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="natives\helpers.h" />
     <ClInclude Include="natives\includes.h" />
+    <ClInclude Include="natives\java\lang\Exception.h" />
     <ClInclude Include="runtime\ClassMember.h" />
     <ClInclude Include="runtime\ClassMemberMap.h" />
     <ClInclude Include="gc\Baker\BakerGc.h" />
@@ -171,6 +176,7 @@
     <ClInclude Include="natives\java\lang\System.h" />
     <ClInclude Include="natives\java\lang\StringBuilder.h" />
     <ClInclude Include="runtime\ObjectHeader.h" />
+    <ClInclude Include="natives\java\lang\Throwable.h" />
     <ClInclude Include="types\Descriptors.h" />
     <ClInclude Include="utils\debug.h" />
     <ClInclude Include="utils\Utf16String.h" />

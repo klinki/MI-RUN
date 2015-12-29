@@ -29,7 +29,7 @@ MethodFrame::MethodFrame(size_t stackSize, size_t localVariablesSize, MethodFram
 	this->parentFrame = parent;
 	this->childFrame = NULL;
 
-	this->localVariables = new(&this->operandStack + 1) LocalVariablesArray(stackSize, (byte*)&this->operandStack + 1);
+	this->localVariables = new(&this->operandStack + 1) LocalVariablesArray(localVariablesSize, (byte*)&this->operandStack + 1);
 	this->operandStack = new((byte*)(&this->operandStack) + sizeof(this->operandStack) + LocalVariablesArray::getMemorySize(localVariablesSize)) OperandStack(stackSize, (byte*)(&this->operandStack + LocalVariablesArray::getMemorySize(localVariablesSize)));
 }
 

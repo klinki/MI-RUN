@@ -510,6 +510,8 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				int exception_table_length = (int)((unsigned char)data[code_length + 8] * 256 + (unsigned char)data[code_length + 9]);
 				printf("method %d exc table length: %d\n", j, exception_table_length);
 
+				m->exceptionTable = new ExceptionTable(exception_table_length);
+
 				for (int i1 = 0; i1 < exception_table_length; i1++)
 				{
 					int start_pc = (int)((unsigned char)data[code_length + 10 + i1 * 8] * 256 + (unsigned char)data[code_length + 11 + i1 * 8]);
@@ -525,7 +527,8 @@ int ClassLoader::loadMethods(Class * thisClass) {
 					int n_i = thisClass->constantPool->get(catch_type)->classInfo.name_index;
 
 					Utf8String exc_name = Utf8String(thisClass->constantPool->get(n_i)->utf8Info.bytes, thisClass->constantPool->get(n_i)->utf8Info.length);
-					m->exceptionTable.addException(exc_name, start_pc, end_pc, handler_pc, catch_type);
+					Exception exc(start_pc, end_pc, handler_pc, catch_type, thisClass->constantPool->get(catch_type)->classInfo.classPtr);
+					m->exceptionTable->addException(exc);
 				}
 
 				int code_attributes_count = (int)((unsigned char)data[code_length + 10 + exception_table_length * 8] * 256 + (unsigned char)data[code_length + 11 + exception_table_length * 8]);

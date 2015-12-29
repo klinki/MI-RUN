@@ -2,8 +2,9 @@
 #include "../jvm_structures/JavaConstantPool.h"
 #include "../runtime/TypeDescriptors.h"
 #include "Runtime.h"
+#include "../natives/java/lang/Throwable.h"
 
-#ifdef _DEBUG
+#ifdef TRACE
 	#include "../utils/debug.h"
 	#include <iomanip>
 #endif
@@ -58,7 +59,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		{
 			Instruction currentInstruction = instructions[pc++];
 
-#ifdef _DEBUG
+#ifdef TRACE
 			std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK: " << frame->operandStack->index << std::endl;
 #endif
 			switch (currentInstruction)
@@ -944,7 +945,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case GOTO:
 			{
-				short offset = this->getShort();
+				short offset = this->getShort() - 2; // 2 bytes for current offset
 				this->jumpWithOffset(offset);
 			}
 			break;
@@ -1337,7 +1338,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case ARRAYLENGTH:
 			{
-				int index = frame->operandStack->pop();
+				int index = frame->operandStack->popReference();
 			
 				if (index == 0) 
 				{
@@ -1358,6 +1359,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case ATHROW:
 			{
 				// TODO: Exceptions!
+				java::lang::Throwable::Throwable* ref = (java::lang::Throwable::Throwable*)this->objectTable->get(getReferenceAddress(frame->operandStack->top()));
+				throw ref;
 			}
 			break;
 
@@ -1460,9 +1463,36 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			} 
 		
 		}
-		catch (Object* e) // user defined exceptions
+		catch (java::lang::Throwable::Throwable* e) // user defined exceptions
 		{
-			this->callStack->pop();
+			e->addStackTrace(frame->method);
+
+			bool handled = false;
+
+			ExceptionTable * table = this->getCurrentMethodFrame()->method->exceptionTable;
+			size_t countExceptions = table->getSize();
+
+			for (size_t i = 0; i < countExceptions; i++)
+			{
+				Exception & exception = (*table)[i];
+				
+				if (pc >= exception.start_pc && pc <= exception.end_pc)
+				{
+					// We could potentially handle exception
+					if (e->objectClass->isSubclassOf(e->objectClass))
+					{
+						handled = true;
+						pc = exception.handler_pc;
+						break;
+					}
+				}
+			}
+
+			if (!handled)
+			{
+				this->callStack->pop();
+				throw; // rethrow exception to parent frame
+			}
 		}
 		catch (Exception e) // runtime exceptions
 		{

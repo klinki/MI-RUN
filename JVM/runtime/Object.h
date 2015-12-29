@@ -16,7 +16,12 @@ public:
 	{
 		if (fields > 0)
 		{
-			this->fields = new(this->fields + 1) LocalVariablesArray(fields);
+			if (address == NULL)
+			{
+				address = (byte*)(this->fields + 1);
+			}
+
+			this->fields = new(address) LocalVariablesArray(fields, NULL);
 		}
 	};
 	

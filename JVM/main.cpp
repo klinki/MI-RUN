@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "runtime/Runtime.h"
+#include "natives/java/lang/Throwable.h"
 
 using namespace std;
 
@@ -11,7 +12,12 @@ int main(int argc, const char * argv[])
 
 	try
 	{
-		runtime->run(argv[1]);
+		runtime->run(argc, argv);
+	}
+	catch (java::lang::Throwable::Throwable* exc)
+	{
+		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString() << endl;
+		exc->printStackTrace();
 	}
 	catch (Exception e)
 	{

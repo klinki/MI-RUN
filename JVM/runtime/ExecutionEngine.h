@@ -107,7 +107,7 @@ public:
 	inline void arrayLoad()
 	{
 		int index = this->getCurrentMethodFrame()->operandStack->pop();
-		int ref = this->getCurrentMethodFrame()->operandStack->pop();
+		int ref = this->getCurrentMethodFrame()->operandStack->popReference();
 
 		if (ref == NULL)
 		{
@@ -269,7 +269,7 @@ public:
 
 	inline void jumpWithOffset(int offset)
 	{
-		this->getCurrentMethodFrame()->pc += offset - 1;
+		this->getCurrentMethodFrame()->pc += offset -1;
 	}
 
 	inline void pushFromConstantPool(int index)

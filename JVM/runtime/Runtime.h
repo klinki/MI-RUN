@@ -8,6 +8,7 @@
 #include "../utils/Macros.h"
 #include "../classfile/ClassLoader.h"
 #include "../natives/natives.h"
+#include "../utils/ArgumentsParser.h"
 
 class Runtime
 {
@@ -17,6 +18,9 @@ visibility:
 	ExecutionEngine * executionEngine;
 	ClassLoader * classLoader;
 	ObjectTable * objectTable;
+
+	const char* filePath;
+	int argsIndex = 0;
 
 public:
 	Runtime()
@@ -29,13 +33,34 @@ public:
 		this->executionEngine = new ExecutionEngine(this);
 	}
 
-	void run(const char* filePath)
+	void run(int argc, const char** argv)
 	{
+		ArgumentsParser parser(this, argc, argv);
+
 		initializeNatives(this);
-		Class* mainClass = this->classLoader->load(filePath);
+		
+		Class* mainClass = this->classLoader->load(parser.getClassFile());
 		Method* mainMethod = mainClass->getMethod("main", "([Ljava/lang/String;)V");
 		mainMethod->classPtr = mainClass;
-		this->executionEngine->execute(mainMethod);
+
+		MethodFrame* frame = this->prepareFrame(mainMethod, parser.getArgumentsArray());
+		this->executionEngine->execute(frame);
+	}
+
+	MethodFrame * prepareFrame(Method* mainMethod, word argsIndex)
+	{
+		unsigned char* memory = this->heap->allocate(MethodFrame::getMemorySize(mainMethod->operandStackSize, mainMethod->localVariablesArraySize));
+		MethodFrame * frame = new (memory) MethodFrame(
+			mainMethod->operandStackSize,
+			mainMethod->localVariablesArraySize,
+			NULL,
+			mainMethod->classPtr->constantPool,
+			mainMethod,
+			NULL
+			);
+
+		frame->localVariables->set(0, argsIndex);
+		return frame;
 	}
 
 	~Runtime()

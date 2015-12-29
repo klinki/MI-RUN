@@ -9,7 +9,7 @@ namespace java
 {
 	namespace lang
 	{
-		StringBuilder::StringBuilder(int size, Class* classPtr) : ArrayObject<char>(size, 0, classPtr, NULL)
+		StringBuilder::StringBuilder(int size, Class* classPtr) : ArrayObject<char>(size, 0, classPtr, (byte*)(&this->bytesLength + 1))
 		{
 		}
 
@@ -30,26 +30,30 @@ namespace java
 
 		bool StringBuilder::canAppend(String::String * string) const
 		{
-			return (this->bytesLength + string->bytes()) >= this->size;
+			return this->size >= (this->bytesLength + string->bytes());
 		}
 
 		void StringBuilder::append(String::String * string)
 		{
-			strncpy_s(this->arrayData + (this->bytesLength - 1), string->bytes(), string->toAsciiString(), (this->size - this->bytesLength));
+			int shift = (this->bytesLength > 0) ? (this->bytesLength - 1) : 0;
+
+			strncpy_s(this->arrayData + shift, string->bytes(), string->toAsciiString(), (this->size - this->bytesLength));
+
+			this->bytesLength += string->bytes();
 		}
 
 		namespace StrBuilder
 		{
-			Class* initialize(Runtime * runtime)
+			Class* initialize(ClassMap * classMap)
 			{
 				Class * newClass = new Class(NULL);
 				newClass->classLoader = NULL;
-				newClass->parentClass = runtime->classTable->getClass("java/lang/Object");
+				newClass->parentClass = classMap->getClass("java/lang/Object");
 				newClass->fullyQualifiedName = Utf8String("java/lang/StringBuilder");
 				newClass->countNonStaticFields = 1;
 
 				newClass->methodArea.addMethod(getNativeMethod("<init>", "()V", &init));
-				newClass->methodArea.addMethod(getNativeMethod("append", "java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;", &appendString));
+				newClass->methodArea.addMethod(getNativeMethod("append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", &appendString));
 				newClass->methodArea.addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
 
 				return newClass;
@@ -90,7 +94,7 @@ namespace java
 
 				builder->append(strPtr);
 
-				engine->getCurrentMethodFrame()->operandStack->push(builderIndex);
+				engine->getCurrentMethodFrame()->operandStack->pushReference(builderIndex);
 			}
 
 			NATIVE_METHOD_HEADER(toString)

@@ -22,7 +22,7 @@ namespace java
 				}
 			};
 
-			Class* initialize(Runtime * runtime);
+			Class* initialize(ClassMap * classMap);
 
 			NATIVE_METHOD_HEADER(init);
 			NATIVE_METHOD_HEADER(initFromArray);

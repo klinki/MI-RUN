@@ -18,11 +18,11 @@ namespace java
 				strncpy_s(this->data, this->dataLength, str.toAsciiString(), this->dataLength);
 			}
 
-			Class* initialize(Runtime * runtime)
+			Class* initialize(ClassMap * classMap)
 			{
 				Class * newClass = new Class(NULL);
 				newClass->classLoader = NULL;
-				newClass->parentClass = runtime->classTable->getClass("java/lang/Object");
+				newClass->parentClass = classMap->getClass("java/lang/Object");
 				newClass->fullyQualifiedName = Utf8String("java/lang/String");
 
 				newClass->methodArea.addMethod(getNativeMethod("<init>", "()V", &init));
