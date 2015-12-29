@@ -1,5 +1,6 @@
 #pragma once
 #include <exception>
+#include <string>
 
 namespace Exceptions
 {
@@ -7,11 +8,28 @@ namespace Exceptions
 	class name : public parent \
 	{\
 		public:\
-		name(): parent(javaException) {}; \
-		name(const char* excName): parent(excName) {}; \
+		name(): name(NULL, javaException) {}; \
+		name(const char* message): name(message, javaException) {}; \
+		name(const char* message, const char* exception): parent(message, exception) {}; \
 	};
 
-	ExceptionClass(Exception, std::exception, "java/lang/Throwable");
+	class Throwable : public std::exception
+	{
+	protected:
+		std::string message;
+
+	public:
+		Throwable(): Throwable(NULL) {};
+		Throwable(const char* message) : Throwable(message, "java/lang/Throwable") {}
+		Throwable(const char* message, const char* parent) : std::exception(parent), message(message) {};
+
+		const char* getMessage() 
+		{
+			return message.c_str();
+		}
+	};
+
+	ExceptionClass(Exception, Throwable, "java/lang/Throwable");
 	ExceptionClass(CloneNotSupportedException, Exception, "java/lang/CloneNotSupportedException");
 
 	namespace Runtime
@@ -29,10 +47,12 @@ namespace Exceptions
 
 namespace Errors
 {
-	ExceptionClass(Error, std::exception, "java/lang/Throwable");
+	ExceptionClass(Error, Exceptions::Throwable, "java/lang/Error");
 	ExceptionClass(AbstractMethodError, Error, "java/lang/AbstractMethodError");
 	ExceptionClass(IncompatibleClassChangeError, Error, "java/lang/IncompatibleClassChangeError");
 	ExceptionClass(NoSuchMethodError, Error, "java/lang/NoSuchMethodError");
 	ExceptionClass(IllegalAccessError, Error, "java/lang/IllegalAccessError");
 	ExceptionClass(UnsatisfiedLinkError, Error, "java/lang/UnsatisfiedLinkError");
+	ExceptionClass(LinkageError, Error, "java/lang/LinkageError");
+	ExceptionClass(NoClassDefFoundError, LinkageError, "java/lang/NoClassDefFoundError");
 }

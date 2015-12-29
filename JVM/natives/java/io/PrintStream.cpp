@@ -102,7 +102,7 @@ namespace java
 				Utf8String * string = (Utf8String *)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 
 				//Utf8String
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 
 				if (string == NULL || printStream == NULL)
 				{

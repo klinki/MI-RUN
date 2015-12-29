@@ -237,7 +237,7 @@ public:
 			((value > 0) && (currentInstruction == IFGT || currentInstruction == IFGE)) ||
 			((value < 0) && (currentInstruction == IFLE || currentInstruction == IFLT)))
 		{
-			this->jumpWithOffset(offset);
+			this->jumpWithOffset(offset - 2);
 		}
 	}
 

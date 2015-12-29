@@ -21,9 +21,15 @@ int main(int argc, const char * argv[])
 		exc->printStackTrace();
 		return -1;
 	}
-	catch (Exceptions::Exception e)
+	catch (Exceptions::Throwable e)
 	{
-		cerr << "Unhandled exception: " << endl;
+		const char* message = e.getMessage();
+		if (message == NULL)
+		{
+			message = "";
+		}
+
+		cerr << "Unhandled exception: " <<  e.what() << ": " << message << endl;
 		return -1;
 	}
 

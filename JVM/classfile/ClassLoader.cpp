@@ -1,8 +1,11 @@
+#include <string>
 #include "ClassLoader.h"
 #include "../runtime/Runtime.h"
 #include "../natives/java/lang/String.h"
+#include "../exceptions/RuntimeExceptions.h"
 
 using namespace std;
+using namespace Errors;
 
 ClassLoader::ClassLoader(Runtime * runtime)
 {
@@ -23,8 +26,9 @@ Class* ClassLoader::load(const char * filename)
 
 	if (!myfile.is_open())
 	{
+		std::string message = std::string("Could not open: ") + std::string(filename);
 		printf("cloud not open %s", filename);
-		throw FileNotFoundException();
+		throw NoClassDefFoundError(message.c_str());
 	}
 
 	printf("loading class\n");
@@ -636,7 +640,7 @@ int ClassLoader::reader(int nob)
 	}
 	else
 	{
-		throw FileNotFoundException();
+		throw NoClassDefFoundError("Error while reading from file");
 		return -1;
 	}
 

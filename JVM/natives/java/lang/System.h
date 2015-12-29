@@ -2,6 +2,7 @@
 
 class ClassMap;
 class Class;
+class Runtime;
 
 namespace Java
 {
@@ -9,7 +10,7 @@ namespace Java
 	{
 		namespace System
 		{
-			Class* initialize(ClassMap* classMap);
+			Class* initialize(Runtime* runtime);
 		}
 	}
 }

@@ -11,11 +11,11 @@
 
 using namespace Java::Lang;
 
-void initializeNatives(ClassMap* classMap)
+void initializeNatives(Runtime* runtime, ClassMap* classMap)
 {
 	classMap->addClass(Java::Lang::Object::initialize());
 	classMap->addClass(java::io::PrintStr::initialize(classMap));
-	classMap->addClass(Java::Lang::System::initialize(classMap));
+	classMap->addClass(Java::Lang::System::initialize(runtime));
 	classMap->addClass(java::lang::StrBuilder::initialize(classMap));
 	classMap->addClass(java::lang::String::initialize(classMap));
 	classMap->addClass(java::lang::Throwable::initialize(classMap));
@@ -41,5 +41,5 @@ void initializeNatives(ClassMap* classMap)
 
 void initializeNatives(Runtime* runtime)
 {
-	initializeNatives(runtime->classTable);
+	initializeNatives(runtime, runtime->classTable);
 }

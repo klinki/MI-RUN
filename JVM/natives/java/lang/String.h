@@ -10,10 +10,10 @@ namespace java
 	{
 		namespace String
 		{
-			class String : public Utf8String, public ObjectHeader
+			class String : public ObjectHeader, public Utf8String
 			{
 			public:
-				String(size_t length, Class* classPtr): Utf8String(length, true), ObjectHeader(classPtr) {};
+				String(size_t length, Class* classPtr): ObjectHeader(classPtr),  Utf8String(length, true) {};
 				String(Utf8String & str, Class* classPtr);
 
 				static size_t getMemorySize(size_t items)
