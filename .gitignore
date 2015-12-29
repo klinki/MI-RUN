@@ -4,6 +4,8 @@
 *.iml
 *.class
 
+!/JavaProject/out/**/*class
+
 # User-specific files
 *.suo
 *.user
