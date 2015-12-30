@@ -45,8 +45,11 @@ Class* ClassLoader::load(const char * filename)
 	FLAG f = access_flags;
 	Class *thisClass = new Class(f);
 	thisClass->constantPool = this->constantPool;
-	thisClass->constantPool->resolveStringRef();
+	//thisClass->constantPool->resolveStringRef();
+#ifdef _DEBUG
 	thisClass->constantPool->print();
+#endif 
+	thisClass->constantPool->resolveStringRef();
 	int nameptr = loadThisClass(thisClass);
 	int super = loadSuperClass(thisClass);
 	loadInterfaces(thisClass);
@@ -633,12 +636,12 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		exc/All
 		exc/prd
 		exc/Ales
-		
+
 		prd/exc/All
 		prd/exc/blb
 		prd/rtr/pko
 		sup/brk
-		
+
 		*/
 		unsigned char *a = thisClass->constantPool->get(name_index)->utf8Info.bytes;
 		//string a ((char*)thisClass->constantPool->get(name_index)->utf8Info.bytes);
@@ -648,12 +651,12 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		int counter = 0;
 		int lastcol = 0;
 		int morecol = 0;
-		for (size_t i = 0; i < (alen>tclen?alen:tclen); i++)
+		for (size_t i = 0; i < (alen>tclen ? alen : tclen); i++)
 		{
 			if (a[i] == thisClass->constantPool->get(nameptr)->utf8Info.bytes[i])
 			{
 				counter++;
-				if (a[i]=='/')
+				if (a[i] == '/')
 				{
 					lastcol = i;
 				}
@@ -662,7 +665,7 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 			{
 				for (size_t j = i; j < alen; j++)
 				{
-					if (a[i]=='/')
+					if (a[i] == '/')
 					{
 						morecol++;
 					}
@@ -670,8 +673,8 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 				break;
 			}
 		}
-		
-		if (morecol>0)
+
+		if (morecol > 0)
 		{
 			morecol = 0;
 			for (size_t i = 0; i < tclen; i++)
@@ -686,11 +689,14 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		}
 
 #ifdef _DEBUG
-		fprintf(stderr, "%s ",a);
+		fprintf(stderr, "%s ", a);
 		fprintf(stderr, "%d %d %d\n", counter, lastcol, morecol);
 #endif
-
-		lastcol++;
+		if (!(lastcol==0 && counter== 0))
+		{
+			lastcol++;
+		}
+		
 		char ext[] = ".class";
 		//strcpy_s(r, alen + 7, (char*)a);
 		//strncpy_s(r + alen, alen + 7, ext, strlen(ext));
