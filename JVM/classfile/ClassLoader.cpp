@@ -43,8 +43,11 @@ Class* ClassLoader::load(const char * filename)
 	FLAG f = access_flags;
 	Class *thisClass = new Class(f);
 	thisClass->constantPool = this->constantPool;
-	thisClass->constantPool->resolveStringRef();
+	//thisClass->constantPool->resolveStringRef();
+#ifdef _DEBUG
 	thisClass->constantPool->print();
+#endif 
+	thisClass->constantPool->resolveStringRef();
 	int nameptr = loadThisClass(thisClass);
 	int super = loadSuperClass(thisClass);
 	loadInterfaces(thisClass);
