@@ -48,7 +48,7 @@ Class* ClassLoader::load(const char * filename)
 	thisClass->constantPool = this->constantPool;
 	thisClass->constantPool->resolveStringRef();
 	thisClass->constantPool->print();
-	loadThisClass(thisClass);
+	int nameptr = loadThisClass(thisClass);
 	int super = loadSuperClass(thisClass);
 	loadInterfaces(thisClass);
 	loadFields(thisClass);
@@ -56,7 +56,7 @@ Class* ClassLoader::load(const char * filename)
 	loadAttributes(thisClass);
 
 	myfile.close();
-	this->resolvePool(thisClass);
+	this->resolvePool(thisClass,nameptr);
 	thisClass->parentClass = thisClass->constantPool->get(super)->classInfo.classPtr;
 	
 	classMap->addClass(thisClass);
@@ -303,7 +303,7 @@ int ClassLoader::loadThisClass(Class * thisClass)
 	int nameptr = thisClass->constantPool->get(thisClassIndex)->classInfo.name_index;
 	thisClass->fullyQualifiedName = Utf8String(thisClass->constantPool->get(nameptr)->utf8Info.bytes, thisClass->constantPool->get(nameptr)->utf8Info.length);
 
-	return 0;
+	return nameptr;
 }
 int ClassLoader::loadSuperClass(Class * thisClass)
 {
@@ -645,7 +645,7 @@ int ClassLoader::reader(int nob)
 	}
 
 }
-void ClassLoader::resolvePool(Class * thisClass)
+void ClassLoader::resolvePool(Class * thisClass, int nameptr)
 {
 	int constant_pool_size = thisClass->constantPool->GetSize();
 	for (int i = 1; i < constant_pool_size; i++)
@@ -659,7 +659,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 
 			if (thisClass->constantPool->get(i)->classInfo.classPtr == nullptr)
 			{
-				resolveClassPointer(thisClass, i);
+				resolveClassPointer(thisClass, i, nameptr);
 			}
 
 			break;}
@@ -669,7 +669,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 			int class_index = thisClass->constantPool->get(i)->fieldInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
 			{
-				resolveClassPointer(thisClass, class_index);
+				resolveClassPointer(thisClass, class_index, nameptr);
 			}
 
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
@@ -695,7 +695,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
 			{
 
-				resolveClassPointer(thisClass, class_index);
+				resolveClassPointer(thisClass, class_index , nameptr);
 
 			}
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
@@ -713,7 +713,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 			{
 				thisClass->constantPool->setMethodPtr(i, thisClass->methodArea.getMethod(item_name, item_descriptor));
 			}
-			else if (myClass != nullptr &&  myClass->methodArea.getMethod(item_name, item_descriptor) != nullptr)
+			else if (myClass != nullptr && myClass->methodArea.getMethod(item_name, item_descriptor) != nullptr)
 			{
 				thisClass->constantPool->setMethodPtr(i, myClass->methodArea.getMethod(item_name, item_descriptor));
 			}
@@ -725,7 +725,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 			int class_index = thisClass->constantPool->get(i)->interfaceMethodInfo.class_index;
 			if (thisClass->constantPool->get(class_index)->classInfo.classPtr == nullptr)
 			{
-				resolveClassPointer(thisClass, class_index);
+				resolveClassPointer(thisClass, class_index,nameptr);
 			}
 			Class * myClass = thisClass->constantPool->get(class_index)->classInfo.classPtr;
 			thisClass->constantPool->setClassPtr(i, myClass);
@@ -758,7 +758,7 @@ void ClassLoader::resolvePool(Class * thisClass)
 	}
 	//printf("resolving finnished\n");
 }
-void ClassLoader::resolveClassPointer(Class * thisClass, int i)
+void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 {
 	printf("resolve class pointer %d\n", i);
 	int name_index = thisClass->constantPool->get(i)->classInfo.name_index;
@@ -769,16 +769,86 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i)
 	if (class_pointer == nullptr)
 	{
 		//reurzivne zavolej classloader pro tridu co nenasel
-
+		/*
+		exc/All
+		exc/prd
+		exc/Ales
+		
+		prd/exc/All
+		prd/exc/blb
+		prd/rtr/pko
+		sup/brk
+		
+		*/
 		unsigned char *a = thisClass->constantPool->get(name_index)->utf8Info.bytes;
+		//string a ((char*)thisClass->constantPool->get(name_index)->utf8Info.bytes);
 		size_t alen = thisClass->constantPool->get(name_index)->utf8Info.length;
 		char *r = new char[alen + 7];
+		int tclen = thisClass->constantPool->get(nameptr)->utf8Info.length;
+		int counter = 0;
+		int lastcol = 0;
+		int morecol = 0;
+		for (size_t i = 0; i < (alen>tclen?alen:tclen); i++)
+		{
+			if (a[i] == thisClass->constantPool->get(nameptr)->utf8Info.bytes[i])
+			{
+				counter++;
+				if (a[i]=='/')
+				{
+					lastcol = i;
+				}
+			}
+			else
+			{
+				for (size_t j = i; j < alen; j++)
+				{
+					if (a[i]=='/')
+					{
+						morecol++;
+					}
+				}
+				break;
+			}
+		}
+		
+		if (morecol>0)
+		{
+			morecol = 0;
+			for (size_t i = 0; i < tclen; i++)
+			{
+				if (thisClass->constantPool->get(nameptr)->utf8Info.bytes[i] == '/')
+				{
+					morecol++;
+				}
 
+			}
+		}
+		printf("%s ",a);
+		printf("%d %d %d\n", counter, lastcol, morecol);
+
+		lastcol++;
 		char ext[] = ".class";
-		strcpy_s(r, alen + 7, (char*)a);
-		strncpy_s(r + alen, alen + 7, ext, strlen(ext));
+		//strcpy_s(r, alen + 7, (char*)a);
+		//strncpy_s(r + alen, alen + 7, ext, strlen(ext));
+		a = a + lastcol;
+		alen = strlen((char*)a);
+		printf("%s %d\n", a,alen);
+		char * adr = new char[alen+ 7 + (morecol*3)];
+		for (size_t i = 0; i < morecol; i++)
+		{
+			
+			adr[i * 3] = '.';
+			adr[i * 3 +1] = '.';
+			adr[i * 3 +2] = '/';
+			//char c[] = "../";
+			//strncpy_s(r+(i*3),((i+1) * 3),c, strlen(c));
+		}
+		strcpy_s(adr+ (morecol * 3), alen  + 7 + (morecol * 3), (char*)a);
+		strncpy_s(adr + alen  + (morecol * 3), alen  + 7 + (morecol * 3), ext, strlen(ext));
 
-		this->load(r);
+
+
+		this->load(adr);
 
 		class_pointer = classMap->getClass(item_name);
 

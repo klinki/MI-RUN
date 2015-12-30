@@ -37,7 +37,7 @@ public:
 	int loadMethods(Class * thisClass);
 	int loadAttributes(Class * thisClass);
 	int reader(int nob); // reads data from file to array data
-	void resolvePool(Class * thisClass);
-	void resolveClassPointer(Class * thisClass,int i);
+	void resolvePool(Class * thisClass,int nameptr);
+	void resolveClassPointer(Class * thisClass,int i, int nameptr);
 	~ClassLoader();
 };
