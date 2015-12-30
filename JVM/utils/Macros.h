@@ -3,5 +3,5 @@
 #ifdef _DEBUG
 	#define visibility public
 #else
-	#define visibility protected
+	#define visibility public
 #endif
