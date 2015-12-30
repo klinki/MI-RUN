@@ -19,7 +19,7 @@ private:
 	
 	Runtime* runtime;
 
-	std::ifstream myfile;
+	std::ifstream * myfile;
 
 public:
 	ClassLoader(Runtime * runtime);
