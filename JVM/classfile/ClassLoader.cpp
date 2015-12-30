@@ -26,11 +26,12 @@ Class* ClassLoader::load(const char * filename)
 	if (!myfile->is_open())
 	{
 		string message = std::string("Could not open: ") + std::string(filename);
-		fprintf(stderr,"cloud not open %s", filename);
+		fprintf(stderr,"could not open %s", filename);
 		throw NoClassDefFoundError(message.c_str());
 	}
-
+#ifdef _DEBUG
 	fprintf(stderr,"loading class\n");
+#endif
 	if (reader(4))//read CAFEBABE
 	{
 		fprintf(stderr,"ERROR IN READ FILE");
@@ -46,7 +47,9 @@ Class* ClassLoader::load(const char * filename)
 	Class *thisClass = new Class(f);
 	thisClass->constantPool = this->constantPool;
 	thisClass->constantPool->resolveStringRef();
+#ifdef _DEBUG
 	thisClass->constantPool->print();
+#endif
 	int nameptr = loadThisClass(thisClass);
 	int super = loadSuperClass(thisClass);
 	loadInterfaces(thisClass);
@@ -59,7 +62,9 @@ Class* ClassLoader::load(const char * filename)
 	thisClass->parentClass = thisClass->constantPool->get(super)->classInfo.classPtr;
 	
 	classMap->addClass(thisClass);
+#ifdef _DEBUG
 	fprintf(stderr,"loading finnished\n");
+#endif
 	return thisClass;
 }
 int ClassLoader::loadMinVersion()
@@ -298,7 +303,7 @@ int ClassLoader::loadThisClass(Class * thisClass)
 	}
 	int thisClassIndex = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
 	thisClass->constantPool->setClassPtr(thisClassIndex, thisClass);
-	fprintf(stderr,"this class:%d\n", thisClassIndex);
+	//fprintf(stderr,"this class:%d\n", thisClassIndex);
 	int nameptr = thisClass->constantPool->get(thisClassIndex)->classInfo.name_index;
 	thisClass->fullyQualifiedName = Utf8String(thisClass->constantPool->get(nameptr)->utf8Info.bytes, thisClass->constantPool->get(nameptr)->utf8Info.length);
 
@@ -433,7 +438,8 @@ int ClassLoader::loadMethods(Class * thisClass) {
 		return -1;
 	}
 	int methods_count = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
-	fprintf(stderr,"method count %d\n", methods_count);
+
+	//fprintf(stderr,"method count %d\n", methods_count);
 
 	for (int i = 0; i < methods_count; i++)
 	{
@@ -457,11 +463,12 @@ int ClassLoader::loadMethods(Class * thisClass) {
 		m->name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, (int)thisClass->constantPool->get(name_index)->utf8Info.length);
 		m->descriptor = Utf8String(thisClass->constantPool->get(descriptor_index)->utf8Info.bytes, (int)thisClass->constantPool->get(descriptor_index)->utf8Info.length);
 
-
+#ifdef _DEBUG
 		fprintf(stderr,"method %d flags: %d\n", i, access_flags);
 		fprintf(stderr,"method %d name: %d\n", i, name_index);
 		fprintf(stderr,"method %d descriptor: %d\n", i, descriptor_index);
 		fprintf(stderr,"method %d att count: %d\n", i, attributes_count);
+#endif
 		for (int j = 0; j < attributes_count; j++)
 		{
 			int attribute_name_index;
@@ -474,9 +481,10 @@ int ClassLoader::loadMethods(Class * thisClass) {
 
 			attribute_name_index = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
 			attribute_length = (int)((unsigned char)data[2] * 256 * 256 * 256 + (unsigned char)data[3] * 256 * 256 + (unsigned char)data[4] * 256 + (unsigned char)data[5]);
+#ifdef _DEBUG
 			fprintf(stderr,"method %d name index: %d\n", j, attribute_name_index);
 			fprintf(stderr,"method %d att length: %d\n", j, attribute_length);
-
+#endif
 			if (reader(attribute_length))
 			{
 				fprintf(stderr,"ERROR IN READ FILE");
@@ -485,11 +493,12 @@ int ClassLoader::loadMethods(Class * thisClass) {
 
 			unsigned char* n = thisClass->constantPool->get(attribute_name_index)->utf8Info.bytes;
 			int n_length = (int)thisClass->constantPool->get(attribute_name_index)->utf8Info.length;
-			fprintf(stderr,"name %s %d\n", n, n_length);
+			//fprintf(stderr,"name %s %d\n", n, n_length);
 
 			if (n_length == 4 && n[0] == 'C'&&n[1] == 'o'&&n[2] == 'd'&&n[3] == 'e') // zmenit na porovnani utf8
 			{
-				fprintf(stderr,"method %d CODE:\n", j);
+
+				
 				int max_stack = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
 				m->operandStackSize = max_stack;
 				int max_variables = (int)((unsigned char)data[2] * 256 + (unsigned char)data[3]);
@@ -497,12 +506,12 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				int code_length = (int)((unsigned char)data[4] * 256 * 256 * 256 + (unsigned char)data[5] * 256 * 256 + (unsigned char)data[6] * 256 + (unsigned char)data[7]);
 				m->byteCodeLength = code_length;
 				//unsigned char * code = new unsigned char[code_length];
-
-
+#ifdef _DEBUG
+				fprintf(stderr, "method %d CODE:\n", j);
 				fprintf(stderr,"method %d max stack: %d\n", j, max_stack);
 				fprintf(stderr,"method %d max var: %d\n", j, max_variables);
 				fprintf(stderr,"method %d code length: %d\n", j, code_length);
-
+#endif
 				m->byteCode = new Instruction[code_length];
 
 				for (int i1 = 0; i1 < code_length; i1++)
@@ -512,8 +521,9 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				}
 
 				int exception_table_length = (int)((unsigned char)data[code_length + 8] * 256 + (unsigned char)data[code_length + 9]);
+#ifdef _DEBUG
 				fprintf(stderr,"method %d exc table length: %d\n", j, exception_table_length);
-
+#endif
 				m->exceptionTable = new ExceptionTable(exception_table_length);
 
 				for (int i1 = 0; i1 < exception_table_length; i1++)
@@ -522,11 +532,12 @@ int ClassLoader::loadMethods(Class * thisClass) {
 					int end_pc = (int)((unsigned char)data[code_length + 12 + i1 * 8] * 256 + (unsigned char)data[code_length + 13 + i1 * 8]);
 					int handler_pc = (int)((unsigned char)data[code_length + 14 + i1 * 8] * 256 + (unsigned char)data[code_length + 15 + i1 * 8]);
 					int catch_type = (int)((unsigned char)data[code_length + 16 + i1 * 8] * 256 + (unsigned char)data[code_length + 17 + i1 * 8]);
-
+#ifdef _DEBUG
 					fprintf(stderr,"method %d ecx %d start pc: %d\n", j, i1, start_pc);
 					fprintf(stderr,"method %d ecx %d end pc: %d\n", j, i1, end_pc);
 					fprintf(stderr,"method %d ecx %d handler pc: %d\n", j, i1, handler_pc);
 					fprintf(stderr,"method %d ecx %d catch type: %d\n", j, i1, catch_type);
+#endif
 					if (catch_type ==0)
 					{
 						Exception exc(start_pc, end_pc, handler_pc, catch_type, NULL);
@@ -544,13 +555,15 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				}
 
 				int code_attributes_count = (int)((unsigned char)data[code_length + 10 + exception_table_length * 8] * 256 + (unsigned char)data[code_length + 11 + exception_table_length * 8]);
+#ifdef _DEBUG
 				fprintf(stderr,"method %d code att count: %d\n", j, code_attributes_count);
-
+#endif
 			}
 			else if (n_length == 11 && n[0] == 'E' &&n[1] == 'x' &&n[2] == 'c' &&n[3] == 'e' &&n[4] == 'p' &&n[5] == 't' &&n[6] == 'i' &&n[7] == 'o' &&n[8] == 'n' &&n[9] == 's')// Exceptions
 			{
+#ifdef _DEBUG
 				fprintf(stderr,"method %d EXCEPTIONS:\n", j);
-
+#endif
 				int number_of_exceptions = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
 				for (int k = 0; k < number_of_exceptions; k++)
 				{
@@ -561,7 +574,7 @@ int ClassLoader::loadMethods(Class * thisClass) {
 			//else if (n_length == 16 && n[0] == 'M' &&n[1] == 'e' &&n[2] == 't' &&n[3] == 'h' &&n[4] == 'o' &&n[5] == 'd' &&n[6] == 'P' &&n[7] == 'a' &&n[8] == 'r' &&n[9] == 'a'&&n[10] == 'm'&&n[11] == 'e'&&n[12] == 't'&&n[13] == 'e'&&n[14] == 'r'&&n[15] == 's')// MethodParameters
 			else
 			{
-				fprintf(stderr,"method %d OTHER : %s \n", j, n);
+				//fprintf(stderr,"method %d OTHER : %s \n", j, n);
 
 				//u2 attribute_name_index;
 				//u4 attribute_length;
@@ -585,7 +598,7 @@ int ClassLoader::loadAttributes(Class * thisClass)
 		return -1;
 	}
 	int attributes_count = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
-	fprintf(stderr,"attributes count:%d\n", attributes_count);
+	//fprintf(stderr,"attributes count:%d\n", attributes_count);
 
 	//attributes[attributes_count]
 	//attributes[attributes_count]
@@ -610,8 +623,8 @@ int ClassLoader::loadAttributes(Class * thisClass)
 		attribute_name_index = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
 		attribute_length = (int)((unsigned char)data[2] * 256 * 256 * 256 + (unsigned char)data[3] * 256 * 256 + (unsigned char)data[4] * 256 + (unsigned char)data[5]);
 
-		fprintf(stderr,"attribute_name_index:%d\n", attribute_name_index);
-		fprintf(stderr,"attribute lenght:%d\n", attribute_length);
+		//fprintf(stderr,"attribute_name_index:%d\n", attribute_name_index);
+		//fprintf(stderr,"attribute lenght:%d\n", attribute_length);
 
 		if (reader(attribute_length))
 		{
@@ -759,7 +772,9 @@ void ClassLoader::resolvePool(Class * thisClass, int nameptr)
 }
 void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 {
+#ifdef _DEBUG
 	fprintf(stderr,"resolve class pointer %d\n", i);
+#endif
 	int name_index = thisClass->constantPool->get(i)->classInfo.name_index;
 	Utf8String item_name = Utf8String(thisClass->constantPool->get(name_index)->utf8Info.bytes, thisClass->constantPool->get(name_index)->utf8Info.length);
 
@@ -822,8 +837,8 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 
 			}
 		}
-		fprintf(stderr,"%s ",a);
-		fprintf(stderr,"%d %d %d\n", counter, lastcol, morecol);
+		//fprintf(stderr,"%s ",a);
+		//fprintf(stderr,"%d %d %d\n", counter, lastcol, morecol);
 
 		lastcol++;
 		char ext[] = ".class";
@@ -831,7 +846,7 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		//strncpy_s(r + alen, alen + 7, ext, strlen(ext));
 		a = a + lastcol;
 		alen = strlen((char*)a);
-		fprintf(stderr,"%s %d\n", a,alen);
+		//fprintf(stderr,"%s %d\n", a,alen);
 		char * adr = new char[alen+ 7 + (morecol*3)];
 		for (size_t i = 0; i < morecol; i++)
 		{
