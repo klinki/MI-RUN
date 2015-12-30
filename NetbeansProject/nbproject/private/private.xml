@@ -4,4 +4,48 @@
         <activeConfTypeElem>1</activeConfTypeElem>
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/Exception.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/includes.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/main.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/Object.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/Class.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/ArrayObject.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/gc/Baker/BakerGc.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/TypeDescriptors.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/classfile/ClassFile.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/LocalVariablesArray.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/io/PrintStream.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/gc/Baker/BakerGc.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/utils/Array.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/String.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/StringBuilder.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/gc/interfaces/HeapInterface.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/Declarations.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/StringBuilder.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/ClassMap.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/Class.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/ClassMap.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/ClassMemberMap.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/io/PrintStream.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/System.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/ExecutionEngine.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/ExecutionEngine.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/utils/HashMap.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/natives.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/natives.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/Throwable.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/String.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/Throwable.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/natives/java/lang/System.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/gc/ObjectTable.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/ClassMember.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/Field.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/classfile/ClassLoader.cpp</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/classfile/ClassLoader.h</file>
+            <file>file:/home/osboxes/MI-RUN/JVM/runtime/Runtime.h</file>
+        </group>
+    </open-files>
 </project-private>

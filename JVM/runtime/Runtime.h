@@ -29,7 +29,7 @@ visibility:
 public:
 	Runtime()
 	{
-		BakerGc * baker = new BakerGc(this, 10 * 1024 * 1024, 50 * 1024 * 1024);
+		BakerGc * baker = new BakerGc(this, 5 * 1024 * 1024, 10 * 1024 * 1024);
 		this->heap = baker;
 		this->objectTable = baker;
 		this->classTable = new ClassMap();

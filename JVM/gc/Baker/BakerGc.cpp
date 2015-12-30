@@ -118,7 +118,10 @@ unsigned char * BakerGc::allocate(size_t size)
 	}
 
 	size_t bytesAllocated = this->countAllocatedBlockSize(size);
-	
+
+#ifdef _DEBUG
+        std::cerr << "Allocating object of size: " << size << " to 16 aligned size: " << bytesAllocated << std::endl;
+#endif	
 	if ((this->memorySlots[this->activeSlot]->usedBytes + bytesAllocated) >= this->memorySlots[this->activeSlot]->allocatedBytes)
 	{
 		// Time for garbage collection man!!
