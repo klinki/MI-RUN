@@ -131,7 +131,7 @@ int ClassLoader::loadConstPool()
 		case ConstantPoolTag::CONSTANT_String://string
 			{
 				reader(2);
-				unsigned short tag = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
+				unsigned short tag = (unsigned short)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
 				ConstantPoolItem spi(ConstantPoolTag::CONSTANT_String);
 				spi.stringInfo = CONSTANT_String_info(tag);
 				constantPool->add(k, &spi);
