@@ -6,6 +6,18 @@ Class::~Class()
 
 }
 
+Class::Class(FLAG flag): flags(flag) 
+{
+    this->classLoader = NULL;
+    this->constantPool = NULL;
+    this->countInterfaces = 0;
+    this->countNonStaticFields = 0;
+    this->countStaticFields = 0;
+    this->parentClass = NULL;
+    this->implementedInterfaces = NULL;
+    this->staticVariablesValues = NULL;
+};
+
 unsigned int Class::getCountFields() const
 {
 	return countNonStaticFields;
@@ -81,7 +93,7 @@ Field * Class::getField(const Utf8String & name, const Utf8String & descriptor)
 }
 
 void Class::addField(Field * field)
-{
+{       
 	int size = 1;
 
 	if (field->type == TypeTag::DOUBLE || field->type == TypeTag::LONG)

@@ -10,7 +10,17 @@ visibility:
 	HashMap<Utf8String, ClassMember*> hashmap;
 public:
 	ClassMemberMap() {}
-	~ClassMemberMap() {}
+	~ClassMemberMap() 
+        {
+            auto iterator = this->hashmap.startIterator();
+    
+            while (iterator != this->hashmap.endIterator())
+            {
+                ClassMember* classPtr =  (ClassMember*)iterator->second;
+                delete classPtr;
+                ++iterator;
+            }
+        }
 
 	ClassMember* get(const Utf8String & name, const Utf8String & descriptor)
 	{

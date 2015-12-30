@@ -9,6 +9,14 @@ ClassMap::ClassMap()
 
 ClassMap::~ClassMap()
 {
+    auto iterator = this->hashmap.startIterator();
+    
+    while (iterator != this->hashmap.endIterator())
+    {
+        Class* classPtr =  (Class*)iterator->second;
+        delete classPtr;
+        ++iterator;
+    }
 }
 
 Class* ClassMap::getClass(const Utf8String & name)

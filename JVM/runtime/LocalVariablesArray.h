@@ -22,14 +22,14 @@ public:
 		return doubleWord(high, low);
 	}
 
-	void set(size_t index, word value)
+	void set(size_t itemIndex, word value)
 	{
-		(*this)[index] = value;
+		(*this)[itemIndex] = value;
 	}
 
-	void set2(size_t index, doubleWord value)
+	void set2(size_t itemIndex, doubleWord value)
 	{
-		(*this)[index] = value.words[1];
-		(*this)[index + 1] = value.words[0];
+		(*this)[itemIndex] = value.words[1];
+		(*this)[itemIndex + 1] = value.words[0];
 	}
 };

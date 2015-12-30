@@ -39,11 +39,11 @@ visibility:
 	Runtime * runtime;
 
 	struct {
-		size_t constantPoolIndex;
-		size_t cpClassIndex;
-		size_t cpMethodIndex;
-		Class* classPtr;
-		Method* methodPtr;
+		size_t constantPoolIndex = -1;
+		size_t cpClassIndex = -1;
+		size_t cpMethodIndex = -1;
+		Class* classPtr = NULL;
+		Method* methodPtr = NULL;
 	} inlineCache;
 
 	MethodFrame* getCurrentMethodFrame()
