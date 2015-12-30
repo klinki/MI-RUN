@@ -150,6 +150,18 @@ size_t BakerGc::insert(void * ptr)
 	return index;
 }
 
+size_t BakerGc::insert(void * ptr, bool systemObject)
+{
+	if (!systemObject)
+	{
+		this->insert(ptr);
+	}
+	else
+	{
+		return ObjectTable::insert(ptr);
+	}
+}
+
 void BakerGc::finalize(Heap* slot)
 {
 	unsigned char* ptr = (unsigned char*)slot->data;

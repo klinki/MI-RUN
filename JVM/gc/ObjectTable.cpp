@@ -17,6 +17,11 @@ size_t ObjectTable::insert(void * obj)
 	return index;
 }
 
+size_t ObjectTable::insert(void* ptr, bool systemObject)
+{
+	this->insert(ptr);
+}
+
 Object * ObjectTable::get(size_t index)
 {
 	return (Object*)this->hashMap.at(index);

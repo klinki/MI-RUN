@@ -98,6 +98,7 @@ public:
 	void collect();
 
 	virtual size_t insert(void * ptr);
+	virtual size_t insert(void * ptr, bool systemObject);
 
 	static MemoryHeader * getHeader(char* memory)
 	{

@@ -12,6 +12,7 @@ public:
 	~ObjectTable();
 
 	virtual size_t insert(void * ptr);
+	virtual size_t insert(void* ptr, bool systemObject);
 	virtual Object* get(size_t index);
 	virtual void updateAddress(size_t index, void* newAddress);
 };
