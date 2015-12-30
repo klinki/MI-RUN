@@ -18,11 +18,6 @@ ClassLoader::ClassLoader(Runtime * runtime)
 
 Class* ClassLoader::load(const char * filename)
 {
-	if (myfile->is_open())
-	{
-		myfile->close();
-	}
-
 	myfile = new ifstream(filename, ios::in | ios::binary);
 
 	if (!myfile->is_open())

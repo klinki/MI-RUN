@@ -11,7 +11,6 @@ class Field : public ClassMember
 {
 visibility:
 	size_t fieldIndex;
-	word value[2];
 	const TypeTag type;
 
 public:
@@ -21,14 +20,9 @@ public:
 
 	~Field() {}
 
-	word getValue() const
+	static size_t getMemorySize()
 	{
-		return this->value[0];
-	}
-
-	doubleWord getValue2() const
-	{
-		return doubleWord((unsigned int)this->value[0], (unsigned int)this->value[1]);
+		return sizeof(Field);
 	}
 
 	friend class ClassLoader;

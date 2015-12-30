@@ -17,10 +17,12 @@ namespace Java
 				system->parentClass = map->getClass("java/lang/Object");
 				system->staticVariablesValues = new LocalVariablesArray(3);
 
-				Field* field = new Field((int)FieldAccessFlags::STATIC | (int)FieldAccessFlags::PUBLIC, Utf8String("out"), Utf8String("Ljava/io/PrintStream;"));
+				byte* fieldMemory = runtime->heap->allocateOnSystemMemory(Field::getMemorySize());
+				Field* field = new(fieldMemory) Field((int)FieldAccessFlags::STATIC | (int)FieldAccessFlags::PUBLIC, Utf8String("out"), Utf8String("Ljava/io/PrintStream;"));
 				system->addField(field);
 
-				Field* errField = new Field((int)FieldAccessFlags::STATIC | (int)FieldAccessFlags::PUBLIC, Utf8String("err"), Utf8String("Ljava/io/PrintStream;"));
+				byte* errFieldMemory = runtime->heap->allocateOnSystemMemory(Field::getMemorySize());
+				Field* errField = new(errFieldMemory) Field((int)FieldAccessFlags::STATIC | (int)FieldAccessFlags::PUBLIC, Utf8String("err"), Utf8String("Ljava/io/PrintStream;"));
 				system->addField(errField);
 
 				java::io::PrintStream * out = new java::io::PrintStream(&std::cout);
