@@ -1240,10 +1240,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case INVOKESTATIC: // TODO: Add another handler for static methods
 			{
 				unsigned short index = this->getShort();
-				Object* reference = NULL;
 
-				Method* methodPtr = this->resolveMethod(index);
+				Method* methodPtr = this->resolveMethod(index, currentInstruction);
 				Class* classPtr = methodPtr->classPtr;
+
+				// damn, why is reference on the bottom of the stack :/
+				Object* reference = NULL;
 
 				if (methodPtr->nativeMethod != nullptr)
 				{

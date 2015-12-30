@@ -10,7 +10,7 @@ namespace java
 {
 	namespace io
 	{
-		class PrintStream
+		class PrintStream : public ObjectHeader
 		{
 			std::ostream * output;
 		public:
@@ -25,6 +25,22 @@ namespace java
 			void write(java_byte);
 			void write(ArrayObject<java_byte> * arr);
 			void write(ArrayObject<java_byte> * arr, size_t offset, size_t length);
+
+
+			virtual void accept(ObjectVisitorInterface * visitor)
+			{
+				visitor->visit(this);
+			};
+
+			virtual void accept(ObjectVisitorInterface & visitor)
+			{
+				this->accept(&visitor);
+			};
+
+			virtual bool requiresFinalization()
+			{
+				return false;
+			}
 		};
 
 		namespace PrintStr

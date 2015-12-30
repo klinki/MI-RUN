@@ -65,7 +65,7 @@ namespace java
 				Class* classPtr = (Class*)engine->objectTable->get(index);
 
 				byte* memory = engine->heap->allocate(StringBuilder::getMemorySize(DEFAULT_SIZE));
-				StringBuilder* builder = new(memory) StringBuilder(engine->classMap->getClass("java/lang/Object"));
+				StringBuilder* builder = new(memory) StringBuilder(engine->classMap->getClass("java/lang/StringBuilder"));
 
 				engine->objectTable->updateAddress(index, builder);
 			}

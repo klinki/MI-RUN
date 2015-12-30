@@ -29,6 +29,12 @@ visibility:
 
 	size_t inputArgsSize;
 
+	void setDescriptor(const Utf8String & str)
+	{
+		this->descriptor = str;
+		this->initInputArgs();
+	}
+
 public:
 	Method() : Method(0) {};
 	Method(FLAG f) : ClassMember()
@@ -58,6 +64,16 @@ public:
 	bool returnsData() const
 	{
 		return this->descriptor != "V";
+	}
+
+	bool isSpecial() const
+	{
+		
+	}
+
+	bool isConstructor() const
+	{
+		return false;
 	}
 
 	void initInputArgs()

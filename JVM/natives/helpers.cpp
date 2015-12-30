@@ -8,7 +8,7 @@ Method* getNativeMethod(const char* name, const char* descriptor, NativeMethodPt
 {
 	Method * method = new Method();
 	method->name = Utf8String(name);
-	method->descriptor = Utf8String(descriptor);
+	method->setDescriptor(Utf8String(descriptor));
 	method->byteCode = NULL;
 	method->byteCodeLength = 0;
 	method->localVariablesArraySize = 0;

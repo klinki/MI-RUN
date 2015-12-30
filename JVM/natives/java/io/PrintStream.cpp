@@ -8,7 +8,9 @@ namespace java
 {
 	namespace io
 	{
-		PrintStream::PrintStream(std::ostream * stream)
+		static Class* printstClassPtr;
+
+		PrintStream::PrintStream(std::ostream * stream): ObjectHeader(printstClassPtr)
 		{
 			this->output = stream;
 		}
@@ -66,7 +68,6 @@ namespace java
 			Class* initialize(ClassMap* classMap)
 			{
 				Class * objectClass = classMap->getClass("java/lang/Object");
-
 				Class * aClass = new Class(0);
 				aClass->parentClass = objectClass;
 				aClass->classLoader = NULL;
@@ -81,6 +82,8 @@ namespace java
 				Class * outputStream = new Class(0);
 				outputStream->fullyQualifiedName = "java/io/OutputStream";
 				outputStream->parentClass = objectClass;
+
+				printstClassPtr = aClass;
 
 				return aClass;
 			};
