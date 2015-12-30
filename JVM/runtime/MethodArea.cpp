@@ -49,7 +49,7 @@ Method* MethodArea::getMethod(const Utf8String & name, const Utf8String & descri
 
 void MethodArea::addMethod(Method* method)
 {
-	printf("add method \n");
+	//fprintf(stderr,"add method \n");
 
 	this->hashmap.insert(method->name,method);
 

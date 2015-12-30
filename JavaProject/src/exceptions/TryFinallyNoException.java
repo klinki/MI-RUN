@@ -10,9 +10,8 @@ public class TryFinallyNoException
 
         try {
             System.out.println("This is inside lonely try");
-            second.throwException();
         } finally {
-            System.out.println("Wow! Did you see that? Exception was falling!");
+            System.out.println("Im still waiting for exception");
         }
 
         System.out.println("Hooraaaaay, no exceptions");
