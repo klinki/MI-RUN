@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="JVM" displayName="JVM" projectFiles="true">
+        <logicalFolder name="classfile" displayName="classfile" projectFiles="true">
+          <itemPath>../JVM/classfile/ClassFile.h</itemPath>
+          <itemPath>../JVM/classfile/ClassLoader.cpp</itemPath>
+          <itemPath>../JVM/classfile/ClassLoader.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="exceptions" displayName="exceptions" projectFiles="true">
+          <itemPath>../JVM/exceptions/RuntimeExceptions.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="gc" displayName="gc" projectFiles="true">
+          <logicalFolder name="Baker" displayName="Baker" projectFiles="true">
+            <itemPath>../JVM/gc/Baker/BakerGc.cpp</itemPath>
+            <itemPath>../JVM/gc/Baker/BakerGc.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="interfaces" displayName="interfaces" projectFiles="true">
+            <itemPath>../JVM/gc/interfaces/FinalizableInterface.h</itemPath>
+            <itemPath>../JVM/gc/interfaces/GarbageCollectableInterface.h</itemPath>
+            <itemPath>../JVM/gc/interfaces/HeapInterface.h</itemPath>
+            <itemPath>../JVM/gc/interfaces/ObjectVisitorInterface.h</itemPath>
+            <itemPath>../JVM/gc/interfaces/VisitableInterface.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="MS" displayName="MS" projectFiles="true">
+            <itemPath>../JVM/gc/MS/Color.h</itemPath>
+            <itemPath>../JVM/gc/MS/Marker.cpp</itemPath>
+            <itemPath>../JVM/gc/MS/Marker.h</itemPath>
+          </logicalFolder>
+          <itemPath>../JVM/gc/GarbageCollector.cpp</itemPath>
+          <itemPath>../JVM/gc/GarbageCollector.h</itemPath>
+          <itemPath>../JVM/gc/Heap.cpp</itemPath>
+          <itemPath>../JVM/gc/Heap.h</itemPath>
+          <itemPath>../JVM/gc/MemoryCell.h</itemPath>
+          <itemPath>../JVM/gc/ObjectTable.cpp</itemPath>
+          <itemPath>../JVM/gc/ObjectTable.h</itemPath>
+          <itemPath>../JVM/gc/TreadMillGc.cpp</itemPath>
+          <itemPath>../JVM/gc/TreadMillGc.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="jvm_structures"
+                       displayName="jvm_structures"
+                       projectFiles="true">
+          <itemPath>../JVM/jvm_structures/JavaConstantPool.h</itemPath>
+          <itemPath>../JVM/jvm_structures/Reference.h</itemPath>
+          <itemPath>../JVM/jvm_structures/TypeInfo.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="natives" displayName="natives" projectFiles="true">
+          <logicalFolder name="java" displayName="java" projectFiles="true">
+            <logicalFolder name="io" displayName="io" projectFiles="true">
+              <itemPath>../JVM/natives/java/io/PrintStream.cpp</itemPath>
+              <itemPath>../JVM/natives/java/io/PrintStream.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="lang" displayName="lang" projectFiles="true">
+              <itemPath>../JVM/natives/java/lang/Exception.cpp</itemPath>
+              <itemPath>../JVM/natives/java/lang/Exception.h</itemPath>
+              <itemPath>../JVM/natives/java/lang/Object.cpp</itemPath>
+              <itemPath>../JVM/natives/java/lang/Object.h</itemPath>
+              <itemPath>../JVM/natives/java/lang/String.cpp</itemPath>
+              <itemPath>../JVM/natives/java/lang/String.h</itemPath>
+              <itemPath>../JVM/natives/java/lang/StringBuilder.cpp</itemPath>
+              <itemPath>../JVM/natives/java/lang/StringBuilder.h</itemPath>
+              <itemPath>../JVM/natives/java/lang/System.cpp</itemPath>
+              <itemPath>../JVM/natives/java/lang/System.h</itemPath>
+              <itemPath>../JVM/natives/java/lang/Throwable.cpp</itemPath>
+              <itemPath>../JVM/natives/java/lang/Throwable.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <itemPath>../JVM/natives/Declarations.h</itemPath>
+          <itemPath>../JVM/natives/helpers.cpp</itemPath>
+          <itemPath>../JVM/natives/helpers.h</itemPath>
+          <itemPath>../JVM/natives/includes.h</itemPath>
+          <itemPath>../JVM/natives/natives.cpp</itemPath>
+          <itemPath>../JVM/natives/natives.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="runtime" displayName="runtime" projectFiles="true">
+          <itemPath>../JVM/runtime/AccessFlags.h</itemPath>
+          <itemPath>../JVM/runtime/ArrayObject.h</itemPath>
+          <itemPath>../JVM/runtime/Class.cpp</itemPath>
+          <itemPath>../JVM/runtime/Class.h</itemPath>
+          <itemPath>../JVM/runtime/ClassMap.cpp</itemPath>
+          <itemPath>../JVM/runtime/ClassMap.h</itemPath>
+          <itemPath>../JVM/runtime/ClassMember.h</itemPath>
+          <itemPath>../JVM/runtime/ClassMemberMap.h</itemPath>
+          <itemPath>../JVM/runtime/ConstantPool.cpp</itemPath>
+          <itemPath>../JVM/runtime/ConstantPool.h</itemPath>
+          <itemPath>../JVM/runtime/ExceptionTable.cpp</itemPath>
+          <itemPath>../JVM/runtime/ExceptionTable.h</itemPath>
+          <itemPath>../JVM/runtime/ExecutionEngine.cpp</itemPath>
+          <itemPath>../JVM/runtime/ExecutionEngine.h</itemPath>
+          <itemPath>../JVM/runtime/Field.h</itemPath>
+          <itemPath>../JVM/runtime/InstructionSet.h</itemPath>
+          <itemPath>../JVM/runtime/LocalVariablesArray.h</itemPath>
+          <itemPath>../JVM/runtime/Method.cpp</itemPath>
+          <itemPath>../JVM/runtime/Method.h</itemPath>
+          <itemPath>../JVM/runtime/MethodArea.cpp</itemPath>
+          <itemPath>../JVM/runtime/MethodArea.h</itemPath>
+          <itemPath>../JVM/runtime/MethodFrame.cpp</itemPath>
+          <itemPath>../JVM/runtime/MethodFrame.h</itemPath>
+          <itemPath>../JVM/runtime/Object.h</itemPath>
+          <itemPath>../JVM/runtime/ObjectHeader.h</itemPath>
+          <itemPath>../JVM/runtime/OperandStack.cpp</itemPath>
+          <itemPath>../JVM/runtime/OperandStack.h</itemPath>
+          <itemPath>../JVM/runtime/Runtime.h</itemPath>
+          <itemPath>../JVM/runtime/TypeDescriptors.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="threads" displayName="threads" projectFiles="true">
+          <itemPath>../JVM/threads/Mutex.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="types" displayName="types" projectFiles="true">
+          <itemPath>../JVM/types/Aliases.h</itemPath>
+          <itemPath>../JVM/types/ConversionFunctions.h</itemPath>
+          <itemPath>../JVM/types/Descriptors.cpp</itemPath>
+          <itemPath>../JVM/types/Descriptors.h</itemPath>
+          <itemPath>../JVM/types/types.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="utils" displayName="utils" projectFiles="true">
+          <itemPath>../JVM/utils/ArgumentsParser.cpp</itemPath>
+          <itemPath>../JVM/utils/ArgumentsParser.h</itemPath>
+          <itemPath>../JVM/utils/Array.h</itemPath>
+          <itemPath>../JVM/utils/HashMap.h</itemPath>
+          <itemPath>../JVM/utils/Macros.h</itemPath>
+          <itemPath>../JVM/utils/Parameters.h</itemPath>
+          <itemPath>../JVM/utils/Utf8String.cpp</itemPath>
+          <itemPath>../JVM/utils/Utf8String.h</itemPath>
+          <itemPath>../JVM/utils/debug.h</itemPath>
+        </logicalFolder>
+        <itemPath>../JVM/JVM.filters</itemPath>
+        <itemPath>../JVM/JVM.sln</itemPath>
+        <itemPath>../JVM/JVM.vcxproj</itemPath>
+        <itemPath>../JVM/JVM.vcxproj.filters</itemPath>
+        <itemPath>../JVM/Makefile</itemPath>
+        <itemPath>../JVM/main.cpp</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../JVM</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <architecture>1</architecture>
+          <standard>11</standard>
+          <commandLine>-D_DEBUG</commandLine>
+          <warningLevel>0</warningLevel>
+        </ccTool>
+      </compileType>
+      <item path="../JVM/JVM.filters" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/JVM.sln" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/JVM.vcxproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/JVM.vcxproj.filters" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/classfile/ClassFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/classfile/ClassLoader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/classfile/ClassLoader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/exceptions/RuntimeExceptions.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/Baker/BakerGc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/Baker/BakerGc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/GarbageCollector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/GarbageCollector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/Heap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/Heap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MS/Color.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MS/Marker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MS/Marker.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MemoryCell.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/ObjectTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/ObjectTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/TreadMillGc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/TreadMillGc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/FinalizableInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/GarbageCollectableInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/HeapInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/ObjectVisitorInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/VisitableInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/jvm_structures/JavaConstantPool.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/jvm_structures/Reference.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/jvm_structures/TypeInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/natives/Declarations.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/helpers.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/natives/helpers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/includes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/io/PrintStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/io/PrintStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Exception.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Exception.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Object.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Object.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/String.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/String.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/StringBuilder.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/StringBuilder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/System.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/System.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Throwable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Throwable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/natives.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/natives/natives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/AccessFlags.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ArrayObject.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Class.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Class.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMember.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMemberMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ConstantPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ConstantPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExceptionTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExceptionTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExecutionEngine.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExecutionEngine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Field.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/InstructionSet.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/LocalVariablesArray.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Method.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Method.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodArea.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodArea.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodFrame.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodFrame.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Object.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ObjectHeader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/OperandStack.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/OperandStack.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Runtime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/TypeDescriptors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/threads/Mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/Aliases.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/ConversionFunctions.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/Descriptors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/types/Descriptors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/types.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/ArgumentsParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/utils/ArgumentsParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Array.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/HashMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Macros.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Parameters.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Utf8String.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Utf8String.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/debug.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../JVM/JVM.filters" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/JVM.sln" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/JVM.vcxproj" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/JVM.vcxproj.filters" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/classfile/ClassFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/classfile/ClassLoader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/classfile/ClassLoader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/exceptions/RuntimeExceptions.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/Baker/BakerGc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/Baker/BakerGc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/GarbageCollector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/GarbageCollector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/Heap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/Heap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MS/Color.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MS/Marker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MS/Marker.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/MemoryCell.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/ObjectTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/ObjectTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/TreadMillGc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/gc/TreadMillGc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/FinalizableInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/GarbageCollectableInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/HeapInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/ObjectVisitorInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/gc/interfaces/VisitableInterface.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/jvm_structures/JavaConstantPool.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/jvm_structures/Reference.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/jvm_structures/TypeInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/natives/Declarations.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/helpers.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/natives/helpers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/includes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/io/PrintStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/io/PrintStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Exception.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Exception.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Object.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Object.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/String.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/String.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/StringBuilder.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/StringBuilder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/System.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/System.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Throwable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/java/lang/Throwable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/natives/natives.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/natives/natives.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/AccessFlags.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ArrayObject.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Class.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Class.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMap.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMember.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ClassMemberMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ConstantPool.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ConstantPool.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExceptionTable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExceptionTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExecutionEngine.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ExecutionEngine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Field.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/InstructionSet.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/LocalVariablesArray.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Method.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Method.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodArea.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodArea.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodFrame.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/MethodFrame.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Object.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/ObjectHeader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/OperandStack.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/OperandStack.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/Runtime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/runtime/TypeDescriptors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/threads/Mutex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/Aliases.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/ConversionFunctions.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/Descriptors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/types/Descriptors.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/types/types.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/ArgumentsParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/utils/ArgumentsParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Array.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/HashMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Macros.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Parameters.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Utf8String.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../JVM/utils/Utf8String.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../JVM/utils/debug.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
