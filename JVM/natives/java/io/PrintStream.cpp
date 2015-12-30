@@ -1,6 +1,7 @@
 #include "PrintStream.h"
 #include "../../Declarations.h"
 #include "../../includes.h"
+#include "../lang/String.h"
 
 using namespace TypeDescriptors;
 namespace java
@@ -99,7 +100,7 @@ namespace java
 
 			NATIVE_METHOD_HEADER(printlnString)
 			{
-				Utf8String * string = (Utf8String *)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+				java::lang::String::String * string = (java::lang::String::String *)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 
 				//Utf8String
 				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());

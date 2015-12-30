@@ -282,6 +282,9 @@
     <ClInclude Include="utils\Parameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gc\debug\DebugVisitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

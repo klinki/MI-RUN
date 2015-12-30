@@ -13,12 +13,29 @@ namespace java
 			class String : public ObjectHeader, public Utf8String
 			{
 			public:
+				String(const char* str, size_t length, Class* classPtr, bool preallocated);
 				String(size_t length, Class* classPtr): ObjectHeader(classPtr),  Utf8String(length, true) {};
 				String(Utf8String & str, Class* classPtr);
+				String(const char* str, bool preallocated);
 
 				static size_t getMemorySize(size_t items)
 				{
 					return sizeof(String) + items * sizeof(char);
+				}
+
+				virtual void accept(ObjectVisitorInterface * visitor)
+				{
+					visitor->visit(this);
+				};
+
+				virtual void accept(ObjectVisitorInterface & visitor)
+				{
+					this->accept(&visitor);
+				};
+
+				virtual bool requiresFinalization()
+				{
+					return false;
 				}
 			};
 

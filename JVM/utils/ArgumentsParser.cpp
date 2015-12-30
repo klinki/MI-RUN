@@ -1,6 +1,8 @@
 #include <string>
 #include "ArgumentsParser.h"
 #include "../runtime/Runtime.h"
+#include "../natives/java/lang/String.h"
+#include "../natives/java/lang/Object.h"
 
 ArgumentsParser::ArgumentsParser(Runtime* runtime, int argc, const char** argv)
 {
@@ -30,14 +32,14 @@ word ArgumentsParser::getArgumentsArray()
 	int countArguments = this->argc - this->argsIndex;
 
 	byte* memory = this->runtime->heap->allocate(ArrayObject<Object*>::getMemorySize(countArguments));
-	ArrayObject<Object*> * arrayObject = new(memory) ArrayObject<Object*>(countArguments, nullptr, NULL, NULL);
+	ArrayObject<Object*> * arrayObject = new(memory) ArrayObject<Object*>(countArguments, nullptr, java::lang::Object::initialize(), NULL);
 
 	size_t arrayIndex = this->runtime->objectTable->insert(arrayObject);
 
 	for (int i = 0; i < countArguments; i++)
 	{
-		byte* strMemory = this->runtime->heap->allocate(Utf8String::getMemorySize(strlen(this->argv[i])));
-		Utf8String* str = new(strMemory) Utf8String(argv[this->argsIndex + i], true);
+		byte* strMemory = this->runtime->heap->allocate(java::lang::String::String::getMemorySize(strlen(this->argv[i])));
+		java::lang::String::String* str = new(strMemory) java::lang::String::String(argv[this->argsIndex + i], true);
 
 		size_t strIndex = this->runtime->objectTable->insert(str);
 		(*arrayObject)[i] = makeReferenceAddress(strIndex);

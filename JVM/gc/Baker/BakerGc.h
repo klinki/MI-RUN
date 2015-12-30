@@ -7,6 +7,7 @@
 #include "../Heap.h"
 
 class ExecutionEngine;
+class Runtime;
 
 class BakerGc : public ObjectTable, public ObjectVisitorInterface, public HeapInterface
 {
@@ -48,6 +49,7 @@ visibility:
 	word edenSpaceRoot;
 	word permanentSpaceRoot;
 
+	Runtime * runtime;
 	ExecutionEngine * engine;
 
 
@@ -78,10 +80,12 @@ visibility:
 public:
 	BakerGc();
 	BakerGc(size_t memorySize, size_t permSize);
+	BakerGc(Runtime* runtime, size_t memorySize, size_t permSize);
 	~BakerGc();
 
 	virtual void visit(MethodFrame* methodFrame);
 	virtual void visit(Object* object);
+	virtual void visit(ObjectHeader* object);
 	virtual void visit(size_t address);
 	virtual void visit(word address);
 

@@ -1,7 +1,8 @@
 #pragma once
+#include "../gc/interfaces/GarbageCollectableInterface.h"
 #include "Class.h"
 
-class ObjectHeader
+class ObjectHeader : GarbageCollectableInterface
 {
 visibility:
 	Class * objectClass;

@@ -3,19 +3,21 @@
 #include <cstdlib>
 #include "../jvm_structures/JavaConstantPool.h"
 
-
+class Runtime;
 
 class ConstantPool
 {
-private:
+protected:
 	int constant_pool_count;
 	ConstantPoolItem * constantPool;
+	Runtime* runtime;
 public:
 	ConstantPool();
-	ConstantPool(int size);
+	ConstantPool(int size, Runtime* runtime = NULL);
 	void print();
 
 	int add(int pos, int type, int length, char * data);
+
 	int GetSize();
 	void add(int pos, ConstantPoolItem * item);
 

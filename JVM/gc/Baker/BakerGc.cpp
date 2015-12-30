@@ -1,17 +1,25 @@
 #include "BakerGc.h"
 #include "../../runtime/MethodFrame.h"
 #include "../../runtime/ExecutionEngine.h"
+#include "../debug/DebugVisitor.h"
+#include "../../runtime/Runtime.h"
 
-BakerGc::BakerGc() : BakerGc(10 * 1024 * 1024, 50 * 1024 * 1024) {};
+BakerGc::BakerGc() : BakerGc(10 * 1024 , 50 * 1024 * 1024) {};
 
-BakerGc::BakerGc(size_t memorySize, size_t permSize)
+BakerGc::BakerGc(Runtime* runtime, size_t memorySize, size_t permSize)
 {
+	this->runtime = runtime;
+
 	this->memorySlots[0] = new Heap(memorySize);
 	this->memorySlots[1] = new Heap(memorySize);
 
 	this->permanentSpace = new Heap(permSize);
 
 	this->activeSlot = 0;
+}
+
+BakerGc::BakerGc(size_t memorySize, size_t permSize): BakerGc(NULL, memorySize, permSize)
+{
 }
 
 BakerGc::~BakerGc()
@@ -23,6 +31,8 @@ BakerGc::~BakerGc()
 
 void BakerGc::visit(MethodFrame* methodFrame)
 {
+	int key = this->getKey(methodFrame);
+	return this->visit((word)makeReferenceAddress(key));
 }
 
 void BakerGc::visit(Object* object)
@@ -35,10 +45,7 @@ void BakerGc::visit(size_t address)
 
 void BakerGc::switchMemorySlot()
 {
-	Heap* oldSlot = this->memorySlots[this->activeSlot];
 	this->activeSlot = this->activeSlot == 0 ? 1 : 0;
-	this->finalize(oldSlot);
-	this->memorySlots[this->activeSlot]->clear();
 }
 
 void BakerGc::setGCRoot(word currentFrame)
@@ -54,7 +61,8 @@ void BakerGc::visit(word address)
 
 		try 
 		{
-			GarbageCollectableInterface* pointer = this->get(refAddress);
+			void * pointer = this->get(refAddress);
+			GarbageCollectableInterface* visitable = (GarbageCollectableInterface*)pointer;
 
 			size_t dataSize = this->getDataSize(pointer);
 
@@ -78,13 +86,18 @@ void BakerGc::visit(word address)
 			this->updateAddress(refAddress, memory);
 			this->setColor(pointer, Color::BAKER_MOVED);
 
-			pointer->accept(*this);
+			visitable->accept(*this);
 		}
 		catch (...)
 		{
 
 		}
 	}
+}
+
+void BakerGc::visit(ObjectHeader* header)
+{
+
 }
 
 size_t BakerGc::countAllocatedBlockSize(size_t size)
@@ -141,12 +154,26 @@ void BakerGc::updateAddress(size_t index, void * newAddress)
 
 void BakerGc::collect()
 {
+#ifdef _DEBUG
+	std::cerr << "Garbage collection starts... " << std::endl;
+#endif
+	Heap* oldSlot = this->memorySlots[this->activeSlot];
 	this->switchMemorySlot();
 
-	if ((int)this->edenSpaceRoot != NULL) 
+	MethodFrame* frame = this->runtime->executionEngine->getCurrentMethodFrame();
+
+	if (frame != NULL) 
 	{
-		this->visit(this->edenSpaceRoot);
+#ifdef _DEBUG
+		DebugVisitor visitor(this);
+		visitor.visit(frame);
+#endif
+
+		this->visit(frame);
 	}
+
+	this->finalize(oldSlot);
+	oldSlot->clear();
 }
 
 size_t BakerGc::insert(void * ptr)
@@ -170,6 +197,10 @@ size_t BakerGc::insert(void * ptr, bool systemObject)
 
 void BakerGc::finalize(Heap* slot)
 {
+#ifdef _DEBUG
+	std::cerr << "Finalization" << std::endl;
+#endif
+
 	unsigned char* ptr = (unsigned char*)slot->data;
 	unsigned char* endPtr = ptr + slot->usedBytes;
 
@@ -198,7 +229,9 @@ void BakerGc::finalize(Heap* slot)
 				}
 			}
 			// TODO: Finalize object
-
+#ifdef _DEBUG
+			std::cerr << "Removing key: " << this->getKey(ptr) << " from table" << std::endl;
+#endif
 			this->hashMap.erase(this->getKey(ptr));
 
 			ptr += size;

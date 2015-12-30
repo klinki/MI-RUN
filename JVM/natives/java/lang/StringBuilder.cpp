@@ -11,6 +11,7 @@ namespace java
 	{
 		StringBuilder::StringBuilder(int size, Class* classPtr) : ArrayObject<char>(size, 0, classPtr, (byte*)(&this->bytesLength + 1))
 		{
+			this->bytesLength = 0;
 		}
 
 		StringBuilder::StringBuilder(Class * classPtr): StringBuilder(StrBuilder::DEFAULT_SIZE, classPtr)
@@ -24,9 +25,7 @@ namespace java
 		void StringBuilder::copy(const StringBuilder & src)
 		{
 			this->bytesLength = src.bytesLength;
-
-                        // TODO
-			// strncpy_s(this->arrayData, src.bytesLength, src.arrayData, this->size);
+			memcpy(this->arrayData, src.arrayData, src.bytesLength);
 		}
 
 		bool StringBuilder::canAppend(String::String * string) const
@@ -36,12 +35,10 @@ namespace java
 
 		void StringBuilder::append(String::String * string)
 		{
-			int shift = (this->bytesLength > 0) ? (this->bytesLength - 1) : 0;
+			int shift = (this->bytesLength > 0) ? (this->bytesLength) : 0;
+			memcpy(this->arrayData + shift, string->toAsciiString(), string->bytes());
 
-                        // TODO
-			// strncpy_s(this->arrayData + shift, string->bytes(), string->toAsciiString(), (this->size - this->bytesLength));
-
-			this->bytesLength += string->bytes();
+			this->bytesLength += string->bytes() - 1;
 		}
 
 		namespace StrBuilder
@@ -105,7 +102,7 @@ namespace java
 				StringBuilder* builder = (StringBuilder*)engine->objectTable->get(builderIndex);
 
 				byte* memory = engine->heap->allocate(String::String::getMemorySize(builder->lengthInBytes()));
-				String::String* strPtr = (String::String*) new String::String(builder->lengthInBytes(), engine->classMap->getClass("java/lang/String"));
+				String::String* strPtr = (String::String*) new String::String(builder->getData(), builder->lengthInBytes(), engine->classMap->getClass("java/lang/String"), true);
 
 				size_t strIndex = engine->objectTable->insert(strPtr);
 

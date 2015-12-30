@@ -27,5 +27,10 @@ public:
 		return sizeof(Field);
 	}
 
+	bool isDoubleWord() const
+	{
+		return this->type == TypeTag::DOUBLE || this->type == TypeTag::LONG;
+	}
+
 	friend class ClassLoader;
 };

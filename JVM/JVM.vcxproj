@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gc\Baker\BakerGc.h" />
+    <ClInclude Include="gc\debug\DebugVisitor.h" />
     <ClInclude Include="gc\interfaces\FinalizableInterface.h" />
     <ClInclude Include="gc\interfaces\GarbageCollectableInterface.h" />
     <ClInclude Include="gc\interfaces\HeapInterface.h" />

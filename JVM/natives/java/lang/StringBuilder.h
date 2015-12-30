@@ -29,6 +29,11 @@ namespace java
 				return this->bytesLength;
 			}
 
+			char* getData() const
+			{
+				return this->arrayData;
+			}
+
 			static size_t getMemorySize(size_t fields)
 			{
 				return sizeof(StringBuilder) + sizeof(char) * fields;

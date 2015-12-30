@@ -164,5 +164,25 @@ void Class::setParent(Class* parent)
 	this->hierarchicalCountNonStaticFields = -1;
 	this->parentClass = parent;
 	
-	this->getHierarchicalCountNonStaticFields();
+	int index = this->getHierarchicalCountNonStaticFields() - this->countNonStaticFields;
+
+	auto fieldIterator = this->fieldsMap.hashmap.startIterator();
+
+	while (fieldIterator != this->fieldsMap.hashmap.endIterator())
+	{
+		Field* field = (Field*)fieldIterator->second;
+		field->fieldIndex = index;
+
+		if (field->isDoubleWord())
+		{
+			index += 2;
+		}
+		else
+		{
+			index++;
+		}
+
+		++fieldIterator;
+	}
+
 }

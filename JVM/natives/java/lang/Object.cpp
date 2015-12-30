@@ -1,15 +1,25 @@
 #include "Object.h"
 #include "../../includes.h"
 
-namespace Java
+namespace java
 {
-	namespace Lang
+	namespace lang
 	{
 		namespace Object
 		{
+			static Class* staticClassPtr = NULL;
+
 			Class* initialize()
 			{
+				if (staticClassPtr != NULL)
+				{
+					return staticClassPtr;
+				}
+
 				Class * newClass = new Class(NULL);
+
+				staticClassPtr = newClass;
+
 				newClass->classLoader = NULL;
 				newClass->parentClass = NULL;
 				newClass->fullyQualifiedName = Utf8String("java/lang/Object");
@@ -88,7 +98,9 @@ namespace Java
 
 			NATIVE_METHOD_HEADER(finalize)
 			{
-
+#ifdef _DEBUG
+				std::cerr << "Finalize object" << std::endl;
+#endif
 			}
 
 			NATIVE_METHOD_HEADER(getClass)
