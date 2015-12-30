@@ -49,7 +49,7 @@ enum class FieldAccessFlags
 	SYNTHETIC = ACC_SYNTHETIC,
 	ENUM = ACC_ENUM
 };
-/*
+
 enum class MethodAccessFlags
 {
 	PUBLIC = ACC_PUBLIC,
@@ -65,7 +65,7 @@ enum class MethodAccessFlags
 	STRICT = ACC_STRICT,
 	SYNTHETIC = ACC_SYNTHETIC
 };
-*/
+
 enum class ClassAccessFlags
 {
 	PUBLIC = ACC_PUBLIC,

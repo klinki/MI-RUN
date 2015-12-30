@@ -46,6 +46,12 @@ public:
 		
 		Class* mainClass = this->classLoader->load(parser.getClassFile());
 		Method* mainMethod = mainClass->getMethod("main", "([Ljava/lang/String;)V");
+
+		if (mainMethod == NULL)
+		{
+			throw Errors::NoSuchMethodError("No main method");
+		}
+
 		mainMethod->classPtr = mainClass;
 
 		MethodFrame* frame = this->prepareFrame(mainMethod, parser.getArgumentsArray());

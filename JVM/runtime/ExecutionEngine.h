@@ -391,7 +391,7 @@ public:
 		return index;
 	}
 
-	inline Method* resolveMethod(size_t index)
+	inline Method* resolveMethod(size_t index, Instruction instruction)
 	{
 		Method* methodPtr = nullptr;
 		Class * classPtr = nullptr;
@@ -429,6 +429,20 @@ public:
 		}
 
 		methodPtr->classPtr = classPtr;
+
+		if (instruction == INVOKEVIRTUAL)
+		{
+			size_t inputArgsSize = methodPtr->inputArgsSize;
+			size_t stackSize = this->getCurrentMethodFrame()->operandStack->index - 1;
+			word reference = getReferenceAddress(this->getCurrentMethodFrame()->operandStack->operator[](stackSize - inputArgsSize));
+
+			void* ptr = this->objectTable->get(reference);
+
+			ObjectHeader* objectPtr = (ObjectHeader*)ptr;
+			Method* overloadedPtr = objectPtr->objectClass->getMethod(methodPtr->name, methodPtr->descriptor);
+
+			return overloadedPtr;
+		}
 
 		return methodPtr;
 	}
