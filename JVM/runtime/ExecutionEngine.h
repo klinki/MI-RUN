@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 #include "InstructionSet.h"
 #include "MethodFrame.h"
 #include "Class.h"
@@ -259,7 +260,7 @@ public:
 		{
 			res = -1;
 		}
-		else if ((a == NAN || b == NAN))
+		else if (isnan(a) || isnan(b))
 		{
 			res = (currentInstruction == DCMPG || currentInstruction == FCMPG) ? 1 : -1;
 		}

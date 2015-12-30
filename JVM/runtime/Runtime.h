@@ -10,6 +10,7 @@
 #include "../natives/natives.h"
 #include "../utils/ArgumentsParser.h"
 #include "../utils/Parameters.h"
+#include "../classfile/ClassLoader.h"
 
 class Runtime
 {

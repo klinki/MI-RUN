@@ -1,3 +1,4 @@
+#include <cstdlib>
 #pragma once
 
 struct MemoryCell

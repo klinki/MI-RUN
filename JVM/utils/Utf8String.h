@@ -66,7 +66,7 @@ namespace std
 {
 	template <> struct hash<Utf8String>
 	{
-		inline size_t std::hash<Utf8String>::operator()(const Utf8String & x) const
+		inline size_t operator()(const Utf8String & x) const
 		{
 			return x.hash;
 		}

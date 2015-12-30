@@ -35,6 +35,7 @@ union doubleWord
 
 	doubleWord() { words[0] = words[1] = 0; }
 	doubleWord(size_t high, size_t low) { words[0] = low; words[1] = high; }
+        doubleWord(word high, word low) { words[0] = low; words[1] = high; }
 	doubleWord(long long value) { longValue = value; }
 	doubleWord(double value) { doubleValue = value; }
 

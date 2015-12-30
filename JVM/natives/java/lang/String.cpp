@@ -15,7 +15,8 @@ namespace java
 				this->hash = str.getHash();
 				this->stringLength = str.length();
 
-				strncpy_s(this->data, this->dataLength, str.toAsciiString(), this->dataLength);
+                                // TODO: 
+				// strncpy_s(this->data, this->dataLength, str.toAsciiString(), this->dataLength);
 			}
 
 			Class* initialize(ClassMap * classMap)

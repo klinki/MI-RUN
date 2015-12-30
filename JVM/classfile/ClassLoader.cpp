@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 #include "ClassLoader.h"
 #include "../runtime/Runtime.h"
 #include "../natives/java/lang/String.h"
@@ -26,7 +27,7 @@ Class* ClassLoader::load(const char * filename)
 
 	if (!myfile->is_open())
 	{
-		std::string message = std::string("Could not open: ") + std::string(filename);
+		string message = std::string("Could not open: ") + std::string(filename);
 		printf("cloud not open %s", filename);
 		throw NoClassDefFoundError(message.c_str());
 	}
@@ -843,10 +844,9 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 			//char c[] = "../";
 			//strncpy_s(r+(i*3),((i+1) * 3),c, strlen(c));
 		}
-		strcpy_s(adr+ (morecol * 3), alen  + 7 + (morecol * 3), (char*)a);
-		strncpy_s(adr + alen  + (morecol * 3), alen  + 7 + (morecol * 3), ext, strlen(ext));
 
-
+                strncpy(adr + (morecol * 3), (char*)a, strlen((char*)a));
+                strncpy(adr + alen  + (morecol * 3), ext, strlen(ext));
 
 		this->load(adr);
 
