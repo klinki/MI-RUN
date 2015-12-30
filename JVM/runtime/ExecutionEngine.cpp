@@ -32,6 +32,7 @@ ExecutionEngine::ExecutionEngine(Runtime * runtime)
 
 ExecutionEngine::~ExecutionEngine()
 {
+	delete this->callStack;
 }
 
 bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
