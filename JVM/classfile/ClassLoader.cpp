@@ -21,7 +21,9 @@ ClassLoader::~ClassLoader()
         
 Class* ClassLoader::load(const char * filename)
 {
-	myfile = new ifstream(filename, ios::in | ios::binary);
+	ifstream* file = new ifstream(filename, ios::in | ios::binary);
+
+	this->myfile = file;
 
 	if (!myfile->is_open())
 	{
@@ -64,6 +66,9 @@ Class* ClassLoader::load(const char * filename)
 #ifdef _DEBUG
 	fprintf(stderr, "loading finnished\n");
 #endif // _DEBUG
+
+	file->close();
+	delete file;
 
 	return thisClass;
 }
