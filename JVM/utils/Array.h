@@ -3,6 +3,9 @@
 #include "Macros.h"
 #include "../types/types.h"
 
+class IndexOutOfBoundsException {};
+
+
 template <class T> 
 class Array
 {
@@ -83,4 +86,3 @@ public:
 	}
 };
 
-class IndexOutOfBoundsException {};

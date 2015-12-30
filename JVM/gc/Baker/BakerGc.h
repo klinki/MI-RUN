@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include "../ObjectTable.h"
 #include "../MS/Color.h"
 #include "../interfaces/ObjectVisitorInterface.h"
@@ -33,7 +34,7 @@ visibility:
 			this->key = 0;
 			this->data = (unsigned char*)(&this->data + 1);
 
-#if _DEBUG
+#ifdef _DEBUG
 			memset(this->data, 0, size);
 #endif
 		}

@@ -25,7 +25,8 @@ namespace java
 		{
 			this->bytesLength = src.bytesLength;
 
-			strncpy_s(this->arrayData, src.bytesLength, src.arrayData, this->size);
+                        // TODO
+			// strncpy_s(this->arrayData, src.bytesLength, src.arrayData, this->size);
 		}
 
 		bool StringBuilder::canAppend(String::String * string) const
@@ -37,7 +38,8 @@ namespace java
 		{
 			int shift = (this->bytesLength > 0) ? (this->bytesLength - 1) : 0;
 
-			strncpy_s(this->arrayData + shift, string->bytes(), string->toAsciiString(), (this->size - this->bytesLength));
+                        // TODO
+			// strncpy_s(this->arrayData + shift, string->bytes(), string->toAsciiString(), (this->size - this->bytesLength));
 
 			this->bytesLength += string->bytes();
 		}

@@ -17,16 +17,21 @@ namespace Exceptions
 	{
 	protected:
 		std::string message;
-
+                std::string exceptionName;
 	public:
 		Throwable(): Throwable(NULL) {};
 		Throwable(const char* message) : Throwable(message, "java/lang/Throwable") {}
-		Throwable(const char* message, const char* parent) : std::exception(parent), message(message) {};
+		Throwable(const char* message, const char* parent): exceptionName(parent), message(message) {};
 
 		const char* getMessage() 
 		{
 			return message.c_str();
 		}
+                
+                const char* what()
+                {
+                    return exceptionName.c_str();
+                }
 	};
 
 	ExceptionClass(Exception, Throwable, "java/lang/Throwable");

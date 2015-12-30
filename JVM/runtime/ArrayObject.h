@@ -3,6 +3,7 @@
 #include "../exceptions/RuntimeExceptions.h"
 #include "../gc/interfaces/GarbageCollectableInterface.h"
 #include "ObjectHeader.h"
+#include "../utils/Utf8String.h"
 
 template<class T>
 class ArrayObject : public ObjectHeader, public GarbageCollectableInterface 

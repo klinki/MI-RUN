@@ -5,7 +5,7 @@
 #include "../runtime/Method.h"
 #include "../runtime/MethodArea.h"
 #include "../runtime/Object.h"
-#include "../runtime/Classmap.h"
+#include "../runtime/ClassMap.h"
 #include "../runtime/ExecutionEngine.h"
 #include "../runtime/ObjectHeader.h"
 #include "../types/Descriptors.h"

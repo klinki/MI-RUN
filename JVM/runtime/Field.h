@@ -28,7 +28,7 @@ public:
 
 	doubleWord getValue2() const
 	{
-		return doubleWord(this->value[0], this->value[1]);
+		return doubleWord((unsigned int)this->value[0], (unsigned int)this->value[1]);
 	}
 
 	friend class ClassLoader;
