@@ -44,7 +44,7 @@ bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
 	{
 		Exception & exception = (*table)[i];
 
-		if (pc >= exception.start_pc && pc < exception.end_pc)
+		if (pc >= exception.start_pc && pc <= exception.end_pc)
 		{
 			// NULL objectClass is for finally block
 			if (e->objectClass == NULL || e->objectClass == exception.classPtr || e->objectClass->isSubclassOf(exception.classPtr))
