@@ -7,9 +7,6 @@
     <ClCompile Include="classfile\ClassLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="natives\arithmetic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gc\GarbageCollector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -17,9 +14,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="runtime\ExecutionEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="runtime\FrameStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="runtime\Method.cpp">
@@ -31,9 +25,6 @@
     <ClCompile Include="runtime\OperandStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\Runtime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtime\ConstantPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -43,9 +34,6 @@
     <ClCompile Include="runtime\MethodFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\Field.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utils\Utf8String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,21 +41,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gc\TreadMillGc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="runtime\Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utils\Utf16String.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="runtime\ObjectTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="natives\JavaObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="natives\JavaString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="types\Descriptors.cpp">
@@ -133,9 +106,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\ExecutionEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="runtime\FrameStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\InstructionSet.h">
@@ -223,12 +193,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\HashMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\Utf16String.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="runtime\ObjectTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="natives\JavaObject.h">
