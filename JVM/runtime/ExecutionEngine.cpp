@@ -53,7 +53,7 @@ bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
 		if (pc >= exception.start_pc && pc <= exception.end_pc)
 		{
 			// NULL objectClass is for finally block
-			if (e->objectClass == NULL || e->objectClass == exception.classPtr || e->objectClass->isSubclassOf(exception.classPtr))
+			if (exception.classPtr == NULL || e->objectClass == exception.classPtr || e->objectClass->isSubclassOf(exception.classPtr))
 			{
 				pc = exception.handler_pc;
 				this->getCurrentMethodFrame()->operandStack->clear();

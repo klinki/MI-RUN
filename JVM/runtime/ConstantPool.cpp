@@ -16,7 +16,7 @@ ConstantPool::ConstantPool(int size)
 	{
 		constPool[i] = new unsigned char[9];
 	}
-	//printf("%d\n", constant_pool_count);
+	//fprintf(stderr,"%d\n", constant_pool_count);
 	*/
 }
 
@@ -174,7 +174,7 @@ int ConstantPool::add(int pos, int type, int length, char * data)
 		case 8:	rt = REF_newInvokeSpecial;break;
 		case 9:	rt = REF_invokeInterface;break;
 		default:
-			printf("ERROR wrong method ref type\n");
+			fprintf(stderr,"ERROR wrong method ref type\n");
 			return -1;
 		}
 		unsigned short i2 = (unsigned short)((unsigned int)data[1] * 256 + (unsigned int)data[2]);
@@ -196,7 +196,7 @@ int ConstantPool::add(int pos, int type, int length, char * data)
 		constantPool[pos] = spi;
 		break;}
 	default:
-		printf("ERROR Constant pool unknown tag %d", type);
+		fprintf(stderr,"ERROR Constant pool unknown tag %d", type);
 		return -1;
 	}
 	int i = pos;
@@ -213,76 +213,76 @@ void ConstantPool::print()
 {
  for (int i = 1; i < constant_pool_count; i++)
 	{
-		printf("%d: t%d ", i, constantPool[i].tag);
+		fprintf(stderr,"%d: t%d ", i, constantPool[i].tag);
 		ConstantPoolItem * cpi;
 		//cpi = this->get(i);
 		
 		switch (constantPool[i].tag)
 		{
 		case CONSTANT_Class: //class
-			printf("class name_index:%d ", constantPool[i].classInfo.name_index);
+			fprintf(stderr,"class name_index:%d ", constantPool[i].classInfo.name_index);
 			break;
 		case CONSTANT_Fieldref: //field ref
-			printf("field class_index:%d ", constantPool[i].fieldInfo.class_index);
-			printf(" name_and_type_index:%d ", constantPool[i].fieldInfo.name_and_type_index);
+			fprintf(stderr,"field class_index:%d ", constantPool[i].fieldInfo.class_index);
+			fprintf(stderr," name_and_type_index:%d ", constantPool[i].fieldInfo.name_and_type_index);
 			break;
 		case CONSTANT_Methodref: //method ref
-			printf("method class_index:%d ", constantPool[i].methodInfo.class_index);
-			printf(" name_and_type_index:%d ", constantPool[i].methodInfo.name_and_type_index);
+			fprintf(stderr,"method class_index:%d ", constantPool[i].methodInfo.class_index);
+			fprintf(stderr," name_and_type_index:%d ", constantPool[i].methodInfo.name_and_type_index);
 			break;
 		case CONSTANT_InterfaceMethodref://interface method ref
-			printf("interface class_index:%d ", constantPool[i].interfaceMethodInfo.class_index);
-			printf(" name_and_type_index:%d ", constantPool[i].interfaceMethodInfo.name_and_type_index);
+			fprintf(stderr,"interface class_index:%d ", constantPool[i].interfaceMethodInfo.class_index);
+			fprintf(stderr," name_and_type_index:%d ", constantPool[i].interfaceMethodInfo.name_and_type_index);
 			break;
 		case CONSTANT_String: //string
-			printf("string string_index:%d ", constantPool[i].stringInfo.string_index);
+			fprintf(stderr,"string string_index:%d ", constantPool[i].stringInfo.string_index);
 			break;
 		case CONSTANT_Integer: //integer
-			printf("integer value:%d ", constantPool[i].integerInfo.value);
+			fprintf(stderr,"integer value:%d ", constantPool[i].integerInfo.value);
 			break;
 		case CONSTANT_Float: //float
-			printf("float value:%f ", constantPool[i].floatInfo.value);
+			fprintf(stderr,"float value:%f ", constantPool[i].floatInfo.value);
 			break;
 		case CONSTANT_Long: //long 
-			printf("long high_bytes:%d ", constantPool[i].longInfo.high_bytes);
-			printf(" low_bytes:%d ", constantPool[i].longInfo.low_bytes);
-			printf(" value:%d ", constantPool[i].longInfo.value);
+			fprintf(stderr,"long high_bytes:%d ", constantPool[i].longInfo.high_bytes);
+			fprintf(stderr," low_bytes:%d ", constantPool[i].longInfo.low_bytes);
+			fprintf(stderr," value:%d ", constantPool[i].longInfo.value);
 			i++;
 			break;
 		case CONSTANT_Double: //double 
-			printf("double high_bytes:%d ", constantPool[i].doubleInfo.high_bytes);
-			printf(" low_bytes:%d ", constantPool[i].doubleInfo.low_bytes);
-			printf(" value:%f ", constantPool[i].doubleInfo.value);
+			fprintf(stderr,"double high_bytes:%d ", constantPool[i].doubleInfo.high_bytes);
+			fprintf(stderr," low_bytes:%d ", constantPool[i].doubleInfo.low_bytes);
+			fprintf(stderr," value:%f ", constantPool[i].doubleInfo.value);
 			i++;
 			break;
 		case CONSTANT_NameAndType: //nameandtype
-			printf("nameandtype name_index:%d ", constantPool[i].nameAndTypeInfo.name_index);
-			printf(" descriptor_index:%d ", constantPool[i].nameAndTypeInfo.descriptor_index);
+			fprintf(stderr,"nameandtype name_index:%d ", constantPool[i].nameAndTypeInfo.name_index);
+			fprintf(stderr," descriptor_index:%d ", constantPool[i].nameAndTypeInfo.descriptor_index);
 			
 			break;
 		case CONSTANT_Utf8://utf8
 			
 			for (int k = 0; k < constantPool[i].utf8Info.length;k++)
 			{
-				printf("%c", constantPool[i].utf8Info.bytes[k]);
+				fprintf(stderr,"%c", constantPool[i].utf8Info.bytes[k]);
 			}
-			printf(" %s", constantPool[i].utf8Info.bytes);
+			fprintf(stderr," %s", constantPool[i].utf8Info.bytes);
 			break;
 		case CONSTANT_MethodHandle: //methodhandle
-			printf("methodHandleInfo reference_kind:%d ", constantPool[i].methodHandleInfo.reference_kind);
-			printf(" reference_index:%d ", constantPool[i].methodHandleInfo.reference_index);
+			fprintf(stderr,"methodHandleInfo reference_kind:%d ", constantPool[i].methodHandleInfo.reference_kind);
+			fprintf(stderr," reference_index:%d ", constantPool[i].methodHandleInfo.reference_index);
 			break;
 		case CONSTANT_MethodType: //methodtype
-			printf("methodTypeInfo descriptor_index:%d ", constantPool[i].methodTypeInfo.descriptor_index);
+			fprintf(stderr,"methodTypeInfo descriptor_index:%d ", constantPool[i].methodTypeInfo.descriptor_index);
 			break;
 		case CONSTANT_InvokeDynamic: //invokedynamic
-			printf("invokeDynamicInfo bootstrap_method_attr_index:%d ", constantPool[i].invokeDynamicInfo.bootstrap_method_attr_index);
-			printf("name_and_type_index:%d ", constantPool[i].invokeDynamicInfo.name_and_type_index);
+			fprintf(stderr,"invokeDynamicInfo bootstrap_method_attr_index:%d ", constantPool[i].invokeDynamicInfo.bootstrap_method_attr_index);
+			fprintf(stderr,"name_and_type_index:%d ", constantPool[i].invokeDynamicInfo.name_and_type_index);
 			break;
 		default:
-			printf("ERROR Constant pool unknown tag \n");
+			fprintf(stderr,"ERROR Constant pool unknown tag \n");
 		}
-		printf("\n");
+		fprintf(stderr,"\n");
 		
 	}
 
