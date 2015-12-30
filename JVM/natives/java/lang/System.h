@@ -4,9 +4,9 @@ class ClassMap;
 class Class;
 class Runtime;
 
-namespace Java
+namespace java
 {
-	namespace Lang
+	namespace lang
 	{
 		namespace System
 		{

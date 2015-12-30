@@ -1171,7 +1171,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case GETFIELD:
 			{
 				unsigned short index = this->getShort();
-				Object* reference = (Object*)frame->operandStack->pop();
+				Object* reference = (Object*)this->objectTable->get(frame->operandStack->popReference());
 
 				if (reference == NULL)
 				{
@@ -1197,12 +1197,6 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case PUTFIELD:
 			{
 				unsigned short index = this->getShort();
-				Object* reference = (Object*)frame->operandStack->pop();
-
-				if (reference == NULL)
-				{
-					throw Exceptions::Runtime::NullPointerException();
-				}
 
 				Class* classPtr = this->resolveClass(index);
 				Field* field = this->resolveField(index);
@@ -1211,10 +1205,30 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				{
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
-					reference->fields->set2(field->fieldIndex, frame->operandStack->pop2());
+					{
+						doubleWord data = frame->operandStack->pop2();
+						Object* reference = (Object*)this->objectTable->get(frame->operandStack->popReference());
+
+						if (reference == NULL)
+						{
+							throw Exceptions::Runtime::NullPointerException();
+						}
+
+						reference->fields->set2(field->fieldIndex, data);
+					}
 					break;
 				default:
-					reference->fields->set(field->fieldIndex, frame->operandStack->pop());
+					{
+						word data = frame->operandStack->pop();
+						Object* reference = (Object*)this->objectTable->get(frame->operandStack->popReference());
+
+						if (reference == NULL)
+						{
+							throw Exceptions::Runtime::NullPointerException();
+						}
+
+						reference->fields->set(field->fieldIndex, data);
+					}
 					break;
 				}
 			}
@@ -1272,7 +1286,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
 
 				word idx = this->objectTable->insert(classPtr);
-				frame->operandStack->push(makeReferenceAddress(idx));
+				frame->operandStack->pushReference(idx);
 			};
 			break;
 
@@ -1288,46 +1302,47 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				unsigned char* ptr = nullptr;
 				void * object = nullptr;
+				Class* arrayClass = this->runtime->classTable->getClass("java/lang/Object");
 
 				switch (type) 
 				{
 				case ArrayType::T_BOOLEAN:
 					ptr = this->heap->allocate(ArrayObject<bool>::getMemorySize(size));
-					object = new (ptr) ArrayObject<bool>(size, false, NULL, ptr);
+					object = new (ptr) ArrayObject<bool>(size, false, arrayClass, ptr);
 					break;
 				case ArrayType::T_BYTE:
 					ptr = this->heap->allocate(ArrayObject<java_byte>::getMemorySize(size));
-					object = new (ptr) ArrayObject<java_byte>(size, 0, NULL, ptr);
+					object = new (ptr) ArrayObject<java_byte>(size, 0, arrayClass, ptr);
 					break;
 				case ArrayType::T_CHAR:
 					ptr = this->heap->allocate(ArrayObject<java_char>::getMemorySize(size));
-					object = new (ptr) ArrayObject<java_char>(size, '\u0000', NULL, ptr);
+					object = new (ptr) ArrayObject<java_char>(size, '\u0000', arrayClass, ptr);
 					break;
 				case ArrayType::T_DOUBLE:
 					ptr = this->heap->allocate(ArrayObject<java_double>::getMemorySize(size));
-					object = new (ptr) ArrayObject<double>(size, +0.0, NULL, ptr);
+					object = new (ptr) ArrayObject<double>(size, +0.0, arrayClass, ptr);
 					break;
 				case ArrayType::T_FLOAT:
 					ptr = this->heap->allocate(ArrayObject<java_float>::getMemorySize(size));
-					object = new (ptr) ArrayObject<float>(size, +0.0, NULL, ptr);
+					object = new (ptr) ArrayObject<float>(size, +0.0, arrayClass, ptr);
 					break;
 				case ArrayType::T_INT:
 					ptr = this->heap->allocate(ArrayObject<java_int>::getMemorySize(size));
-					object = new (ptr) ArrayObject<int>(size, 0, NULL, ptr);
+					object = new (ptr) ArrayObject<int>(size, 0, arrayClass, ptr);
 					break;
 				case ArrayType::T_LONG:
 					ptr = this->heap->allocate(ArrayObject<java_long>::getMemorySize(size));
-					object = new (ptr) ArrayObject<long long>(size, 0, NULL, ptr);
+					object = new (ptr) ArrayObject<long long>(size, 0, arrayClass, ptr);
 					break;
 				case ArrayType::T_SHORT:
 					ptr = this->heap->allocate(ArrayObject<java_short>::getMemorySize(size));
-					object = new (ptr) ArrayObject<short>(size, 0, NULL, ptr);
+					object = new (ptr) ArrayObject<short>(size, 0, arrayClass, ptr);
 					break;
 				}
 
 				int objectIndex = this->objectTable->insert((Object*)object);
 
-				frame->operandStack->push(objectIndex);
+				frame->operandStack->pushReference(objectIndex);
 			}
 			break;
 

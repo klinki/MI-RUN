@@ -24,7 +24,11 @@
 
 
 class Runtime;
-namespace java { namespace lang { namespace Throwable { class Throwable; } } }
+namespace java {
+	namespace lang { 
+		namespace Throwable { class Throwable; }
+	} 
+}
 
 class ExecutionEngine
 {
@@ -326,7 +330,7 @@ public:
 		{
 			size_t index = item->stringInfo.string_index;
 
-			size_t insertedStrIndex = this->objectTable->insert(item->stringInfo.value);
+			size_t insertedStrIndex = this->objectTable->insert(item->stringInfo.stringObject, true);
 			this->getCurrentMethodFrame()->operandStack->pushReference(insertedStrIndex);
 		}
 		break;
@@ -442,7 +446,7 @@ public:
 		ConstantPoolItem * fieldName = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.name_index);
 		ConstantPoolItem * fieldType = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.descriptor_index);
 
-		Field* field = (Field*)classPtr->fieldsMap.get(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
+		Field* field = (Field*)classPtr->getField(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
 
 		return field;
 	}

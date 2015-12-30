@@ -9,13 +9,13 @@
 #include "java/lang/Exception.h"
 #include "java/io/PrintStream.h"
 
-using namespace Java::Lang;
+using namespace java::lang;
 
 void initializeNatives(Runtime* runtime, ClassMap* classMap)
 {
-	classMap->addClass(Java::Lang::Object::initialize());
+	classMap->addClass(java::lang::Object::initialize());
 	classMap->addClass(java::io::PrintStr::initialize(classMap));
-	classMap->addClass(Java::Lang::System::initialize(runtime));
+	classMap->addClass(java::lang::System::initialize(runtime));
 	classMap->addClass(java::lang::StrBuilder::initialize(classMap));
 	classMap->addClass(java::lang::String::initialize(classMap));
 	classMap->addClass(java::lang::Throwable::initialize(classMap));

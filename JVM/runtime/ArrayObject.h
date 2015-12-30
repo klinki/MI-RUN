@@ -6,7 +6,7 @@
 #include "../utils/Utf8String.h"
 
 template<class T>
-class ArrayObject : public ObjectHeader, public GarbageCollectableInterface 
+class ArrayObject : public ObjectHeader
 {
 protected:
 	size_t size;
@@ -17,7 +17,13 @@ public:
 	{
 		this->size = arraySize;
 		this->objectClass = objectClass;
-		this->arrayData = new(&this->arrayData + sizeof(this->arrayData) / sizeof(int)) T[arraySize];
+
+		if (address == NULL)
+		{
+			address = (byte*)(&this->arrayData + sizeof(this->arrayData) / sizeof(int));
+		}
+
+		this->arrayData = new(address) T[arraySize];
 		
 		for (int i = 0; i < arraySize; i++)
 		{
@@ -61,10 +67,14 @@ public:
 
 
 	void accept(ObjectVisitorInterface * visitor)
-	{}
+	{
+		visitor->visit(this);
+	}
 
 	void accept(ObjectVisitorInterface & visitor)
-	{}
+	{
+		this->accept(&visitor);
+	}
 
 	virtual bool requiresFinalization()
 	{
@@ -81,9 +91,11 @@ public:
 template <>
 void ArrayObject<Object*>::accept(ObjectVisitorInterface * visitor)
 {
+	visitor->visit(this);
+
 	for (int i = 0; i < this->size; i++)
 	{
-		visitor->visit(this->arrayData[i]);
+		visitor->visit((word)this->arrayData[i]);
 	}
 }
 
@@ -96,7 +108,7 @@ void ArrayObject<Object*>::accept(ObjectVisitorInterface & visitor)
 template <>
 bool ArrayObject<Object*>::requiresFinalization()
 {
-	return true;
+	return false;
 }
 
 template <>

@@ -1,43 +1,28 @@
 #include "ConstantPool.h"
-
+#include "../runtime/Runtime.h"
+#include "../natives/java/lang/String.h"
 
 ConstantPool::ConstantPool()
 {
 	constant_pool_count = 0;
 }
-ConstantPool::ConstantPool(int size)
+ConstantPool::ConstantPool(int size, Runtime* runtime)
 {
 	constant_pool_count = size;
-
 	constantPool = new ConstantPoolItem[size];
-	/*
-	constPool = new unsigned char *[constant_pool_count];
-	for (int i = 0; i < constant_pool_count; i++)
-	{
-		constPool[i] = new unsigned char[9];
-	}
-	//fprintf(stderr,"%d\n", constant_pool_count);
-	*/
+	this->runtime = runtime;
 }
-
 
 ConstantPool::~ConstantPool()
 {
-	/*
-	for (int i = 0; i < constant_pool_count; i++)
-	{
-		delete[] constPool[i];
-	}
-	delete[] constPool;
-	*/
 	delete[] constantPool;
 }
-
 
 int ConstantPool::GetSize()
 {
 	return constant_pool_count;
 }
+
 int ConstantPool::add(int pos, int type, int length, char * data)
 {
 	
@@ -294,8 +279,11 @@ void ConstantPool::resolveStringRef()
 	{
 		if (this->constantPool[i].tag == 8)
 		{
-//			this->constantPool[i].stringInfo.stringObject = 
-			this->constantPool[i].stringInfo.value = new Utf8String(constantPool[this->constantPool[i].stringInfo.string_index].utf8Info.bytes, constantPool[this->constantPool[i].stringInfo.string_index].utf8Info.length);
+			CONSTANT_Utf8_info & stringInfo = constantPool[this->constantPool[i].stringInfo.string_index].utf8Info;
+
+			java::lang::String::String * ptr = new java::lang::String::String((char*)stringInfo.bytes, stringInfo.length, this->runtime->classTable->getClass("java/lang/String"), false);
+			this->constantPool[i].stringInfo.stringObject = ptr;
+			this->constantPool[i].stringInfo.value = new Utf8String(stringInfo.bytes, stringInfo.length);
 		}
 	}
 

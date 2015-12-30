@@ -5,9 +5,9 @@ class Class;
 class Object;
 class MethodFrame;
 
-namespace Java
+namespace java
 {
-	namespace Lang
+	namespace lang
 	{
 		namespace Object
 		{

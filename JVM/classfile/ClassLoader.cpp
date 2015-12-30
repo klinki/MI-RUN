@@ -54,7 +54,7 @@ Class* ClassLoader::load(const char * filename)
 
 	myfile->close();
 	this->resolvePool(thisClass,nameptr);
-	thisClass->parentClass = thisClass->constantPool->get(super)->classInfo.classPtr;
+	thisClass->setParent(thisClass->constantPool->get(super)->classInfo.classPtr);
 	
 	classMap->addClass(thisClass);
 
@@ -85,7 +85,7 @@ int ClassLoader::loadConstPool()
 	reader(2);
 	int constant_pool_count = (int)((unsigned char)data[0] * 256 + (unsigned char)data[1]);
 	//fprintf(stderr, "constant_pool_count:%d\n", constant_pool_count);
-	constantPool = new ConstantPool(constant_pool_count);
+	constantPool = new ConstantPool(constant_pool_count, this->runtime);
 
 	for (int k = 1; k < constant_pool_count; k++)
 	{
@@ -126,8 +126,13 @@ int ClassLoader::loadConstPool()
 			constantPool->add(k, cpType, 2, data);
 			break;
 		case ConstantPoolTag::CONSTANT_String://string
-			reader(2);
-			constantPool->add(k, cpType, 2, data);
+			{
+				reader(2);
+				unsigned short tag = (unsigned short)((unsigned int)data[0] * 256 + (unsigned int)data[1]);
+				ConstantPoolItem spi(ConstantPoolTag::CONSTANT_String);
+				spi.stringInfo = CONSTANT_String_info(tag);
+				constantPool->add(k, &spi);
+			}
 			break;
 		case ConstantPoolTag::CONSTANT_Fieldref://fieldref
 			reader(4);

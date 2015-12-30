@@ -10,6 +10,8 @@ class Field;
 class Method;
 class Utf8String;
 
+class ObjectHeader;
+
 enum ConstantPoolTag
 {
 	CONSTANT_Class = 7,
@@ -97,7 +99,7 @@ struct CONSTANT_String_info
 	ConstantPoolAddress string_index;
 
 	Utf8String * value; // TODO: Add this
-	//java::lang::String::String * stringObject;
+	void * stringObject;
 
 	CONSTANT_String_info(unsigned short index)
 	{

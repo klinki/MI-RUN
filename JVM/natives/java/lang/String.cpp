@@ -1,7 +1,9 @@
 #include "String.h"
+#include <cstring>
 #include "../../../runtime/Runtime.h"
 #include "../../../runtime/Object.h"
 #include "../../../utils/Utf8String.h"
+#include "../../../runtime/Class.h"
 
 namespace java
 {
@@ -9,19 +11,27 @@ namespace java
 	{
 		namespace String
 		{
+			static Class* staticClassPtr;
+
+			String::String(const char* str, bool preallocated) : String(str, strlen(str), staticClassPtr, preallocated) {};
+
+			String::String(const char* str, size_t length, Class* classPtr, bool preallocated): ObjectHeader(classPtr), Utf8String(str, length, preallocated)
+			{
+			}
+
 			String::String(Utf8String & str, Class * classPtr): ObjectHeader(classPtr)
 			{
 				this->dataLength = str.bytes();
 				this->hash = str.getHash();
 				this->stringLength = str.length();
 
-                                // TODO: 
-				// strncpy_s(this->data, this->dataLength, str.toAsciiString(), this->dataLength);
+				memcpy(this->data, str.toAsciiString(), str.bytes());
 			}
 
 			Class* initialize(ClassMap * classMap)
 			{
 				Class * newClass = new Class(NULL);
+				staticClassPtr = newClass;
 				newClass->classLoader = NULL;
 				newClass->parentClass = classMap->getClass("java/lang/Object");
 				newClass->fullyQualifiedName = Utf8String("java/lang/String");

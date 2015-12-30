@@ -3,9 +3,9 @@
 #include "../../includes.h"
 #include "../io/PrintStream.h"
 
-namespace Java
+namespace java
 {
-	namespace Lang
+	namespace lang
 	{
 		namespace System
 		{

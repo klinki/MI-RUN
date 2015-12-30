@@ -5,7 +5,7 @@
 #include "ObjectHeader.h"
 #include "../gc/interfaces/GarbageCollectableInterface.h"
 
-class Object : public ObjectHeader, public GarbageCollectableInterface
+class Object : public ObjectHeader
 {
 visibility:
 	LocalVariablesArray * fields;
