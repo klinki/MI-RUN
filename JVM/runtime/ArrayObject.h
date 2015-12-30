@@ -77,7 +77,7 @@ public:
 	}
 };
 
-/*
+#ifdef _MSC_VER
 template <>
 void ArrayObject<Object*>::accept(ObjectVisitorInterface * visitor)
 {
@@ -104,4 +104,5 @@ Method* ArrayObject<Object*>::getFinalizationMethod()
 {
 	return this->objectClass->getMethod("finalize", "()V");
 }
-*/
+
+#endif

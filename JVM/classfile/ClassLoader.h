@@ -23,7 +23,8 @@ private:
 
 public:
 	ClassLoader(Runtime * runtime);
-
+        ~ClassLoader();
+        
 	//bool load(char * filename);
 	Class* load(const char * filename);
 	int loadMinVersion();
@@ -39,5 +40,4 @@ public:
 	int reader(int nob); // reads data from file to array data
 	void resolvePool(Class * thisClass,int nameptr);
 	void resolveClassPointer(Class * thisClass,int i, int nameptr);
-	~ClassLoader();
 };

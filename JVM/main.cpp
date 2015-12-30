@@ -9,6 +9,7 @@ using namespace std;
 
 int main(int argc, const char * argv[])
 {
+    int statusCode = 0;
 	Runtime * runtime = new Runtime();
 
 	try
@@ -19,7 +20,8 @@ int main(int argc, const char * argv[])
 	{
 		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString() << endl;
 		exc->printStackTrace();
-		return -1;
+                
+		statusCode = -1;
 	}
 	catch (Exceptions::Throwable e)
 	{
@@ -30,7 +32,7 @@ int main(int argc, const char * argv[])
 		}
 
 		cerr << "Unhandled exception: " <<  e.what() << ": " << message << endl;
-		return -1;
+		statusCode = -1;
 	}
 
 	/*
@@ -41,5 +43,6 @@ int main(int argc, const char * argv[])
 			4) run while loop with instructions switch
 	*/
 
-	return 0;
+        delete runtime;
+	return statusCode;
 }

@@ -12,10 +12,13 @@ ClassLoader::ClassLoader(Runtime * runtime)
 {
 	this->runtime = runtime;
 	this->classMap = runtime->classTable;
-	this->constantPool = new ConstantPool(1000);
 	data = new char[1024];
 }
-
+ClassLoader::~ClassLoader()
+{
+    delete[] this->data;
+}
+        
 Class* ClassLoader::load(const char * filename)
 {
 	myfile = new ifstream(filename, ios::in | ios::binary);
@@ -852,8 +855,4 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 	printf("set class ptr %d\n", i);
 	thisClass->constantPool->setClassPtr(i, class_pointer);
 
-}
-ClassLoader::~ClassLoader()
-{
-	delete[] data;
 }

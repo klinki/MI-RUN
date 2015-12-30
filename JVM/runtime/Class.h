@@ -37,7 +37,7 @@ visibility:
 	void setParent(Class* parent);
 
 public:
-	Class(FLAG flag) : flags(flag) {};
+	Class(FLAG flag);
 	~Class();
 	size_t getCountFields() const;
 	bool isFlagSet(FLAG flag) const;

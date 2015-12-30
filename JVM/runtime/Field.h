@@ -16,6 +16,8 @@ visibility:
 public:
 	Field(FLAG flags, const Utf8String & name, const Utf8String & descriptor) : ClassMember(name, descriptor), type((TypeTag)descriptor.toAsciiString()[0])
 	{
+            this->flags = flags;
+            this->fieldIndex = -1; // uninitialized
 	}
 
 	~Field() {}

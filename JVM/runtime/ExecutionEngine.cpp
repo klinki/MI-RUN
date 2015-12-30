@@ -13,6 +13,10 @@ ExecutionEngine::ExecutionEngine()
 {
 	this->callStack = new OperandStack(1024);
 	this->objectTable = new ObjectTable();
+        this->frame = NULL;
+        this->heap = NULL;
+        this->classMap = NULL;
+        this->runtime = NULL;
 }
 
 ExecutionEngine::ExecutionEngine(Runtime * runtime)
@@ -21,7 +25,8 @@ ExecutionEngine::ExecutionEngine(Runtime * runtime)
 	this->objectTable = runtime->objectTable;
 	this->heap = runtime->heap;
 	this->classMap = runtime->classTable;
-
+        this->frame = NULL;
+        
 	this->callStack = new OperandStack(1024);
 }
 

@@ -45,6 +45,11 @@ public:
 		return this->multimap.count(k);
 	}
 
+        auto startIterator() const
+        {
+            return this->multimap.begin();
+        }
+        
 	auto endIterator() const
 	{
 		return this->multimap.cend();

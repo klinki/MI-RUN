@@ -23,11 +23,13 @@ namespace Java
 				Field* errField = new Field((int)FieldAccessFlags::STATIC | (int)FieldAccessFlags::PUBLIC, Utf8String("err"), Utf8String("Ljava/io/PrintStream;"));
 				system->addField(errField);
 
-				java::io::PrintStream * out = new java::io::PrintStream(&std::cout);
-				size_t outIndex = runtime->objectTable->insert(out, true);
+                                byte* printStrMemory = runtime->heap->allocateOnSystemMemory(sizeof(java::io::PrintStream));
+				java::io::PrintStream * out = new(printStrMemory) java::io::PrintStream(&std::cout);
+				size_t outIndex = runtime->objectTable->insert(out);
 
-				java::io::PrintStream * err = new java::io::PrintStream(&std::cerr);
-				size_t errIndex = runtime->objectTable->insert(err, true);
+                                byte* errStrMemory = runtime->heap->allocateOnSystemMemory(sizeof(java::io::PrintStream));
+				java::io::PrintStream * err = new(errStrMemory) java::io::PrintStream(&std::cerr);
+				size_t errIndex = runtime->objectTable->insert(err);
 
 				system->staticVariablesValues->set(field->fieldIndex, (word)makeReferenceAddress(outIndex));
 				system->staticVariablesValues->set(errField->fieldIndex, (word)makeReferenceAddress(errIndex));
