@@ -1285,7 +1285,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				int classIndex = item->classInfo.name_index;
 				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
 
-				word idx = this->objectTable->insert(classPtr);
+				word idx = this->objectTable->insert(classPtr, true);
 				frame->operandStack->pushReference(idx);
 			};
 			break;

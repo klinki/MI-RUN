@@ -102,7 +102,7 @@ namespace java
 				StringBuilder* builder = (StringBuilder*)engine->objectTable->get(builderIndex);
 
 				byte* memory = engine->heap->allocate(String::String::getMemorySize(builder->lengthInBytes()));
-				String::String* strPtr = (String::String*) new String::String(builder->getData(), builder->lengthInBytes(), engine->classMap->getClass("java/lang/String"), true);
+				String::String* strPtr = (String::String*) new(memory) String::String(builder->getData(), builder->lengthInBytes(), engine->classMap->getClass("java/lang/String"), true);
 
 				size_t strIndex = engine->objectTable->insert(strPtr);
 
