@@ -87,6 +87,16 @@ void BakerGc::visit(word address)
 	}
 }
 
+size_t BakerGc::countAllocatedBlockSize(size_t size)
+{
+	int totalAllocated = size + sizeof(MemoryHeader);
+
+	int slots = totalAllocated / MEMORY_ALIGNMENT + 1;
+	size_t bytesAllocated = slots * MEMORY_ALIGNMENT;
+
+	return bytesAllocated;
+}
+
 unsigned char * BakerGc::allocate(size_t size)
 {
 	if (size == 0)
@@ -94,10 +104,7 @@ unsigned char * BakerGc::allocate(size_t size)
 		return NULL; // TODO: Throw exception
 	}
 
-	int totalAllocated = size + sizeof(MemoryHeader);
-
-	int slots = totalAllocated / MEMORY_ALIGNMENT + 1;
-	size_t bytesAllocated = slots * MEMORY_ALIGNMENT;
+	size_t bytesAllocated = this->countAllocatedBlockSize(size);
 	
 	if ((this->memorySlots[this->activeSlot]->usedBytes + bytesAllocated) >= this->memorySlots[this->activeSlot]->allocatedBytes)
 	{
@@ -116,8 +123,7 @@ unsigned char * BakerGc::allocateOnPermanentSpace(size_t size)
 		return NULL; // TODO: Throw exception
 	}
 
-	int slots = size / MEMORY_ALIGNMENT + 1;
-	size_t bytesAllocated = slots * MEMORY_ALIGNMENT;
+	size_t bytesAllocated = this->countAllocatedBlockSize(size);
 
 	if ((this->permanentSpace->usedBytes + bytesAllocated) >= this->permanentSpace->allocatedBytes)
 	{

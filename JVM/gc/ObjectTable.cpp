@@ -19,7 +19,7 @@ size_t ObjectTable::insert(void * obj)
 
 size_t ObjectTable::insert(void* ptr, bool systemObject)
 {
-	this->insert(ptr);
+	return this->insert(ptr);
 }
 
 Object * ObjectTable::get(size_t index)

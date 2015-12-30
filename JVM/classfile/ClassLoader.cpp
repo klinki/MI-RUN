@@ -843,8 +843,8 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 			//strncpy_s(r+(i*3),((i+1) * 3),c, strlen(c));
 		}
 
-                strncpy(adr + (morecol * 3), (char*)a, strlen((char*)a));
-                strncpy(adr + alen  + (morecol * 3), ext, strlen(ext));
+		memcpy(adr + (morecol * 3), (char*)a, strlen((char*)a) + 1);
+                memcpy(adr + alen  + (morecol * 3), ext, strlen(ext) + 1);
 
 		this->load(adr);
 

@@ -27,7 +27,7 @@ void Heap::resize()
 unsigned char* Heap::allocate(size_t bytes)
 {
 	unsigned char* data = this->freeMemory;
-	this->freeMemory = this->freeMemory + bytes;
+	this->freeMemory += bytes;
 	this->usedBytes += bytes;
 
 	return data;

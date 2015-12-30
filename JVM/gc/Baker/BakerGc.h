@@ -73,6 +73,8 @@ visibility:
 
 	void finalize(Heap* slot);
 
+	size_t countAllocatedBlockSize(size_t size);
+
 public:
 	BakerGc();
 	BakerGc(size_t memorySize, size_t permSize);
