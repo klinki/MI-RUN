@@ -17,14 +17,14 @@ ClassLoader::ClassLoader(Runtime * runtime)
 
 Class* ClassLoader::load(const char * filename)
 {
-	if (myfile.is_open())
+	if (myfile->is_open())
 	{
-		myfile.close();
+		myfile->close();
 	}
 
-	myfile = ifstream(filename, ios::in | ios::binary);
+	myfile = new ifstream(filename, ios::in | ios::binary);
 
-	if (!myfile.is_open())
+	if (!myfile->is_open())
 	{
 		std::string message = std::string("Could not open: ") + std::string(filename);
 		printf("cloud not open %s", filename);
@@ -55,7 +55,7 @@ Class* ClassLoader::load(const char * filename)
 	loadMethods(thisClass);
 	loadAttributes(thisClass);
 
-	myfile.close();
+	myfile->close();
 	this->resolvePool(thisClass,nameptr);
 	thisClass->parentClass = thisClass->constantPool->get(super)->classInfo.classPtr;
 	
@@ -627,14 +627,14 @@ int ClassLoader::loadAttributes(Class * thisClass)
 
 int ClassLoader::reader(int nob)
 {
-	if (myfile.is_open())
+	if (myfile->is_open())
 	{
 		if (nob > 1024)
 		{
 			delete[] data;
 			data = new char[nob];
 		}
-		myfile.read(data, nob);
+		myfile->read(data, nob);
 
 		return 0;
 	}
