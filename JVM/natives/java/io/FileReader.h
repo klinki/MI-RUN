@@ -21,8 +21,6 @@ namespace java
 
 			
 			void close(); //Closes the stream and releases any system resources associated with it.
-			void mark(int readAheadLimit);//Marks the present position in the stream.
-			bool markSupported(); //Tells whether this stream supports the mark() operation.
 			int read(); //Reads a single character.
 			int read(char* cbuf); //Reads characters into an array.
 			int read(char* cbuf, int off, int len);//Reads characters into a portion of an array.
@@ -52,9 +50,9 @@ namespace java
 		{
 			Class* initialize(ClassMap* map);
 
-			//NATIVE_METHOD_HEADER(printlnEmpty);
-			//NATIVE_METHOD_HEADER(printlnString);
-			//NATIVE_METHOD_HEADER(printlnDouble);
+			NATIVE_METHOD_HEADER(readEmpty);
+			NATIVE_METHOD_HEADER(readString);
+			NATIVE_METHOD_HEADER(readStrinIntInt);
 		}
 	}
 }

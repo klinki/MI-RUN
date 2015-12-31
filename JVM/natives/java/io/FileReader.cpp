@@ -19,16 +19,10 @@ namespace java
 		}
 		void FileReader::close()//Closes the stream and releases any system resources associated with it.
 		{
+			this->reader->close();
 			delete this->reader;
 		}
-		void FileReader::mark(int readAheadLimit)//Marks the present position in the stream.
-		{
 		
-		}
-		bool FileReader::markSupported() //Tells whether this stream supports the mark() operation.
-		{
-		
-		}
 		int FileReader::read() //Reads a single character.
 		{
 			if (reader->is_open())
@@ -89,6 +83,11 @@ namespace java
 				//aClass->methodArea.addMethod(getNativeMethod("", "(D)V", &printlnDouble));
 				//aClass->methodArea.addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
 
+				//newClass->methodArea.addMethod(getNativeMethod("<init>", "()V", &init));
+				//newClass->methodArea.addMethod(getNativeMethod("append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", &appendString));
+				//newClass->methodArea.addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
+
+
 				Class * filterOutputStream = new Class(0);
 				filterOutputStream->fullyQualifiedName = "java.io.FilterOutputStream";
 
@@ -98,35 +97,35 @@ namespace java
 
 				return aClass;
 			};
-			/*
-			NATIVE_METHOD_HEADER(printlnEmpty)
+			
+			NATIVE_METHOD_HEADER(readEmpty)
 			{
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
-				printStream->println();
+				//PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				//printStream->println();
 			}
 
-			NATIVE_METHOD_HEADER(printlnDouble)
+			NATIVE_METHOD_HEADER(readString)
 			{
 				double value = engine->getCurrentMethodFrame()->operandStack->pop2();
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
-				printStream->println(value);
+				//PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				//printStream->println(value);
 			}
 
-			NATIVE_METHOD_HEADER(printlnString)
+			NATIVE_METHOD_HEADER(readStrinIntInt)
 			{
 				java::lang::String::String * string = (java::lang::String::String *)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 
 				//Utf8String
-				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+				//PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 
-				if (string == NULL || printStream == NULL)
-				{
-					throw Exceptions::Runtime::NullPointerException();
-				}
+				//if (string == NULL || printStream == NULL)
+				//{
+				//	throw Exceptions::Runtime::NullPointerException();
+				//}
 
-				printStream->println(*string);
+				//printStream->println(*string);
 			}
-
+			/*
 			void println(::Object * obj, MethodFrame * frm)
 			{
 
