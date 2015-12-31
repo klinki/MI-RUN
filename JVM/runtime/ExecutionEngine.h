@@ -70,7 +70,7 @@ public:
 	{
 		word value = this->getCurrentMethodFrame()->operandStack->pop();
 		int index = this->getCurrentMethodFrame()->operandStack->pop();
-		int ref = this->getCurrentMethodFrame()->operandStack->pop();
+		int ref = this->getCurrentMethodFrame()->operandStack->popReference();
 
 		if (ref == NULL)
 		{

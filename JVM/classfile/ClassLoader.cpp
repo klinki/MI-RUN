@@ -236,6 +236,8 @@ int ClassLoader::loadFields(Class * thisClass)
 
 	//fprintf(stderr, "fields count:%d\n", fields_count);
 
+	thisClass->staticVariablesValues = new LocalVariablesArray(fields_count);
+
 	for (int i = 0; i < fields_count; i++)
 	{
 		unsigned short access_flags;
