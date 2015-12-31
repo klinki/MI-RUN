@@ -52,7 +52,7 @@ visibility:
 
 	MethodFrame* getCurrentMethodFrame()
 	{
-		size_t index = this->callStack->top();
+		size_t index = getReferenceAddress(this->callStack->top());
 		return (MethodFrame*)this->objectTable->get(index);
 	}
 
