@@ -33,4 +33,12 @@ public class Parent {
     {
         return "Father greets!";
     }
+
+    public void change()
+    {
+        this.hierarchy += "Sorry boy, I changed that. Daddy";
+        this.myPrivates += "Sorry boy, I changed that. Daddy";
+        this.publicated += "Sorry boy, I changed that. Daddy";
+        this.gene += "Sorry boy, I changed that. Daddy";
+    }
 }
