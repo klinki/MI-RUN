@@ -1425,12 +1425,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case CHECKCAST:
 			{
-				Object* ref = frame->operandStack->top();
+				ObjectHeader* ref = this->objectTable->get(getReferenceAddress(this->getCurrentMethodFrame()->operandStack->top()));
 				size_t index = this->getShort();
 
 				if (ref != NULL)
 				{
-					Class* classPtr = this->resolveClass(index);
+					Class* classPtr = this->getCurrentMethodFrame()->constantPool->get(index)->classInfo.classPtr;
+
 					if (! this->isInstanceOf(ref->objectClass, classPtr))
 					{
 						throw Exceptions::Runtime::RuntimeException();
