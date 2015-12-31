@@ -59,34 +59,35 @@ void BakerGc::visit(word address)
 	{
 		int refAddress = getReferenceAddress((unsigned int)address);
 
-		try 
+		try
 		{
 			void * pointer = this->get(refAddress);
+			MemoryHeader* header = this->getHeader((char*)pointer);
 			GarbageCollectableInterface* visitable = (GarbageCollectableInterface*)pointer;
 
 			size_t dataSize = this->getDataSize(pointer);
 
 			unsigned char* memory;
 
-			if (this->getAccessCounter(pointer) >= TENURATION_THRESHOLD)
+			if (! header->isTenured())
 			{
-				memory = this->allocateOnPermanentSpace(dataSize);
-				this->permanentSpaceRoot = address;
-				this->edenSpaceRoot = NULL; // todo: this is probably wrong
-				this->setColor(memory, Color::BLACK);
-			}
-			else
-			{
-				memory = this->allocate(dataSize);
-				this->incrementAccessCounter(memory, this->getAccessCounter(pointer) + 1);
-			}
+				if (this->getAccessCounter(pointer) >= TENURATION_THRESHOLD)
+				{
+					memory = this->allocateOnPermanentSpace(dataSize);
+					//this->setColor(memory, Color::BLACK);
+					this->getHeader((char*)memory)->tenure();
+				}
+				else
+				{
+					memory = this->allocate(dataSize);
+					this->incrementAccessCounter(memory, this->getAccessCounter(pointer) + 1);
+				}
 
-			// TODO: CANNOT SIMPLY COPY HERE!!!!
-			visitable->copyTo(memory);
-//			memcpy(memory, pointer, dataSize);
+				visitable->copyTo(memory);
 
-			this->updateAddress(refAddress, memory);
-			this->setColor(pointer, Color::BAKER_MOVED);
+				this->updateAddress(refAddress, memory);
+				this->setColor(pointer, Color::BAKER_MOVED);
+			}
 				
 			visitable->accept(*this);
 		}

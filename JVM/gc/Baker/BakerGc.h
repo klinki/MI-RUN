@@ -13,6 +13,7 @@ class BakerGc : public ObjectTable, public ObjectVisitorInterface, public HeapIn
 {
 	const int MEMORY_ALIGNMENT = 16;
 	const int TENURATION_THRESHOLD = 50;
+	static const int TENURATION_MASK = 0xfffff;
 visibility:
 	enum MemoryLocation
 	{
@@ -38,6 +39,16 @@ visibility:
 #ifdef _DEBUG
 			memset(this->data, 0, size);
 #endif
+		}
+
+		bool isTenured() const
+		{
+			return (this->accessCounter & TENURATION_MASK) == TENURATION_MASK;
+		}
+
+		void tenure()
+		{
+			this->accessCounter |= TENURATION_MASK;
 		}
 	};
 
