@@ -42,7 +42,14 @@ public:
 		this->flags = f;
 		this->operandStackSize = 0;
 		this->localVariablesArraySize = 0;
+		this->byteCode = nullptr;
 		this->nativeMethod = nullptr;
+		this->byteCodeLength = 0;
+		this->exceptionTable = nullptr;
+		this->classPtr = nullptr;
+		this->inputArgs = nullptr;
+		this->countIntputArgs = 0;
+		this->inputArgsSize = 0;
 	};
 	~Method();
 
