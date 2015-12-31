@@ -5,9 +5,13 @@
 #include "java/lang/System.h"
 #include "java/lang/String.h"
 #include "java/lang/StringBuilder.h"
-//#include "java/lang/Throwable.h" // WTF LINUX?!!!
 #include "java/lang/Exception.h"
+#include "java/lang/Array.h"
 #include "java/io/PrintStream.h"
+
+#ifdef _MSC_VER
+	#include "java/lang/Throwable.h" // WTF LINUX?!!!
+#endif
 
 using namespace java::lang;
 
@@ -18,8 +22,12 @@ void initializeNatives(Runtime* runtime, ClassMap* classMap)
 	classMap->addClass(java::lang::System::initialize(runtime));
 	classMap->addClass(java::lang::StrBuilder::initialize(classMap));
 	classMap->addClass(java::lang::String::initialize(classMap));
+#ifndef _MSC_VER
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/Throwable", "java/lang/Object")); // WTF LINUX?!!!
-	// classMap->addClass(java::lang::Throwable::initialize(classMap));
+#else
+	classMap->addClass(java::lang::Throwable::initialize(classMap));
+#endif
+	classMap->addClass(java::lang::Array::initialize(classMap));
 
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/Exception", "java/lang/Throwable"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/CloneNotSupportedException"));

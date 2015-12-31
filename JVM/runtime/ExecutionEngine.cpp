@@ -1304,41 +1304,41 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				unsigned char* ptr = nullptr;
 				void * object = nullptr;
-				Class* arrayClass = this->runtime->classTable->getClass("java/lang/Object");
+				Class* arrayClass = this->runtime->classTable->getClass("java/lang/Array");
 
-				switch (type) 
+				switch (type)
 				{
 				case ArrayType::T_BOOLEAN:
 					ptr = this->heap->allocate(ArrayObject<bool>::getMemorySize(size));
-					object = new (ptr) ArrayObject<bool>(size, false, arrayClass, ptr);
+					object = new (ptr) ArrayObject<bool>(size, false, arrayClass, nullptr);
 					break;
 				case ArrayType::T_BYTE:
 					ptr = this->heap->allocate(ArrayObject<java_byte>::getMemorySize(size));
-					object = new (ptr) ArrayObject<java_byte>(size, 0, arrayClass, ptr);
+					object = new (ptr) ArrayObject<java_byte>(size, 0, arrayClass, nullptr);
 					break;
 				case ArrayType::T_CHAR:
 					ptr = this->heap->allocate(ArrayObject<java_char>::getMemorySize(size));
-					object = new (ptr) ArrayObject<java_char>(size, '\u0000', arrayClass, ptr);
+					object = new (ptr) ArrayObject<java_char>(size, '\u0000', arrayClass, nullptr);
 					break;
 				case ArrayType::T_DOUBLE:
 					ptr = this->heap->allocate(ArrayObject<java_double>::getMemorySize(size));
-					object = new (ptr) ArrayObject<double>(size, +0.0, arrayClass, ptr);
+					object = new (ptr) ArrayObject<double>(size, +0.0, arrayClass, nullptr);
 					break;
 				case ArrayType::T_FLOAT:
 					ptr = this->heap->allocate(ArrayObject<java_float>::getMemorySize(size));
-					object = new (ptr) ArrayObject<float>(size, +0.0, arrayClass, ptr);
+					object = new (ptr) ArrayObject<float>(size, +0.0, arrayClass, nullptr);
 					break;
 				case ArrayType::T_INT:
 					ptr = this->heap->allocate(ArrayObject<java_int>::getMemorySize(size));
-					object = new (ptr) ArrayObject<int>(size, 0, arrayClass, ptr);
+					object = new (ptr) ArrayObject<int>(size, 0, arrayClass, nullptr);
 					break;
 				case ArrayType::T_LONG:
 					ptr = this->heap->allocate(ArrayObject<java_long>::getMemorySize(size));
-					object = new (ptr) ArrayObject<long long>(size, 0, arrayClass, ptr);
+					object = new (ptr) ArrayObject<long long>(size, 0, arrayClass, nullptr);
 					break;
 				case ArrayType::T_SHORT:
 					ptr = this->heap->allocate(ArrayObject<java_short>::getMemorySize(size));
-					object = new (ptr) ArrayObject<short>(size, 0, arrayClass, ptr);
+					object = new (ptr) ArrayObject<short>(size, 0, arrayClass, nullptr);
 					break;
 				}
 
