@@ -189,6 +189,7 @@ void Class::setParent(Class* parent)
 
 void Class::addMethod(Method* method)
 {
+	method->classPtr = this;
 	this->methodArea.addMethod(method);
 	method->initInputArgs();
 }

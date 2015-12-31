@@ -1253,7 +1253,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				}
 				else
 				{
-					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction == INVOKESTATIC);
+					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction);
 					newFrame->parentFrame = frame;
 					frame->childFrame = newFrame;
 					this->execute(newFrame);
