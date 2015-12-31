@@ -11,22 +11,44 @@ namespace java
 {
 	namespace io
 	{
-		class FileReader
+		class FileReader : public ObjectHeader
 		{
-			std::ifstream * input;
+			std::ifstream * reader;
 		public:
 			FileReader(std::ifstream * stream);
 			~FileReader();
 
 
-			void close();
-			Utf8String* Readln();
-			Utf8String* Read(java_byte);
-			//void write(ArrayObject<java_byte> * arr);
-			//void write(ArrayObject<java_byte> * arr, size_t offset, size_t length);
+			
+			void close(); //Closes the stream and releases any system resources associated with it.
+			void mark(int readAheadLimit);//Marks the present position in the stream.
+			bool markSupported(); //Tells whether this stream supports the mark() operation.
+			int read(); //Reads a single character.
+			int read(char* cbuf); //Reads characters into an array.
+			int read(char* cbuf, int off, int len);//Reads characters into a portion of an array.
+			//int read(CharBuffer target);//Attempts to read characters into the specified character buffer.
+			bool ready();//Tells whether this stream is ready to be read.
+			void reset();//Resets the stream.
+			long skip(long n);//Skips characters.
+
+			virtual void accept(ObjectVisitorInterface * visitor)
+			{
+				visitor->visit(this);
+			};
+
+			virtual void accept(ObjectVisitorInterface & visitor)
+			{
+				this->accept(&visitor);
+			};
+
+			virtual bool requiresFinalization()
+			{
+				return false;
+			}
+
 		};
 
-		namespace FileReader
+		namespace FileRdr
 		{
 			Class* initialize(ClassMap* map);
 

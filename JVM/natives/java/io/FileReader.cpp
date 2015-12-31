@@ -8,34 +8,74 @@ namespace java
 {
 	namespace io
 	{
-		FileReader::FileReader(std::ifstream * stream)
-		{
-			this->input = stream;
-		}
+		static Class* fileRdClassPtr;
 
+		FileReader::FileReader(std::ifstream * stream) : ObjectHeader(fileRdClassPtr)
+		{
+			this->reader = stream;
+		}
 		FileReader::~FileReader()
 		{
 		}
-
-		void FileReader::close()
+		void FileReader::close()//Closes the stream and releases any system resources associated with it.
 		{
-			delete this->input;
+			delete this->reader;
 		}
-
-		Utf8String * FileReader::println()
-		{
-			char* line;
-			getline(this->input,line);
-			return new Utf8String(line,strlen(line));
-		}
-
-		Utf8String * FileReader::Utf8String* Read(java_byte)
+		void FileReader::mark(int readAheadLimit)//Marks the present position in the stream.
 		{
 		
+		}
+		bool FileReader::markSupported() //Tells whether this stream supports the mark() operation.
+		{
 		
 		}
+		int FileReader::read() //Reads a single character.
+		{
+			if (reader->is_open())
+			{
+				reader->read(NULL, 1);
+				return true;
+			}
+			return false;
+		}
+		int FileReader::read(char* cbuf) //Reads characters into an array.
+		{
+			if (reader->is_open())
+			{
+				reader->read(cbuf,1);
+				return true;
+			}
+			return false;
+		}
+		int FileReader::read(char* cbuf, int off, int len)//Reads characters into a portion of an array.
+		{
+			if (reader->is_open())
+			{
+				reader->read(cbuf+off, len);
+				return true;
+			}
+			return false;
+		}
+		bool FileReader::ready()//Tells whether this stream is ready to be read.
+		{
+			
+			return reader->is_open();
+			
+		}
+		void FileReader::reset()//Resets the stream.
+		{
 		
-		namespace PrintStr
+		}
+		long FileReader::skip(long n)//Skips characters.
+		{
+			if (reader->is_open())
+			{
+				reader->read(NULL, n);
+				return true;
+			}
+			return false;
+		}
+		namespace FileRdr
 		{
 			Class* initialize(ClassMap* classMap)
 			{
@@ -46,8 +86,8 @@ namespace java
 				aClass->classLoader = NULL;
 				aClass->fullyQualifiedName = "java/io/FileReader";
 
-				aClass->methodArea.addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
-				aClass->methodArea.addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
+				//aClass->methodArea.addMethod(getNativeMethod("", "(D)V", &printlnDouble));
+				//aClass->methodArea.addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
 
 				Class * filterOutputStream = new Class(0);
 				filterOutputStream->fullyQualifiedName = "java.io.FilterOutputStream";
