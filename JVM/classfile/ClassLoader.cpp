@@ -437,7 +437,8 @@ int ClassLoader::loadMethods(Class * thisClass) {
 				fprintf(stderr, "method %d OTHER : %s \n", j, n);
 			}
 		}
-		thisClass->methodArea.addMethod(m);
+
+		thisClass->addMethod(m);
 	}
 
 
