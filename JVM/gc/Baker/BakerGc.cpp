@@ -121,11 +121,18 @@ unsigned char * BakerGc::allocate(size_t size)
 	
 	if ((this->memorySlots[this->activeSlot]->usedBytes + bytesAllocated) >= this->memorySlots[this->activeSlot]->allocatedBytes)
 	{
+#ifdef _DEBUG
+		DEBUG_PRINT("Allocation cannot proceed, garbage collection needed\n");
+#endif
 		// Time for garbage collection man!!
 		this->collect();		
 	}
 
-	MemoryHeader* memory = (MemoryHeader*) new(this->memorySlots[this->activeSlot]->allocate(bytesAllocated)) MemoryHeader(size);
+	void* allocatedAddress = this->memorySlots[this->activeSlot]->allocate(bytesAllocated);
+	MemoryHeader* memory = (MemoryHeader*) new(allocatedAddress) MemoryHeader(size);
+
+	DEBUG_PRINT("Allocated memory with address: %p, data start at address: %p\n", (void*) allocatedAddress, (void*) memory->data);
+
 	return (unsigned char*)memory->data;
 }
 
@@ -154,22 +161,22 @@ void BakerGc::updateAddress(size_t index, void * newAddress)
 
 void BakerGc::collect()
 {
-#ifdef _DEBUG
-	std::cerr << "Garbage collection starts... " << std::endl;
-#endif
+	DEBUG_PRINT("Garbage collection starts...\n");
+
+	word frameIndex = this->runtime->executionEngine->callStack->top();
+//	MethodFrame* frame = (MethodFrame*)this->get(frameIndex);
+
 	Heap* oldSlot = this->memorySlots[this->activeSlot];
 	this->switchMemorySlot();
 
-	MethodFrame* frame = this->runtime->executionEngine->getCurrentMethodFrame();
-
-	if (frame != NULL) 
+	if ((int)frameIndex != 0) 
 	{
 #ifdef _DEBUG
 		DebugVisitor visitor(this);
-		visitor.visit(frame);
+		visitor.visit(frameIndex);
 #endif
 
-		this->visit(frame);
+		this->visit(frameIndex);
 	}
 
 	this->finalize(oldSlot);
@@ -197,9 +204,7 @@ size_t BakerGc::insert(void * ptr, bool systemObject)
 
 void BakerGc::finalize(Heap* slot)
 {
-#ifdef _DEBUG
-	std::cerr << "Finalization" << std::endl;
-#endif
+	DEBUG_PRINT("Finalization");
 
 	unsigned char* ptr = (unsigned char*)slot->data;
 	unsigned char* endPtr = ptr + slot->usedBytes;
@@ -229,13 +234,13 @@ void BakerGc::finalize(Heap* slot)
 				}
 			}
 			// TODO: Finalize object
-#ifdef _DEBUG
-			std::cerr << "Removing key: " << this->getKey(ptr) << " from table" << std::endl;
-#endif
-			this->hashMap.erase(this->getKey(ptr));
 
-			ptr += size;
-			ptr += MEMORY_ALIGNMENT - (size % MEMORY_ALIGNMENT);
+			DEBUG_PRINT("Removing key: %d from table\n", this->getKey(ptr));
+
+			this->hashMap.erase(this->getKey(ptr));
 		}
+
+		ptr += size;
+		ptr += MEMORY_ALIGNMENT - (size % MEMORY_ALIGNMENT);
 	}
 }

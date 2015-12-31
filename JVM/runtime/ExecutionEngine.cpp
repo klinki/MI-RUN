@@ -13,10 +13,10 @@ ExecutionEngine::ExecutionEngine()
 {
 	this->callStack = new OperandStack(1024);
 	this->objectTable = new ObjectTable();
-        this->frame = NULL;
-        this->heap = NULL;
-        this->classMap = NULL;
-        this->runtime = NULL;
+	this->frame = NULL;
+    this->heap = NULL;
+    this->classMap = NULL;
+    this->runtime = NULL;
 }
 
 ExecutionEngine::ExecutionEngine(Runtime * runtime)
@@ -25,7 +25,7 @@ ExecutionEngine::ExecutionEngine(Runtime * runtime)
 	this->objectTable = runtime->objectTable;
 	this->heap = runtime->heap;
 	this->classMap = runtime->classTable;
-        this->frame = NULL;
+    this->frame = NULL;
         
 	this->callStack = new OperandStack(1024);
 }
@@ -83,12 +83,12 @@ void ExecutionEngine::execute(Method* method)
 int ExecutionEngine::execute(MethodFrame * frame)
 {
 	word index = this->objectTable->insert(frame);
-	this->callStack->push(index);
+	this->callStack->pushReference(index);
 
-	Instruction * instructions = (Instruction*)frame->method->getBytecode();
-	unsigned int length = frame->method->getByteCodeLength();
+	Instruction * instructions = (Instruction*)this->getCurrentMethodFrame()->method->getBytecode();
+	unsigned int length = this->getCurrentMethodFrame()->method->getByteCodeLength();
 
-	ProgramCounter & pc = frame->pc;
+	ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
 	
 	while (pc < length)
 	{
@@ -100,13 +100,13 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			if (this->runtime->parameters.PrintExecutedInstructions) {
 				std::cerr << std::endl;
 				std::cerr << std::string(this->callStack->index - 1, '\t').c_str();
-				std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK BEFORE: " << frame->operandStack->index;
+				std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK BEFORE: " << this->getCurrentMethodFrame()->operandStack->index;
 			}
 #endif
 			switch (currentInstruction)
 			{
 			case ACONST_NULL:
-				frame->operandStack->pushReference(NULL);
+				this->getCurrentMethodFrame()->operandStack->pushReference(NULL);
 				break;
 
 				// FALL THROUGH:
@@ -117,33 +117,33 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case ICONST_3:
 			case ICONST_4:
 			case ICONST_5:
-				frame->operandStack->push(currentInstruction - ICONST_0);
+				this->getCurrentMethodFrame()->operandStack->push(currentInstruction - ICONST_0);
 				break;
 
 				// FALL THROUGH:
 			case LCONST_0:
 			case LCONST_1:
-				frame->operandStack->push2((long long)(currentInstruction - LCONST_0));
+				this->getCurrentMethodFrame()->operandStack->push2((long long)(currentInstruction - LCONST_0));
 				break;
 
 				// FALL THROUGH:
 			case FCONST_0:
 			case FCONST_1:
 			case FCONST_2:
-				frame->operandStack->push((float)(currentInstruction - FCONST_0));
+				this->getCurrentMethodFrame()->operandStack->push((float)(currentInstruction - FCONST_0));
 				break;
 
 				// FALL THROUGH:
 			case DCONST_0:
 			case DCONST_1:
-				frame->operandStack->push2((double)(currentInstruction - DCONST_0));
+				this->getCurrentMethodFrame()->operandStack->push2((double)(currentInstruction - DCONST_0));
 				break;
 
 			case BIPUSH:
 			{
 				// push byte
 				word byte = instructions[pc++];
-				frame->operandStack->push(byte);
+				this->getCurrentMethodFrame()->operandStack->push(byte);
 			}
 			break;
 
@@ -153,7 +153,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				// byte 1
 				// byte 2
 				unsigned short index = getShort();
-				frame->operandStack->push(index);
+				this->getCurrentMethodFrame()->operandStack->push(index);
 			}
 			break;
 
@@ -391,21 +391,21 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case POP:
 				// pop value from stack
-				frame->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->pop();
 				break;
 
 			case POP2:
-				frame->operandStack->pop();
-				frame->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->pop();
 				break;
 
 			case DUP:
 			{
 				// value
 				// value, value
-				word value = frame->operandStack->pop();
-				frame->operandStack->push(value);
-				frame->operandStack->push(value);
+				word value = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(value);
+				this->getCurrentMethodFrame()->operandStack->push(value);
 			}
 			break;
 
@@ -413,11 +413,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// value2, value1
 				// value1, value2, value1
-				word a = frame->operandStack->pop();
-				word b = frame->operandStack->pop();
-				frame->operandStack->push(a);
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
+				word a = this->getCurrentMethodFrame()->operandStack->pop();
+				word b = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
 			}
 			break;
 
@@ -425,25 +425,25 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// value3, value2, value1
 				// value1, value3, value2, value1
-				word a = frame->operandStack->pop();
-				word b = frame->operandStack->pop();
-				word c = frame->operandStack->pop();
+				word a = this->getCurrentMethodFrame()->operandStack->pop();
+				word b = this->getCurrentMethodFrame()->operandStack->pop();
+				word c = this->getCurrentMethodFrame()->operandStack->pop();
 
-				frame->operandStack->push(a);
-				frame->operandStack->push(c);
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(c);
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
 			};
 			break;
 
 			case DUP2:
 			{
-				word a = frame->operandStack->pop();
-				word b = frame->operandStack->pop();
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
+				word a = this->getCurrentMethodFrame()->operandStack->pop();
+				word b = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
 			}
 			break;
 
@@ -451,15 +451,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// value3, value2, value1
 				// value2, value1, value3, value2, value1
-				word a = frame->operandStack->pop();
-				word b = frame->operandStack->pop();
-				word c = frame->operandStack->pop();
+				word a = this->getCurrentMethodFrame()->operandStack->pop();
+				word b = this->getCurrentMethodFrame()->operandStack->pop();
+				word c = this->getCurrentMethodFrame()->operandStack->pop();
 
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
-				frame->operandStack->push(c);
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(c);
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
 			}
 			break;
 
@@ -467,17 +467,17 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// value4, value3, value2, value1
 				// value2, value1, value4, value3, value2, value1
-				word a = frame->operandStack->pop();
-				word b = frame->operandStack->pop();
-				word c = frame->operandStack->pop();
-				word d = frame->operandStack->pop();
+				word a = this->getCurrentMethodFrame()->operandStack->pop();
+				word b = this->getCurrentMethodFrame()->operandStack->pop();
+				word c = this->getCurrentMethodFrame()->operandStack->pop();
+				word d = this->getCurrentMethodFrame()->operandStack->pop();
 
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
-				frame->operandStack->push(d);
-				frame->operandStack->push(c);
-				frame->operandStack->push(b);
-				frame->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
+				this->getCurrentMethodFrame()->operandStack->push(d);
+				this->getCurrentMethodFrame()->operandStack->push(c);
+				this->getCurrentMethodFrame()->operandStack->push(b);
+				this->getCurrentMethodFrame()->operandStack->push(a);
 			}
 			break;
 
@@ -485,10 +485,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// swap operand-stack values
 				// category 1
-				word low = frame->operandStack->pop();
-				word high = frame->operandStack->pop();
-				frame->operandStack->push(low);
-				frame->operandStack->push(high);
+				word low = this->getCurrentMethodFrame()->operandStack->pop();
+				word high = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(low);
+				this->getCurrentMethodFrame()->operandStack->push(high);
 			}
 			break;
 
@@ -567,8 +567,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case IDIV:
 			{
-				int b = frame->operandStack->pop();
-				int a = frame->operandStack->pop();
+				int b = this->getCurrentMethodFrame()->operandStack->pop();
+				int a = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if (b == 0)
 				{
@@ -576,15 +576,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::ArithmeticException();
 				}
 
-				frame->operandStack->push(a / b);
+				this->getCurrentMethodFrame()->operandStack->push(a / b);
 			}
 			break;
 
 
 			case LDIV:
 			{
-				long long b = frame->operandStack->pop2();
-				long long a = frame->operandStack->pop2();
+				long long b = this->getCurrentMethodFrame()->operandStack->pop2();
+				long long a = this->getCurrentMethodFrame()->operandStack->pop2();
 
 				if (b == 0)
 				{
@@ -592,7 +592,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::ArithmeticException();
 				}
 
-				frame->operandStack->push2(a / b);
+				this->getCurrentMethodFrame()->operandStack->push2(a / b);
 			}
 			break;
 
@@ -611,8 +611,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IREM:
 			{
 				// returns remainder
-				int b = frame->operandStack->pop();
-				int a = frame->operandStack->pop();
+				int b = this->getCurrentMethodFrame()->operandStack->pop();
+				int a = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if (b == 0)
 				{
@@ -620,14 +620,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::ArithmeticException();
 				}
 
-				frame->operandStack->push(a % b);
+				this->getCurrentMethodFrame()->operandStack->push(a % b);
 			}
 			break;
 
 			case LREM:
 			{
-				long long b = frame->operandStack->pop2();
-				long long a = frame->operandStack->pop2();
+				long long b = this->getCurrentMethodFrame()->operandStack->pop2();
+				long long a = this->getCurrentMethodFrame()->operandStack->pop2();
 
 				if (b == 0)
 				{
@@ -635,51 +635,51 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::ArithmeticException();
 				}
 
-				frame->operandStack->push2(a % b);
+				this->getCurrentMethodFrame()->operandStack->push2(a % b);
 			}
 			break;
 
 			case FREM:
 			{
-				float b = frame->operandStack->pop();
-				float a = frame->operandStack->pop();
-				frame->operandStack->push(fmodf(a, b));
+				float b = this->getCurrentMethodFrame()->operandStack->pop();
+				float a = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(fmodf(a, b));
 			}
 			break;
 
 			case DREM:
 			{
-				double b = frame->operandStack->pop2();
-				double a = frame->operandStack->pop2();
-				frame->operandStack->push2(fmod(a, b));
+				double b = this->getCurrentMethodFrame()->operandStack->pop2();
+				double a = this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push2(fmod(a, b));
 			}
 			break;
 
 			case INEG:
 			{
-				int a = frame->operandStack->pop();
-				frame->operandStack->push(-a);
+				int a = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(-a);
 			}
 			break;
 
 			case LNEG:
 			{
-				long long a = frame->operandStack->pop2();
-				frame->operandStack->push2(-a);
+				long long a = this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push2(-a);
 			}
 			break;
 
 			case FNEG:
 			{
-				float a = frame->operandStack->pop();
-				frame->operandStack->push(-a);
+				float a = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(-a);
 			}
 			break;
 
 			case DNEG:
 			{
-				double a = frame->operandStack->pop2();
-				frame->operandStack->push2(-a);
+				double a = this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push2(-a);
 			}
 			break;
 
@@ -693,9 +693,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case LSHL:
 			{
-				int b = frame->operandStack->pop();
-				long long a = frame->operandStack->pop2();
-				frame->operandStack->push2(a << b);
+				int b = this->getCurrentMethodFrame()->operandStack->pop();
+				long long a = this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push2(a << b);
 			}
 			break;
 
@@ -708,9 +708,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case LSHR:
 			{
 				// shift right
-				int b = frame->operandStack->pop();
-				long long a = frame->operandStack->pop2();
-				frame->operandStack->push2(a >> b);
+				int b = this->getCurrentMethodFrame()->operandStack->pop();
+				long long a = this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push2(a >> b);
 			}
 			break;
 
@@ -723,9 +723,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case LUSHR:
 			{
-				unsigned long long a = (unsigned long long)(long long)frame->operandStack->pop2();
-				unsigned int b = frame->operandStack->pop();
-				frame->operandStack->push2((long long)(a >> b));
+				unsigned long long a = (unsigned long long)(long long)this->getCurrentMethodFrame()->operandStack->pop2();
+				unsigned int b = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push2((long long)(a >> b));
 				break;
 			}
 
@@ -775,114 +775,114 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case I2L:
 			{
-				long long val = (long long)(int) frame->operandStack->pop();
-				frame->operandStack->push2(val);
+				long long val = (long long)(int) this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push2(val);
 			}
 			break;
 
 			case I2F:
 			{
-				float val = (float)(int) frame->operandStack->pop();
-				frame->operandStack->push(val);
+				float val = (float)(int) this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case I2D:
 			{
-				double val = (double)(int) frame->operandStack->pop();
-				frame->operandStack->push2(val);
+				double val = (double)(int) this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push2(val);
 			}
 			break;
 
 			case L2I:
 			{
-				int val = (int)(long long)frame->operandStack->pop2();
-				frame->operandStack->push(val);
+				int val = (int)(long long)this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case L2F:
 			{
-				float val = (float)(long long)frame->operandStack->pop2();
-				frame->operandStack->push(val);
+				float val = (float)(long long)this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case L2D:
 			{
-				double val = (double)(long long)frame->operandStack->pop2();
-				frame->operandStack->push2(val);
+				double val = (double)(long long)this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push2(val);
 			}
 			break;
 
 			case F2I:
 			{
-				int val = (int)(float)frame->operandStack->pop();
-				frame->operandStack->push(val);
+				int val = (int)(float)this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case F2L:
 			{
-				long long val = (long long)(float)frame->operandStack->pop();
-				frame->operandStack->push2(val);
+				long long val = (long long)(float)this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push2(val);
 			}
 			break;
 
 			case F2D:
 			{
-				double val = (double)(float) frame->operandStack->pop();
-				frame->operandStack->push2(val);
+				double val = (double)(float) this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push2(val);
 			}
 			break;
 
 			case D2I:
 			{
-				int val = (int)(double)frame->operandStack->pop2();
-				frame->operandStack->push(val);
+				int val = (int)(double)this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case D2L:
 			{
-				long long val = (long long)((double)frame->operandStack->pop2());
-				frame->operandStack->push2(val);
+				long long val = (long long)((double)this->getCurrentMethodFrame()->operandStack->pop2());
+				this->getCurrentMethodFrame()->operandStack->push2(val);
 			}
 			break;
 
 			case D2F:
 			{
-				float val = (float)(double)frame->operandStack->pop2();
-				frame->operandStack->push(val);
+				float val = (float)(double)this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case I2B:
 			{
-				int val = (char)(int)frame->operandStack->pop();
-				frame->operandStack->push(val);
+				int val = (char)(int)this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case I2C:
 			{
-				int val = (java_char)(int)frame->operandStack->pop();
-				frame->operandStack->push(val);
+				int val = (java_char)(int)this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 			case I2S:
 			{
-				int val = (short)(int)frame->operandStack->pop();
-				frame->operandStack->push(val);
+				int val = (short)(int)this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->operandStack->push(val);
 			}
 			break;
 
 
 			case LCMP:
 			{
-				long long a = frame->operandStack->pop2();
-				long long b = frame->operandStack->pop2();
+				long long a = this->getCurrentMethodFrame()->operandStack->pop2();
+				long long b = this->getCurrentMethodFrame()->operandStack->pop2();
 
 				int res = 0;
 
@@ -899,15 +899,15 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					res = -1;
 				}
 
-				frame->operandStack->push(res);
+				this->getCurrentMethodFrame()->operandStack->push(res);
 			}
 			break;
 
 			case FCMPL:
 			case FCMPG:
 			{
-				float a = frame->operandStack->pop();
-				float b = frame->operandStack->pop();
+				float a = this->getCurrentMethodFrame()->operandStack->pop();
+				float b = this->getCurrentMethodFrame()->operandStack->pop();
 
 				this->fdcmp<float>(a, b, currentInstruction);
 			}
@@ -918,8 +918,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case DCMPL:
 			case DCMPG:
 			{
-				double a = frame->operandStack->pop2();
-				double b = frame->operandStack->pop2();
+				double a = this->getCurrentMethodFrame()->operandStack->pop2();
+				double b = this->getCurrentMethodFrame()->operandStack->pop2();
 
 				this->fdcmp<double>(a, b, currentInstruction);
 			}
@@ -933,7 +933,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IFGT:
 			case IFLE:
 			{
-				int value = frame->operandStack->pop();
+				int value = this->getCurrentMethodFrame()->operandStack->pop();
 				this->jumpIfEq(currentInstruction, value);
 			}
 			break;
@@ -946,8 +946,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IF_ICMPGT:
 			case IF_ICMPLE:
 			{
-				int b = frame->operandStack->pop();
-				int a = frame->operandStack->pop();
+				int b = this->getCurrentMethodFrame()->operandStack->pop();
+				int a = this->getCurrentMethodFrame()->operandStack->pop();
 
 				int res = a - b;
 				this->jumpIfEq(currentInstruction - (IF_ICMPEQ - IFEQ), res);
@@ -960,8 +960,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IF_ACMPNE:
 			{
 				short offset = this->getShort();
-				unsigned short b = frame->operandStack->pop();
-				unsigned short a = frame->operandStack->pop();
+				unsigned short b = this->getCurrentMethodFrame()->operandStack->pop();
+				unsigned short a = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if ((a == b && currentInstruction == IF_ACMPEQ) || (a != b && currentInstruction == IF_ACMPNE))
 				{
@@ -975,7 +975,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IFNONNULL:
 			{
 				short offset = this->getShort();
-				unsigned short ref = frame->operandStack->pop();
+				unsigned short ref = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if ((ref == NULL && currentInstruction == IFNULL) || (ref != NULL && currentInstruction == IFNONNULL) )
 				{
@@ -1001,7 +1001,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case JSR:
 			{
 				short offset = this->getShort();
-				frame->operandStack->push(pc);
+				this->getCurrentMethodFrame()->operandStack->push(pc);
 				this->jumpWithOffset(offset);
 			}
 			break;
@@ -1009,7 +1009,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case JSR_W:
 			{
 				int offset = (int)this->getInt();
-				frame->operandStack->push(pc);
+				this->getCurrentMethodFrame()->operandStack->push(pc);
 				this->jumpWithOffset(offset);
 			}
 			break;
@@ -1018,7 +1018,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case RET:
 			{
 				unsigned char index = instructions[pc];
-				int restoredPc = frame->localVariables->operator[](index);
+				int restoredPc = this->getCurrentMethodFrame()->localVariables->operator[](index);
 				pc = restoredPc;
 			}
 			break;
@@ -1037,7 +1037,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				int low = this->getInt();
 				int high = this->getInt();
 
-				int index = frame->operandStack->pop();
+				int index = this->getCurrentMethodFrame()->operandStack->pop();
 
 				int offset = 0;
 
@@ -1071,7 +1071,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				int def = this->getInt();
 				int n = this->getInt();
 
-				int key = frame->operandStack->pop();
+				int key = this->getCurrentMethodFrame()->operandStack->pop();
 				bool matched = false;
 
 				int offset = 0;
@@ -1103,8 +1103,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IRETURN:
 			case ARETURN:
 			{
-				word reference = frame->operandStack->pop();
-				frame->parentFrame->operandStack->push(reference);
+				word reference = this->getCurrentMethodFrame()->operandStack->pop();
+				this->getCurrentMethodFrame()->parentFrame->operandStack->push(reference);
 				this->dropCurrentFrame();
 				return 0;
 			}
@@ -1114,8 +1114,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case LRETURN:
 			case DRETURN:
 			{
-				doubleWord word = frame->operandStack->pop2();
-				frame->parentFrame->operandStack->push2(word);
+				doubleWord word = this->getCurrentMethodFrame()->operandStack->pop2();
+				this->getCurrentMethodFrame()->parentFrame->operandStack->push2(word);
 				this->dropCurrentFrame();
 				return 0;
 			};
@@ -1139,10 +1139,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				{
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
-					frame->operandStack->push2(classPtr->staticVariablesValues->get2(field->fieldIndex));
+					this->getCurrentMethodFrame()->operandStack->push2(classPtr->staticVariablesValues->get2(field->fieldIndex));
 					break;
 				default:
-					frame->operandStack->push(classPtr->staticVariablesValues->get(field->fieldIndex));
+					this->getCurrentMethodFrame()->operandStack->push(classPtr->staticVariablesValues->get(field->fieldIndex));
 					break;
 				}
 			};
@@ -1159,10 +1159,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				{
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
-					classPtr->staticVariablesValues->set2(field->fieldIndex, frame->operandStack->pop2());
+					classPtr->staticVariablesValues->set2(field->fieldIndex, this->getCurrentMethodFrame()->operandStack->pop2());
 					break;
 				default:
-					classPtr->staticVariablesValues->set(field->fieldIndex, frame->operandStack->pop());
+					classPtr->staticVariablesValues->set(field->fieldIndex, this->getCurrentMethodFrame()->operandStack->pop());
 					break;
 				}
 			};
@@ -1171,7 +1171,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case GETFIELD:
 			{
 				unsigned short index = this->getShort();
-				Object* reference = (Object*)this->objectTable->get(frame->operandStack->popReference());
+				Object* reference = (Object*)this->objectTable->get(this->getCurrentMethodFrame()->operandStack->popReference());
 
 				if (reference == NULL)
 				{
@@ -1185,10 +1185,10 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				{
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
-					frame->operandStack->push2(reference->fields->get2(field->fieldIndex));
+					this->getCurrentMethodFrame()->operandStack->push2(reference->fields->get2(field->fieldIndex));
 					break;
 				default:
-					frame->operandStack->push(reference->fields->get(field->fieldIndex));
+					this->getCurrentMethodFrame()->operandStack->push(reference->fields->get(field->fieldIndex));
 					break;
 				}
 			}
@@ -1206,8 +1206,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				case TypeTag::DOUBLE:
 				case TypeTag::LONG:
 					{
-						doubleWord data = frame->operandStack->pop2();
-						Object* reference = (Object*)this->objectTable->get(frame->operandStack->popReference());
+						doubleWord data = this->getCurrentMethodFrame()->operandStack->pop2();
+						Object* reference = (Object*)this->objectTable->get(this->getCurrentMethodFrame()->operandStack->popReference());
 
 						if (reference == NULL)
 						{
@@ -1219,8 +1219,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					break;
 				default:
 					{
-						word data = frame->operandStack->pop();
-						Object* reference = (Object*)this->objectTable->get(frame->operandStack->popReference());
+						word data = this->getCurrentMethodFrame()->operandStack->pop();
+						Object* reference = (Object*)this->objectTable->get(this->getCurrentMethodFrame()->operandStack->popReference());
 
 						if (reference == NULL)
 						{
@@ -1254,8 +1254,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				else
 				{
 					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction);
-					newFrame->parentFrame = frame;
-					frame->childFrame = newFrame;
+					newFrame->parentFrame = this->getCurrentMethodFrame();
+					this->getCurrentMethodFrame()->childFrame = newFrame;
 					this->execute(newFrame);
 				}
 			}
@@ -1281,21 +1281,21 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				int index = this->getShort();
 				// TODO: Class resolution and object allocation
-				ConstantPoolItem * item = frame->constantPool->get(index);
+				ConstantPoolItem * item = this->getCurrentMethodFrame()->constantPool->get(index);
 
 				Class* classPtr = item->classInfo.classPtr;
 				int classIndex = item->classInfo.name_index;
-				ConstantPoolItem * name = frame->constantPool->get(item->classInfo.name_index);
+				ConstantPoolItem * name = this->getCurrentMethodFrame()->constantPool->get(item->classInfo.name_index);
 
 				word idx = this->objectTable->insert(classPtr, true);
-				frame->operandStack->pushReference(idx);
+				this->getCurrentMethodFrame()->operandStack->pushReference(idx);
 			};
 			break;
 
 			case NEWARRAY:
 			{
 				ArrayType type = (ArrayType)instructions[pc++];
-				int size = frame->operandStack->pop();
+				int size = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if (size < 0)
 				{
@@ -1344,7 +1344,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				int objectIndex = this->objectTable->insert((Object*)object);
 
-				frame->operandStack->pushReference(objectIndex);
+				this->getCurrentMethodFrame()->operandStack->pushReference(objectIndex);
 			}
 			break;
 
@@ -1352,7 +1352,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case ANEWARRAY:
 			{
 				short index = this->getShort();
-				int size = frame->operandStack->pop();
+				int size = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if (size < 0)
 				{
@@ -1367,7 +1367,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				int objectIndex = this->objectTable->insert((Object*)object);
 
-				frame->operandStack->push(objectIndex);
+				this->getCurrentMethodFrame()->operandStack->push(objectIndex);
 			}
 			break;
 
@@ -1386,18 +1386,18 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				for (int i = 0; i < dimensions; i++)
 				{
-					arrayDimensions[i] = frame->operandStack->pop();
+					arrayDimensions[i] = this->getCurrentMethodFrame()->operandStack->pop();
 				}
 
 				int object = (int)this->recursiveAllocateArray(dimensions, arrayDimensions);
 			
-				frame->operandStack->push(object);
+				this->getCurrentMethodFrame()->operandStack->push(object);
 			}
 			break;
 
 			case ARRAYLENGTH:
 			{
-				int index = frame->operandStack->popReference();
+				int index = this->getCurrentMethodFrame()->operandStack->popReference();
 			
 				if (index == 0) 
 				{
@@ -1411,14 +1411,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::NullPointerException();
 				}
 
-				frame->operandStack->push(object->getSize());
+				this->getCurrentMethodFrame()->operandStack->push(object->getSize());
 			}
 			break;
 
 			case ATHROW:
 			{
 				// TODO: Exceptions!
-				java::lang::Throwable::Throwable* ref = (java::lang::Throwable::Throwable*)this->objectTable->get(getReferenceAddress(frame->operandStack->top()));
+				java::lang::Throwable::Throwable* ref = (java::lang::Throwable::Throwable*)this->objectTable->get(getReferenceAddress(this->getCurrentMethodFrame()->operandStack->top()));
 				throw ref;
 			}
 			break;
@@ -1442,7 +1442,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case INSTANCEOF:
 			{
-				Object* ref = frame->operandStack->pop();
+				Object* ref = this->getCurrentMethodFrame()->operandStack->pop();
 				size_t index = this->getShort();
 
 				if (ref != NULL)
@@ -1450,11 +1450,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					Class* classPtr = this->resolveClass(index);
 
 					bool result = this->isInstanceOf(ref->objectClass, classPtr);				
-					frame->operandStack->push((int)result);
+					this->getCurrentMethodFrame()->operandStack->push((int)result);
 				}
 				else
 				{
-					frame->operandStack->push(0);
+					this->getCurrentMethodFrame()->operandStack->push(0);
 				}
 
 			}
@@ -1496,7 +1496,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					break;
 				case RET: 
 					{
-						int restoredPc = frame->localVariables->operator[](index);
+						int restoredPc = this->getCurrentMethodFrame()->localVariables->operator[](index);
 						pc = restoredPc;
 					}
 					break;
@@ -1524,7 +1524,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 		
 #ifdef _DEBUG
 			if (this->runtime->parameters.PrintExecutedInstructions) {
-				std::cerr << "\tSTACK AFTER: " << frame->operandStack->index << std::endl;
+				std::cerr << "\tSTACK AFTER: " << this->getCurrentMethodFrame()->operandStack->index << std::endl;
 			}
 #endif
 
@@ -1542,7 +1542,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					this->dropCurrentFrame();
 				}
 
-				throw; // rethrow exception to parent frame
+				throw; // rethrow exception to parent this->getCurrentMethodFrame()
 			}
 
 		}
@@ -1564,7 +1564,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					this->dropCurrentFrame();
 				}
 
-				throw throwable; // rethrow exception to parent frame as java type exception
+				throw throwable; // rethrow exception to parent this->getCurrentMethodFrame() as java type exception
 			}
 		}
 	}
