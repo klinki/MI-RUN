@@ -23,6 +23,7 @@ public:
 	MethodFrame(size_t stackSize, size_t localVariablesSize);
 	MethodFrame(Method * method, MethodFrame* parent = NULL);
 	MethodFrame(size_t stackSize, size_t localVariablesSize, MethodFrame * parent, ConstantPool * constantPool, Method * method, byte * address);
+	MethodFrame(const MethodFrame & copy);
 	~MethodFrame();
 
 	static size_t getMemorySize(size_t stackSize = 0, size_t localVariblesSize = 0);
@@ -31,6 +32,10 @@ public:
 	virtual void accept(ObjectVisitorInterface & visitor);
 
 	virtual bool requiresFinalization();
+
+	virtual void repairAfterGC();
+
+	virtual void copyTo(byte* address);
 
 	friend class ExecutionEngine;
 	friend class Method;

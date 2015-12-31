@@ -81,11 +81,13 @@ void BakerGc::visit(word address)
 				this->incrementAccessCounter(memory, this->getAccessCounter(pointer) + 1);
 			}
 
-			memcpy(memory, pointer, dataSize);
+			// TODO: CANNOT SIMPLY COPY HERE!!!!
+			visitable->copyTo(memory);
+//			memcpy(memory, pointer, dataSize);
 
 			this->updateAddress(refAddress, memory);
 			this->setColor(pointer, Color::BAKER_MOVED);
-
+				
 			visitable->accept(*this);
 		}
 		catch (...)
@@ -176,7 +178,7 @@ void BakerGc::collect()
 	{
 #ifdef _DEBUG
 		DebugVisitor visitor(this);
-		visitor.visit(frameIndex);
+//		visitor.visit(frameIndex);
 #endif
 
 		this->visit(frameIndex);
@@ -207,7 +209,7 @@ size_t BakerGc::insert(void * ptr, bool systemObject)
 
 void BakerGc::finalize(Heap* slot)
 {
-	DEBUG_PRINT("Finalization");
+	DEBUG_PRINT("Finalization\n");
 
 	unsigned char* ptr = (unsigned char*)slot->data;
 	unsigned char* endPtr = ptr + slot->usedBytes;

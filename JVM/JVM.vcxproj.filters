@@ -7,9 +7,6 @@
     <ClCompile Include="classfile\ClassLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gc\GarbageCollector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtime\Class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -100,9 +97,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="natives\Declarations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\GarbageCollector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="runtime\Class.h">

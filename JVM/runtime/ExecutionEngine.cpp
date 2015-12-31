@@ -87,13 +87,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 	Instruction * instructions = (Instruction*)this->getCurrentMethodFrame()->method->getBytecode();
 	unsigned int length = this->getCurrentMethodFrame()->method->getByteCodeLength();
-
 	ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
-	
+
 	while (pc < length)
 	{
 		try
 		{
+			ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
+
 			Instruction currentInstruction = instructions[pc++];
 
 #ifdef _DEBUG

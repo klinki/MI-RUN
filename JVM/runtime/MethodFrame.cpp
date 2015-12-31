@@ -33,6 +33,22 @@ MethodFrame::MethodFrame(size_t stackSize, size_t localVariablesSize, MethodFram
 	this->operandStack = new((byte*)(&this->operandStack) + sizeof(this->operandStack) + LocalVariablesArray::getMemorySize(localVariablesSize)) OperandStack(stackSize, (byte*)(&this->operandStack + LocalVariablesArray::getMemorySize(localVariablesSize)));
 }
 
+MethodFrame::MethodFrame(const MethodFrame & copy): 
+	MethodFrame(copy.operandStack->allocatedSize, copy.localVariables->allocatedSize, copy.parentFrame, copy.constantPool, copy.method, NULL)
+{
+	this->pc = copy.pc;
+	this->sp = copy.sp;
+	this->childFrame = copy.childFrame;
+
+	memcpy(this->localVariables->allocatedArray, copy.localVariables->allocatedArray, copy.localVariables->allocatedSize);
+	memcpy(this->operandStack->allocatedArray, copy.operandStack->allocatedArray, copy.operandStack->allocatedSize);
+}
+
+void MethodFrame::copyTo(byte* address)
+{
+	new(address) MethodFrame(*this);
+}
+
 MethodFrame::~MethodFrame()
 {
 }
@@ -70,4 +86,11 @@ void MethodFrame::accept(ObjectVisitorInterface & visitor)
 bool MethodFrame::requiresFinalization()
 {
 	return false;
+}
+
+
+void MethodFrame::repairAfterGC()
+{
+	this->localVariables = (LocalVariablesArray*)(&this->operandStack + 1);
+	this->operandStack = (OperandStack*)((&this->operandStack) + sizeof(this->operandStack) + LocalVariablesArray::getMemorySize(this->localVariables->allocatedSize));
 }

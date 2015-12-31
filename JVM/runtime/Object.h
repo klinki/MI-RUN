@@ -31,6 +31,11 @@ public:
 		this->fields = new LocalVariablesArray(fields);
 	};
 
+	Object(const Object & source) : Object(source.fields->allocatedSize, source.objectClass, NULL)
+	{
+		memcpy(this->fields->allocatedArray, source.fields->allocatedArray, source.fields->allocatedSize);
+	}
+
 	Object(): ObjectHeader(NULL)
 	{
 	};
@@ -39,6 +44,11 @@ public:
 	{
 	};
 	
+	virtual void copyTo(byte* address)
+	{
+		new(address) Object(*this);
+	}
+
 	static size_t getMemorySize(size_t fields = 0)
 	{
 		return sizeof(Object) 

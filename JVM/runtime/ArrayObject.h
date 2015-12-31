@@ -31,9 +31,19 @@ public:
 		}
 	}
 
+	ArrayObject(const ArrayObject & copy): ArrayObject(copy.size, 0, copy.objectClass, NULL)
+	{
+		memcpy(this->arrayData, copy.arrayData, copy.size * sizeof(T));
+	}
+
 	~ArrayObject()
 	{
 		// DO NOT DELETE DATA HERE!!
+	}
+
+	virtual void copyTo(byte* address)
+	{
+		new(address) ArrayObject<T>(*this);
 	}
 
 	size_t getSize() const { return this->size; }

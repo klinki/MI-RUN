@@ -6,6 +6,7 @@
 class ObjectTable
 {
 protected:
+	size_t index = 0;
 	std::unordered_map<int, void*> hashMap;
 public:
 	ObjectTable(size_t size = 10);

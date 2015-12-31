@@ -212,12 +212,12 @@ public:
 		(*this->getCurrentMethodFrame()->localVariables)[index + 1] = low;
 	}
 
-	inline unsigned short getShort()
+	inline short getShort()
 	{
 		const Instruction * instructions = this->getCurrentMethodFrame()->method->getBytecode();
 		unsigned char HIGH = instructions[this->getCurrentMethodFrame()->pc++];
 		unsigned char LOW = instructions[this->getCurrentMethodFrame()->pc++];
-		unsigned short value = shortFromStack(HIGH, LOW);
+		short value = shortFromStack(HIGH, LOW);
 		return value;
 	}
 

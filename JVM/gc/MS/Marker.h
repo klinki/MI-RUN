@@ -3,17 +3,22 @@
 
 class Marker : public ObjectVisitorInterface
 {
+	class Sweeper : public ObjectVisitorInterface
+	{
+		virtual void visit(MethodFrame* methodFrame);
+		virtual void visit(ObjectHeader* header);
+		virtual void visit(Object* object);
+		virtual void visit(word address);
+	};
+
 protected:
 	const size_t oneRoundLimit = 150;
 public:
 	Marker();
 	~Marker();
 
-	virtual void visit(MethodFrame* methodFrame) = 0;
-	virtual void visit(Object* object) = 0;
-	virtual void visit(size_t address) = 0;
-	virtual void visit(word address)
-	{
-		this->visit(address);
-	}
+	virtual void visit(MethodFrame* methodFrame);
+	virtual void visit(ObjectHeader* header);
+	virtual void visit(Object* object);
+	virtual void visit(word address);
 };

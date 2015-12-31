@@ -139,7 +139,6 @@
     <ClCompile Include="utils\ArgumentsParser.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
     <ClCompile Include="runtime\ConstantPool.cpp" />
-    <ClCompile Include="gc\GarbageCollector.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="runtime\MethodFrame.cpp" />
     <ClCompile Include="runtime\Class.cpp" />
@@ -200,7 +199,6 @@
     <ClInclude Include="runtime\LocalVariablesArray.h" />
     <ClInclude Include="runtime\ExceptionTable.h" />
     <ClInclude Include="runtime\ConstantPool.h" />
-    <ClInclude Include="gc\GarbageCollector.h" />
     <ClInclude Include="runtime\MethodFrame.h" />
     <ClInclude Include="natives\Declarations.h" />
     <ClInclude Include="runtime\AccessFlags.h" />

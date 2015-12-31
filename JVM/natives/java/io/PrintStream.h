@@ -15,7 +15,13 @@ namespace java
 			std::ostream * output;
 		public:
 			PrintStream(std::ostream * stream);
+			PrintStream(const PrintStream & copy) : PrintStream(copy.output) {}
 			~PrintStream();
+
+			virtual void copyTo(byte* address)
+			{
+				new(address) PrintStream(*this);
+			}
 
 			void close();
 			void flush();
