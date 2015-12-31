@@ -51,6 +51,9 @@ Class* ClassLoader::load(const char * filename)
 #endif 
 	thisClass->constantPool->resolveStringRef();
 	int nameptr = loadThisClass(thisClass);
+
+	classMap->addClass(thisClass);
+
 	int super = loadSuperClass(thisClass);
 	loadInterfaces(thisClass);
 	loadFields(thisClass);
@@ -61,8 +64,6 @@ Class* ClassLoader::load(const char * filename)
 	this->resolvePool(thisClass,nameptr);
 	thisClass->setParent(thisClass->constantPool->get(super)->classInfo.classPtr);
 	
-	classMap->addClass(thisClass);
-
 #ifdef _DEBUG
 	fprintf(stderr, "loading finnished\n");
 #endif // _DEBUG

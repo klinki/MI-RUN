@@ -230,6 +230,8 @@ size_t BakerGc::insert(void * ptr, bool systemObject)
 
 void BakerGc::finalize(Heap* slot)
 {
+	return; // TODO: THERE IS BUG IN FINALIZATION, REMOVE WHEN FIXED
+
 	DEBUG_PRINT("Finalization\n");
 
 	unsigned char* ptr = (unsigned char*)slot->data;
@@ -247,8 +249,6 @@ void BakerGc::finalize(Heap* slot)
 			if (objPtr->requiresFinalization())
 			{
 				Method* method = objPtr->getFinalizationMethod(); // objectClass->getMethod("finalize", "()V");
-				unsigned char* frameMemory = this->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
-				MethodFrame * frame = new(frameMemory) MethodFrame(method->operandStackSize, method->localVariablesArraySize, NULL, NULL, method, NULL);
 			
 				if (method->isNative())
 				{
@@ -256,7 +256,11 @@ void BakerGc::finalize(Heap* slot)
 				}
 				else
 				{
-					this->engine->execute(frame);
+					unsigned char* frameMemory = this->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
+					MethodFrame * frame = new(frameMemory) MethodFrame(method->operandStackSize, method->localVariablesArraySize, 
+						this->runtime->executionEngine->getCurrentMethodFrame(), method->classPtr->constantPool, method, NULL);
+
+					this->runtime->executionEngine->execute(frame);
 				}
 			}
 			// TODO: Finalize object
