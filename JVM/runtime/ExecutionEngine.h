@@ -428,7 +428,7 @@ public:
 			}
 		}
 
-		methodPtr->classPtr = classPtr;
+//		methodPtr->classPtr = classPtr;
 
 		if (instruction == INVOKEVIRTUAL)
 		{
@@ -440,6 +440,8 @@ public:
 
 			ObjectHeader* objectPtr = (ObjectHeader*)ptr;
 			Method* overloadedPtr = objectPtr->objectClass->getMethod(methodPtr->name, methodPtr->descriptor);
+
+//			overloadedPtr->classPtr = classPtr; // TODO: Verify this
 
 			return overloadedPtr;
 		}
@@ -477,7 +479,7 @@ public:
 		return classPtr;
 	}
 
-	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, bool isStatic)
+	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, Instruction currentInstruction)
 	{
 		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize + 1));
 		MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize + 1);
@@ -489,7 +491,7 @@ public:
 
 		size_t varPos = method->inputArgsSize;
 
-		if (isStatic)
+		if (currentInstruction == INVOKESTATIC)
 		{
 			varPos--;
 		}
@@ -517,9 +519,17 @@ public:
 			}
 		}
 
-		if (!isStatic)
+		if (currentInstruction != INVOKESTATIC)
 		{
-			(*newFrame->localVariables)[0] = this->getCurrentMethodFrame()->operandStack->pop();
+			size_t reference = this->getCurrentMethodFrame()->operandStack->pop();
+			(*newFrame->localVariables)[0] = reference;
+
+			if (currentInstruction != INVOKESPECIAL)
+			{
+				void*ptr = this->objectTable->get(getReferenceAddress(reference));
+				ObjectHeader* referencePtr = (ObjectHeader*)ptr;
+				// newFrame->constantPool = referencePtr->objectClass->constantPool;
+			}
 		}
 
 		return newFrame;
