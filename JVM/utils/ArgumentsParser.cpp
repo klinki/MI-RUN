@@ -3,6 +3,7 @@
 #include "../runtime/Runtime.h"
 #include "../natives/java/lang/String.h"
 #include "../natives/java/lang/Array.h"
+#include "../exceptions/RuntimeExceptions.h"
 
 ArgumentsParser::ArgumentsParser(Runtime* runtime, int argc, const char** argv)
 {
@@ -24,7 +25,7 @@ const char* ArgumentsParser::getClassFile()
 		}
 	}
 
-	throw "Missing class file!";
+	throw Errors::NoClassDefFoundError("Missing class file!");
 }
 
 word ArgumentsParser::getArgumentsArray()

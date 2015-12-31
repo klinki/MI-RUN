@@ -82,6 +82,10 @@ void ExecutionEngine::execute(Method* method)
 
 int ExecutionEngine::execute(MethodFrame * frame)
 {
+	DEBUG_PRINT("INSIDE METHOD: %s::%s\n", 
+		frame->method->classPtr->fullyQualifiedName.toAsciiString(),
+		frame->method->name.toAsciiString());
+
 	word index = this->objectTable->insert(frame);
 	this->callStack->pushReference(index);
 
@@ -1363,12 +1367,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				// TODO: Resolve class!
 
 
-				unsigned char* ptr = nullptr;
-				void * object = new (ptr) ArrayObject<Object*>(size, 0, NULL, ptr);
+				unsigned char* ptr = this->heap->allocate(ArrayObject<Object*>::getMemorySize(size));
+				void * object = new (ptr) ArrayObject<Object*>(size, 0, this->classMap->getClass("java/lang/Array"), NULL);
 
 				int objectIndex = this->objectTable->insert((Object*)object);
 
-				this->getCurrentMethodFrame()->operandStack->push(objectIndex);
+				this->getCurrentMethodFrame()->operandStack->pushReference(objectIndex);
 			}
 			break;
 

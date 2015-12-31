@@ -481,8 +481,16 @@ public:
 
 	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, Instruction currentInstruction)
 	{
-		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize + 1));
-		MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize + 1);
+		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(
+			method->operandStackSize + 10, 
+			method->localVariablesArraySize + 10)
+		);
+		MethodFrame* newFrame = new (data) MethodFrame(
+			method->operandStackSize + 10, 
+			method->localVariablesArraySize + 10
+		);
+
+		// TODO: FIX THIS! 
 
 		newFrame->method = method;
 		newFrame->constantPool = classPtr->constantPool;

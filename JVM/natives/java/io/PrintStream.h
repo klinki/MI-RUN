@@ -33,14 +33,15 @@ namespace java
 			void println();
 
 			void println(double type);
-			
+			void println(int value);
+
 			void println(const Utf8String & ref);
 
 			std::ostream & print(const Utf8String & ref);
 
 //			template <class T>
 			std::ostream & print(double type);
-			
+			std::ostream & print(int value);
 
 			void write(java_byte);
 			void write(ArrayObject<java_byte> * arr);
@@ -71,6 +72,10 @@ namespace java
 			NATIVE_METHOD_HEADER(printlnEmpty);
 			NATIVE_METHOD_HEADER(printlnString);
 			NATIVE_METHOD_HEADER(printlnDouble);
+
+			NATIVE_METHOD_HEADER(printInt);
+			NATIVE_METHOD_HEADER(printDouble);
+			NATIVE_METHOD_HEADER(printString);
 		}
 	}
 }
