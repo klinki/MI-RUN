@@ -10,6 +10,12 @@ namespace java
 	{
 		static Class* printstClassPtr;
 
+		PrintStream::PrintStream(::word streamIndex, FileOutputStream::FileOutputStream * stream): 
+			PrintStream::PrintStream(stream->stream)
+		{
+			this->outputStreamIndex = streamIndex;
+		}
+
 		PrintStream::PrintStream(std::ostream * stream): ObjectHeader(printstClassPtr)
 		{
 			this->output = stream;
@@ -39,9 +45,19 @@ namespace java
 			*this->output << ref.toAsciiString() << std::endl;
 		}
 
-		void PrintStream::println(double d)
+		void PrintStream::println(double type)
 		{
-			*this->output << d << std::endl;
+			this->print(type) << std::endl;
+		}
+
+		std::ostream & PrintStream::print(const Utf8String & ref)
+		{
+			return *this->output << ref.toAsciiString();
+		}
+
+		std::ostream & PrintStream::print(double type)
+		{
+			return *this->output << type;
 		}
 
 		void PrintStream::write(java_byte byte)
@@ -73,6 +89,7 @@ namespace java
 				aClass->classLoader = NULL;
 				aClass->fullyQualifiedName = "java/io/PrintStream";
 
+				aClass->addMethod(getNativeMethod("<init>", "(Ljava/io/OutputStream;)V", &initFromFileOutputStream));
 				aClass->methodArea.addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
 				aClass->methodArea.addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
 
@@ -87,6 +104,20 @@ namespace java
 
 				return aClass;
 			};
+
+			NATIVE_METHOD_HEADER(initFromFileOutputStream)
+			{
+				size_t outputStreamIndex = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				FileOutputStream::FileOutputStream* outputStr = (FileOutputStream::FileOutputStream*)engine->objectTable->get(outputStreamIndex);
+
+				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				Class* classPtr = (Class*)engine->objectTable->get(index);
+
+				byte* memory = engine->heap->allocate(sizeof(FileOutputStream::FileOutputStream));
+				PrintStream* printStr = new(memory) PrintStream(outputStreamIndex, outputStr);
+
+				engine->objectTable->updateAddress(index, printStr);
+			}
 
 			NATIVE_METHOD_HEADER(printlnEmpty)
 			{

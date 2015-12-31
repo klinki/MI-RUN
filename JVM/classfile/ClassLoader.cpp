@@ -19,6 +19,27 @@ ClassLoader::~ClassLoader()
     delete[] this->data;
 }
         
+void ClassLoader::init(const char * activeFile)
+{
+	std::string activeFileString(activeFile);
+	int lastDelimiter = activeFileString.find_last_of('/');
+	std::string directory = activeFileString.substr(0, lastDelimiter);
+	this->currentDir = directory.c_str();
+}
+
+std::string ClassLoader::getNamespaceFromClass(const char* className)
+{
+	std::string currentClassName = std::string(className);
+	int lastDelimiter = currentClassName.find_last_of('/');
+	std::string directory = currentClassName.substr(0, lastDelimiter);
+	std::string namesp = directory;
+
+	this->defaultNamespace = new char[directory.length() + 1];
+	memcpy(this->defaultNamespace, directory.c_str(), directory.length() + 1);
+
+	return namesp;
+}
+
 Class* ClassLoader::load(const char * filename)
 {
 	ifstream* file = new ifstream(filename, ios::in | ios::binary);
@@ -51,6 +72,13 @@ Class* ClassLoader::load(const char * filename)
 #endif 
 	thisClass->constantPool->resolveStringRef();
 	int nameptr = loadThisClass(thisClass);
+
+	if (this->defaultNamespace == NULL)
+	{
+		this->getNamespaceFromClass(thisClass->fullyQualifiedName.toAsciiString());
+		this->rootNamespace = new NamespaceStructure(thisClass->fullyQualifiedName.toAsciiString());
+		this->rootNamespace->directory = this->currentDir;
+	}
 
 	classMap->addClass(thisClass);
 
@@ -650,7 +678,13 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		unsigned char *a = thisClass->constantPool->get(name_index)->utf8Info.bytes;
 		//string a ((char*)thisClass->constantPool->get(name_index)->utf8Info.bytes);
 		size_t alen = thisClass->constantPool->get(name_index)->utf8Info.length;
+
 		char *r = new char[alen + 7];
+
+		
+
+
+
 		int tclen = thisClass->constantPool->get(nameptr)->utf8Info.length;
 		int counter = 0;
 		int lastcol = 0;
@@ -723,7 +757,9 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		}
 
 		memcpy(adr + (morecol * 3), (char*)a, strlen((char*)a) + 1);
-                memcpy(adr + alen  + (morecol * 3), ext, strlen(ext) + 1);
+        memcpy(adr + alen  + (morecol * 3), ext, strlen(ext) + 1);
+
+		NamespaceStructure structure(thisClass->fullyQualifiedName.toAsciiString());
 
 		this->load(adr);
 

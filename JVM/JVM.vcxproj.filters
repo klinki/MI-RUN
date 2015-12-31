@@ -88,6 +88,12 @@
     <ClCompile Include="natives\java\lang\Array.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="natives\java\io\FileOutputStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="natives\java\io\OutputStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classfile\ClassFile.h">
@@ -283,6 +289,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="natives\java\lang\Array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\io\FileOutputStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\io\OutputStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

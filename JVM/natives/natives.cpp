@@ -8,6 +8,8 @@
 #include "java/lang/Exception.h"
 #include "java/lang/Array.h"
 #include "java/io/PrintStream.h"
+#include "java/io/OutputStream.h"
+#include "java/io/FileOutputStream.h"
 
 #ifdef _MSC_VER
 	#include "java/lang/Throwable.h" // WTF LINUX?!!!
@@ -22,6 +24,9 @@ void initializeNatives(Runtime* runtime, ClassMap* classMap)
 	classMap->addClass(java::lang::System::initialize(runtime));
 	classMap->addClass(java::lang::StrBuilder::initialize(classMap));
 	classMap->addClass(java::lang::String::initialize(classMap));
+	classMap->addClass(java::io::OutputStream::initialize(classMap));
+	classMap->addClass(java::io::FileOutputStream::initialize(classMap));
+
 #ifndef _MSC_VER
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/Throwable", "java/lang/Object")); // WTF LINUX?!!!
 #else

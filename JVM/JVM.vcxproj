@@ -121,10 +121,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
+    <ClCompile Include="natives\java\io\FileOutputStream.cpp" />
     <ClCompile Include="gc\Baker\BakerGc.cpp" />
     <ClCompile Include="gc\MS\Marker.cpp" />
     <ClCompile Include="gc\ObjectTable.cpp" />
     <ClCompile Include="natives\helpers.cpp" />
+    <ClCompile Include="natives\java\io\OutputStream.cpp" />
     <ClCompile Include="natives\java\io\PrintStream.cpp" />
     <ClCompile Include="natives\java\lang\Array.cpp" />
     <ClCompile Include="natives\java\lang\Exception.cpp" />
@@ -151,6 +153,7 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="natives\java\io\FileOutputStream.h" />
     <ClInclude Include="gc\Baker\BakerGc.h" />
     <ClInclude Include="gc\debug\DebugVisitor.h" />
     <ClInclude Include="gc\interfaces\FinalizableInterface.h" />
@@ -165,6 +168,7 @@
     <ClInclude Include="natives\includes.h" />
     <ClInclude Include="natives\JavaObject.h" />
     <ClInclude Include="natives\JavaString.h" />
+    <ClInclude Include="natives\java\io\OutputStream.h" />
     <ClInclude Include="natives\java\io\PrintStream.h" />
     <ClInclude Include="natives\java\lang\Array.h" />
     <ClInclude Include="natives\java\lang\Exception.h" />

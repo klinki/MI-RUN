@@ -44,6 +44,7 @@ public:
 
 		initializeNatives(this);
 		
+		this->classLoader->init(parser.getClassFile());
 		Class* mainClass = this->classLoader->load(parser.getClassFile());
 		Method* mainMethod = mainClass->getMethod("main", "([Ljava/lang/String;)V");
 
