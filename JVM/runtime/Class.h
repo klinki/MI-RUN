@@ -34,6 +34,7 @@ visibility:
 	LocalVariablesArray * staticVariablesValues;
 
 	void addField(Field* field);
+	void addMethod(Method * method);
 	void setParent(Class* parent);
 
 public:
