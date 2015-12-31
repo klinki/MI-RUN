@@ -14,6 +14,7 @@ class BakerGc : public ObjectTable, public ObjectVisitorInterface, public HeapIn
 	const int MEMORY_ALIGNMENT = 16;
 	const int TENURATION_THRESHOLD = 50;
 	static const int TENURATION_MASK = 0xfffff;
+	static const int EDEN_SPACE_LIMIT = 1 * 1024;
 visibility:
 	enum MemoryLocation
 	{
@@ -101,6 +102,7 @@ public:
 	virtual void visit(word address);
 
 	virtual unsigned char* allocate(size_t size);
+	unsigned char* allocateOnEdenSpace(size_t size);
 	virtual unsigned char* allocateOnSystemMemory(size_t size)
 	{
 		return this->allocateOnPermanentSpace(size);

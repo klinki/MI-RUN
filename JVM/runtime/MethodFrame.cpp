@@ -42,6 +42,9 @@ MethodFrame::MethodFrame(const MethodFrame & copy):
 
 	memcpy(this->localVariables->allocatedArray, copy.localVariables->allocatedArray, copy.localVariables->allocatedSize);
 	memcpy(this->operandStack->allocatedArray, copy.operandStack->allocatedArray, copy.operandStack->allocatedSize);
+
+	this->localVariables->index = copy.localVariables->index;
+	this->operandStack->index = copy.operandStack->index;
 }
 
 void MethodFrame::copyTo(byte* address)

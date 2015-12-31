@@ -60,4 +60,5 @@ namespace Errors
 	ExceptionClass(UnsatisfiedLinkError, Error, "java/lang/UnsatisfiedLinkError");
 	ExceptionClass(LinkageError, Error, "java/lang/LinkageError");
 	ExceptionClass(NoClassDefFoundError, LinkageError, "java/lang/NoClassDefFoundError");
+	ExceptionClass(OutOfMemoryError, Error, "java/lang/OutOfMemoryError");
 }

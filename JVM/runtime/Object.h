@@ -33,7 +33,10 @@ public:
 
 	Object(const Object & source) : Object(source.fields->allocatedSize, source.objectClass, NULL)
 	{
-		memcpy(this->fields->allocatedArray, source.fields->allocatedArray, source.fields->allocatedSize);
+		if (this->fields != NULL)
+		{
+			memcpy(this->fields->allocatedArray, source.fields->allocatedArray, source.fields->allocatedSize);
+		}
 	}
 
 	Object(): ObjectHeader(NULL)

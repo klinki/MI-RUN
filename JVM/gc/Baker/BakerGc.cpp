@@ -122,14 +122,29 @@ unsigned char * BakerGc::allocate(size_t size)
 
 	size_t bytesAllocated = this->countAllocatedBlockSize(size);
 
-#ifdef _DEBUG
-        std::cerr << "Allocating object of size: " << size << " to 16 aligned size: " << bytesAllocated << std::endl;
-#endif	
+	if (bytesAllocated >= EDEN_SPACE_LIMIT)
+	{
+		return this->allocateOnPermanentSpace(size);
+	}
+	else
+	{
+		return this->allocateOnEdenSpace(size);
+	}
+}
+
+unsigned char * BakerGc::allocateOnEdenSpace(size_t size)
+{
+	if (size == 0)
+	{
+		return NULL; // TODO: Throw exception
+	}
+	
+	size_t bytesAllocated = this->countAllocatedBlockSize(size);
+	DEBUG_BLOCK(std::cerr << "Allocating object of size: " << size << " to 16 aligned size: " << bytesAllocated << " on EDEN space" << std::endl );
+
 	if ((this->memorySlots[this->activeSlot]->usedBytes + bytesAllocated) >= this->memorySlots[this->activeSlot]->allocatedBytes)
 	{
-#ifdef _DEBUG
 		DEBUG_PRINT("Allocation cannot proceed, garbage collection needed\n");
-#endif
 		// Time for garbage collection man!!
 		this->collect();		
 	}
@@ -151,12 +166,17 @@ unsigned char * BakerGc::allocateOnPermanentSpace(size_t size)
 
 	size_t bytesAllocated = this->countAllocatedBlockSize(size);
 
+	DEBUG_BLOCK(std::cerr << "Allocating object of size: " << size << " to 16 aligned size: " << bytesAllocated << " on TENURED space" << std::endl);
+
+
 	if ((this->permanentSpace->usedBytes + bytesAllocated) >= this->permanentSpace->allocatedBytes)
 	{
 		// Thats bad - time for FULL old space garbage collection!!
+		throw Errors::OutOfMemoryError("TENURED SPACE OUT OF MEMORY");
 	}
 
 	MemoryHeader* memory = (MemoryHeader*) new(this->permanentSpace->allocate(bytesAllocated)) MemoryHeader(size);
+	memory->tenure(); // automatically tenured - do not move to eden space...
 	return (unsigned char*)memory->data;
 }
 
