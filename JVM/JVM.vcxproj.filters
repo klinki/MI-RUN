@@ -88,6 +88,9 @@
     <ClCompile Include="utils\ArgumentsParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="natives\java\lang\Array.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classfile\ClassFile.h">
@@ -283,6 +286,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gc\debug\DebugVisitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="natives\java\lang\Array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

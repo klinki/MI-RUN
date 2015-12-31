@@ -7,6 +7,7 @@
 #include "java/lang/StringBuilder.h"
 #include "java/lang/Throwable.h"
 #include "java/lang/Exception.h"
+#include "java/lang/Array.h"
 #include "java/io/PrintStream.h"
 
 using namespace java::lang;
@@ -18,8 +19,9 @@ void initializeNatives(Runtime* runtime, ClassMap* classMap)
 	classMap->addClass(java::lang::System::initialize(runtime));
 	classMap->addClass(java::lang::StrBuilder::initialize(classMap));
 	classMap->addClass(java::lang::String::initialize(classMap));
+	classMap->addClass(java::lang::Array::initialize(classMap));
+
 	classMap->addClass(java::lang::Throwable::initialize(classMap));
-	
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/Exception", "java/lang/Throwable"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/CloneNotSupportedException"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/RuntimeException"));

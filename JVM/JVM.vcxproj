@@ -126,6 +126,7 @@
     <ClCompile Include="gc\ObjectTable.cpp" />
     <ClCompile Include="natives\helpers.cpp" />
     <ClCompile Include="natives\java\io\PrintStream.cpp" />
+    <ClCompile Include="natives\java\lang\Array.cpp" />
     <ClCompile Include="natives\java\lang\Exception.cpp" />
     <ClCompile Include="natives\java\lang\Object.cpp" />
     <ClCompile Include="natives\java\lang\String.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="natives\JavaObject.h" />
     <ClInclude Include="natives\JavaString.h" />
     <ClInclude Include="natives\java\io\PrintStream.h" />
+    <ClInclude Include="natives\java\lang\Array.h" />
     <ClInclude Include="natives\java\lang\Exception.h" />
     <ClInclude Include="natives\java\lang\Object.h" />
     <ClInclude Include="natives\java\lang\String.h" />

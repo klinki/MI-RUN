@@ -2,7 +2,7 @@
 #include "ArgumentsParser.h"
 #include "../runtime/Runtime.h"
 #include "../natives/java/lang/String.h"
-#include "../natives/java/lang/Object.h"
+#include "../natives/java/lang/Array.h"
 
 ArgumentsParser::ArgumentsParser(Runtime* runtime, int argc, const char** argv)
 {
@@ -32,7 +32,7 @@ word ArgumentsParser::getArgumentsArray()
 	int countArguments = this->argc - this->argsIndex;
 
 	byte* memory = this->runtime->heap->allocate(ArrayObject<Object*>::getMemorySize(countArguments));
-	ArrayObject<Object*> * arrayObject = new(memory) ArrayObject<Object*>(countArguments, nullptr, java::lang::Object::initialize(), NULL);
+	ArrayObject<Object*> * arrayObject = new(memory) ArrayObject<Object*>(countArguments, nullptr, java::lang::Array::initialize(NULL), NULL);
 
 	size_t arrayIndex = this->runtime->objectTable->insert(arrayObject);
 
