@@ -11,11 +11,10 @@ int main(int argc, const char * argv[])
 {
     int statusCode = 0;
 	Runtime * runtime = new Runtime();
-	runtime->run(argc, argv);
-
+	
 	try
 	{
-//		runtime->run(argc, argv);
+		runtime->run(argc, argv);
 	}
 	catch (java::lang::Throwable::Throwable* exc)
 	{

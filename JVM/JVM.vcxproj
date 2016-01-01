@@ -121,6 +121,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
+    <ClCompile Include="natives\java\io\FileInputStream.cpp" />
+    <ClCompile Include="natives\java\io\InputStream.cpp" />
     <ClCompile Include="natives\java\io\FileOutputStream.cpp" />
     <ClCompile Include="gc\Baker\BakerGc.cpp" />
     <ClCompile Include="gc\MS\Marker.cpp" />
@@ -137,6 +139,7 @@
     <ClCompile Include="natives\java\lang\Throwable.cpp" />
     <ClCompile Include="natives\natives.cpp" />
     <ClCompile Include="runtime\ClassMap.cpp" />
+    <ClCompile Include="natives\java\util\Scanner.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
     <ClCompile Include="utils\ArgumentsParser.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
@@ -153,6 +156,8 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="natives\java\io\FileInputStream.h" />
+    <ClInclude Include="natives\java\io\InputStream.h" />
     <ClInclude Include="natives\java\io\FileOutputStream.h" />
     <ClInclude Include="gc\Baker\BakerGc.h" />
     <ClInclude Include="gc\debug\DebugVisitor.h" />
@@ -182,6 +187,7 @@
     <ClInclude Include="runtime\ClassMember.h" />
     <ClInclude Include="runtime\ClassMemberMap.h" />
     <ClInclude Include="runtime\ObjectHeader.h" />
+    <ClInclude Include="natives\java\util\Scanner.h" />
     <ClInclude Include="types\Descriptors.h" />
     <ClInclude Include="utils\ArgumentsParser.h" />
     <ClInclude Include="utils\debug.h" />

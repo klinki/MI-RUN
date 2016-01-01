@@ -419,7 +419,18 @@ public:
 
 			classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
 
+			if (classPtr == nullptr) {
+				throw Errors::NoClassDefFoundError(("Class: " + std::string((char*)className->utf8Info.bytes) + " not found!").c_str());
+			}
+
 			methodPtr = classPtr->getMethod(Utf8String(name->utf8Info.bytes, name->utf8Info.length), Utf8String(descr->utf8Info.bytes, descr->utf8Info.length));
+
+			if (methodPtr == nullptr)
+			{
+				throw Errors::NoSuchMethodError((
+					"Method " + std::string((char*)className->utf8Info.bytes) + "::" + std::string((char*)name->utf8Info.bytes) 
+					+  std::string((char*)descr->utf8Info.bytes) +  " not found!").c_str());
+			}
 
 			if (classIndex == this->inlineCache.cpClassIndex)
 			{
@@ -427,8 +438,6 @@ public:
 				//method = this->inlineCache.classPtr->getMethod(name->utf8Info);
 			}
 		}
-
-//		methodPtr->classPtr = classPtr;
 
 		if (instruction == INVOKEVIRTUAL)
 		{
@@ -439,11 +448,7 @@ public:
 			void* ptr = this->objectTable->get(reference);
 
 			ObjectHeader* objectPtr = (ObjectHeader*)ptr;
-			Method* overloadedPtr = objectPtr->objectClass->getMethod(methodPtr->name, methodPtr->descriptor);
-
-//			overloadedPtr->classPtr = classPtr; // TODO: Verify this
-
-			return overloadedPtr;
+			methodPtr = objectPtr->objectClass->getMethod(methodPtr->name, methodPtr->descriptor);
 		}
 
 		return methodPtr;
@@ -463,6 +468,10 @@ public:
 		ConstantPoolItem * fieldType = this->getCurrentMethodFrame()->constantPool->get(fieldNameAndType->nameAndTypeInfo.descriptor_index);
 
 		Field* field = (Field*)classPtr->getField(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
+
+		if (field == nullptr) {
+			throw Errors::NoSuchMethodError(("Field " + std::string((char*)fieldName->utf8Info.bytes) + " " + std::string((char*)fieldType->utf8Info.bytes) + " not found!").c_str());
+		}
 
 		return field;
 	}
