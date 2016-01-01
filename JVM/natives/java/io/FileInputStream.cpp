@@ -1,28 +1,13 @@
-#pragma once
-#include <iostream>
-#include "FileOutputStream.h"
+#include "FileInputStream.h"
 #include "../lang/String.h"
+#include "InputStream.h"
 
 namespace java
 {
 	namespace io
 	{
-		namespace FileOutputStream
+		namespace FileInputStream
 		{
-			static Class* staticClassPtr = nullptr;
-
-			FileOutputStream::FileOutputStream(std::ofstream * stream) : ObjectHeader(staticClassPtr)
-			{
-				this->stream = stream;
-			}
-
-			FileOutputStream::FileOutputStream(const FileOutputStream & copy): ObjectHeader(copy.objectClass)
-			{
-				this->stream = copy.stream;
-			}
-
-			FileOutputStream::~FileOutputStream() {}
-
 			Class* initialize(ClassMap* classMap)
 			{
 				if (staticClassPtr != NULL)
@@ -30,19 +15,20 @@ namespace java
 					return staticClassPtr;
 				}
 
-				Class * objectClass = classMap->getClass("java/io/OutputStream");
+				Class * objectClass = classMap->getClass("java/io/InputStream");
 				Class * aClass = new Class(0);
 				aClass->parentClass = objectClass;
 				aClass->classLoader = NULL;
-				aClass->fullyQualifiedName = "java/io/FileOutputStream";
+				aClass->fullyQualifiedName = "java/io/FileInputStream";
 
 				aClass->methodArea.addMethod(getNativeMethod("<init>", "(Ljava/lang/String;)V", &initFromString));
-
 
 				staticClassPtr = aClass;
 
 				return aClass;
+
 			}
+
 
 			NATIVE_METHOD_HEADER(initFromString)
 			{
@@ -57,14 +43,13 @@ namespace java
 				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
 				Class* classPtr = (Class*)engine->objectTable->get(index);
 
-				byte* memory = engine->heap->allocate(sizeof(FileOutputStream));
+				byte* memory = engine->heap->allocate(sizeof(InputStream::InputStream));
 
-				std::ofstream * outputStream = new std::ofstream(string->toAsciiString(), std::ios_base::out);
-				FileOutputStream* builder = new(memory) FileOutputStream(outputStream);
+				std::ifstream * inputStream = new std::ifstream(string->toAsciiString(), std::ios_base::in);
+				InputStream::InputStream* builder = new(memory) InputStream::InputStream(inputStream);
 
 				engine->objectTable->updateAddress(index, builder);
 			}
-
-		};
+		}				
 	}
 }

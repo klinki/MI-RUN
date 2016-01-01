@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
-#include "../../Declarations.h"
-#include "../../includes.h"
+#include "../../../runtime/Class.h"
+#include "../../../runtime/MethodFrame.h"
+#include "../../../runtime/ArrayObject.h"
+#include "../../../types/types.h"
 
 class Class;
 class ClassMap;
@@ -10,21 +12,21 @@ namespace java
 {
 	namespace io
 	{
-		namespace FileOutputStream
+		namespace InputStream
 		{
-			class FileOutputStream : ObjectHeader
+			class InputStream : ObjectHeader
 			{
 			public:
-				std::ofstream * stream;
+				std::istream * stream;
 			public:
-				FileOutputStream(std::ofstream * stream);
-				FileOutputStream(const FileOutputStream & copy);
-				~FileOutputStream();
+				InputStream(std::istream * stream);
+				InputStream(const InputStream & copy);
+				~InputStream();
 
 
 				virtual void copyTo(byte* address)
 				{
-					new(address) FileOutputStream(*this);
+					new(address) InputStream(*this);
 				}
 
 				virtual void accept(ObjectVisitorInterface * visitor)
@@ -44,9 +46,9 @@ namespace java
 			};
 
 
-			Class* initialize(ClassMap* classMap);
+			Class* initialize(ClassMap* map);
 
-			NATIVE_METHOD_HEADER(initFromString);
-		};
+			NATIVE_METHOD_HEADER(finalize);
+		}
 	}
 }
