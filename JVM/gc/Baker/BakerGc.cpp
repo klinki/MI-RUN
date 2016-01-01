@@ -62,6 +62,7 @@ void BakerGc::visit(word address)
 		try
 		{
 			void * pointer = this->get(refAddress);
+
 			MemoryHeader* header = this->getHeader((char*)pointer);
 			GarbageCollectableInterface* visitable = (GarbageCollectableInterface*)pointer;
 

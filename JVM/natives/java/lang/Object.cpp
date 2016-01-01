@@ -48,7 +48,7 @@ namespace java
 			NATIVE_METHOD_HEADER(init)
 			{
 				// pointer is not object, but ref. to class
-				size_t index = engine->getCurrentMethodFrame()->operandStack->pop();
+				size_t index = engine->getCurrentMethodFrame()->operandStack->popReference();
 				Class* classPtr = (Class*)engine->objectTable->get(index);
 
 				size_t fields = classPtr->getHierarchicalCountNonStaticFields();

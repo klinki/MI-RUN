@@ -5,10 +5,5 @@
 class GarbageCollectableInterface : public VisitableInterface, public FinalizableInterface
 {
 public:
-	virtual void repairAfterGC()
-	{
-
-	};
-
 	virtual void copyTo(byte* memory) = 0;
 };
