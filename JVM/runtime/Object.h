@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include "Class.h"
 #include "Field.h"
 #include "LocalVariablesArray.h"
