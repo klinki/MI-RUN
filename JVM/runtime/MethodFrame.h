@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include "OperandStack.h"
 #include "Method.h"
 #include "LocalVariablesArray.h"
