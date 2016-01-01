@@ -85,6 +85,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 	DEBUG_PRINT("INSIDE METHOD: %s::%s\n", 
 		frame->method->classPtr->fullyQualifiedName.toAsciiString(),
 		frame->method->name.toAsciiString());
+	DEBUG_PRINT("Method stack size: %d, local variables size: %d\n", frame->method->operandStackSize, frame->method->localVariablesArraySize);
 
 	word index = this->objectTable->insert(frame);
 	this->callStack->pushReference(index);
@@ -103,9 +104,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 #ifdef _DEBUG
 			if (this->runtime->parameters.PrintExecutedInstructions) {
-				std::cerr << std::endl;
 				std::cerr << std::string(this->callStack->index - 1, '\t').c_str();
-				std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK BEFORE: " << this->getCurrentMethodFrame()->operandStack->index;
+				std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK SIZE: " << this->getCurrentMethodFrame()->operandStack->index << std::endl;
 			}
 #endif
 			switch (currentInstruction)
@@ -1254,6 +1254,12 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 				if (methodPtr->nativeMethod != nullptr)
 				{
+					DEBUG_PRINT("Executing native method: %s - %s %s\n",
+						methodPtr->classPtr->fullyQualifiedName.toAsciiString(),
+						methodPtr->name.toAsciiString(),
+						methodPtr->descriptor.toAsciiString()
+					);
+
 					methodPtr->nativeMethod(reference, this);
 				}
 				else
@@ -1526,13 +1532,6 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IMPDEP2:
 				break;
 			} 
-		
-#ifdef _DEBUG
-			if (this->runtime->parameters.PrintExecutedInstructions) {
-				std::cerr << "\tSTACK AFTER: " << this->getCurrentMethodFrame()->operandStack->index << std::endl;
-			}
-#endif
-
 		}
 		catch (java::lang::Throwable::Throwable* e) // user defined exceptions
 		{

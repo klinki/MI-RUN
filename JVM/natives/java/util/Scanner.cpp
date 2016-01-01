@@ -39,7 +39,7 @@ namespace java
 				aClass->classLoader = NULL;
 				aClass->fullyQualifiedName = "java/util/Scanner";
 
-				aClass->methodArea.addMethod(getNativeMethod("<init>", "(Ljava/io/InputStream;)V", &initFromInputStream));
+				aClass->addMethod(getNativeMethod("<init>", "(Ljava/io/InputStream;)V", &initFromInputStream));
 				aClass->addMethod(getNativeMethod("nextInt", "()I", &nextInt));
 
 				staticClassPtr = aClass;

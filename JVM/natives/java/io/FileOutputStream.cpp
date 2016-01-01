@@ -36,7 +36,7 @@ namespace java
 				aClass->classLoader = NULL;
 				aClass->fullyQualifiedName = "java/io/FileOutputStream";
 
-				aClass->methodArea.addMethod(getNativeMethod("<init>", "(Ljava/lang/String;)V", &initFromString));
+				aClass->addMethod(getNativeMethod("<init>", "(Ljava/lang/String;)V", &initFromString));
 
 				staticClassPtr = aClass;
 

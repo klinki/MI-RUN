@@ -53,10 +53,10 @@ namespace java
 				newClass->addField(new Field((int)FieldAccessFlags::PROTECTED, "message", "Ljava/lang/String;"));
 				newClass->addField(new Field((int)FieldAccessFlags::PROTECTED, "throwable", "Ljava/lang/Throwable;"));
 
-				newClass->methodArea.addMethod(getNativeMethod("<init>", "()V", &init));
-				newClass->methodArea.addMethod(getNativeMethod("<init>", "(Ljava/lang/String;)V", &initWithMessage));
-				newClass->methodArea.addMethod(getNativeMethod("<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V", &initWithMessageAndThrowable));
-				newClass->methodArea.addMethod(getNativeMethod("printStackTrace", "()V", &printStackTrace));
+				newClass->addMethod(getNativeMethod("<init>", "()V", &init));
+				newClass->addMethod(getNativeMethod("<init>", "(Ljava/lang/String;)V", &initWithMessage));
+				newClass->addMethod(getNativeMethod("<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V", &initWithMessageAndThrowable));
+				newClass->addMethod(getNativeMethod("printStackTrace", "()V", &printStackTrace));
 
 				return newClass;
 			}

@@ -114,9 +114,9 @@ namespace java
 				aClass->fullyQualifiedName = "java/io/PrintStream";
 
 				aClass->addMethod(getNativeMethod("<init>", "(Ljava/io/OutputStream;)V", &initFromFileOutputStream));
-				aClass->methodArea.addMethod(getNativeMethod("println", "()V", &printlnEmpty));
-				aClass->methodArea.addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
-				aClass->methodArea.addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
+				aClass->addMethod(getNativeMethod("println", "()V", &printlnEmpty));
+				aClass->addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
+				aClass->addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
 
 //				aClass->addMethod(getNativeMethod("print", "(D)V", &printDouble));
 				aClass->addMethod(getNativeMethod("print", "(I)V", &printInt));
