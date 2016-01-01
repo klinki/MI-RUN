@@ -83,5 +83,10 @@ public:
 
 	}
 
+	virtual bool preallocated()
+	{
+		return true;
+	}
+
 	friend class ClassLoader;
 };

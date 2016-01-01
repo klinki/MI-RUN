@@ -63,8 +63,14 @@ void BakerGc::visit(word address)
 		{
 			void * pointer = this->get(refAddress);
 
-			MemoryHeader* header = this->getHeader((char*)pointer);
 			GarbageCollectableInterface* visitable = (GarbageCollectableInterface*)pointer;
+
+			if (visitable->preallocated()) 
+			{
+				return; // not allocated by GC
+			}
+
+			MemoryHeader* header = this->getHeader((char*)pointer);
 
 			size_t dataSize = this->getDataSize(pointer);
 
