@@ -38,11 +38,10 @@ protected:
 			char* token = NULL;
 
 			for (int i = 0; i < size; i++) {
-#ifdef _MSVC_V
-				token = strtok_s(classNameSTr, "/");
-
-#else
+#ifdef _MSC_VER
 				token = strtok_s(classNameSTr, "/", &classNameSTr);
+#else
+				token = strtok(classNameSTr, "/");
 #endif
 				this->namespaces[i] = std::string(token);
 			}

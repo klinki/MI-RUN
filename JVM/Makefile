@@ -4,6 +4,7 @@ CC_FLAGS = -w -m32 -std=c++14 -D_DEBUG
 
 # File names
 EXEC = jvm
+SOURCEDIR = .
 SOURCES := $(shell find $(SOURCEDIR) -name '*.cpp')
 OBJECTS = $(SOURCES:.cpp=.o)
 

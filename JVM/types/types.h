@@ -6,8 +6,8 @@ union word
 	intptr_t intValue;
 	float floatValue;
 
+	operator size_t() const { return intValue; }
 	operator int() const { return intValue; }
-	operator unsigned int() const { return (unsigned int)intValue; }
 	operator float() const { return floatValue; }
 	operator unsigned short() const { return (unsigned short)intValue; }
 	operator bool() const { return (bool)intValue; }
@@ -17,7 +17,7 @@ union word
 	operator T*() const { return (T*)intValue; }
 
 	word() { intValue = 0; }
-	word(unsigned int val) { intValue = val; }
+	word(size_t val) { intValue = val; }
 	word(intptr_t val) { intValue = val; }
 	word(float val) { floatValue = val;  }
 	
