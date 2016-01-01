@@ -1,7 +1,9 @@
 package knapsack;
 
-public class Knapsack
-{
+import java.io.FileInputStream;
+import java.util.Scanner;
+
+public class Knapsack {
     protected int maxWeight;
 
     protected Item[] availableItems;
@@ -24,8 +26,7 @@ public class Knapsack
         this.countOfItems = 0;
     }
 
-    public int getWeight()
-    {
+    public int getWeight() {
         int weight = 0;
         for (int i = 0; i < this.countOfItems; i++) {
             weight += this.itemsInKnapsack[i].getWeight();
@@ -34,8 +35,7 @@ public class Knapsack
         return weight;
     }
 
-    public int getValue()
-    {
+    public int getValue() {
         int value = 0;
         for (int i = 0; i < this.countOfItems; i++) {
             value += this.itemsInKnapsack[i].getValue();
@@ -44,8 +44,7 @@ public class Knapsack
         return value;
     }
 
-    protected void copyCurrentSolution()
-    {
+    protected void copyCurrentSolution() {
         for (int i = 0; i < this.availableItems.length; i++) {
             this.bestSolution[i] = this.itemsInKnapsack[i];
         }
@@ -54,15 +53,13 @@ public class Knapsack
         this.bestSolutonValue = this.getValue();
     }
 
-    public void solve()
-    {
+    public void solve() {
         this.solve(0, 0, 0);
     }
 
-    public void solve(int level, int value, int weight)
-    {
+    public void solve(int level, int value, int weight) {
         if (level >= availableItems.length) {
-            if (value > this.bestSolutonValue && weight <= this.maxWeight)  {
+            if (value > this.bestSolutonValue && weight <= this.maxWeight) {
                 this.bestSolutonValue = value;
                 this.bestSolutionWeight = weight;
             }
@@ -84,7 +81,28 @@ public class Knapsack
         ); // item is inside
     }
 
-    public static void main(String[] args) {
+    public static Knapsack readFromFile(String fileName) throws Exception {
+        FileInputStream fileInputStream = new FileInputStream(fileName);
+        Scanner scanner = new Scanner(fileInputStream);
+
+        int instanceId = scanner.nextInt();
+        int countItems = scanner.nextInt();
+        int maxWeight = scanner.nextInt();
+
+        Item[] items = new Item[countItems];
+
+        for (int i = 0; i < countItems; i++) {
+            int weight = scanner.nextInt();
+            int value = scanner.nextInt();
+
+            items[i] = new Item(weight, value);
+        }
+
+        return new Knapsack(items, maxWeight);
+    }
+
+    public static Knapsack getDefault()
+    {
         // W, C
         int knapsackSize = 100;
 
@@ -100,7 +118,21 @@ public class Knapsack
         items[8] = new Item(50, 42);
         items[9] = new Item(12, 223);
 
-        Knapsack solver = new Knapsack(items, knapsackSize);
+        return new Knapsack(items, knapsackSize);
+    }
+
+    public static void main(String[] args) throws Exception {
+        Knapsack solver;
+
+        if (args.length == 1) {
+            solver = readFromFile(args[0]);
+        } else {
+            solver = getDefault();
+            System.out.println("Using default data set");
+            System.out.print("Correct solution: ");
+            System.out.println("798");
+        }
+
         solver.solve();
 
         System.out.println("Best solution is: ");
@@ -108,8 +140,5 @@ public class Knapsack
         System.out.println(solver.bestSolutionWeight);
         System.out.print("Value: ");
         System.out.println(solver.bestSolutonValue);
-
-        System.out.print("Correct solution: ");
-        System.out.println("798");
     }
 }

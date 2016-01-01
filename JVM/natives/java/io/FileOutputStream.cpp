@@ -38,7 +38,6 @@ namespace java
 
 				aClass->methodArea.addMethod(getNativeMethod("<init>", "(Ljava/lang/String;)V", &initFromString));
 
-
 				staticClassPtr = aClass;
 
 				return aClass;

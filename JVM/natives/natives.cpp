@@ -52,6 +52,8 @@ void initializeNatives(Runtime* runtime, ClassMap* classMap)
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/ArrayStoreException", "java/lang/RuntimeException"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/ClassCastException", "java/lang/RuntimeException"));
 
+	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/FileNotFoundException", "java/lang/Exception"));
+
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/Error", "java/lang/Throwable"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/AbstractMethodError", "java/lang/Error"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/IncompatibleClassChangeError", "java/lang/Error"));

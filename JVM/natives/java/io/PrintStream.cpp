@@ -151,21 +151,21 @@ namespace java
 
 			NATIVE_METHOD_HEADER(printlnEmpty)
 			{
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 				printStream->println();
 			}
 			
 			NATIVE_METHOD_HEADER(printlnDouble)
 			{
 				double value = engine->getCurrentMethodFrame()->operandStack->pop2();
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 				printStream->println(value);
 			}
 
 			NATIVE_METHOD_HEADER(printlnInt)
 			{
 				int value = engine->getCurrentMethodFrame()->operandStack->pop();
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 				printStream->println(value);
 			}
 

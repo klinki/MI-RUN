@@ -46,6 +46,11 @@ namespace java
 				byte* memory = engine->heap->allocate(sizeof(InputStream::InputStream));
 
 				std::ifstream * inputStream = new std::ifstream(string->toAsciiString(), std::ios_base::in);
+
+				if (!inputStream->good()) {
+					throw Exceptions::Runtime::FileNotFoundException(("File: " + std::string(string->toAsciiString()) + " was not found").c_str());
+				}
+
 				InputStream::InputStream* builder = new(memory) InputStream::InputStream(inputStream);
 
 				engine->objectTable->updateAddress(index, builder);

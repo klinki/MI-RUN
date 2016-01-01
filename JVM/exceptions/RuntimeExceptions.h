@@ -47,6 +47,8 @@ namespace Exceptions
 		ExceptionClass(NegativeArraySizeException, RuntimeException, "java/lang/NegativeArraySizeException");
 		ExceptionClass(ArrayStoreException, RuntimeException, "java/lang/ArrayStoreException");
 		ExceptionClass(ClassCastException, RuntimeException, "java/lang/ClassCastException");
+
+		ExceptionClass(FileNotFoundException, Exception, "java/lang/FileNotFoundException");
 	}
 }
 
