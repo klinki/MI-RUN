@@ -6,12 +6,16 @@ union word
 	intptr_t intValue;
 	float floatValue;
 
-	operator size_t() const { return intValue; }
+	operator long() const { return intValue; }
+	operator long long() const { return intValue; }
 	operator int() const { return intValue; }
 	operator float() const { return floatValue; }
-	operator unsigned short() const { return (unsigned short)intValue; }
 	operator bool() const { return (bool)intValue; }
 	operator short() const { return (short)intValue; }
+
+	operator unsigned int() const { return intValue; }
+	operator unsigned long() const { return intValue; }
+	operator unsigned short() const { return intValue; }
 
 	template <class T>
 	operator T*() const { return (T*)intValue; }
@@ -35,7 +39,7 @@ union doubleWord
 
 	doubleWord() { words[0] = words[1] = 0; }
 	doubleWord(size_t high, size_t low) { words[0] = low; words[1] = high; }
-        doubleWord(word high, word low) { words[0] = low; words[1] = high; }
+    doubleWord(word high, word low) { words[0] = low; words[1] = high; }
 	doubleWord(long long value) { longValue = value; }
 	doubleWord(double value) { doubleValue = value; }
 
