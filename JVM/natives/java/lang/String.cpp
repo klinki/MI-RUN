@@ -40,6 +40,8 @@ namespace java
 
 				newClass->addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
 				newClass->addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
+				newClass->addMethod(getNativeMethod("hashCode", "()I", &hashCode));
+				newClass->addMethod(getNativeMethod("length", "()I", &length));
 
 				return newClass;
 			}

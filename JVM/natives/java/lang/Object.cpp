@@ -34,12 +34,12 @@ namespace java
 				newClass->addMethod(::getNativeMethod("hashCode", "()I", &hashCode));
 		
 			/*
-				newClass->addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), (void*)&getClass));
-				newClass->addMethod(getNativeMethod("notify", getMethodDescriptor(), (void*)&notify));
-				newClass->addMethod(getNativeMethod("notifyAll", getMethodDescriptor(), (void*)&notifyAll));
-				newClass->addMethod(getNativeMethod("wait", getMethodDescriptor(), (void*)&waitEmpty));
-				newClass->addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), (void*)&waitTimeout));
-				newClass->addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
+				newClass->methodArea.addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), (void*)&getClass));
+				newClass->methodArea.addMethod(getNativeMethod("notify", getMethodDescriptor(), (void*)&notify));
+				newClass->methodArea.addMethod(getNativeMethod("notifyAll", getMethodDescriptor(), (void*)&notifyAll));
+				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(), (void*)&waitEmpty));
+				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG), (void*)&waitTimeout));
+				newClass->methodArea.addMethod(getNativeMethod("wait", getMethodDescriptor(TypeTag::JAVA_VOID, TypeTag::LONG, TypeTag::INT), (void*) &waitTimeoutNanos));
 			*/
 
 				return newClass;
@@ -48,7 +48,7 @@ namespace java
 			NATIVE_METHOD_HEADER(init)
 			{
 				// pointer is not object, but ref. to class
-				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				size_t index = engine->getCurrentMethodFrame()->operandStack->pop();
 				Class* classPtr = (Class*)engine->objectTable->get(index);
 
 				size_t fields = classPtr->getHierarchicalCountNonStaticFields();
