@@ -19,7 +19,7 @@ public:
 		{
 			if (address == NULL)
 			{
-				address = (byte*)(this->fields + 1);
+				address = (byte*)(&this->fields + 1);
 			}
 
 			this->fields = new(address) LocalVariablesArray(fields, NULL);
