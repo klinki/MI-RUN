@@ -647,12 +647,6 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		//string a ((char*)thisClass->constantPool->get(name_index)->utf8Info.bytes);
 		size_t alen = thisClass->constantPool->get(name_index)->utf8Info.length;
 
-		char *r = new char[alen + 7];
-
-		
-
-
-
 		int tclen = thisClass->constantPool->get(nameptr)->utf8Info.length;
 		int counter = 0;
 		int lastcol = 0;
@@ -727,6 +721,7 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		NamespaceStructure structure(thisClass->fullyQualifiedName.toAsciiString());
 
 		this->load(adr);
+		delete[] adr;
 
 		class_pointer = classMap->getClass(item_name);
 

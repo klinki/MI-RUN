@@ -9,6 +9,14 @@ MethodArea::MethodArea()
 
 MethodArea::~MethodArea()
 {
+	auto iterator = this->hashmap.startIterator();
+	
+	while (iterator != this->hashmap.endIterator())
+	{
+		Method* classPtr =  (Method*)iterator->second;
+		delete classPtr;
+		++iterator;
+	}
 }
 
 Method* MethodArea::getMethod(const Utf8String & name, const Utf8String & descriptor)

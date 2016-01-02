@@ -68,6 +68,10 @@ public:
 
 		delete[] this->inputArgs;
 		this->inputArgs = NULL;
+		
+		
+		delete this->exceptionTable;
+		this->exceptionTable = NULL;
 	}
 
 	bool isNative() const

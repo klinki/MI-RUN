@@ -54,7 +54,7 @@ namespace java
 				size_t fields = classPtr->getHierarchicalCountNonStaticFields();
 				size_t size = ::Object::getMemorySize(fields);
 				unsigned char* memory = engine->heap->allocate(size);
-				::Object* objPtr = new(memory) ::Object(fields, classPtr);
+				::Object* objPtr = new(memory) ::Object(fields, classPtr); // TODO: Memory leak here 
 
 				engine->objectTable->updateAddress(index, objPtr);
 			}
