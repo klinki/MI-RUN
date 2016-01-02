@@ -15,12 +15,15 @@ ConstantPool::ConstantPool(int size, Runtime* runtime)
 
 ConstantPool::~ConstantPool()
 {
+    java::lang::String::String * strPtr;
+    
     for (size_t i = 0; i < this->constant_pool_count; i++)
     {
 	switch(this->constantPool[i].tag)
 	{
 	    case ConstantPoolTag::CONSTANT_String:
-		delete this->constantPool[i].stringInfo.stringObject;
+		strPtr = (java::lang::String::String *)this->constantPool[i].stringInfo.stringObject;
+		delete strPtr;
 		delete this->constantPool[i].stringInfo.value;
 		this->constantPool[i].stringInfo.value = NULL;
 		break;

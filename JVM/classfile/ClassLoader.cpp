@@ -17,6 +17,7 @@ ClassLoader::ClassLoader(Runtime * runtime)
 ClassLoader::~ClassLoader()
 {
     delete[] this->data;
+    delete[] this->defaultNamespace;
 }
         
 void ClassLoader::init(const char * activeFile)
@@ -34,6 +35,9 @@ std::string ClassLoader::getNamespaceFromClass(const char* className)
 	std::string directory = currentClassName.substr(0, lastDelimiter);
 	std::string namesp = directory;
 
+	if (this->defaultNamespace != NULL) {
+	    delete[] this->defaultNamespace;
+	}
 	this->defaultNamespace = new char[directory.length() + 1];
 	memcpy(this->defaultNamespace, directory.c_str(), directory.length() + 1);
 
@@ -74,8 +78,8 @@ Class* ClassLoader::load(const char * filename)
 	if (this->defaultNamespace == NULL)
 	{
 		this->getNamespaceFromClass(thisClass->fullyQualifiedName.toAsciiString());
-		this->rootNamespace = new NamespaceStructure(thisClass->fullyQualifiedName.toAsciiString());
-		this->rootNamespace->directory = this->currentDir;
+		//this->rootNamespace = new NamespaceStructure(thisClass->fullyQualifiedName.toAsciiString());
+		//this->rootNamespace->directory = this->currentDir;
 	}
 
 	classMap->addClass(thisClass);
@@ -716,9 +720,9 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		}
 
 		memcpy(adr + (morecol * 3), (char*)a, strlen((char*)a) + 1);
-        memcpy(adr + alen  + (morecol * 3), ext, strlen(ext) + 1);
+		memcpy(adr + alen  + (morecol * 3), ext, strlen(ext) + 1);
 
-		NamespaceStructure structure(thisClass->fullyQualifiedName.toAsciiString());
+		// NamespaceStructure structure(thisClass->fullyQualifiedName.toAsciiString());
 
 		this->load(adr);
 		delete[] adr;

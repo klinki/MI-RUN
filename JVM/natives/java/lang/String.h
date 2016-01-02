@@ -21,6 +21,10 @@ namespace java
 				{
 					memcpy(this->data, copy.data, copy.dataLength);
 				}
+				
+				virtual ~String()
+				{
+				}
 
 				virtual void copyTo(byte* address)
 				{

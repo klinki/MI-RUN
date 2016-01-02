@@ -123,14 +123,6 @@ namespace java
 				aClass->addMethod(getNativeMethod("print", "(I)V", &printInt));
 				aClass->addMethod(getNativeMethod("print", "(Ljava/lang/String;)V", &printString));
 
-
-				Class * filterOutputStream = new Class(0);
-				filterOutputStream->fullyQualifiedName = "java.io.FilterOutputStream";
-
-				Class * outputStream = new Class(0);
-				outputStream->fullyQualifiedName = "java/io/OutputStream";
-				outputStream->parentClass = objectClass;
-
 				printstClassPtr = aClass;
 
 				return aClass;
