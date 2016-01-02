@@ -85,6 +85,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 	word index = this->objectTable->insert(frame);
 	this->callStack->pushReference(index);
 
+	DEBUG_BLOCK(const char** namedInstructions = getNamedInstructions());
+
 	DEBUG_PRINT("INSIDE METHOD: %s::%s\n", 
 		frame->method->classPtr->fullyQualifiedName.toAsciiString(),
 		frame->method->name.toAsciiString());

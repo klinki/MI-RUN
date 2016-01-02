@@ -236,6 +236,11 @@ const char* namedInstructions[] = {
 "JSR_W"
 };
 
+const char** getNamedInstructions()
+{
+	return namedInstructions;
+}
+
 void printValue(word value)
 {
 	std::cerr << (unsigned int)value;
