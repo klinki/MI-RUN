@@ -82,7 +82,7 @@ void ExecutionEngine::execute(Method* method)
 
 int ExecutionEngine::execute(MethodFrame * frame)
 {
-	word index = this->objectTable->insert(frame);
+	word index = this->runtime->objectTable->insert(frame);
 	this->callStack->pushReference(index);
 
 	DEBUG_BLOCK(const char** namedInstructions = getNamedInstructions());

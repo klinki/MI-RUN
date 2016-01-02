@@ -34,7 +34,7 @@ visibility:
 		{
 			this->size = size;
 			this->accessCounter = 0;
-			this->key = 0;
+			this->key = -1;
 			this->data = (unsigned char*)(&this->data + 1);
 
 #ifdef _DEBUG

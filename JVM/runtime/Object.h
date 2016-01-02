@@ -9,7 +9,7 @@
 class Object : public ObjectHeader
 {
 visibility:
-	LocalVariablesArray * fields;
+	LocalVariablesArray * fields = NULL;
 
 public:
 	Object(size_t fields, Class * objectClass, byte * address): 
@@ -32,10 +32,13 @@ public:
 		this->fields = new LocalVariablesArray(fields);
 	};
 
-	Object(const Object & source) : Object(source.fields->allocatedSize, source.objectClass, NULL)
+	Object(const Object & source): Object(0, source.objectClass, NULL)
 	{
-		if (this->fields != NULL)
+		if (source.fields != NULL)
 		{
+			byte* address = (byte*)(&this->fields + 1);
+			this->fields = new(address) LocalVariablesArray(source.fields->allocatedSize, NULL);
+
 			memcpy(this->fields->allocatedArray, source.fields->allocatedArray, source.fields->allocatedSize);
 		}
 	}
@@ -61,6 +64,11 @@ public:
 
 	virtual void accept(ObjectVisitorInterface * visitor)
 	{
+		if (this->fields == NULL)
+		{
+			return;
+		}
+
 		for (int i = 0; i < this->fields->index; i++)
 		{
 			visitor->visit(this->fields->get(i));

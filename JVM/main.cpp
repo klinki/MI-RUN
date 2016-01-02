@@ -10,11 +10,11 @@ using namespace std;
 int main(int argc, const char * argv[])
 {
     int statusCode = 0;
-	Runtime * runtime = new Runtime();
+	Runtime * runtime = new Runtime(argc, argv);
 	
 	try
 	{
-		runtime->run(argc, argv);
+		runtime->run();
 	}
 	catch (java::lang::Throwable::Throwable* exc)
 	{

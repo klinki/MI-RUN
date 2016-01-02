@@ -1,4 +1,5 @@
 #include <string>
+#include <sstream>
 #include "ArgumentsParser.h"
 #include "../runtime/Runtime.h"
 #include "../natives/java/lang/String.h"
@@ -55,12 +56,47 @@ void ArgumentsParser::setParameters()
 
 	for (int i = 0; i < argsIndex; i++)
 	{
-		if (strstr(argv[i], "--verbose")) {
+		if (strstr(argv[i], "--verbose")) 
+		{
 			this->runtime->parameters.PrintExecutedInstructions = true;
 		}
 
-		if (strstr(argv[i], "--gc-eden-size")) {
+		if (strstr(argv[i], "--gc-eden-size")) 
+		{
+			if (i + 1 < argsIndex)
+			{
+				std::stringstream strStream(std::string(this->argv[i + 1]));
+				double edenSize = 0;
+				strStream >> edenSize;
+				size_t sizeInBytes = edenSize * 1024 * 1024;
 
+				if (sizeInBytes < this->runtime->parameters.MinEdenSpaceSize) {
+					sizeInBytes = this->runtime->parameters.MinEdenSpaceSize;
+				}
+
+				this->runtime->parameters.EdenSpaceSize = sizeInBytes;
+
+				i++;
+			}
+		}
+
+		if (strstr(argv[i], "--gc-perm-size")) 
+		{
+			if (i + 1 < argsIndex)
+			{
+				std::stringstream strStream(std::string(this->argv[i + 1]));
+				double permSize = 0;
+				strStream >> permSize;
+				size_t sizeInBytes = permSize * 1024 * 1024;
+
+				if (sizeInBytes < this->runtime->parameters.MinPermSpaceSize) {
+					sizeInBytes = this->runtime->parameters.MinPermSpaceSize;
+				}
+
+				this->runtime->parameters.PermSpaceSize = sizeInBytes;
+
+				i++;
+			}
 		}
 	}
 }

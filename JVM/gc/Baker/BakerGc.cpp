@@ -237,7 +237,7 @@ size_t BakerGc::insert(void * ptr, bool systemObject)
 
 void BakerGc::finalize(Heap* slot)
 {
-	return; // TODO: THERE IS BUG IN FINALIZATION, REMOVE WHEN FIXED
+//	return; // TODO: THERE IS BUG IN FINALIZATION, REMOVE WHEN FIXED
 
 	DEBUG_PRINT("Finalization\n");
 
