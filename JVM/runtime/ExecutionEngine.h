@@ -504,7 +504,7 @@ public:
 		);
 
 		// TODO: FIX THIS! 
-		size_t varPos = method->localVariablesArraySize - 1;
+		size_t varPos = method->inputArgsSize;
 
 		if (currentInstruction == INVOKESTATIC)
 		{

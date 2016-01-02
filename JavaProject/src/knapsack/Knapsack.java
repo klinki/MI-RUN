@@ -82,6 +82,7 @@ public class Knapsack {
     }
 
     public static Knapsack readFromFile(String fileName) throws Exception {
+        System.out.println("Using file: " + fileName);
         FileInputStream fileInputStream = new FileInputStream(fileName);
         Scanner scanner = new Scanner(fileInputStream);
 
