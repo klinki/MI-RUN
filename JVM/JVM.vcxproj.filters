@@ -13,9 +13,6 @@
     <ClCompile Include="runtime\ExecutionEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runtime\Method.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtime\MethodArea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
