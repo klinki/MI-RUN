@@ -8,7 +8,7 @@
 	#define PRINT_LOCAL_VARIABLES(frame) printLocalVariables(frame);
 #else
 	#define visibility public
-	#define DEBUG_PRINT(arguments)
+	#define DEBUG_PRINT(...)
 	#define DEBUG_BLOCK(block)
 	#define PRINT_STACK(stack)
 	#define PRINT_LOCAL_VARIABLES(frame) 
