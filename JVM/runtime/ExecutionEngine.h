@@ -496,14 +496,14 @@ public:
 		);
 		MethodFrame* newFrame = new (data) MethodFrame(
 			method->operandStackSize, 
-			method->localVariablesArraySize
+			method->localVariablesArraySize,
+			this->getCurrentMethodFrame(),
+			classPtr->constantPool,
+			method,
+			nullptr
 		);
 
 		// TODO: FIX THIS! 
-
-		newFrame->method = method;
-		newFrame->constantPool = classPtr->constantPool;
-
 		size_t varPos = method->localVariablesArraySize - 1;
 
 		if (currentInstruction == INVOKESTATIC)
