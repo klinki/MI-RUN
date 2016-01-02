@@ -117,6 +117,7 @@ namespace java
 				aClass->addMethod(getNativeMethod("println", "()V", &printlnEmpty));
 				aClass->addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
 				aClass->addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
+				aClass->addMethod(getNativeMethod("println", "(I)V", &printlnInt));
 
 //				aClass->addMethod(getNativeMethod("print", "(D)V", &printDouble));
 				aClass->addMethod(getNativeMethod("print", "(I)V", &printInt));

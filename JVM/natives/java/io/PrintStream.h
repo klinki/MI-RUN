@@ -72,6 +72,7 @@ namespace java
 			NATIVE_METHOD_HEADER(printlnEmpty);
 			NATIVE_METHOD_HEADER(printlnString);
 			NATIVE_METHOD_HEADER(printlnDouble);
+			NATIVE_METHOD_HEADER(printlnInt);
 
 			NATIVE_METHOD_HEADER(printInt);
 			NATIVE_METHOD_HEADER(printDouble);
