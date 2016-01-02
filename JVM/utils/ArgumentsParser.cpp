@@ -39,7 +39,7 @@ word ArgumentsParser::getArgumentsArray()
 
 	for (int i = 0; i < countArguments; i++)
 	{
-		byte* strMemory = this->runtime->heap->allocate(java::lang::String::String::getMemorySize(strlen(this->argv[i])));
+		byte* strMemory = this->runtime->heap->allocate(java::lang::String::String::getMemorySize(strlen(this->argv[i]) + 1));
 		java::lang::String::String* str = new(strMemory) java::lang::String::String(argv[this->argsIndex + i], true);
 
 		size_t strIndex = this->runtime->objectTable->insert(str);
