@@ -58,5 +58,9 @@ void ArgumentsParser::setParameters()
 		if (strstr(argv[i], "--verbose")) {
 			this->runtime->parameters.PrintExecutedInstructions = true;
 		}
+
+		if (strstr(argv[i], "--gc-eden-size")) {
+
+		}
 	}
 }

@@ -82,13 +82,15 @@ void ExecutionEngine::execute(Method* method)
 
 int ExecutionEngine::execute(MethodFrame * frame)
 {
+	word index = this->objectTable->insert(frame);
+	this->callStack->pushReference(index);
+
 	DEBUG_PRINT("INSIDE METHOD: %s::%s\n", 
 		frame->method->classPtr->fullyQualifiedName.toAsciiString(),
 		frame->method->name.toAsciiString());
 	DEBUG_PRINT("Method stack size: %d, local variables size: %d\n", frame->method->operandStackSize, frame->method->localVariablesArraySize);
-
-	word index = this->objectTable->insert(frame);
-	this->callStack->pushReference(index);
+	PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+	PRINT_LOCAL_VARIABLES(this->getCurrentMethodFrame());
 
 	Instruction * instructions = (Instruction*)this->getCurrentMethodFrame()->method->getBytecode();
 	unsigned int length = this->getCurrentMethodFrame()->method->getByteCodeLength();
@@ -1241,9 +1243,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			// TODO: Invokes!
 			case INVOKEVIRTUAL:
-			case INVOKESPECIAL: // TODO: Should have its own handler			
+			case INVOKESPECIAL: // TODO: Should have its own handler
 			case INVOKESTATIC: // TODO: Add another handler for static methods
 			{
+				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+
 				unsigned short index = this->getShort();
 
 				Method* methodPtr = this->resolveMethod(index, currentInstruction);
@@ -1371,7 +1375,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				}
 
 				// TODO: Resolve class!
-
+				
 
 				unsigned char* ptr = this->heap->allocate(ArrayObject<Object*>::getMemorySize(size));
 				void * object = new (ptr) ArrayObject<Object*>(size, 0, this->classMap->getClass("java/lang/Array"), NULL);
@@ -1408,6 +1412,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case ARRAYLENGTH:
 			{
+				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+
 				int index = this->getCurrentMethodFrame()->operandStack->popReference();
 			
 				if (index == 0) 
@@ -1422,7 +1428,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::NullPointerException();
 				}
 
-				this->getCurrentMethodFrame()->operandStack->push(object->getSize());
+				int arraySize = object->getSize();
+				this->getCurrentMethodFrame()->operandStack->push(arraySize);
 			}
 			break;
 

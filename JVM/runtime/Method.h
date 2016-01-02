@@ -99,6 +99,7 @@ public:
 		{
 			switch (descr[i++])
 			{
+			case '[':
 			case 'L':
 				while (descr[i++] != ';');
 				this->inputArgs[index++] = TypeTag::REFERENCE;

@@ -491,12 +491,12 @@ public:
 	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, Instruction currentInstruction)
 	{
 		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(
-			method->operandStackSize + 10, 
-			method->localVariablesArraySize + 10)
+			method->operandStackSize,
+			method->localVariablesArraySize)
 		);
 		MethodFrame* newFrame = new (data) MethodFrame(
-			method->operandStackSize + 10, 
-			method->localVariablesArraySize + 10
+			method->operandStackSize, 
+			method->localVariablesArraySize
 		);
 
 		// TODO: FIX THIS! 
@@ -504,9 +504,7 @@ public:
 		newFrame->method = method;
 		newFrame->constantPool = classPtr->constantPool;
 
-		method->initInputArgs();
-
-		size_t varPos = method->inputArgsSize;
+		size_t varPos = method->localVariablesArraySize - 1;
 
 		if (currentInstruction == INVOKESTATIC)
 		{
@@ -540,13 +538,6 @@ public:
 		{
 			size_t reference = this->getCurrentMethodFrame()->operandStack->pop();
 			(*newFrame->localVariables)[0] = reference;
-
-			if (currentInstruction != INVOKESPECIAL)
-			{
-				void*ptr = this->objectTable->get(getReferenceAddress(reference));
-				ObjectHeader* referencePtr = (ObjectHeader*)ptr;
-				// newFrame->constantPool = referencePtr->objectClass->constantPool;
-			}
 		}
 
 		return newFrame;

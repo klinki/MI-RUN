@@ -103,6 +103,9 @@
     <ClCompile Include="natives\java\io\FileInputStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utils\debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classfile\ClassFile.h">
