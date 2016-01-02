@@ -55,9 +55,8 @@ public:
 
 	static size_t getMemorySize(size_t fields = 0)
 	{
-		return sizeof(Object) 
-			+ LocalVariablesArray::getMemorySize(fields) 
-			- sizeof(LocalVariablesArray); // already included in size;
+		return sizeof(Object)
+			+ LocalVariablesArray::getMemorySize(fields);
 	}
 
 	virtual void accept(ObjectVisitorInterface * visitor)
