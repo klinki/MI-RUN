@@ -1,6 +1,6 @@
 # Declaration of variables
 CC = g++
-CC_FLAGS = -w -m32 -std=c++14 -D_DEBUG
+CC_FLAGS = -w -m32 -std=c++14
 
 # File names
 EXEC = jvm
@@ -9,7 +9,7 @@ SOURCES := $(shell find $(SOURCEDIR) -name '*.cpp')
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Main target
-$(EXEC): $(OBJECTS)
+main: $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC)
 
 # To obtain object files
@@ -20,3 +20,12 @@ $(EXEC): $(OBJECTS)
 clean:
 	rm -f $(EXEC) $(OBJECTS)
 
+debug: CC_FLAGS +=  -D_DEBUG -g
+debug: main
+	
+build: 
+	main
+	
+all: 
+	clean
+	main
