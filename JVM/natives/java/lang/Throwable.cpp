@@ -58,7 +58,7 @@ namespace java
 				newClass->addMethod(getNativeMethod("<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V", &initWithMessageAndThrowable));
 				newClass->addMethod(getNativeMethod("printStackTrace", "()V", &printStackTrace));
 				newClass->addMethod(getNativeMethod("getMessage", "()Ljava/lang/String;", &getMessage));
-				newClass->addMethod(getNativeMethod("getCause", "()Ljava/lang/Throwable;", &getMessage));
+				newClass->addMethod(getNativeMethod("getCause", "()Ljava/lang/Throwable;", &getCause));
 
 				return newClass;
 			}
@@ -66,7 +66,7 @@ namespace java
 			Throwable* createInstance(::Object * object, ExecutionEngine * engine)
 			{
 				// pointer is not object, but ref. to class
-				size_t index = engine->getCurrentMethodFrame()->operandStack->pop();
+				size_t index = engine->getCurrentMethodFrame()->operandStack->popReference();
 				Class* classPtr = (Class*)engine->objectTable->get(index);
 
 				byte* memory = engine->heap->allocate(Throwable::getMemorySize());

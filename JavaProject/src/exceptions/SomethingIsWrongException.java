@@ -9,4 +9,9 @@ public class SomethingIsWrongException extends RuntimeException
     {
         super(str);
     }
+
+    SomethingIsWrongException(String str, Throwable cause)
+    {
+        super(str, cause);
+    }
 }

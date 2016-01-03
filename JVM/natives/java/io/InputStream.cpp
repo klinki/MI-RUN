@@ -38,6 +38,8 @@ namespace java
 				aClass->classLoader = NULL;
 				aClass->fullyQualifiedName = "java/io/InputStream";
 
+				staticClassPtr = aClass;
+
 				return aClass;
 			};
 

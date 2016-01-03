@@ -3,6 +3,7 @@
 #include "../runtime/TypeDescriptors.h"
 #include "Runtime.h"
 #include "../natives/java/lang/Throwable.h"
+#include "../natives/java/lang/String.h"
 
 #ifdef _DEBUG
 	#include "../utils/debug.h"
@@ -983,6 +984,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IFNULL:
 			case IFNONNULL:
 			{
+				PRINT_OBJECT_TABLE(this->objectTable);
+
 				short offset = this->getShort();
 				unsigned short ref = this->getCurrentMethodFrame()->operandStack->pop();
 
@@ -1251,40 +1254,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
 
 				unsigned short index = this->getShort();
-
-				Method* methodPtr = this->resolveMethod(index, currentInstruction);
-				Class* classPtr = methodPtr->classPtr;
-
-				// damn, why is reference on the bottom of the stack :/
-				Object* reference = NULL;
-
-				if (methodPtr->nativeMethod != nullptr)
-				{
-					DEBUG_PRINT("Executing native method: %s - %s %s\n",
-						methodPtr->classPtr->fullyQualifiedName.toAsciiString(),
-						methodPtr->name.toAsciiString(),
-						methodPtr->descriptor.toAsciiString()
-					);
-
-					methodPtr->nativeMethod(reference, this);
-				}
-				else
-				{
-					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction);
-					newFrame->parentFrame = this->getCurrentMethodFrame();
-					this->getCurrentMethodFrame()->childFrame = newFrame;
-					this->execute(newFrame);
-				}
+				this->invokeMethod(index, currentInstruction);
 			}
 			break;
 	
 			case INVOKEINTERFACE:
 			{
+				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+
 				size_t index = this->getShort();
 				size_t count = instructions[pc++]; // information about parameters, could be determined from const pool
 				pc++; // Reserved 0
 
 				// TODO: Implement
+				this->invokeMethod(index, currentInstruction);
 			}
 			break;
 
@@ -1559,12 +1542,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 
 		}
-		catch (Exceptions::Exception e) // runtime exceptions
+		catch (Exceptions::Throwable e) // runtime exceptions
 		{
 			Class* classPtr = this->classMap->getClass(e.what());
 
 			byte* memory = this->heap->allocate(java::lang::Throwable::Throwable::getMemorySize());
 			java::lang::Throwable::Throwable* throwable = new(memory) java::lang::Throwable::Throwable(classPtr);
+
+			if (e.getMessage() != NULL)
+			{
+				byte* stringMemory = this->heap->allocate(java::lang::String::String::getMemorySize(strlen(e.getMessage())));
+				java::lang::String::String * string = new(stringMemory) java::lang::String::String(e.getMessage(), true);
+				size_t stringIndex = this->objectTable->insert(string);
+				throwable->fields->set(0, stringIndex);
+			}
 
 			if (!this->handleException(throwable))
 			{

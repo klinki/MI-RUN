@@ -12,29 +12,36 @@ public class Cycle
     public Cycle(String name)
     {
         this.name = name;
+        this.child = new Cycle(this);
     }
 
     public Cycle()
     {
+        this.name = "Empty cycle";
         this.child = new Cycle("Son of " + this.name);
         this.child.parent = this;
     }
 
     public Cycle(Cycle parent)
     {
+        this.name = "Son of " + parent.name;
         this.parent = parent;
     }
 
     public void familyGreeting()
     {
         System.out.println(this.name);
-        this.child.familyGreeting();
+        if (this.child != null) {
+            this.child.familyGreeting();
+        }
     }
 
     public static void main(String[] args) {
         System.out.println("Allocating cycle");
 
         Cycle survivingCycle = new Cycle("Surviving cycle");
+
+        survivingCycle.familyGreeting();
 
         for (int i = 0; i < 1000; i++)
         {

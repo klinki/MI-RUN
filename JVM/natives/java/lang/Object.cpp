@@ -56,12 +56,6 @@ namespace java
 				unsigned char* memory = engine->heap->allocate(size);
 				::Object* objPtr = new(memory) ::Object(fields, classPtr, NULL);
 
-				for (int i = 0; i < fields; i++)
-				{
-					objPtr->fields->set(i, i);
-				}
-
-
 				engine->objectTable->updateAddress(index, objPtr);
 			}
 

@@ -549,4 +549,36 @@ public:
 	{
 		this->callStack->pop();
 	}
+
+	void invokeMethod(size_t constPoolIndex, Instruction currentInstruction)
+	{
+		Method* methodPtr = this->resolveMethod(constPoolIndex, currentInstruction);
+		Class* classPtr = methodPtr->classPtr;
+
+		if (methodPtr->isAbstract())
+		{
+			throw Errors::AbstractMethodError();
+		}
+
+		// damn, why is reference on the bottom of the stack :/
+		Object* reference = NULL;
+
+		if (methodPtr->nativeMethod != nullptr)
+		{
+			DEBUG_PRINT("Executing native method: %s - %s %s\n",
+				methodPtr->classPtr->fullyQualifiedName.toAsciiString(),
+				methodPtr->name.toAsciiString(),
+				methodPtr->descriptor.toAsciiString()
+				);
+
+			methodPtr->nativeMethod(reference, this);
+		}
+		else
+		{
+			MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction);
+			newFrame->parentFrame = this->getCurrentMethodFrame();
+			this->getCurrentMethodFrame()->childFrame = newFrame;
+			this->execute(newFrame);
+		}
+	}
 };

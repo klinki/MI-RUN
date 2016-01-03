@@ -5,7 +5,7 @@
 
 class ObjectTable
 {
-protected:
+visibility:
 	size_t index = 0;
 	std::unordered_map<int, void*> hashMap;
 public:

@@ -24,7 +24,6 @@ void initializeNatives(Runtime* runtime, ClassMap* classMap)
 {
 	classMap->addClass(java::lang::Object::initialize());
 	classMap->addClass(java::io::PrintStr::initialize(classMap));
-	classMap->addClass(java::lang::System::initialize(runtime));
 	classMap->addClass(java::lang::StrBuilder::initialize(classMap));
 	classMap->addClass(java::lang::String::initialize(classMap));
 	classMap->addClass(java::io::OutputStream::initialize(classMap));
@@ -32,7 +31,7 @@ void initializeNatives(Runtime* runtime, ClassMap* classMap)
 	classMap->addClass(java::io::InputStream::initialize(classMap));
 	classMap->addClass(java::io::FileInputStream::initialize(classMap));
 	classMap->addClass(java::utils::Scanner::initialize(classMap));
-
+	classMap->addClass(java::lang::System::initialize(runtime));
 
 #ifndef _MSC_VER
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/Throwable", "java/lang/Object")); // WTF LINUX?!!!

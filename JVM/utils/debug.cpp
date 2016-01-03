@@ -4,6 +4,8 @@
 #include "../runtime/OperandStack.h"
 #include "../types/ConversionFunctions.h"
 #include "../runtime/MethodFrame.h"
+#include "../gc/ObjectTable.h"
+#include "../gc/debug/DebugVisitor.h"
 
 const char* namedInstructions[] = {
 	"NOP",
@@ -316,4 +318,38 @@ void printLocalVariables(MethodFrame * frame)
 	}
 
 	std::cerr << std::string(10, '-') << std::endl;
+}
+
+void printObjectTable(ObjectTable* table)
+{
+	DebugVisitor visitor(table);
+	auto iterator = table->hashMap.begin();
+
+	while (iterator != table->hashMap.cend())
+	{
+		void* address = iterator->second;
+		GarbageCollectableInterface* collectable = (GarbageCollectableInterface*)address;
+
+		if (address == NULL)
+		{
+			++iterator;
+			continue;
+		}
+
+		if (!collectable->preallocated())
+		{
+			ObjectHeader* header = (ObjectHeader*)address;
+
+//			std::cerr << typeid(*collectable).name() << std::endl;
+
+			if (typeid(*collectable) != typeid(MethodFrame))
+			{
+				std::cerr << iterator->first << " " << header->objectClass->fullyQualifiedName.toAsciiString() << std::endl;
+
+			}
+			//collectable->accept(visitor);
+		}
+
+		++iterator;
+	}
 }

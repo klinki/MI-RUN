@@ -68,8 +68,8 @@ public:
 
 		delete[] this->inputArgs;
 		this->inputArgs = NULL;
-		
-		
+
+
 		delete this->exceptionTable;
 		this->exceptionTable = NULL;
 	}
@@ -96,12 +96,17 @@ public:
 
 	bool isSpecial() const
 	{
-		
+
 	}
 
 	bool isConstructor() const
 	{
 		return false;
+	}
+
+	bool isAbstract() const
+	{
+		return (this->flags & (int)MethodAccessFlags::ABSTRACT) == (int)(MethodAccessFlags::ABSTRACT);
 	}
 
 	void initInputArgs()

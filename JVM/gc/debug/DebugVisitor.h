@@ -7,6 +7,7 @@ class DebugVisitor : public ObjectVisitorInterface
 {
 	ObjectTable * table;
 	size_t level = 0;
+	bool recursive = false;
 public:
 	DebugVisitor(ObjectTable *table)
 	{
@@ -17,13 +18,18 @@ public:
 	{
 		std::cerr << std::string(level * 2, '-');
 		std::cerr << "Inside methodFrame " << methodFrame << std::endl;
-		level++;
-		methodFrame->accept(this);
-		level--;
 
-		if (methodFrame->parentFrame != NULL)
+		if (this->recursive) 
 		{
-			methodFrame->parentFrame->accept(this);
+			level++;
+			methodFrame->accept(this);
+			level--;
+
+			if (methodFrame->parentFrame != NULL)
+			{
+				methodFrame->parentFrame->accept(this);
+			}
+
 		}
 	}
 
@@ -31,9 +37,14 @@ public:
 	{
 		std::cerr << std::string(level * 2, '-');
 		std::cerr << "Inside object " << object << " " << object->objectClass->fullyQualifiedName.toAsciiString() << std::endl;
-		level++;
-		object->accept(this);
-		level--;
+		
+		if (this->recursive)
+		{
+		
+			level++;
+			object->accept(this);
+			level--;
+		}
 	}
 
 

@@ -4,6 +4,7 @@
 #include "runtime/Runtime.h"
 #include "natives/java/lang/Throwable.h"
 #include "exceptions/RuntimeExceptions.h"
+#include "natives/java//lang/String.h"
 
 using namespace std;
 
@@ -18,7 +19,16 @@ int main(int argc, const char * argv[])
 	}
 	catch (java::lang::Throwable::Throwable* exc)
 	{
-		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString() << endl;
+		size_t messageIndex = exc->fields->get(0);
+
+		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString();
+		
+		if (messageIndex != 0) {
+			java::lang::String::String * str = (java::lang::String::String *)runtime->objectTable->get(messageIndex);
+			cerr << " message: " << str->toAsciiString();
+		}
+
+		cerr << endl;
 		exc->printStackTrace();
                 
 		statusCode = -1;
