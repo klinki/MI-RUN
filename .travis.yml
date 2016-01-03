@@ -13,6 +13,9 @@ install:
 - sudo apt-get install -qq g++-5
 - export CXX="g++-5"
 
+before_script:
+  - cd JVM
+
 script:
   - make ./JVM/Makefile
 

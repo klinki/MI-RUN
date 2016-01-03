@@ -6,6 +6,7 @@
 #include "../runtime/MethodFrame.h"
 #include "../gc/ObjectTable.h"
 #include "../gc/debug/DebugVisitor.h"
+#include <typeinfo>
 
 const char* namedInstructions[] = {
 	"NOP",
