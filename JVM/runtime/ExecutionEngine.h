@@ -439,7 +439,7 @@ public:
 			}
 		}
 
-		if (instruction == INVOKEVIRTUAL)
+		if (instruction == INVOKEVIRTUAL || instruction == INVOKEINTERFACE)
 		{
 			size_t inputArgsSize = methodPtr->inputArgsSize;
 			size_t stackSize = this->getCurrentMethodFrame()->operandStack->index - 1;
