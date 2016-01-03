@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdlib>
+#include <cstring>
 #include "Macros.h"
 #include "../types/types.h"
 

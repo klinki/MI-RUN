@@ -11,12 +11,10 @@ before_install:
 
 install:
 - sudo apt-get install -qq g++-5
-- export CC="g++-5"
+- export CXX="g++-5"
 
 before_script:
   - cd JVM
-
+  - $CXX --version
 script:
   - make
-
-
