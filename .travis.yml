@@ -17,5 +17,6 @@ before_script:
   - cd JVM
 
 script:
-  - make ./JVM/Makefile
+  - make
+
 
