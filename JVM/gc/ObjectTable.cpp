@@ -32,3 +32,8 @@ void ObjectTable::updateAddress(size_t index, void* newAddress)
 {
 	this->hashMap[index] = newAddress;
 }
+
+void ObjectTable::remove(size_t index)
+{
+	this->hashMap.erase(index);
+}

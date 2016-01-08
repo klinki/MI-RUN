@@ -25,7 +25,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -121,6 +121,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
+    <ClCompile Include="gc\MS\Sweeper.cpp" />
+    <ClCompile Include="gc\PermSpaceHeap.cpp" />
     <ClCompile Include="natives\java\io\FileInputStream.cpp" />
     <ClCompile Include="natives\java\io\InputStream.cpp" />
     <ClCompile Include="natives\java\io\FileOutputStream.cpp" />
@@ -156,6 +158,8 @@
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gc\MS\Sweeper.h" />
+    <ClInclude Include="gc\PermSpaceHeap.h" />
     <ClInclude Include="natives\java\io\FileInputStream.h" />
     <ClInclude Include="natives\java\io\InputStream.h" />
     <ClInclude Include="natives\java\io\FileOutputStream.h" />

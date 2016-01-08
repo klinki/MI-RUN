@@ -2,16 +2,18 @@
 #include "../interfaces/GarbageCollectableInterface.h"
 #include "../../types/ConversionFunctions.h"
 #include "../../utils/Macros.h"
+#include "../MemoryCell.h"
 
-Marker::Marker()
+Marker::Marker() {};
+
+Marker::Marker(ObjectTable * objectTable)
 {
+	this->objectTable = objectTable;
 }
-
 
 Marker::~Marker()
 {
 }
-
 
 void Marker::visit(MethodFrame* methodFrame)
 {
@@ -30,33 +32,31 @@ void Marker::visit(word address)
 	if (isReferenceAddress(address))
 	{
 		int refAddress = getReferenceAddress((unsigned int)address);
-		/*
+
+		if (this->visitedObjects.count(refAddress) != 0)
+		{
+			return; // already visited object
+		}
+
+		this->visitedObjects.insert(refAddress);
+
 		try
 		{
-			void * pointer = this->get(refAddress);
+			void * pointer = this->objectTable->get(refAddress);
+
 			GarbageCollectableInterface* visitable = (GarbageCollectableInterface*)pointer;
 
-			size_t dataSize = this->getDataSize(pointer);
-
-			unsigned char* memory;
-
-			if (this->getAccessCounter(pointer) >= TENURATION_THRESHOLD)
+			if (visitable->preallocated())
 			{
-				memory = this->allocateOnPermanentSpace(dataSize);
-				this->permanentSpaceRoot = address;
-				this->edenSpaceRoot = NULL; // todo: this is probably wrong
-				this->setColor(memory, Color::BLACK);
-			}
-			else
-			{
-				memory = this->allocate(dataSize);
-				this->incrementAccessCounter(memory, this->getAccessCounter(pointer) + 1);
+				return; // not allocated by GC
 			}
 
-			memcpy(memory, pointer, dataSize);
+			MemoryHeader* header = MemoryHeader::getHeader((char*)pointer);
 
-			this->updateAddress(refAddress, memory);
-			this->setColor(pointer, Color::BAKER_MOVED);
+			if (header->isTenured())
+			{
+				header->setColor(Color::BLACK);
+			}
 
 			visitable->accept(*this);
 		}
@@ -64,26 +64,11 @@ void Marker::visit(word address)
 		{
 
 		}
-		*/
 	}
 }
 
-void Marker::Sweeper::visit(MethodFrame* methodFrame)
+void Marker::mark(word root)
 {
-
-}
-
-void Marker::Sweeper::visit(ObjectHeader* header)
-{
-
-}
-
-void Marker::Sweeper::visit(Object* object)
-{
-
-}
-
-void Marker::Sweeper::visit(word address)
-{
-
+	this->visit(root);
+	this->visitedObjects.clear();
 }

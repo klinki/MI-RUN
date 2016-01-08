@@ -31,22 +31,7 @@
     <ClCompile Include="utils\Utf8String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gc\Heap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gc\TreadMillGc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="types\Descriptors.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gc\ObjectTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gc\MS\Marker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gc\Baker\BakerGc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="natives\java\io\PrintStream.cpp">
@@ -101,6 +86,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils\debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\Baker\BakerGc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\MS\Marker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\Heap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\ObjectTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\TreadMillGc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\MS\Sweeper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gc\PermSpaceHeap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -180,15 +186,6 @@
     <ClInclude Include="utils\Utf8String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gc\Heap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\MemoryCell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\TreadMillGc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="runtime\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -214,33 +211,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="types\Descriptors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\ObjectTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\MS\Color.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\MS\Marker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\interfaces\FinalizableInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\interfaces\GarbageCollectableInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\interfaces\HeapInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\interfaces\ObjectVisitorInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\interfaces\VisitableInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gc\Baker\BakerGc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="natives\java\io\PrintStream.h">
@@ -294,9 +264,6 @@
     <ClInclude Include="utils\Parameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gc\debug\DebugVisitor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="natives\java\lang\Array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -313,6 +280,51 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="natives\java\io\FileInputStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\Baker\BakerGc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\debug\DebugVisitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\FinalizableInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\GarbageCollectableInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\HeapInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\ObjectVisitorInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\interfaces\VisitableInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\MS\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\MS\Marker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\Heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\MemoryCell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\ObjectTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\TreadMillGc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\MS\Sweeper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gc\PermSpaceHeap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

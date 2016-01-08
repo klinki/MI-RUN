@@ -25,7 +25,7 @@ public:
 
 		this->arrayData = new(address) T[arraySize];
 		
-		for (int i = 0; i < arraySize; i++)
+		for (size_t i = 0; i < arraySize; i++)
 		{
 			this->arrayData[i] = defaultValue;
 		}

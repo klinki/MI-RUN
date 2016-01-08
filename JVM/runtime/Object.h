@@ -69,7 +69,7 @@ public:
 			return;
 		}
 
-		for (int i = 0; i < this->fields->allocatedSize; i++)
+		for (size_t i = 0; i < this->fields->allocatedSize; i++)
 		{
 			visitor->visit(this->fields->get(i));
 		}

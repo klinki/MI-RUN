@@ -31,7 +31,7 @@ BakerGc::~BakerGc()
 
 void BakerGc::visit(MethodFrame* methodFrame)
 {
-	int key = this->getKey(methodFrame);
+	int key = this->getHeader(methodFrame)->key;
 	return this->visit((word)makeReferenceAddress(key));
 }
 
@@ -48,16 +48,18 @@ void BakerGc::switchMemorySlot()
 	this->activeSlot = this->activeSlot == 0 ? 1 : 0;
 }
 
-void BakerGc::setGCRoot(word currentFrame)
-{
-	this->edenSpaceRoot = currentFrame;
-}
-
 void BakerGc::visit(word address)
 {
 	if (isReferenceAddress(address))
 	{
 		int refAddress = getReferenceAddress((unsigned int)address);
+
+		if (this->visitedObjects.count(refAddress) > 0)
+		{
+			return; // already visited object
+		}
+
+		this->visitedObjects.insert(refAddress);
 
 		try
 		{
@@ -72,28 +74,27 @@ void BakerGc::visit(word address)
 
 			MemoryHeader* header = this->getHeader((char*)pointer);
 
-			size_t dataSize = this->getDataSize(pointer);
+			size_t dataSize = this->getHeader(pointer)->size;
 
 			unsigned char* memory;
 
 			if (! header->isTenured())
 			{
-				if (this->getAccessCounter(pointer) >= TENURATION_THRESHOLD)
+				if (this->getHeader(pointer)->accessCounter >= TENURATION_THRESHOLD)
 				{
 					memory = this->allocateOnPermanentSpace(dataSize);
-					//this->setColor(memory, Color::BLACK);
 					this->getHeader((char*)memory)->tenure();
 				}
 				else
 				{
 					memory = this->allocate(dataSize);
-					this->incrementAccessCounter(memory, this->getAccessCounter(pointer) + 1);
+					this->getHeader(memory)->incrementAccessCounter();
 				}
 
 				visitable->copyTo(memory);
 
 				this->updateAddress(refAddress, memory);
-				this->setColor(pointer, Color::BAKER_MOVED);
+				this->getHeader(pointer)->setColor(Color::BAKER_MOVED);
 			}
 				
 			visitable->accept(*this);
@@ -179,7 +180,7 @@ unsigned char * BakerGc::allocateOnPermanentSpace(size_t size)
 	if ((this->permanentSpace->usedBytes + bytesAllocated) >= this->permanentSpace->allocatedBytes)
 	{
 		// Thats bad - time for FULL old space garbage collection!!
-		throw Errors::OutOfMemoryError("TENURED SPACE OUT OF MEMORY");
+		this->fullCollect();
 	}
 
 	MemoryHeader* memory = (MemoryHeader*) new(this->permanentSpace->allocate(bytesAllocated)) MemoryHeader(size);
@@ -197,7 +198,6 @@ void BakerGc::collect()
 	DEBUG_PRINT("Garbage collection starts...\n");
 
 	word frameIndex = this->runtime->executionEngine->callStack->top();
-//	MethodFrame* frame = (MethodFrame*)this->get(frameIndex);
 
 	Heap* oldSlot = this->memorySlots[this->activeSlot];
 	this->switchMemorySlot();
@@ -214,12 +214,13 @@ void BakerGc::collect()
 
 	this->finalize(oldSlot);
 	oldSlot->clear();
+	this->visitedObjects.clear();
 }
 
 size_t BakerGc::insert(void * ptr)
 {
 	size_t index = ObjectTable::insert(ptr);
-	this->setKey(ptr, index);
+	this->getHeader(ptr)->setKey(index);
 	return index;
 }
 
@@ -247,37 +248,46 @@ void BakerGc::finalize(Heap* slot)
 	while (ptr != endPtr)
 	{
 		ptr += sizeof(MemoryHeader);
-		int size = this->getDataSize(ptr);
+		int size = this->getHeader(ptr)->size;
 		GarbageCollectableInterface* objPtr = (GarbageCollectableInterface*)ptr;
 
-		if (this->getColor(ptr) != Color::BAKER_MOVED)
+		if (this->getHeader(ptr)->accessCounter != Color::BAKER_MOVED)
 		{
 			// finalize object
-			if (objPtr->requiresFinalization())
-			{
-				Method* method = objPtr->getFinalizationMethod(); // objectClass->getMethod("finalize", "()V");
-			
-				if (method->isNative())
-				{
-					method->nativeMethod((Object*)objPtr, engine);
-				}
-				else
-				{
-					unsigned char* frameMemory = this->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
-					MethodFrame * frame = new(frameMemory) MethodFrame(method->operandStackSize, method->localVariablesArraySize, 
-						this->runtime->executionEngine->getCurrentMethodFrame(), method->classPtr->constantPool, method, NULL);
+			this->finalize(objPtr);
 
-					this->runtime->executionEngine->execute(frame);
-				}
-			}
-			// TODO: Finalize object
+			DEBUG_PRINT("Removing key: %d from table\n", this->getHeader(ptr)->key);
 
-			DEBUG_PRINT("Removing key: %d from table\n", this->getKey(ptr));
-
-			this->hashMap.erase(this->getKey(ptr));
+			this->remove(this->getHeader(ptr)->key);
 		}
 
 		ptr += size;
 		ptr += MEMORY_ALIGNMENT - (size % MEMORY_ALIGNMENT);
 	}
+}
+
+void BakerGc::finalize(GarbageCollectableInterface * objPtr)
+{
+	if (objPtr->requiresFinalization())
+	{
+		Method* method = objPtr->getFinalizationMethod();
+
+		if (method->isNative())
+		{
+			method->nativeMethod((Object*)objPtr, engine);
+		}
+		else
+		{
+			unsigned char* frameMemory = this->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize));
+			MethodFrame * frame = new(frameMemory) MethodFrame(method->operandStackSize, method->localVariablesArraySize,
+			this->runtime->executionEngine->getCurrentMethodFrame(), method->classPtr->constantPool, method, NULL);
+
+			this->runtime->executionEngine->execute(frame);
+		}
+	}
+}
+
+void BakerGc::fullCollect()
+{
+
 }
