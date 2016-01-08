@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include "Heap.h"
-#include "Baker\BakerGc.h"
+#include "Baker/BakerGc.h"
 #include "MemoryCell.h"
 
 class Marker;
@@ -80,7 +80,6 @@ public:
 	}
 
 	virtual unsigned char* allocate(size_t size);
-	virtual void clear();
 
 	void addToFreeList(FreeListHeader * header);
 
