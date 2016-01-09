@@ -10,12 +10,12 @@ union word
 	operator long long() const { return intValue; }
 	operator int() const { return intValue; }
 	operator float() const { return floatValue; }
-	operator bool() const { return (bool)intValue; }
+	operator bool() const { return intValue != 0; }
 	operator short() const { return (short)intValue; }
 
-	operator unsigned int() const { return intValue; }
-	operator unsigned long() const { return intValue; }
-	operator unsigned short() const { return intValue; }
+	operator unsigned int() const { return (unsigned int)intValue; }
+	operator unsigned long() const { return (unsigned long)intValue; }
+	operator unsigned short() const { return (unsigned short)intValue; }
 
 	template <class T>
 	operator T*() const { return (T*)intValue; }
