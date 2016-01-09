@@ -279,7 +279,7 @@ void BakerGc::finalize(GarbageCollectableInterface * objPtr)
 
 		if (method->isNative())
 		{
-			method->nativeMethod((Object*)objPtr, engine);
+			method->nativeMethod(engine);
 		}
 		else
 		{

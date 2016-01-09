@@ -9,7 +9,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace Tests
 {
 	int finalizationCalled = 0;
-	void testFinalizationCalled(Object* obj, ExecutionEngine* engine)
+	void testFinalizationCalled(ExecutionEngine* engine)
 	{
 		finalizationCalled++;
 	}

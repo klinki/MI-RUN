@@ -66,7 +66,8 @@ namespace java
 
 			NATIVE_METHOD_HEADER(equals)
 			{
-				::Object* anotherObj = engine->getCurrentMethodFrame()->operandStack->pop();
+				::Object* object = engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+				::Object* anotherObj = engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 
 				if (anotherObj == nullptr)
 				{
@@ -74,8 +75,9 @@ namespace java
 				}
 				else
 				{
-					hashCode(object, engine);
-					hashCode(anotherObj, engine);
+					// TODO: Fix
+					hashCode(engine);
+					hashCode(engine);
 
 					int secondHash = engine->getCurrentMethodFrame()->operandStack->pop();
 					int firstHash = engine->getCurrentMethodFrame()->operandStack->pop();
@@ -105,11 +107,13 @@ namespace java
 
 			NATIVE_METHOD_HEADER(getClass)
 			{
+				::Object* object = engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 				engine->getCurrentMethodFrame()->operandStack->push((int)object->objectClass);
 			}
 
 			NATIVE_METHOD_HEADER(hashCode)
 			{
+				::Object* object = engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 				engine->getCurrentMethodFrame()->operandStack->push((int)object);
 			}
 		}

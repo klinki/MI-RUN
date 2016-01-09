@@ -6,6 +6,6 @@ class MethodFrame;
 class Method;
 class ExecutionEngine;
 
-#define NATIVE_METHOD_HEADER(name) void name (::Object * object, ExecutionEngine * engine)
+#define NATIVE_METHOD_HEADER(name) void name (ExecutionEngine * engine)
 
-typedef void(*NativeMethodPtr)(Object *, ExecutionEngine *);
+typedef void(*NativeMethodPtr)(ExecutionEngine *);
