@@ -11,6 +11,8 @@
 class ExecutionEngine;
 class Runtime;
 class PermSpaceHeap;
+class Marker;
+class Sweeper;
 
 class BakerGc : public ObjectTable, public ObjectVisitorInterface, public HeapInterface
 {
@@ -28,7 +30,10 @@ visibility:
 	};
 
 	Heap* memorySlots[2];
-	Heap* permanentSpace;
+	
+	PermSpaceHeap* permanentSpace;
+	Marker* marker;
+	Sweeper* sweeper;
 
 	size_t activeSlot;
 

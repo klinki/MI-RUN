@@ -16,12 +16,14 @@ namespace Tests
 
 	TEST_CLASS(PermSpaceCollection)
 	{
-		Runtime * prepare()
+		Runtime * prepare(size_t youngSize = 10 * 1024, size_t oldSize = 10 * 1024)
 		{
 			Runtime* runtime = new Runtime(0, NULL);
-			BakerGc * baker = new BakerGc(10 * 1024, 10 * 1024);
+			BakerGc * baker = new BakerGc(youngSize, oldSize);
 			runtime->objectTable = baker;
 			runtime->heap = baker;
+
+			runtime->classTable->addClass(java::lang::Object::initialize());
 
 			return runtime;
 		}
@@ -51,48 +53,6 @@ namespace Tests
 				unsigned char* address = baker->allocateOnPermanentSpace(ArrayObject<Object*>::getMemorySize(arraySize)); // allocate some garbage
 				ArrayObject<Object*> * obj = new(address) ArrayObject<Object*>(arraySize, NULL, aClass, NULL);
 			}
-		}
-
-		BakerGc * testStub(int numAllocations, int arraySize = 64)
-		{
-			Runtime * runtime = this->prepare();
-			BakerGc * baker = (BakerGc*)runtime->heap;
-
-			unsigned char* address = baker->allocate(MethodFrame::getMemorySize(10, 10));
-			MethodFrame * frame = new(address) MethodFrame(10, 10, NULL, NULL, NULL, NULL);
-
-			unsigned char* arrayPtr = baker->allocateOnPermanentSpace(ArrayObject<int>::getMemorySize(arraySize));
-			ArrayObject<int> * arrayObj = new(arrayPtr) ArrayObject<int>(arraySize, 0, NULL, NULL);
-
-			for (int i = 0; i < arraySize; i++)
-			{
-				arrayObj->operator[](i) = i;
-			}
-
-			int methodFrameIndex = baker->insert((Object*)frame);
-			int arrayIndex = baker->insert((Object*)arrayObj);
-
-			(*frame->localVariables)[0] = getReferenceAddress(arrayIndex);
-
-			this->allocataGarbage(baker, numAllocations, arraySize);
-
-			MethodFrame* newMethodFrameAddress = (MethodFrame*)baker->get(methodFrameIndex);
-			ArrayObject<int>* newArrayObj = (ArrayObject<int>*)baker->get(arrayIndex);
-
-			Assert::AreNotEqual(0, (int)baker->getHeader(newMethodFrameAddress)->accessCounter);
-			Assert::AreNotEqual(0, (int)baker->getHeader(newArrayObj)->accessCounter);
-
-			Assert::AreNotEqual((unsigned int)frame, (unsigned int)newMethodFrameAddress);
-			Assert::AreNotEqual((unsigned int)arrayObj, (unsigned int)newArrayObj);
-
-			Assert::AreEqual(arraySize, (int)newArrayObj->getSize());
-
-			for (int i = 0; i < arraySize; i++)
-			{
-				Assert::AreEqual(i, (int)newArrayObj->operator[](i));
-			}
-
-			return baker;
 		}
 
 		TEST_METHOD(testFinalizationNative)
@@ -158,12 +118,7 @@ namespace Tests
 			baker->switchMemorySlot();
 		}
 
-		TEST_METHOD(testSimpleGc)
-		{
-			testStub(47);
-		}
-
-		TEST_METHOD(testCompacting)
+		Runtime* allocateGarbageOnPermSpace(bool compacting = false)
 		{
 			// allocate object with 5 fields
 			// allocate array -> store into object
@@ -171,13 +126,11 @@ namespace Tests
 			// .....
 			// ....
 
-			BakerGc * baker = testStub(500);
-
 			size_t initialMemorySize = 100 * 1024;
 			size_t totalMemorySize = initialMemorySize;
 
 			Runtime * runtime = this->prepare();
-			runtime->classTable->addClass(java::lang::Object::initialize());
+			BakerGc* baker = (BakerGc*)runtime->heap;
 
 			size_t methodFrameSize = MethodFrame::getMemorySize(1, 1);
 			totalMemorySize -= methodFrameSize;
@@ -198,13 +151,27 @@ namespace Tests
 
 			for (int i = 0; i < 10; i++)
 			{
-				ArrayObject<double> * arrayObject = new(baker->allocateOnPermanentSpace(arraySize)) ArrayObject<double>(100, 0.0, java::lang::Array::initialize(runtime->classTable));
+				ArrayObject<double> * arrayObject = new(baker->allocateOnPermanentSpace(arraySize)) ArrayObject<double>(100, 0.0, java::lang::Array::initialize(runtime->classTable), nullptr);
 				size_t key = baker->insert(arrayObject);
+
+				if (!compacting && i++ % 2 == 0 && index < countObjectFields)
+				{
+					object->fields->set(index++, key);
+				}
 			}
 
 			baker->fullCollect();
 
-			// test free list
+			// TEST FREE LIST NOW 
+			return runtime;
+		}
+		
+		TEST_METHOD(testCompacting)
+		{
+			Runtime* runtime = this->allocateGarbageOnPermSpace();
+			BakerGc* baker = (BakerGc*)runtime->heap;
+
+			baker->fullCollect();
 		}
 
 		TEST_METHOD(testNonCompactingCollection)
@@ -214,46 +181,16 @@ namespace Tests
 			// allocate array, do not store anywher
 			// .....
 			// ....
-
-			BakerGc * baker = testStub(500);
-
-			size_t initialMemorySize = 100 * 1024;
-			size_t totalMemorySize = initialMemorySize;
-
-			Runtime * runtime = this->prepare();
-			runtime->classTable->addClass(java::lang::Object::initialize());
-
-			size_t methodFrameSize = MethodFrame::getMemorySize(1, 1);
-			totalMemorySize -= methodFrameSize;
-			MethodFrame * frame = new(baker->allocateOnPermanentSpace(methodFrameSize)) MethodFrame(1, 1);
-			baker->insert(frame);
-
-
-			size_t objectSize = Object::getMemorySize(5);
-			totalMemorySize -= objectSize;
-			Object * object = new (baker->allocateOnPermanentSpace(objectSize)) Object(5, java::lang::Object::initialize());
-			frame->localVariables->set(0, baker->insert(object));
-
-			int i = 0;
-			int index = 0;
-			int countObjectFields = 5;
-
-			size_t arraySize = ArrayObject<double>::getMemorySize(100); // 820 B
-
-			for (int i = 0; i < 10; i++)
-			{
-				ArrayObject<double> * arrayObject = new(baker->allocateOnPermanentSpace(arraySize)) ArrayObject<double>(100, 0.0, java::lang::Array::initialize(runtime->classTable));
-				size_t key = baker->insert(arrayObject);
-
-				if (i++ % 2 == 0 && index < countObjectFields)
-				{
-					object->fields->set(index++, key);
-				}
-			}
+			Runtime* runtime = this->allocateGarbageOnPermSpace(true);
+			BakerGc* baker = (BakerGc*)runtime->heap;
 
 			baker->fullCollect();
 
-			// TEST FREE LIST NOW 
+			int expectedFreeListItems = 5;
+			int freeListItems = 0;
+
+			
+			
 		}
 
 	};

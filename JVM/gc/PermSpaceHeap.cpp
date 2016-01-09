@@ -71,6 +71,8 @@ unsigned char* PermSpaceHeap::allocate(size_t size)
 		}
 	}
 
+	this->usedBytes += requiredSize;
+
 	return (unsigned char*)selectedHeader;
 }
 

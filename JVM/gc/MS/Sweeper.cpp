@@ -1,6 +1,16 @@
 #include "Sweeper.h"
 #include "../PermSpaceHeap.h"
 
+Sweeper::Sweeper(BakerGc* baker)
+{
+	this->objectTable = baker;
+	this->baker = baker;
+}
+
+Sweeper::~Sweeper()
+{
+}
+
 void Sweeper::sweep(void* address)
 {
 	char* ptr = (char*)address;

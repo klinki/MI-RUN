@@ -3,6 +3,9 @@
 #include "../../runtime/ExecutionEngine.h"
 #include "../debug/DebugVisitor.h"
 #include "../../runtime/Runtime.h"
+#include "../PermSpaceHeap.h"
+#include "../MS/Marker.h"
+#include "../MS/Sweeper.h"
 
 BakerGc::BakerGc() : BakerGc(10 * 1024 , 50 * 1024 * 1024) {};
 
@@ -13,7 +16,9 @@ BakerGc::BakerGc(Runtime* runtime, size_t memorySize, size_t permSize)
 	this->memorySlots[0] = new Heap(memorySize);
 	this->memorySlots[1] = new Heap(memorySize);
 
-	this->permanentSpace = new Heap(permSize);
+	this->permanentSpace = new PermSpaceHeap(permSize);
+	this->marker = new Marker(this);
+	this->sweeper = new Sweeper(this);
 
 	this->activeSlot = 0;
 }
@@ -289,5 +294,5 @@ void BakerGc::finalize(GarbageCollectableInterface * objPtr)
 
 void BakerGc::fullCollect()
 {
-
+	this->sweeper->sweep(this->permanentSpace->data);
 }
