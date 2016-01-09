@@ -571,7 +571,7 @@ public:
 				methodPtr->descriptor.toAsciiString()
 				);
 
-			methodPtr->nativeMethod(reference, this);
+			methodPtr->nativeMethod(this);
 		}
 		else
 		{

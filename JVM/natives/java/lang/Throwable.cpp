@@ -63,7 +63,7 @@ namespace java
 				return newClass;
 			}
 
-			Throwable* createInstance(::Object * object, ExecutionEngine * engine)
+			Throwable* createInstance(ExecutionEngine * engine)
 			{
 				// pointer is not object, but ref. to class
 				size_t index = engine->getCurrentMethodFrame()->operandStack->popReference();
@@ -79,13 +79,13 @@ namespace java
 
 			NATIVE_METHOD_HEADER(init)
 			{				
-				createInstance(object, engine);
+				createInstance(engine);
 			}
 
 			NATIVE_METHOD_HEADER(initWithMessage)
 			{
 				size_t stringIndex = engine->getCurrentMethodFrame()->operandStack->pop();
-				Throwable* throwable = createInstance(object, engine);
+				Throwable* throwable = createInstance(engine);
 
 				throwable->fields->set(0, stringIndex);
 			}
@@ -95,7 +95,7 @@ namespace java
 				size_t throwableIndex = engine->getCurrentMethodFrame()->operandStack->pop();
 				size_t stringIndex = engine->getCurrentMethodFrame()->operandStack->pop();
 
-				Throwable* throwable = createInstance(object, engine);
+				Throwable* throwable = createInstance(engine);
 				throwable->fields->set(0, stringIndex);
 				throwable->fields->set(1, throwableIndex);
 			}
