@@ -3,6 +3,7 @@
 #include "../runtime/TypeDescriptors.h"
 #include "Runtime.h"
 #include "../natives/java/lang/Throwable.h"
+#include "../natives/java/lang/String.h"
 
 #ifdef _DEBUG
 	#include "../utils/debug.h"
@@ -82,25 +83,34 @@ void ExecutionEngine::execute(Method* method)
 
 int ExecutionEngine::execute(MethodFrame * frame)
 {
-	word index = this->objectTable->insert(frame);
+	word index = this->runtime->objectTable->insert(frame);
 	this->callStack->pushReference(index);
+
+	DEBUG_BLOCK(const char** namedInstructions = getNamedInstructions());
+
+	DEBUG_PRINT("INSIDE METHOD: %s::%s\n", 
+		frame->method->classPtr->fullyQualifiedName.toAsciiString(),
+		frame->method->name.toAsciiString());
+	DEBUG_PRINT("Method stack size: %d, local variables size: %d\n", frame->method->operandStackSize, frame->method->localVariablesArraySize);
+	PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+	PRINT_LOCAL_VARIABLES(this->getCurrentMethodFrame());
 
 	Instruction * instructions = (Instruction*)this->getCurrentMethodFrame()->method->getBytecode();
 	unsigned int length = this->getCurrentMethodFrame()->method->getByteCodeLength();
-
 	ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
-	
+
 	while (pc < length)
 	{
 		try
 		{
+			ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
+
 			Instruction currentInstruction = instructions[pc++];
 
 #ifdef _DEBUG
 			if (this->runtime->parameters.PrintExecutedInstructions) {
-				std::cerr << std::endl;
 				std::cerr << std::string(this->callStack->index - 1, '\t').c_str();
-				std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK BEFORE: " << this->getCurrentMethodFrame()->operandStack->index;
+				std::cerr << std::setw(20) << std::left << namedInstructions[currentInstruction] << "\t\tSTACK SIZE: " << this->getCurrentMethodFrame()->operandStack->index << std::endl;
 			}
 #endif
 			switch (currentInstruction)
@@ -974,6 +984,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IFNULL:
 			case IFNONNULL:
 			{
+				PRINT_OBJECT_TABLE(this->objectTable);
+
 				short offset = this->getShort();
 				unsigned short ref = this->getCurrentMethodFrame()->operandStack->pop();
 
@@ -1236,38 +1248,26 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			// TODO: Invokes!
 			case INVOKEVIRTUAL:
-			case INVOKESPECIAL: // TODO: Should have its own handler			
+			case INVOKESPECIAL: // TODO: Should have its own handler
 			case INVOKESTATIC: // TODO: Add another handler for static methods
 			{
+				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+
 				unsigned short index = this->getShort();
-
-				Method* methodPtr = this->resolveMethod(index, currentInstruction);
-				Class* classPtr = methodPtr->classPtr;
-
-				// damn, why is reference on the bottom of the stack :/
-				Object* reference = NULL;
-
-				if (methodPtr->nativeMethod != nullptr)
-				{
-					methodPtr->nativeMethod(reference, this);
-				}
-				else
-				{
-					MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction);
-					newFrame->parentFrame = this->getCurrentMethodFrame();
-					this->getCurrentMethodFrame()->childFrame = newFrame;
-					this->execute(newFrame);
-				}
+				this->invokeMethod(index, currentInstruction);
 			}
 			break;
 	
 			case INVOKEINTERFACE:
 			{
+				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+
 				size_t index = this->getShort();
 				size_t count = instructions[pc++]; // information about parameters, could be determined from const pool
 				pc++; // Reserved 0
 
 				// TODO: Implement
+				this->invokeMethod(index, currentInstruction);
 			}
 			break;
 
@@ -1360,14 +1360,14 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				}
 
 				// TODO: Resolve class!
+				
 
-
-				unsigned char* ptr = nullptr;
-				void * object = new (ptr) ArrayObject<Object*>(size, 0, NULL, ptr);
+				unsigned char* ptr = this->heap->allocate(ArrayObject<Object*>::getMemorySize(size));
+				void * object = new (ptr) ArrayObject<Object*>(size, 0, this->classMap->getClass("java/lang/Array"), NULL);
 
 				int objectIndex = this->objectTable->insert((Object*)object);
 
-				this->getCurrentMethodFrame()->operandStack->push(objectIndex);
+				this->getCurrentMethodFrame()->operandStack->pushReference(objectIndex);
 			}
 			break;
 
@@ -1397,6 +1397,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case ARRAYLENGTH:
 			{
+				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
+
 				int index = this->getCurrentMethodFrame()->operandStack->popReference();
 			
 				if (index == 0) 
@@ -1411,7 +1413,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					throw Exceptions::Runtime::NullPointerException();
 				}
 
-				this->getCurrentMethodFrame()->operandStack->push(object->getSize());
+				int arraySize = object->getSize();
+				this->getCurrentMethodFrame()->operandStack->push(arraySize);
 			}
 			break;
 
@@ -1521,13 +1524,6 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IMPDEP2:
 				break;
 			} 
-		
-#ifdef _DEBUG
-			if (this->runtime->parameters.PrintExecutedInstructions) {
-				std::cerr << "\tSTACK AFTER: " << this->getCurrentMethodFrame()->operandStack->index << std::endl;
-			}
-#endif
-
 		}
 		catch (java::lang::Throwable::Throwable* e) // user defined exceptions
 		{
@@ -1546,12 +1542,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			}
 
 		}
-		catch (Exceptions::Exception e) // runtime exceptions
+		catch (Exceptions::Throwable e) // runtime exceptions
 		{
 			Class* classPtr = this->classMap->getClass(e.what());
 
 			byte* memory = this->heap->allocate(java::lang::Throwable::Throwable::getMemorySize());
 			java::lang::Throwable::Throwable* throwable = new(memory) java::lang::Throwable::Throwable(classPtr);
+
+			if (e.getMessage() != NULL)
+			{
+				byte* stringMemory = this->heap->allocate(java::lang::String::String::getMemorySize(strlen(e.getMessage())));
+				java::lang::String::String * string = new(stringMemory) java::lang::String::String(e.getMessage(), true);
+				size_t stringIndex = this->objectTable->insert(string);
+				throwable->fields->set(0, stringIndex);
+			}
 
 			if (!this->handleException(throwable))
 			{

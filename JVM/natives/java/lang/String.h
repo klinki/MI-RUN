@@ -17,6 +17,19 @@ namespace java
 				String(size_t length, Class* classPtr): ObjectHeader(classPtr),  Utf8String(length, true) {};
 				String(Utf8String & str, Class* classPtr);
 				String(const char* str, bool preallocated);
+				String(const String & copy): ObjectHeader(copy.objectClass), Utf8String(copy.dataLength, true) 
+				{
+					memcpy(this->data, copy.data, copy.dataLength);
+				}
+				
+				virtual ~String()
+				{
+				}
+
+				virtual void copyTo(byte* address)
+				{
+					new(address) String(*this);
+				}
 
 				static size_t getMemorySize(size_t items)
 				{

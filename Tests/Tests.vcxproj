@@ -180,6 +180,7 @@
     <ClCompile Include="MethodAreaTest.cpp" />
     <ClCompile Include="IntTest.cpp" />
     <ClCompile Include="OperandStackTest.cpp" />
+    <ClCompile Include="PermSpaceCollection.cpp" />
     <ClCompile Include="PushTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

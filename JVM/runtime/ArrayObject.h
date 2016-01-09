@@ -25,15 +25,25 @@ public:
 
 		this->arrayData = new(address) T[arraySize];
 		
-		for (int i = 0; i < arraySize; i++)
+		for (size_t i = 0; i < arraySize; i++)
 		{
 			this->arrayData[i] = defaultValue;
 		}
 	}
 
+	ArrayObject(const ArrayObject & copy): ArrayObject(copy.size, 0, copy.objectClass, NULL)
+	{
+		memcpy(this->arrayData, copy.arrayData, copy.size * sizeof(T));
+	}
+
 	~ArrayObject()
 	{
 		// DO NOT DELETE DATA HERE!!
+	}
+
+	virtual void copyTo(byte* address)
+	{
+		new(address) ArrayObject<T>(*this);
 	}
 
 	size_t getSize() const { return this->size; }

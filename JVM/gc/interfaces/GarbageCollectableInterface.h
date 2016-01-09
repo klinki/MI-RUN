@@ -4,5 +4,10 @@
 
 class GarbageCollectableInterface : public VisitableInterface, public FinalizableInterface
 {
-	
+public:
+	virtual void copyTo(byte* memory) = 0;
+	virtual bool preallocated()
+	{
+		return false;
+	}
 };

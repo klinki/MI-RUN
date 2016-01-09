@@ -25,7 +25,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -121,10 +121,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="classfile\ClassLoader.cpp" />
+    <ClCompile Include="gc\MS\Sweeper.cpp" />
+    <ClCompile Include="gc\PermSpaceHeap.cpp" />
+    <ClCompile Include="natives\java\io\FileInputStream.cpp" />
+    <ClCompile Include="natives\java\io\InputStream.cpp" />
+    <ClCompile Include="natives\java\io\FileOutputStream.cpp" />
     <ClCompile Include="gc\Baker\BakerGc.cpp" />
     <ClCompile Include="gc\MS\Marker.cpp" />
     <ClCompile Include="gc\ObjectTable.cpp" />
     <ClCompile Include="natives\helpers.cpp" />
+    <ClCompile Include="natives\java\io\OutputStream.cpp" />
     <ClCompile Include="natives\java\io\PrintStream.cpp" />
     <ClCompile Include="natives\java\lang\Array.cpp" />
     <ClCompile Include="natives\java\lang\Exception.cpp" />
@@ -135,23 +141,28 @@
     <ClCompile Include="natives\java\lang\Throwable.cpp" />
     <ClCompile Include="natives\natives.cpp" />
     <ClCompile Include="runtime\ClassMap.cpp" />
+    <ClCompile Include="natives\java\util\Scanner.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
     <ClCompile Include="utils\ArgumentsParser.cpp" />
     <ClCompile Include="runtime\ExceptionTable.cpp" />
     <ClCompile Include="runtime\ConstantPool.cpp" />
-    <ClCompile Include="gc\GarbageCollector.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="runtime\MethodFrame.cpp" />
     <ClCompile Include="runtime\Class.cpp" />
     <ClCompile Include="runtime\ExecutionEngine.cpp" />
     <ClCompile Include="gc\Heap.cpp" />
-    <ClCompile Include="runtime\Method.cpp" />
     <ClCompile Include="runtime\MethodArea.cpp" />
     <ClCompile Include="runtime\OperandStack.cpp" />
     <ClCompile Include="gc\TreadMillGc.cpp" />
+    <ClCompile Include="utils\debug.cpp" />
     <ClCompile Include="utils\Utf8String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gc\MS\Sweeper.h" />
+    <ClInclude Include="gc\PermSpaceHeap.h" />
+    <ClInclude Include="natives\java\io\FileInputStream.h" />
+    <ClInclude Include="natives\java\io\InputStream.h" />
+    <ClInclude Include="natives\java\io\FileOutputStream.h" />
     <ClInclude Include="gc\Baker\BakerGc.h" />
     <ClInclude Include="gc\debug\DebugVisitor.h" />
     <ClInclude Include="gc\interfaces\FinalizableInterface.h" />
@@ -166,6 +177,7 @@
     <ClInclude Include="natives\includes.h" />
     <ClInclude Include="natives\JavaObject.h" />
     <ClInclude Include="natives\JavaString.h" />
+    <ClInclude Include="natives\java\io\OutputStream.h" />
     <ClInclude Include="natives\java\io\PrintStream.h" />
     <ClInclude Include="natives\java\lang\Array.h" />
     <ClInclude Include="natives\java\lang\Exception.h" />
@@ -179,6 +191,7 @@
     <ClInclude Include="runtime\ClassMember.h" />
     <ClInclude Include="runtime\ClassMemberMap.h" />
     <ClInclude Include="runtime\ObjectHeader.h" />
+    <ClInclude Include="natives\java\util\Scanner.h" />
     <ClInclude Include="types\Descriptors.h" />
     <ClInclude Include="utils\ArgumentsParser.h" />
     <ClInclude Include="utils\debug.h" />
@@ -200,7 +213,6 @@
     <ClInclude Include="runtime\LocalVariablesArray.h" />
     <ClInclude Include="runtime\ExceptionTable.h" />
     <ClInclude Include="runtime\ConstantPool.h" />
-    <ClInclude Include="gc\GarbageCollector.h" />
     <ClInclude Include="runtime\MethodFrame.h" />
     <ClInclude Include="natives\Declarations.h" />
     <ClInclude Include="runtime\AccessFlags.h" />

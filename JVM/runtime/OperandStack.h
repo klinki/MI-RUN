@@ -1,7 +1,6 @@
 #pragma once
 #include "../utils/Array.h"
 #include "../types/types.h"
-#include "../gc/GarbageCollector.h"
 
 class OperandStack : public Array<word>
 {
@@ -28,8 +27,6 @@ public:
 
 	word & operator[] (size_t index);
 	const word & operator[] (size_t index) const;
-
-	friend class GarbageCollector;
 };
 
 class StackOverflowException {};

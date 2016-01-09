@@ -4,21 +4,31 @@
 #include "runtime/Runtime.h"
 #include "natives/java/lang/Throwable.h"
 #include "exceptions/RuntimeExceptions.h"
+#include "natives/java//lang/String.h"
 
 using namespace std;
 
 int main(int argc, const char * argv[])
 {
     int statusCode = 0;
-	Runtime * runtime = new Runtime();
-
+	Runtime * runtime = new Runtime(argc, argv);
+	
 	try
 	{
-		runtime->run(argc, argv);
+		runtime->run();
 	}
 	catch (java::lang::Throwable::Throwable* exc)
 	{
-		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString() << endl;
+		size_t messageIndex = exc->fields->get(0);
+
+		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString();
+		
+		if (messageIndex != 0) {
+			java::lang::String::String * str = (java::lang::String::String *)runtime->objectTable->get(messageIndex);
+			cerr << " message: " << str->toAsciiString();
+		}
+
+		cerr << endl;
 		exc->printStackTrace();
                 
 		statusCode = -1;
@@ -43,6 +53,6 @@ int main(int argc, const char * argv[])
 			4) run while loop with instructions switch
 	*/
 
-        delete runtime;
+    delete runtime;
 	return statusCode;
 }

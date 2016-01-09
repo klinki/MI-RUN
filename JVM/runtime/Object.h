@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include "Class.h"
 #include "Field.h"
 #include "LocalVariablesArray.h"
@@ -8,7 +9,7 @@
 class Object : public ObjectHeader
 {
 visibility:
-	LocalVariablesArray * fields;
+	LocalVariablesArray * fields = NULL;
 
 public:
 	Object(size_t fields, Class * objectClass, byte * address): 
@@ -18,7 +19,7 @@ public:
 		{
 			if (address == NULL)
 			{
-				address = (byte*)(this->fields + 1);
+				address = (byte*)(&this->fields + 1);
 			}
 
 			this->fields = new(address) LocalVariablesArray(fields, NULL);
@@ -31,6 +32,17 @@ public:
 		this->fields = new LocalVariablesArray(fields);
 	};
 
+	Object(const Object & source): Object(0, source.objectClass, NULL)
+	{
+		if (source.fields != NULL)
+		{
+			byte* address = (byte*)(&this->fields + 1);
+			this->fields = new(address) LocalVariablesArray(source.fields->allocatedSize, NULL);
+
+			memcpy(this->fields->allocatedArray, source.fields->allocatedArray, source.fields->allocatedSize);
+		}
+	}
+
 	Object(): ObjectHeader(NULL)
 	{
 	};
@@ -39,16 +51,25 @@ public:
 	{
 	};
 	
+	virtual void copyTo(byte* address)
+	{
+		new(address) Object(*this);
+	}
+
 	static size_t getMemorySize(size_t fields = 0)
 	{
-		return sizeof(Object) 
-			+ LocalVariablesArray::getMemorySize(fields) 
-			- sizeof(LocalVariablesArray); // already included in size;
+		return sizeof(Object)
+			+ LocalVariablesArray::getMemorySize(fields);
 	}
 
 	virtual void accept(ObjectVisitorInterface * visitor)
 	{
-		for (int i = 0; i < this->fields->index; i++)
+		if (this->fields == NULL)
+		{
+			return;
+		}
+
+		for (size_t i = 0; i < this->fields->allocatedSize; i++)
 		{
 			visitor->visit(this->fields->get(i));
 		}

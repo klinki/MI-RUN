@@ -24,14 +24,14 @@ namespace java
 				newClass->parentClass = NULL;
 				newClass->fullyQualifiedName = Utf8String("java/lang/Object");
 				
-				newClass->methodArea.addMethod(::getNativeMethod("<init>", "()V", &init));
-				newClass->methodArea.addMethod(::getNativeMethod("finalize", "()V", &finalize));
+				newClass->addMethod(::getNativeMethod("<init>", "()V", &init));
+				newClass->addMethod(::getNativeMethod("finalize", "()V", &finalize));
 
-				newClass->methodArea.addMethod(::getNativeMethod("toString", "()Ljava/lang/String;", &toString));
-				newClass->methodArea.addMethod(::getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
-				newClass->methodArea.addMethod(::getNativeMethod("equals", "(Ljava/lang/Object;)B", &equals));
+				newClass->addMethod(::getNativeMethod("toString", "()Ljava/lang/String;", &toString));
+				newClass->addMethod(::getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
+				newClass->addMethod(::getNativeMethod("equals", "(Ljava/lang/Object;)B", &equals));
 
-				newClass->methodArea.addMethod(::getNativeMethod("hashCode", "()I", &hashCode));
+				newClass->addMethod(::getNativeMethod("hashCode", "()I", &hashCode));
 		
 			/*
 				newClass->methodArea.addMethod(getNativeMethod("getClass", getMethodDescriptor(JavaType(TypeTag::REFERENCE, "java/lang/Class;")), (void*)&getClass));
@@ -48,13 +48,13 @@ namespace java
 			NATIVE_METHOD_HEADER(init)
 			{
 				// pointer is not object, but ref. to class
-				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				size_t index = engine->getCurrentMethodFrame()->operandStack->popReference();
 				Class* classPtr = (Class*)engine->objectTable->get(index);
 
 				size_t fields = classPtr->getHierarchicalCountNonStaticFields();
 				size_t size = ::Object::getMemorySize(fields);
 				unsigned char* memory = engine->heap->allocate(size);
-				::Object* objPtr = new(memory) ::Object(fields, classPtr);
+				::Object* objPtr = new(memory) ::Object(fields, classPtr, NULL);
 
 				engine->objectTable->updateAddress(index, objPtr);
 			}

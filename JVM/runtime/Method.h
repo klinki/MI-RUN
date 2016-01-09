@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <cstring>
 #include "ConstantPool.h"
 #include "../types/types.h"
 #include "ExceptionTable.h"
@@ -35,6 +36,15 @@ visibility:
 		this->initInputArgs();
 	}
 
+protected:
+	void resizeInputArgs()
+	{
+		TypeTag * newArray = new TypeTag[this->countIntputArgs];
+		memcpy(newArray, this->inputArgs, this->countIntputArgs * sizeof(*this->inputArgs));
+		delete[] this->inputArgs;
+		this->inputArgs = newArray;
+	}
+
 public:
 	Method() : Method(0) {};
 	Method(FLAG f) : ClassMember()
@@ -47,11 +57,22 @@ public:
 		this->byteCodeLength = 0;
 		this->exceptionTable = nullptr;
 		this->classPtr = nullptr;
-		this->inputArgs = nullptr;
+		this->inputArgs = new TypeTag[255];
 		this->countIntputArgs = 0;
 		this->inputArgsSize = 0;
 	};
-	~Method();
+	~Method()
+	{
+		delete[] this->byteCode;
+		this->byteCode = NULL;
+
+		delete[] this->inputArgs;
+		this->inputArgs = NULL;
+
+
+		delete this->exceptionTable;
+		this->exceptionTable = NULL;
+	}
 
 	bool isNative() const
 	{
@@ -75,7 +96,7 @@ public:
 
 	bool isSpecial() const
 	{
-		
+
 	}
 
 	bool isConstructor() const
@@ -83,13 +104,16 @@ public:
 		return false;
 	}
 
+	bool isAbstract() const
+	{
+		return (this->flags & (int)MethodAccessFlags::ABSTRACT) == (int)(MethodAccessFlags::ABSTRACT);
+	}
+
 	void initInputArgs()
 	{
 		std::string descr = this->descriptor.toAsciiString();
 
 		int i = 1;
-
-		this->inputArgs = new TypeTag[100];
 
 		int index = 0;
 
@@ -99,6 +123,7 @@ public:
 		{
 			switch (descr[i++])
 			{
+			case '[':
 			case 'L':
 				while (descr[i++] != ';');
 				this->inputArgs[index++] = TypeTag::REFERENCE;
@@ -120,6 +145,7 @@ public:
 		}
 
 		this->countIntputArgs = index;
+		this->resizeInputArgs();
 	}
 
 	friend class ClassLoader;

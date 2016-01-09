@@ -15,6 +15,25 @@ ConstantPool::ConstantPool(int size, Runtime* runtime)
 
 ConstantPool::~ConstantPool()
 {
+    java::lang::String::String * strPtr;
+    
+    for (size_t i = 0; i < this->constant_pool_count; i++)
+    {
+	switch(this->constantPool[i].tag)
+	{
+	    case ConstantPoolTag::CONSTANT_String:
+		strPtr = (java::lang::String::String *)this->constantPool[i].stringInfo.stringObject;
+		delete strPtr;
+		delete this->constantPool[i].stringInfo.value;
+		this->constantPool[i].stringInfo.value = NULL;
+		break;
+	    case ConstantPoolTag::CONSTANT_Utf8:
+		delete this->constantPool[i].utf8Info.string;
+		delete[] this->constantPool[i].utf8Info.bytes;
+		break;
+	}
+    }
+    
 	delete[] constantPool;
 }
 
@@ -84,7 +103,7 @@ int ConstantPool::add(int pos, int type, int length, char * data)
 					  (bits & 0x7fffff) | 0x800000;
 
 
-		Then the float value equals the result of the mathematical expression s · m · 2e-150*/
+		Then the float value equals the result of the mathematical expression s ï¿½ m ï¿½ 2e-150*/
 		//float v = (float)(data[0] * 256 * 256 * 256 + data[1] * 256 * 256 + data[2] * 256 + data[3]);
 		
 

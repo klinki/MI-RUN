@@ -10,6 +10,14 @@ class TestVisitor : public ObjectVisitorInterface
 public:
 	bool hasBeenCalled = false;
 
+	virtual void visit(ObjectHeader* header)
+	{
+	}
+
+	virtual void visit(word address)
+	{
+	}
+
 	virtual void visit(Object* object)
 	{
 		this->hasBeenCalled = true;

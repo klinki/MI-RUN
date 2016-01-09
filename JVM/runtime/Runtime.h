@@ -23,13 +23,18 @@ visibility:
 
 	Parameters parameters;
 
+	ArgumentsParser * parser;
+
 	const char* filePath;
 	int argsIndex = 0;
 
 public:
-	Runtime()
+	Runtime(int argc, const char** argv)
 	{
-		BakerGc * baker = new BakerGc(this, 10 * 1024, 50 * 1024 * 1024);
+		this->parser = new ArgumentsParser (this, argc, argv);
+		this->parser->setParameters();
+
+		BakerGc * baker = new BakerGc(this, this->parameters.EdenSpaceSize, this->parameters.PermSpaceSize);
 		this->heap = baker;
 		this->objectTable = baker;
 		this->classTable = new ClassMap();
@@ -37,14 +42,12 @@ public:
 		this->executionEngine = new ExecutionEngine(this);
 	}
 
-	void run(int argc, const char** argv)
+	void run()
 	{
-		ArgumentsParser parser(this, argc, argv);
-		parser.setParameters();
-
 		initializeNatives(this);
 		
-		Class* mainClass = this->classLoader->load(parser.getClassFile());
+		this->classLoader->init(this->parser->getClassFile());
+		Class* mainClass = this->classLoader->load(this->parser->getClassFile());
 		Method* mainMethod = mainClass->getMethod("main", "([Ljava/lang/String;)V");
 
 		if (mainMethod == NULL)
@@ -54,7 +57,7 @@ public:
 
 		mainMethod->classPtr = mainClass;
 
-		MethodFrame* frame = this->prepareFrame(mainMethod, parser.getArgumentsArray());
+		MethodFrame* frame = this->prepareFrame(mainMethod, parser->getArgumentsArray());
 		this->executionEngine->execute(frame);
 	}
 
@@ -80,5 +83,6 @@ public:
 		delete this->classTable;
 		delete this->classLoader;
 		delete this->executionEngine;
+		delete this->parser;
 	}
 };

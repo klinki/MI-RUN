@@ -36,10 +36,12 @@ namespace java
 				newClass->parentClass = classMap->getClass("java/lang/Object");
 				newClass->fullyQualifiedName = Utf8String("java/lang/String");
 
-				newClass->methodArea.addMethod(getNativeMethod("<init>", "()V", &init));
+				newClass->addMethod(getNativeMethod("<init>", "()V", &init));
 
-				newClass->methodArea.addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
-				newClass->methodArea.addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
+				newClass->addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
+				newClass->addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
+				newClass->addMethod(getNativeMethod("hashCode", "()I", &hashCode));
+				newClass->addMethod(getNativeMethod("length", "()I", &length));
 
 				return newClass;
 			}

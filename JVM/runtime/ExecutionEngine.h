@@ -70,7 +70,7 @@ public:
 	{
 		word value = this->getCurrentMethodFrame()->operandStack->pop();
 		int index = this->getCurrentMethodFrame()->operandStack->pop();
-		int ref = this->getCurrentMethodFrame()->operandStack->pop();
+		int ref = this->getCurrentMethodFrame()->operandStack->popReference();
 
 		if (ref == NULL)
 		{
@@ -212,12 +212,12 @@ public:
 		(*this->getCurrentMethodFrame()->localVariables)[index + 1] = low;
 	}
 
-	inline unsigned short getShort()
+	inline short getShort()
 	{
 		const Instruction * instructions = this->getCurrentMethodFrame()->method->getBytecode();
 		unsigned char HIGH = instructions[this->getCurrentMethodFrame()->pc++];
 		unsigned char LOW = instructions[this->getCurrentMethodFrame()->pc++];
-		unsigned short value = shortFromStack(HIGH, LOW);
+		short value = shortFromStack(HIGH, LOW);
 		return value;
 	}
 
@@ -419,7 +419,18 @@ public:
 
 			classPtr = this->classMap->getClass(Utf8String(className->utf8Info.bytes, className->utf8Info.length));
 
+			if (classPtr == nullptr) {
+				throw Errors::NoClassDefFoundError(("Class: " + std::string((char*)className->utf8Info.bytes) + " not found!").c_str());
+			}
+
 			methodPtr = classPtr->getMethod(Utf8String(name->utf8Info.bytes, name->utf8Info.length), Utf8String(descr->utf8Info.bytes, descr->utf8Info.length));
+
+			if (methodPtr == nullptr)
+			{
+				throw Errors::NoSuchMethodError((
+					"Method " + std::string((char*)className->utf8Info.bytes) + "::" + std::string((char*)name->utf8Info.bytes) 
+					+  std::string((char*)descr->utf8Info.bytes) +  " not found!").c_str());
+			}
 
 			if (classIndex == this->inlineCache.cpClassIndex)
 			{
@@ -428,9 +439,7 @@ public:
 			}
 		}
 
-//		methodPtr->classPtr = classPtr;
-
-		if (instruction == INVOKEVIRTUAL)
+		if (instruction == INVOKEVIRTUAL || instruction == INVOKEINTERFACE)
 		{
 			size_t inputArgsSize = methodPtr->inputArgsSize;
 			size_t stackSize = this->getCurrentMethodFrame()->operandStack->index - 1;
@@ -439,11 +448,7 @@ public:
 			void* ptr = this->objectTable->get(reference);
 
 			ObjectHeader* objectPtr = (ObjectHeader*)ptr;
-			Method* overloadedPtr = objectPtr->objectClass->getMethod(methodPtr->name, methodPtr->descriptor);
-
-//			overloadedPtr->classPtr = classPtr; // TODO: Verify this
-
-			return overloadedPtr;
+			methodPtr = objectPtr->objectClass->getMethod(methodPtr->name, methodPtr->descriptor);
 		}
 
 		return methodPtr;
@@ -464,6 +469,10 @@ public:
 
 		Field* field = (Field*)classPtr->getField(Utf8String(fieldName->utf8Info.bytes, fieldName->utf8Info.length), Utf8String(fieldType->utf8Info.bytes, fieldType->utf8Info.length));
 
+		if (field == nullptr) {
+			throw Errors::NoSuchMethodError(("Field " + std::string((char*)fieldName->utf8Info.bytes) + " " + std::string((char*)fieldType->utf8Info.bytes) + " not found!").c_str());
+		}
+
 		return field;
 	}
 
@@ -481,14 +490,20 @@ public:
 
 	inline MethodFrame* createMethodFrame(Method* method, Class* classPtr, Instruction currentInstruction)
 	{
-		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(method->operandStackSize, method->localVariablesArraySize + 1));
-		MethodFrame* newFrame = new (data) MethodFrame(method->operandStackSize, method->localVariablesArraySize + 1);
+		unsigned char* data = this->heap->allocate(MethodFrame::getMemorySize(
+			method->operandStackSize,
+			method->localVariablesArraySize)
+		);
+		MethodFrame* newFrame = new (data) MethodFrame(
+			method->operandStackSize, 
+			method->localVariablesArraySize,
+			this->getCurrentMethodFrame(),
+			classPtr->constantPool,
+			method,
+			nullptr
+		);
 
-		newFrame->method = method;
-		newFrame->constantPool = classPtr->constantPool;
-
-		method->initInputArgs();
-
+		// TODO: FIX THIS! 
 		size_t varPos = method->inputArgsSize;
 
 		if (currentInstruction == INVOKESTATIC)
@@ -523,13 +538,6 @@ public:
 		{
 			size_t reference = this->getCurrentMethodFrame()->operandStack->pop();
 			(*newFrame->localVariables)[0] = reference;
-
-			if (currentInstruction != INVOKESPECIAL)
-			{
-				void*ptr = this->objectTable->get(getReferenceAddress(reference));
-				ObjectHeader* referencePtr = (ObjectHeader*)ptr;
-				// newFrame->constantPool = referencePtr->objectClass->constantPool;
-			}
 		}
 
 		return newFrame;
@@ -540,5 +548,37 @@ public:
 	void dropCurrentFrame()
 	{
 		this->callStack->pop();
+	}
+
+	void invokeMethod(size_t constPoolIndex, Instruction currentInstruction)
+	{
+		Method* methodPtr = this->resolveMethod(constPoolIndex, currentInstruction);
+		Class* classPtr = methodPtr->classPtr;
+
+		if (methodPtr->isAbstract())
+		{
+			throw Errors::AbstractMethodError();
+		}
+
+		// damn, why is reference on the bottom of the stack :/
+		Object* reference = NULL;
+
+		if (methodPtr->nativeMethod != nullptr)
+		{
+			DEBUG_PRINT("Executing native method: %s - %s %s\n",
+				methodPtr->classPtr->fullyQualifiedName.toAsciiString(),
+				methodPtr->name.toAsciiString(),
+				methodPtr->descriptor.toAsciiString()
+				);
+
+			methodPtr->nativeMethod(reference, this);
+		}
+		else
+		{
+			MethodFrame* newFrame = this->createMethodFrame(methodPtr, classPtr, currentInstruction);
+			newFrame->parentFrame = this->getCurrentMethodFrame();
+			this->getCurrentMethodFrame()->childFrame = newFrame;
+			this->execute(newFrame);
+		}
 	}
 };

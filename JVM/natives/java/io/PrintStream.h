@@ -3,6 +3,8 @@
 #include "../../../runtime/Class.h"
 #include "../../../runtime/MethodFrame.h"
 #include "../../../runtime/ArrayObject.h"
+#include "FileOutputStream.h"
+#include "../../../types/types.h"
 
 class ClassMap;
 
@@ -13,15 +15,34 @@ namespace java
 		class PrintStream : public ObjectHeader
 		{
 			std::ostream * output;
+			::word outputStreamIndex;
+
 		public:
+			PrintStream(::word streamIndex, FileOutputStream::FileOutputStream * stream);
 			PrintStream(std::ostream * stream);
+			PrintStream(const PrintStream & copy) : PrintStream(copy.output) {}
 			~PrintStream();
+
+			virtual void copyTo(byte* address)
+			{
+				new(address) PrintStream(*this);
+			}
 
 			void close();
 			void flush();
 			void println();
-			void println(double d);
+
+			void println(double type);
+			void println(int value);
+
 			void println(const Utf8String & ref);
+
+			std::ostream & print(const Utf8String & ref);
+
+//			template <class T>
+			std::ostream & print(double type);
+			std::ostream & print(int value);
+
 			void write(java_byte);
 			void write(ArrayObject<java_byte> * arr);
 			void write(ArrayObject<java_byte> * arr, size_t offset, size_t length);
@@ -47,9 +68,15 @@ namespace java
 		{
 			Class* initialize(ClassMap* map);
 
+			NATIVE_METHOD_HEADER(initFromFileOutputStream);
 			NATIVE_METHOD_HEADER(printlnEmpty);
 			NATIVE_METHOD_HEADER(printlnString);
 			NATIVE_METHOD_HEADER(printlnDouble);
+			NATIVE_METHOD_HEADER(printlnInt);
+
+			NATIVE_METHOD_HEADER(printInt);
+			NATIVE_METHOD_HEADER(printDouble);
+			NATIVE_METHOD_HEADER(printString);
 		}
 	}
 }

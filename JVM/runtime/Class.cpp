@@ -3,7 +3,8 @@
 
 Class::~Class()
 {
-
+	delete this->constantPool;
+	delete this->staticVariablesValues;
 }
 
 Class::Class(FLAG flag): flags(flag) 

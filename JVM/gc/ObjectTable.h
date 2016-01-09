@@ -5,8 +5,11 @@
 
 class ObjectTable
 {
-protected:
+visibility:
+	size_t index = 0;
 	std::unordered_map<int, void*> hashMap;
+
+	virtual void remove(size_t index);
 public:
 	ObjectTable(size_t size = 10);
 	~ObjectTable();

@@ -1,9 +1,9 @@
 #pragma once
 enum Color
 {
-	WHITE = 1,
-	GREY = 2,
-	BLACK = 4,
+	WHITE = 1, // newly allocated
+	GREY = 2, // 
+	BLACK = 4, // reachable
 
 	BAKER_MOVED = 5
 };

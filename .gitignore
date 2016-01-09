@@ -3,6 +3,7 @@
 .idea
 *.iml
 *.class
+*.exe
 
 !/JavaProject/out/**/*class
 

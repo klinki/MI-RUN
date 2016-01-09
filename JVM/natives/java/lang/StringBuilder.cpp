@@ -51,9 +51,9 @@ namespace java
 				newClass->fullyQualifiedName = Utf8String("java/lang/StringBuilder");
 				newClass->countNonStaticFields = 1;
 
-				newClass->methodArea.addMethod(getNativeMethod("<init>", "()V", &init));
-				newClass->methodArea.addMethod(getNativeMethod("append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", &appendString));
-				newClass->methodArea.addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
+				newClass->addMethod(getNativeMethod("<init>", "()V", &init));
+				newClass->addMethod(getNativeMethod("append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", &appendString));
+				newClass->addMethod(getNativeMethod("toString", "()Ljava/lang/String;", &toString));
 
 				return newClass;
 			};

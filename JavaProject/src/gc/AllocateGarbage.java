@@ -9,7 +9,8 @@ public class AllocateGarbage
         System.out.println("Im going to allocate garbage");
 
         for (int i = 0; i < 100000; i++) {
-            double[] garbage = new double[500];
+            double[] garbage = new double[100];
+            garbage = new double[100];
         }
 
         System.out.println("I allocated ton of garbage and survived");

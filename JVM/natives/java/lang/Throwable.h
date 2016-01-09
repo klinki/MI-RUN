@@ -31,7 +31,8 @@ namespace java
 			NATIVE_METHOD_HEADER(initWithMessageAndThrowable);
 			
 			NATIVE_METHOD_HEADER(printStackTrace);
-
+			NATIVE_METHOD_HEADER(getMessage);
+			NATIVE_METHOD_HEADER(getCause);
 
 			static size_t getMemorySize()
 			{

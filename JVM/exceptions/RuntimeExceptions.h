@@ -8,7 +8,7 @@ namespace Exceptions
 	class name : public parent \
 	{\
 		public:\
-		name(): name(NULL, javaException) {}; \
+		name(): name("", javaException) {}; \
 		name(const char* message): name(message, javaException) {}; \
 		name(const char* message, const char* exception): parent(message, exception) {}; \
 	};
@@ -17,21 +17,26 @@ namespace Exceptions
 	{
 	protected:
 		std::string message;
-                std::string exceptionName;
+        std::string exceptionName;
 	public:
-		Throwable(): Throwable(NULL) {};
+		Throwable(): Throwable("") {};
 		Throwable(const char* message) : Throwable(message, "java/lang/Throwable") {}
 		Throwable(const char* message, const char* parent): exceptionName(parent), message(message) {};
 
 		const char* getMessage() 
 		{
+			if (message.length() == 0)
+			{
+				return NULL;
+			}
+
 			return message.c_str();
 		}
                 
-                const char* what()
-                {
-                    return exceptionName.c_str();
-                }
+        const char* what()
+        {
+            return exceptionName.c_str();
+        }
 	};
 
 	ExceptionClass(Exception, Throwable, "java/lang/Throwable");
@@ -47,6 +52,8 @@ namespace Exceptions
 		ExceptionClass(NegativeArraySizeException, RuntimeException, "java/lang/NegativeArraySizeException");
 		ExceptionClass(ArrayStoreException, RuntimeException, "java/lang/ArrayStoreException");
 		ExceptionClass(ClassCastException, RuntimeException, "java/lang/ClassCastException");
+
+		ExceptionClass(FileNotFoundException, Exception, "java/lang/FileNotFoundException");
 	}
 }
 
@@ -60,4 +67,5 @@ namespace Errors
 	ExceptionClass(UnsatisfiedLinkError, Error, "java/lang/UnsatisfiedLinkError");
 	ExceptionClass(LinkageError, Error, "java/lang/LinkageError");
 	ExceptionClass(NoClassDefFoundError, LinkageError, "java/lang/NoClassDefFoundError");
+	ExceptionClass(OutOfMemoryError, Error, "java/lang/OutOfMemoryError");
 }

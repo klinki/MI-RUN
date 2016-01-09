@@ -9,6 +9,8 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+#ifdef FIXED
+
 namespace Tests
 {
 	int finalizationCalled = 0;
@@ -168,3 +170,5 @@ namespace Tests
 
 	};
 }
+
+#endif

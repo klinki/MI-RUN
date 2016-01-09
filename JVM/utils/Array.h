@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdlib>
+#include <cstring>
 #include "Macros.h"
 #include "../types/types.h"
 
@@ -24,6 +25,8 @@ public:
 		this->allocatedArray = new T[size];
 		this->allocatedSize = size;
 		this->index = 0;
+
+		this->initialize();
 	}
 
 	Array(size_t size, byte * address)
@@ -32,6 +35,8 @@ public:
 		this->index = 0;
 		this->allocatedSize = size;
 		this->allocatedArray = (T*) (&this->allocatedArray + 1);//address;
+
+		this->initialize();
 	}
 
 	~Array()
@@ -42,6 +47,11 @@ public:
 		}
 
 		this->allocatedArray = NULL;
+	}
+
+	void initialize()
+	{
+		memset(this->allocatedArray, 0, sizeof(*this->allocatedArray) * this->allocatedSize);
 	}
 
 	void resize()

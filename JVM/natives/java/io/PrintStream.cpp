@@ -3,12 +3,32 @@
 #include "../../includes.h"
 #include "../lang/String.h"
 
+#define PRINT_METHOD_HEADER(name, method, type) NATIVE_METHOD_HEADER(name) \
+{ \
+	type value = engine->getCurrentMethodFrame()->operandStack->pop(); \
+	PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference()); \
+\
+	if (printStream == NULL)\
+	{\
+		throw Exceptions::Runtime::NullPointerException();\
+	}\
+\
+	printStream->method(value);\
+}
+
 using namespace TypeDescriptors;
+
 namespace java
 {
 	namespace io
 	{
 		static Class* printstClassPtr;
+
+		PrintStream::PrintStream(::word streamIndex, FileOutputStream::FileOutputStream * stream): 
+			PrintStream::PrintStream(stream->stream)
+		{
+			this->outputStreamIndex = streamIndex;
+		}
 
 		PrintStream::PrintStream(std::ostream * stream): ObjectHeader(printstClassPtr)
 		{
@@ -39,9 +59,29 @@ namespace java
 			*this->output << ref.toAsciiString() << std::endl;
 		}
 
-		void PrintStream::println(double d)
+		void PrintStream::println(double type)
 		{
-			*this->output << d << std::endl;
+			this->print(type) << std::endl;
+		}
+
+		void PrintStream::println(int type)
+		{
+			this->print(type) << std::endl;
+		}
+
+		std::ostream & PrintStream::print(const Utf8String & ref)
+		{
+			return *this->output << ref.toAsciiString();
+		}
+
+		std::ostream & PrintStream::print(int value)
+		{
+			return *this->output << value;
+		}
+
+		std::ostream & PrintStream::print(double type)
+		{
+			return *this->output << type;
 		}
 
 		void PrintStream::write(java_byte byte)
@@ -73,33 +113,55 @@ namespace java
 				aClass->classLoader = NULL;
 				aClass->fullyQualifiedName = "java/io/PrintStream";
 
-				aClass->methodArea.addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
-				aClass->methodArea.addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
+				aClass->addMethod(getNativeMethod("<init>", "(Ljava/io/OutputStream;)V", &initFromFileOutputStream));
+				aClass->addMethod(getNativeMethod("println", "()V", &printlnEmpty));
+				aClass->addMethod(getNativeMethod("println", "(D)V", &printlnDouble));
+				aClass->addMethod(getNativeMethod("println", "(Ljava/lang/String;)V", &printlnString));
+				aClass->addMethod(getNativeMethod("println", "(I)V", &printlnInt));
 
-				Class * filterOutputStream = new Class(0);
-				filterOutputStream->fullyQualifiedName = "java.io.FilterOutputStream";
-
-				Class * outputStream = new Class(0);
-				outputStream->fullyQualifiedName = "java/io/OutputStream";
-				outputStream->parentClass = objectClass;
+//				aClass->addMethod(getNativeMethod("print", "(D)V", &printDouble));
+				aClass->addMethod(getNativeMethod("print", "(I)V", &printInt));
+				aClass->addMethod(getNativeMethod("print", "(Ljava/lang/String;)V", &printString));
 
 				printstClassPtr = aClass;
 
 				return aClass;
 			};
 
+			NATIVE_METHOD_HEADER(initFromFileOutputStream)
+			{
+				size_t outputStreamIndex = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				FileOutputStream::FileOutputStream* outputStr = (FileOutputStream::FileOutputStream*)engine->objectTable->get(outputStreamIndex);
+
+				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
+				Class* classPtr = (Class*)engine->objectTable->get(index);
+
+				byte* memory = engine->heap->allocate(sizeof(FileOutputStream::FileOutputStream));
+				PrintStream* printStr = new(memory) PrintStream(outputStreamIndex, outputStr);
+
+				engine->objectTable->updateAddress(index, printStr);
+			}
+
 			NATIVE_METHOD_HEADER(printlnEmpty)
 			{
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 				printStream->println();
 			}
 			
 			NATIVE_METHOD_HEADER(printlnDouble)
 			{
 				double value = engine->getCurrentMethodFrame()->operandStack->pop2();
-				PrintStream * printStream = (PrintStream*)engine->getCurrentMethodFrame()->operandStack->pop();
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
 				printStream->println(value);
 			}
+
+			NATIVE_METHOD_HEADER(printlnInt)
+			{
+				int value = engine->getCurrentMethodFrame()->operandStack->pop();
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+				printStream->println(value);
+			}
+
 
 			NATIVE_METHOD_HEADER(printlnString)
 			{
@@ -116,17 +178,24 @@ namespace java
 				printStream->println(*string);
 			}
 
-			void println(::Object * obj, MethodFrame * frm)
+			NATIVE_METHOD_HEADER(printString)
 			{
-				
+				java::lang::String::String * string = (java::lang::String::String *)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+
+				//Utf8String
+				PrintStream * printStream = (PrintStream*)engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+
+				if (string == NULL || printStream == NULL)
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
+
+				printStream->print(*string);
 
 			}
 
-			void close(::Object *, MethodFrame *);
-			void flush(::Object *, MethodFrame *);
-			void write(::Object *, MethodFrame *);
-			void writeWithOffset(::Object *, MethodFrame *);
-			void writeSingleByte(::Object *, MethodFrame *);
+			PRINT_METHOD_HEADER(printInt, print, int)
+//			PRINT_METHOD_HEADER(printDouble, print, double)
 		}
 	}
 }

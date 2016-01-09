@@ -6,8 +6,9 @@
 #include "MethodArea.h"
 #include "LocalVariablesArray.h"
 #include "ClassMemberMap.h"
+#include "../gc/interfaces/GarbageCollectableInterface.h"
 
-class Class
+class Class : public GarbageCollectableInterface
 {
 public:
 visibility:
@@ -65,6 +66,27 @@ public:
 	bool implementsInterface(Class* parentInterface);
 
 	size_t getHierarchicalCountNonStaticFields();
+
+	virtual void accept(ObjectVisitorInterface * visitor)
+	{}
+
+	virtual void accept(ObjectVisitorInterface & visitor)
+	{}
+
+	virtual bool requiresFinalization()
+	{
+		return false;
+	}
+
+	virtual void copyTo(byte* memory)
+	{
+
+	}
+
+	virtual bool preallocated()
+	{
+		return true;
+	}
 
 	friend class ClassLoader;
 };

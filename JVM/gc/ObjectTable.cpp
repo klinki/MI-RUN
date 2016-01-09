@@ -11,10 +11,11 @@ ObjectTable::~ObjectTable()
 
 size_t ObjectTable::insert(void * obj)
 {
-	size_t index = this->hashMap.size();
 	this->hashMap.emplace(index, obj);
 
-	return index;
+	DEBUG_PRINT("Inserting object with address: %p to index: %d\n", obj, index);
+
+	return index++;
 }
 
 size_t ObjectTable::insert(void* ptr, bool systemObject)
@@ -30,4 +31,9 @@ Object * ObjectTable::get(size_t index)
 void ObjectTable::updateAddress(size_t index, void* newAddress)
 {
 	this->hashMap[index] = newAddress;
+}
+
+void ObjectTable::remove(size_t index)
+{
+	this->hashMap.erase(index);
 }

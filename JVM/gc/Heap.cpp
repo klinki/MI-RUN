@@ -1,4 +1,6 @@
 #include "Heap.h"
+#include "../exceptions/RuntimeExceptions.h"
+#include <sstream>
 
 Heap::Heap(): Heap(Heap::DEFAULT_HEAP_SIZE)
 {
@@ -26,6 +28,17 @@ void Heap::resize()
 
 unsigned char* Heap::allocate(size_t bytes)
 {
+	if ((bytes + this->usedBytes) > this->allocatedBytes)
+	{
+		std::ostringstream message;
+		message << "Tried to allocate: ";
+		message << bytes;
+		message << " bytes, but only ";
+		message << (this->allocatedBytes - this->usedBytes);
+		message << " free";
+		throw Errors::OutOfMemoryError(message.str().c_str());
+	}
+
 	unsigned char* data = this->freeMemory;
 	this->freeMemory += bytes;
 	this->usedBytes += bytes;

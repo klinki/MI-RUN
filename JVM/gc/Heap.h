@@ -15,7 +15,7 @@ protected:
 public:
 	Heap();
 	Heap(size_t size);
-	~Heap();
+	virtual ~Heap();
 
 	virtual unsigned char* allocate(size_t size);
 	virtual unsigned char* allocateOnSystemMemory(size_t size)
