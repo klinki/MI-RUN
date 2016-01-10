@@ -13,14 +13,19 @@ class PermSpaceHeap : public Heap
 	{
 		FreeListHeader * left = nullptr;
 		FreeListHeader * right = nullptr;
-		MemoryHeader * header = nullptr;
 		char* PADDING = nullptr; // pading for 16B memory alignment
-
-		FreeListHeader() {};
+		MemoryHeader * header = nullptr;
+		
+		FreeListHeader() 
+		{
+			this->left = this;
+			this->right = this;
+		};
 
 		FreeListHeader(size_t size)
 		{
-			this->header = new(&this->header + 1) MemoryHeader(size + sizeof(FreeListHeader));
+			this->header = new(&this->header + 1) MemoryHeader(size - sizeof(FreeListHeader) - sizeof(MemoryHeader));
+			this->header->size = size;
 			this->left = this;
 			this->right = this;
 		}
@@ -81,6 +86,7 @@ public:
 
 	virtual unsigned char* allocate(size_t size);
 
+	void addToFreeList(MemoryHeader * header);
 	void addToFreeList(FreeListHeader * header);
 
 	friend class BakerGc;

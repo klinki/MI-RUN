@@ -19,7 +19,7 @@ unsigned char* PermSpaceHeap::allocate(size_t size)
 	}
 
 	FreeListHeader * header = this->freeList;
-	size_t requiredSize = this->countAllocatedBlockSize(size);
+	size_t requiredSize = size;
 
 	FreeListHeader * selectedHeader = nullptr;
 
@@ -76,6 +76,24 @@ unsigned char* PermSpaceHeap::allocate(size_t size)
 	return (unsigned char*)selectedHeader;
 }
 
+void PermSpaceHeap::addToFreeList(MemoryHeader* header)
+{
+	size_t size = header->size;
+	PermSpaceHeap::FreeListHeader * freeListHeader = new(header) PermSpaceHeap::FreeListHeader(header->size);
+
+
+	int rem = size % BakerGc::MEMORY_ALIGNMENT;
+
+	if (rem != 0)
+	{
+		freeListHeader->header->size += BakerGc::MEMORY_ALIGNMENT - rem;
+	}
+
+	freeListHeader->header->size += sizeof(MemoryHeader);
+
+	this->addToFreeList(freeListHeader);
+}
+
 void PermSpaceHeap::addToFreeList(FreeListHeader * header)
 {
 	if (this->freeList == nullptr)
@@ -84,10 +102,15 @@ void PermSpaceHeap::addToFreeList(FreeListHeader * header)
 	}
 	else
 	{
-		if (this->lastInserted != nullptr)
+		if (this->lastInserted == nullptr)
+		{
+			this->lastInserted = header;
+			this->freeList->insertAfter(header);
+		}
+		else
 		{
 			size_t size = this->lastInserted->header->size;
-			char* lastInsertedNext = (char*) this->lastInserted->header->data + size;
+			char* lastInsertedNext = (char*) this->lastInserted + size;
 
 			size_t diff = (char*)header - lastInsertedNext;
 

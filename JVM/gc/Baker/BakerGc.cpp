@@ -120,7 +120,13 @@ size_t BakerGc::countAllocatedBlockSize(size_t size)
 {
 	int totalAllocated = size + sizeof(MemoryHeader);
 
-	int slots = totalAllocated / MEMORY_ALIGNMENT + 1;
+	int slots = totalAllocated / MEMORY_ALIGNMENT;
+
+	if (totalAllocated % MEMORY_ALIGNMENT != 0)
+	{
+		slots++;
+	}
+
 	size_t bytesAllocated = slots * MEMORY_ALIGNMENT;
 
 	return bytesAllocated;
@@ -267,7 +273,13 @@ void BakerGc::finalize(Heap* slot)
 		}
 
 		ptr += size;
-		ptr += MEMORY_ALIGNMENT - (size % MEMORY_ALIGNMENT);
+
+		int rem = size % BakerGc::MEMORY_ALIGNMENT;
+
+		if (rem != 0)
+		{
+			ptr += BakerGc::MEMORY_ALIGNMENT - rem;
+		}
 	}
 }
 

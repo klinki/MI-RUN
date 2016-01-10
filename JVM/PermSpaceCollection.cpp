@@ -23,7 +23,7 @@ namespace Tests
 			BakerGc * baker = new BakerGc(youngSize, oldSize);
 			runtime->objectTable = baker;
 			runtime->heap = baker;
-
+			runtime->classTable = new ClassMap();
 			runtime->classTable->addClass(java::lang::Object::initialize());
 
 			return runtime;
@@ -154,6 +154,8 @@ namespace Tests
 			{
 				ArrayObject<double> * arrayObject = new(baker->allocateOnPermanentSpace(arraySize)) ArrayObject<double>(100, 0.0, java::lang::Array::initialize(runtime->classTable), nullptr);
 				size_t key = baker->insert(arrayObject);
+				totalMemorySize -= arraySize;
+
 
 				if (!compacting && i++ % 2 == 0 && index < countObjectFields)
 				{
@@ -161,15 +163,12 @@ namespace Tests
 				}
 			}
 
-			baker->fullCollect();
-
-			// TEST FREE LIST NOW 
 			return runtime;
 		}
 		
 		TEST_METHOD(testCompacting)
 		{
-			Runtime* runtime = this->allocateGarbageOnPermSpace();
+			Runtime* runtime = this->allocateGarbageOnPermSpace(true);
 			BakerGc* baker = (BakerGc*)runtime->heap;
 
 			baker->fullCollect();
@@ -182,7 +181,7 @@ namespace Tests
 			// allocate array, do not store anywher
 			// .....
 			// ....
-			Runtime* runtime = this->allocateGarbageOnPermSpace(true);
+			Runtime* runtime = this->allocateGarbageOnPermSpace(false);
 			BakerGc* baker = (BakerGc*)runtime->heap;
 
 			baker->fullCollect();
