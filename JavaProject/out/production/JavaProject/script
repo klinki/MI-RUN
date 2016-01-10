@@ -1,0 +1,11 @@
+!#/bin/bash
+
+find . -name '*.class' | while read line; do
+    echo "Processing file '$line'";
+    classFile=$(echo $line | awk -F "/" '{ print $NF }');
+    echo "JVM: "
+    ./jvm $line
+    echo "Valgrind"	
+    valgrind --leak-check=full --track-origins=yes -v ./jvm $line 2> "./valgrind/$classFile.log"
+done
+
