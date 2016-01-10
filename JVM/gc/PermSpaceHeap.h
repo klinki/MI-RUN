@@ -9,25 +9,21 @@ class Sweeper;
 
 class PermSpaceHeap : public Heap
 {
-	struct FreeListHeader
+	struct FreeListHeader : MemoryHeader
 	{
 		FreeListHeader * left = nullptr;
 		FreeListHeader * right = nullptr;
-		char* PADDING = nullptr; // pading for 16B memory alignment
-		MemoryHeader * header = nullptr;
 		
-		FreeListHeader() 
+		FreeListHeader(): FreeListHeader(0)
 		{
-			this->left = this;
-			this->right = this;
 		};
 
-		FreeListHeader(size_t size)
+		FreeListHeader(size_t size): MemoryHeader(size - sizeof(FreeListHeader) - sizeof(MemoryHeader))
 		{
-			this->header = new(&this->header + 1) MemoryHeader(size - sizeof(FreeListHeader) - sizeof(MemoryHeader));
-			this->header->size = size;
+			this->size = size;
 			this->left = this;
 			this->right = this;
+			this->accessCounter = Color::FREE_REGION;
 		}
 
 		void updateLeft(void* address)

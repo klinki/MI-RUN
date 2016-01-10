@@ -14,10 +14,12 @@ Sweeper::~Sweeper()
 
 void Sweeper::sweep(void* address)
 {
-	char* ptr = (char*)address;
-	char* endPtr = (char*)this->heap->freeList;
+	this->heap->freeList = nullptr;
 
-	while (ptr != endPtr)
+	char* ptr = (char*)address;
+	char* endPtr = (char*)address + this->heap->allocatedBytes;
+
+	while (ptr < endPtr)
 	{
 		MemoryHeader * header = (MemoryHeader*) ptr;
 		size_t size = header->size;
