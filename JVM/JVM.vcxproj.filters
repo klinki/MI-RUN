@@ -109,6 +109,9 @@
     <ClCompile Include="gc\PermSpaceHeap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PermSpaceCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classfile\ClassFile.h">
@@ -325,6 +328,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gc\PermSpaceHeap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PermSpaceCollection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

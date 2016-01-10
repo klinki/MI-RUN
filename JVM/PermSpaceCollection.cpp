@@ -1,10 +1,10 @@
-#include "stdafx.h"
-#include "CppUnitTest.h"
 #include "../JVM/runtime/Runtime.h"
 #include "../JVM/natives/java/lang/Object.h"
 #include "../JVM/natives/java/lang/Array.h"
 
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+#define TEST_METHOD(name) void name()
+
+
 
 namespace Tests
 {
@@ -14,8 +14,9 @@ namespace Tests
 		finalizationCalled++;
 	}
 
-	TEST_CLASS(PermSpaceCollection)
+	class PermSpaceCollection
 	{
+	public:
 		Runtime * prepare(size_t youngSize = 10 * 1024, size_t oldSize = 10 * 1024)
 		{
 			const char * argv[] = {"test", "test2"};
@@ -83,7 +84,7 @@ namespace Tests
 
 			baker->switchMemorySlot();
 
-			Assert::AreEqual(3, finalizationCalled);
+			//Assert::AreEqual(3, finalizationCalled);
 		}
 
 		TEST_METHOD(testFinalizationByteCode)
@@ -195,4 +196,11 @@ namespace Tests
 		}
 
 	};
+}
+
+
+void run()
+{
+	Tests::PermSpaceCollection * test = new Tests::PermSpaceCollection();
+	test->testNonCompactingCollection();
 }
