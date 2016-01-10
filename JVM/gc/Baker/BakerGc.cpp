@@ -32,6 +32,8 @@ BakerGc::~BakerGc()
 	delete this->memorySlots[0];
 	delete this->memorySlots[1];
 	delete this->permanentSpace;
+	delete this->marker;
+	delete this->sweeper;
 }
 
 void BakerGc::visit(MethodFrame* methodFrame)
