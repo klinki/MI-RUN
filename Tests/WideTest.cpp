@@ -14,8 +14,8 @@ namespace Tests
 
 		TEST_METHOD(testWideILOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng(new Runtime());
+			Method m = getMethod();
 
 			int expected = 0x0BAFBAF;
 			int index = 1024;
@@ -40,8 +40,8 @@ namespace Tests
 
 		TEST_METHOD(testWideFLOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float expected = (float)3.14159265359;
 
@@ -67,8 +67,8 @@ namespace Tests
 
 		TEST_METHOD(testWideLLOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long expected = 0xBAFFEEDBEEF;
 			int index = 1024;
@@ -98,8 +98,8 @@ namespace Tests
 
 		TEST_METHOD(testWideDLOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double expected = (double)3.14159265359;
 
@@ -129,8 +129,8 @@ namespace Tests
 
 		TEST_METHOD(testWideALOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = (int)&m;
 
@@ -157,8 +157,8 @@ namespace Tests
 
 		TEST_METHOD(testWideISTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = 0x0BAFBAF;
 			int index = 1024;
@@ -183,8 +183,8 @@ namespace Tests
 
 		TEST_METHOD(testWideFSTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float expected = (float)3.14159265359;
 
@@ -210,8 +210,8 @@ namespace Tests
 
 		TEST_METHOD(testWideLSTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long expected = 0xBAFFEEDBEEF;
 			int index = 1024;
@@ -239,8 +239,8 @@ namespace Tests
 
 		TEST_METHOD(testWideDSTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double expected = (double)3.14159265359;
 
@@ -269,8 +269,8 @@ namespace Tests
 
 		TEST_METHOD(testWideASTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = (int)&m;
 
@@ -296,8 +296,8 @@ namespace Tests
 
 		TEST_METHOD(testIINCWideIndexAndValue)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = 0x0BAFBAF;
 			int increment = 1024;
@@ -327,8 +327,8 @@ namespace Tests
 		TEST_METHOD(testWideRET)
 		{
 			const int byteCodeLength = 70000;
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xCAFEBABD;
 			int b = 1;

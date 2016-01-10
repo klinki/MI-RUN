@@ -14,8 +14,8 @@ namespace Tests
 
 		TEST_METHOD(testACONST_NULL)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			m.byteCode = new Instruction[1];
 			MethodFrame frm(1, 1);
 			frm.method = &m;
@@ -36,8 +36,8 @@ namespace Tests
 
 		TEST_METHOD(testICONST)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			m.byteCode = new Instruction[1];
 			MethodFrame frm(1, 1);
 			frm.method = &m;
@@ -63,8 +63,8 @@ namespace Tests
 
 		TEST_METHOD(testFCONST)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			m.byteCode = new Instruction[1];
 			MethodFrame frm(1, 1);
 			frm.method = &m;
@@ -89,8 +89,8 @@ namespace Tests
 
 		TEST_METHOD(testLCONST)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			m.byteCode = new Instruction[1];
 			MethodFrame frm(2, 2);
 			frm.method = &m;
@@ -119,8 +119,8 @@ namespace Tests
 
 		TEST_METHOD(testDCONST)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			m.byteCode = new Instruction[1];
 			MethodFrame frm(2, 2);
 			frm.method = &m;

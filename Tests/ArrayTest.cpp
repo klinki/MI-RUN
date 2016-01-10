@@ -18,7 +18,7 @@ namespace Tests
 			ExecutionEngine * eng = new ExecutionEngine();
 			eng->heap = new Heap();
 			eng->objectTable = new ObjectTable();
-			Method m;
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[2];
 			m.byteCode[0] = (Instruction)InstructionSet::NEWARRAY;
@@ -95,7 +95,7 @@ namespace Tests
 			ExecutionEngine * eng = new ExecutionEngine();
 			eng->heap = new Heap();
 			eng->objectTable = new ObjectTable();
-			Method m;
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[2];
 			m.byteCode[0] = (Instruction)InstructionSet::NEWARRAY;
@@ -128,10 +128,10 @@ namespace Tests
 		{
 			int arraySize = 10;
 
-			ExecutionEngine eng;
+			ExecutionEngine eng = getEngine();
 			eng.heap = new Heap();
 			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0, eng.heap);
-			Method m;
+			Method m = getMethod();
 
 			int arrayIndex = 1;
 
@@ -157,10 +157,10 @@ namespace Tests
 		{
 			int arraySize = 10;
 
-			ExecutionEngine eng;
+			ExecutionEngine eng = getEngine();
 			eng.heap = new Heap();
 			eng.objectTable = this->getObjectTableWithArray<int>(arraySize, 0, eng.heap);
-			Method m;
+			Method m = getMethod();
 
 			int arrayIndex = 1;
 
@@ -184,10 +184,10 @@ namespace Tests
 			long long value = UINT_MAX + 1024;
 			int arraySize = 10;
 
-			ExecutionEngine eng;
+			ExecutionEngine eng = getEngine();
 			eng.heap = new Heap();
 			eng.objectTable = this->getObjectTableWithArray<long long>(arraySize, 0, eng.heap);
-			Method m;
+			Method m = getMethod();
 
 			int arrayIndex = 9;
 			int arrPtr = 1;
@@ -217,10 +217,10 @@ namespace Tests
 			double value = 3.14;
 			int arraySize = 10;
 
-			ExecutionEngine eng;
+			ExecutionEngine eng = getEngine();
 			eng.heap = new Heap();
 			eng.objectTable = this->getObjectTableWithArray<double>(arraySize, value, eng.heap);
-			Method m;
+			Method m = getMethod();
 
 			int arrayIndex = 1;
 
@@ -247,7 +247,7 @@ namespace Tests
 			ExecutionEngine * eng = new ExecutionEngine();
 			eng->heap = new Heap();
 			eng->objectTable = new ObjectTable();
-			Method m;
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[4];
 			m.byteCode[0] = (Instruction)InstructionSet::MULTIANEWARRAY;

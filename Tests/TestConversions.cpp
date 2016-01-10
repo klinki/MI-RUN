@@ -12,8 +12,8 @@ namespace Tests
 	public:
 		TEST_METHOD(I2L)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int value = 0x0BAFBAF;
 
@@ -37,8 +37,8 @@ namespace Tests
 
 		TEST_METHOD(I2B)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int value = 0x0BAFBAF;
 
@@ -62,8 +62,8 @@ namespace Tests
 
 		TEST_METHOD(I2C)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int value = 0x0BAFBAF;
 
@@ -86,8 +86,8 @@ namespace Tests
 
 		TEST_METHOD(I2S)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int value = 0x0BAFBAF;
 
@@ -110,8 +110,8 @@ namespace Tests
 
 		TEST_METHOD(I2F)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int value = 0x0BAFBAF;
 
@@ -134,8 +134,8 @@ namespace Tests
 
 		TEST_METHOD(I2D)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int value = 0x0BAFBAF;
 
@@ -167,8 +167,8 @@ namespace Tests
 
 		TEST_METHOD(F2D)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float value = 3.14159265359F;
 
@@ -194,8 +194,8 @@ namespace Tests
 
 		TEST_METHOD(F2I)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float value = 3.14159265359F;
 
@@ -218,8 +218,8 @@ namespace Tests
 
 		TEST_METHOD(F2L)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float value = (float)(INT_MAX) + 1;
 
@@ -244,8 +244,8 @@ namespace Tests
 
 		TEST_METHOD(D2I)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double value = 3.14159265359;
 			int high = highWord(value);
@@ -271,8 +271,8 @@ namespace Tests
 
 		TEST_METHOD(D2L)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double value = (double)INT_MAX + 3.14159265359;
 
@@ -296,8 +296,8 @@ namespace Tests
 
 		TEST_METHOD(D2F)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double value = 3.14159265359;
 			int high = highWord(value);
@@ -324,8 +324,8 @@ namespace Tests
 
 		TEST_METHOD(L2I)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long value = (long long)INT_MAX + 1;
 
@@ -348,8 +348,8 @@ namespace Tests
 
 		TEST_METHOD(L2D)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long value = (long long)INT_MAX + 1;
 			int high = highWord(value);
@@ -376,8 +376,8 @@ namespace Tests
 
 		TEST_METHOD(L2F)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long value = (long long)INT_MAX + 1;
 

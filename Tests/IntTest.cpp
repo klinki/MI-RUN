@@ -11,8 +11,8 @@ namespace Tests
 	public:
 		TEST_METHOD(testIMUL)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
 			int b[] = { 0, 1, -1, INT_MAX, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
@@ -41,8 +41,8 @@ namespace Tests
 
 		TEST_METHOD(testIDivByZero)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::IDIV;
@@ -61,8 +61,8 @@ namespace Tests
 
 		TEST_METHOD(testIDIV)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::IDIV;
@@ -85,8 +85,8 @@ namespace Tests
 
 		TEST_METHOD(testIREM)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::IREM;
@@ -109,8 +109,8 @@ namespace Tests
 
 		TEST_METHOD(testIRemByZero)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::IREM;
@@ -129,8 +129,8 @@ namespace Tests
 
 		TEST_METHOD(testIADD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
 			int b[] = { 0, -1, 1, INT_MIN, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
@@ -159,8 +159,8 @@ namespace Tests
 
 		TEST_METHOD(testISUB)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
 			int b[] = { 0, -1, 1, INT_MIN, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
@@ -189,8 +189,8 @@ namespace Tests
 
 		TEST_METHOD(testINEG)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a[] = { 1, -1, INT_MAX, INT_MIN };
 
@@ -218,8 +218,8 @@ namespace Tests
 
 		TEST_METHOD(testISHL)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 1;
 
@@ -247,8 +247,8 @@ namespace Tests
 
 		TEST_METHOD(testISHR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 1 << 32;
 
@@ -276,8 +276,8 @@ namespace Tests
 
 		TEST_METHOD(testIUSHR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 1 << 32;
 
@@ -305,8 +305,8 @@ namespace Tests
 
 		TEST_METHOD(testIAND)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = INT_MAX;
 
@@ -334,8 +334,8 @@ namespace Tests
 
 		TEST_METHOD(testIOR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0x0BAFBAF;
 			int b = 0xEEAABBEE;
@@ -361,8 +361,8 @@ namespace Tests
 
 		TEST_METHOD(testIXOR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			int a = 0x0BAFBAF;
 			int b = 0xEEAABBEE;
 
@@ -387,8 +387,8 @@ namespace Tests
 
 		TEST_METHOD(testIINC)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = 0x0BAFBAF;
 			int increment = 255;

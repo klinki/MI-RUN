@@ -19,8 +19,7 @@ namespace Tests
 	public:
 		Runtime * prepare(size_t youngSize = 10 * 1024, size_t oldSize = 10 * 1024)
 		{
-			const char * argv[] = {"test", "test2"};
-			Runtime* runtime = new Runtime(2, argv);
+			Runtime* runtime = new Runtime();
 			BakerGc * baker = new BakerGc(youngSize, oldSize);
 			runtime->objectTable = baker;
 			runtime->heap = baker;
@@ -201,6 +200,6 @@ namespace Tests
 
 void run()
 {
-	Tests::PermSpaceCollection * test = new Tests::PermSpaceCollection();
-	test->testNonCompactingCollection();
+	Tests::PermSpaceCollection test;
+	test.testNonCompactingCollection();
 }

@@ -14,8 +14,8 @@ namespace Tests
 
 		TEST_METHOD(testILOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			
 			int expected = 0x0BAFBAF;
 
@@ -36,8 +36,8 @@ namespace Tests
 
 		TEST_METHOD(testFLOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float expected = (float)3.14159265359;
 
@@ -58,8 +58,8 @@ namespace Tests
 
 		TEST_METHOD(testLLOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long expected = 0xBAFFEEDBEEF;
 
@@ -85,8 +85,8 @@ namespace Tests
 
 		TEST_METHOD(testDLOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double expected = (double)3.14159265359;
 
@@ -111,8 +111,8 @@ namespace Tests
 
 		TEST_METHOD(testALOAD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = (int)&m;
 

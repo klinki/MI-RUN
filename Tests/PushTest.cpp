@@ -12,8 +12,8 @@ namespace Tests
 
 		TEST_METHOD(testBIPUSH)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = 125;
 
@@ -34,8 +34,8 @@ namespace Tests
 
 		TEST_METHOD(testSIPUSH)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = 256;
 

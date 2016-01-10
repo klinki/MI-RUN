@@ -11,8 +11,8 @@ namespace Tests
 	public:
 		TEST_METHOD(testLMUL)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a[] = { 0, 1, -1, LLONG_MAX, -1, LLONG_MIN, INT_MAX, UINT_MAX};
 			long long b[] = { 0, 1, -1, LLONG_MAX, LLONG_MAX, LLONG_MIN, INT_MAX, UINT_MAX };
@@ -41,8 +41,8 @@ namespace Tests
 
 		TEST_METHOD(testLDivByZero)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::LDIV;
@@ -61,8 +61,8 @@ namespace Tests
 
 		TEST_METHOD(testLDIV)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::LDIV;
@@ -85,8 +85,8 @@ namespace Tests
 
 		TEST_METHOD(testLREM)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::LREM;
@@ -109,8 +109,8 @@ namespace Tests
 
 		TEST_METHOD(testLRemByZero)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::LREM;
@@ -129,8 +129,8 @@ namespace Tests
 
 		TEST_METHOD(testLADD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
 			long long b[] = { 0, -1, 1, INT_MIN, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
@@ -159,8 +159,8 @@ namespace Tests
 
 		TEST_METHOD(testLSUB)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a[] = { 0, 1, -1, INT_MAX, -1, INT_MIN, SHRT_MAX, USHRT_MAX };
 			long long b[] = { 0, -1, 1, INT_MIN, INT_MAX, INT_MIN, SHRT_MAX, USHRT_MAX };
@@ -189,8 +189,8 @@ namespace Tests
 
 		TEST_METHOD(testLNEG)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a[] = { 1, -1, INT_MAX, INT_MIN };
 
@@ -218,8 +218,8 @@ namespace Tests
 
 		TEST_METHOD(testLSHL)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a = 1;
 
@@ -247,8 +247,8 @@ namespace Tests
 
 		TEST_METHOD(testLSHR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a = 1 << 64;
 
@@ -276,8 +276,8 @@ namespace Tests
 
 		TEST_METHOD(testLUSHR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a = 1 << 64;
 
@@ -305,8 +305,8 @@ namespace Tests
 
 		TEST_METHOD(testLAND)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a = LLONG_MAX;;
 
@@ -334,8 +334,8 @@ namespace Tests
 
 		TEST_METHOD(testLOR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long a = 0x0BAFBAF;
 			long long b = 0xEEAABBEE;
@@ -361,8 +361,8 @@ namespace Tests
 
 		TEST_METHOD(testLXOR)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 			long long a = 0x0BAFBAF;
 			long long b = 0xEEAABBEE;
 
