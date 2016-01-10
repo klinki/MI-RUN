@@ -1,0 +1,670 @@
+Allocating object of size: 20 to 16 aligned size: 48 on EDEN space
+Allocated memory with address: 007A3318, data start at address: 007A3328
+Inserting object with address: 007A3328 to index: 4
+Allocating object of size: 104 to 16 aligned size: 128 on EDEN space
+Allocated memory with address: 007A3348, data start at address: 007A3358
+
+INSIDE METHOD: inheritance/Child::main
+Method stack size: 3, local variables size: 5Inserting object with address: 007A3358 to index: 5
+NEW                 		STACK SIZE: 0
+Inserting object with address: 007BE118 to index: 6
+DUP                 		STACK SIZE: 1
+INVOKESPECIAL       		STACK SIZE: 2
+Allocating object of size: 164 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A33C8, data start at address: 007A33D8
+INSIDE METHOD: inheritance/Child::<init>
+Method stack size: 2, local variables size: 1Inserting object with address: 007A33D8 to index: 7
+	ALOAD_0             		STACK SIZE: 0
+	INVOKESPECIAL       		STACK SIZE: 1
+Allocating object of size: 164 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3488, data start at address: 007A3498
+INSIDE METHOD: inheritance/Parent::<init>
+Method stack size: 2, local variables size: 1Inserting object with address: 007A3498 to index: 8
+		ALOAD_0             		STACK SIZE: 0
+		INVOKESPECIAL       		STACK SIZE: 1
+Executing native method: java/lang/Object - <init> ()V
+Allocating object of size: 44 to 16 aligned size: 64 on EDEN space
+Allocated memory with address: 007A3548, data start at address: 007A3558
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDCB0 to index: 9
+		PUTFIELD            		STACK SIZE: 2
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDCF8 to index: 10
+		PUTFIELD            		STACK SIZE: 2
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007E3F58 to index: 11
+		PUTFIELD            		STACK SIZE: 2
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007E40C0 to index: 12
+		PUTFIELD            		STACK SIZE: 2
+		RETURN              		STACK SIZE: 0
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2FA0 to index: 13
+	PUTFIELD            		STACK SIZE: 2
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D3030 to index: 14
+	PUTFIELD            		STACK SIZE: 2
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D3078 to index: 15
+	PUTFIELD            		STACK SIZE: 2
+	RETURN              		STACK SIZE: 0
+ASTORE_1            		STACK SIZE: 1
+NEW                 		STACK SIZE: 0
+Inserting object with address: 007BE9B8 to index: 16
+DUP                 		STACK SIZE: 1
+INVOKESPECIAL       		STACK SIZE: 2
+Allocating object of size: 164 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3588, data start at address: 007A3598
+INSIDE METHOD: inheritance/Parent::<init>
+Method stack size: 2, local variables size: 1Inserting object with address: 007A3598 to index: 17
+	ALOAD_0             		STACK SIZE: 0
+	INVOKESPECIAL       		STACK SIZE: 1
+Executing native method: java/lang/Object - <init> ()V
+Allocating object of size: 32 to 16 aligned size: 64 on EDEN space
+Allocated memory with address: 007A3648, data start at address: 007A3658
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDCB0 to index: 18
+	PUTFIELD            		STACK SIZE: 2
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDCF8 to index: 19
+	PUTFIELD            		STACK SIZE: 2
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007E3F58 to index: 20
+	PUTFIELD            		STACK SIZE: 2
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007E40C0 to index: 21
+	PUTFIELD            		STACK SIZE: 2
+	RETURN              		STACK SIZE: 0
+ASTORE_2            		STACK SIZE: 1
+NEW                 		STACK SIZE: 0
+Inserting object with address: 007BE118 to index: 22
+DUP                 		STACK SIZE: 1
+INVOKESPECIAL       		STACK SIZE: 2
+Allocating object of size: 164 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3688, data start at address: 007A3698
+INSIDE METHOD: inheritance/Child::<init>
+Method stack size: 2, local variables size: 1Inserting object with address: 007A3698 to index: 23
+	ALOAD_0             		STACK SIZE: 0
+	INVOKESPECIAL       		STACK SIZE: 1
+Allocating object of size: 164 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3748, data start at address: 007A3758
+INSIDE METHOD: inheritance/Parent::<init>
+Method stack size: 2, local variables size: 1Inserting object with address: 007A3758 to index: 24
+		ALOAD_0             		STACK SIZE: 0
+		INVOKESPECIAL       		STACK SIZE: 1
+Executing native method: java/lang/Object - <init> ()V
+Allocating object of size: 44 to 16 aligned size: 64 on EDEN space
+Allocated memory with address: 007A3808, data start at address: 007A3818
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDCB0 to index: 25
+		PUTFIELD            		STACK SIZE: 2
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDCF8 to index: 26
+		PUTFIELD            		STACK SIZE: 2
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007E3F58 to index: 27
+		PUTFIELD            		STACK SIZE: 2
+		ALOAD_0             		STACK SIZE: 0
+		LDC                 		STACK SIZE: 1
+Inserting object with address: 007E40C0 to index: 28
+		PUTFIELD            		STACK SIZE: 2
+		RETURN              		STACK SIZE: 0
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2FA0 to index: 29
+	PUTFIELD            		STACK SIZE: 2
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D3030 to index: 30
+	PUTFIELD            		STACK SIZE: 2
+	ALOAD_0             		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D3078 to index: 31
+	PUTFIELD            		STACK SIZE: 2
+	RETURN              		STACK SIZE: 0
+ASTORE_3            		STACK SIZE: 1
+GETSTATIC           		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Allocating object of size: 160 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3848, data start at address: 007A3858
+INSIDE METHOD: inheritance/Child::greet
+Method stack size: 1, local variables size: 1Inserting object with address: 007A3858 to index: 32
+	LDC                 		STACK SIZE: 0
+Inserting object with address: 007D31E0 to index: 33
+	ARETURN             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+GETSTATIC           		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Allocating object of size: 160 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3908, data start at address: 007A3918
+INSIDE METHOD: inheritance/Child::getMyPrivates
+Method stack size: 1, local variables size: 1Inserting object with address: 007A3918 to index: 34
+	ALOAD_0             		STACK SIZE: 0
+	GETFIELD            		STACK SIZE: 1
+	ARETURN             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+GETSTATIC           		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Allocating object of size: 160 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A39C8, data start at address: 007A39D8
+INSIDE METHOD: inheritance/Child::getMyHierarchy
+Method stack size: 1, local variables size: 1Inserting object with address: 007A39D8 to index: 35
+	ALOAD_0             		STACK SIZE: 0
+	GETFIELD            		STACK SIZE: 1
+	ARETURN             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+GETSTATIC           		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Allocating object of size: 164 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3A88, data start at address: 007A3A98
+INSIDE METHOD: inheritance/Child::familyGreeting
+Method stack size: 2, local variables size: 1Inserting object with address: 007A3A98 to index: 36
+	NEW                 		STACK SIZE: 0
+Inserting object with address: 007AF740 to index: 37
+	DUP                 		STACK SIZE: 1
+	INVOKESPECIAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A3B48, data start at address: 007A3B58
+	ALOAD_0             		STACK SIZE: 1
+	INVOKESPECIAL       		STACK SIZE: 2
+Allocating object of size: 160 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3C78, data start at address: 007A3C88
+INSIDE METHOD: inheritance/Parent::familyGreeting
+Method stack size: 1, local variables size: 1Inserting object with address: 007A3C88 to index: 38
+		LDC                 		STACK SIZE: 0
+Inserting object with address: 007E4420 to index: 39
+		ARETURN             		STACK SIZE: 1
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2C88 to index: 40
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2CD0 to index: 41
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 1
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 62 to 16 aligned size: 80 on EDEN space
+Allocated memory with address: 007A3D38, data start at address: 007A3D48
+Inserting object with address: 007A3D48 to index: 42
+	ARETURN             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+GETSTATIC           		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Allocating object of size: 160 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3D88, data start at address: 007A3D98
+INSIDE METHOD: inheritance/Child::getMyGene
+Method stack size: 1, local variables size: 1Inserting object with address: 007A3D98 to index: 43
+	ALOAD_0             		STACK SIZE: 0
+	GETFIELD            		STACK SIZE: 1
+	ARETURN             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+GETSTATIC           		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 1
+LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD518 to index: 44
+INVOKEVIRTUAL       		STACK SIZE: 3
+Allocating object of size: 168 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A3E48, data start at address: 007A3E58
+INSIDE METHOD: inheritance/Parent::greetMe
+Method stack size: 2, local variables size: 2Inserting object with address: 007A3E58 to index: 45
+	NEW                 		STACK SIZE: 0
+Inserting object with address: 007AF740 to index: 46
+	DUP                 		STACK SIZE: 1
+	INVOKESPECIAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A3F08, data start at address: 007A3F18
+	ALOAD_0             		STACK SIZE: 1
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Allocating object of size: 160 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A4038, data start at address: 007A4048
+INSIDE METHOD: inheritance/Child::greet
+Method stack size: 1, local variables size: 1Inserting object with address: 007A4048 to index: 47
+		LDC                 		STACK SIZE: 0
+Inserting object with address: 007D31E0 to index: 48
+		ARETURN             		STACK SIZE: 1
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007E41E0 to index: 49
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_1             		STACK SIZE: 1
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 1
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 46 to 16 aligned size: 64 on EDEN space
+Allocated memory with address: 007A40F8, data start at address: 007A4108
+Inserting object with address: 007A4108 to index: 50
+	ARETURN             		STACK SIZE: 1
+INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+GETSTATIC           		STACK SIZE: 0
+LDC                 		STACK SIZE: 1
+Inserting object with address: 007DD5A8 to index: 51
+INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+ALOAD_1             		STACK SIZE: 0
+INVOKEVIRTUAL       		STACK SIZE: 1
+Allocating object of size: 168 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A4138, data start at address: 007A4148
+INSIDE METHOD: inheritance/Child::compare
+Method stack size: 3, local variables size: 1Inserting object with address: 007A4148 to index: 52
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2D18 to index: 53
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDB00 to index: 54
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDC68 to index: 55
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 56
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A41F8, data start at address: 007A4208
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD8C0 to index: 57
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 84 to 16 aligned size: 112 on EDEN space
+Allocated memory with address: 007A4328, data start at address: 007A4338
+Inserting object with address: 007A4338 to index: 58
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 59
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A4398, data start at address: 007A43A8
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DDC20 to index: 60
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 73 to 16 aligned size: 96 on EDEN space
+Allocated memory with address: 007A44C8, data start at address: 007A44D8
+Inserting object with address: 007A44D8 to index: 61
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 62
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A4528, data start at address: 007A4538
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD878 to index: 63
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 99 to 16 aligned size: 128 on EDEN space
+Allocated memory with address: 007A4658, data start at address: 007A4668
+Inserting object with address: 007A4668 to index: 64
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 65
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A46D8, data start at address: 007A46E8
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD3B0 to index: 66
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 41 to 16 aligned size: 64 on EDEN space
+Allocated memory with address: 007A4808, data start at address: 007A4818
+Inserting object with address: 007A4818 to index: 67
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2D18 to index: 68
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 69
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A4848, data start at address: 007A4858
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD758 to index: 70
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 77 to 16 aligned size: 96 on EDEN space
+Allocated memory with address: 007A4978, data start at address: 007A4988
+Inserting object with address: 007A4988 to index: 71
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 72
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A49D8, data start at address: 007A49E8
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD638 to index: 73
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 81 to 16 aligned size: 112 on EDEN space
+Allocated memory with address: 007A4B08, data start at address: 007A4B18
+Inserting object with address: 007A4B18 to index: 74
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 75
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A4B78, data start at address: 007A4B88
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD4D0 to index: 76
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 45 to 16 aligned size: 64 on EDEN space
+Allocated memory with address: 007A4CA8, data start at address: 007A4CB8
+Inserting object with address: 007A4CB8 to index: 77
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDB00 to index: 78
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2D18 to index: 79
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	RETURN              		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 0
+INVOKEVIRTUAL       		STACK SIZE: 1
+Allocating object of size: 168 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A4CE8, data start at address: 007A4CF8
+INSIDE METHOD: inheritance/Child::change
+Method stack size: 3, local variables size: 1Inserting object with address: 007A4CF8 to index: 80
+	NEW                 		STACK SIZE: 0
+Inserting object with address: 007AF740 to index: 81
+	DUP                 		STACK SIZE: 1
+	INVOKESPECIAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A4DA8, data start at address: 007A4DB8
+	ALOAD_0             		STACK SIZE: 1
+	DUP_X1              		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD3F8 to index: 82
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 91 to 16 aligned size: 112 on EDEN space
+Allocated memory with address: 007A4ED8, data start at address: 007A4EE8
+Inserting object with address: 007A4EE8 to index: 83
+	PUTFIELD            		STACK SIZE: 2
+	NEW                 		STACK SIZE: 0
+Inserting object with address: 007AF740 to index: 84
+	DUP                 		STACK SIZE: 1
+	INVOKESPECIAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A4F48, data start at address: 007A4F58
+	ALOAD_0             		STACK SIZE: 1
+	DUP_X1              		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD3F8 to index: 85
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 81 to 16 aligned size: 112 on EDEN space
+Allocated memory with address: 007A5078, data start at address: 007A5088
+Inserting object with address: 007A5088 to index: 86
+	PUTFIELD            		STACK SIZE: 2
+	NEW                 		STACK SIZE: 0
+Inserting object with address: 007AF740 to index: 87
+	DUP                 		STACK SIZE: 1
+	INVOKESPECIAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A50E8, data start at address: 007A50F8
+	ALOAD_0             		STACK SIZE: 1
+	DUP_X1              		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD6C8 to index: 88
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 105 to 16 aligned size: 128 on EDEN space
+Allocated memory with address: 007A5218, data start at address: 007A5228
+Inserting object with address: 007A5228 to index: 89
+	PUTFIELD            		STACK SIZE: 2
+	NEW                 		STACK SIZE: 0
+Inserting object with address: 007AF740 to index: 90
+	DUP                 		STACK SIZE: 1
+	INVOKESPECIAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A5298, data start at address: 007A52A8
+	ALOAD_0             		STACK SIZE: 1
+	DUP_X1              		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DDA28 to index: 91
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 54 to 16 aligned size: 80 on EDEN space
+Allocated memory with address: 007A53C8, data start at address: 007A53D8
+Inserting object with address: 007A53D8 to index: 92
+	PUTFIELD            		STACK SIZE: 2
+	RETURN              		STACK SIZE: 0
+ALOAD_1             		STACK SIZE: 0
+INVOKEVIRTUAL       		STACK SIZE: 1
+Allocating object of size: 168 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A5418, data start at address: 007A5428
+INSIDE METHOD: inheritance/Child::compare
+Method stack size: 3, local variables size: 1Inserting object with address: 007A5428 to index: 93
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007D2D18 to index: 94
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDB00 to index: 95
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	LDC                 		STACK SIZE: 1
+Inserting object with address: 007DDC68 to index: 96
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 97
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A54D8, data start at address: 007A54E8
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD8C0 to index: 98
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 105 to 16 aligned size: 128 on EDEN space
+Allocated memory with address: 007A5608, data start at address: 007A5618
+Inserting object with address: 007A5618 to index: 99
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 100
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A5688, data start at address: 007A5698
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DDC20 to index: 101
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 94 to 16 aligned size: 112 on EDEN space
+Allocated memory with address: 007A57B8, data start at address: 007A57C8
+Inserting object with address: 007A57C8 to index: 102
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 103
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocated memory with address: 007A5828, data start at address: 007A5838
+	LDC                 		STACK SIZE: 2
+Inserting object with address: 007DD878 to index: 104
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	ALOAD_0             		STACK SIZE: 2
+	GETFIELD            		STACK SIZE: 3
+	INVOKEVIRTUAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - append (Ljava/lang/String;)Ljava/lang/StringBuilder;
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/lang/StringBuilder - toString ()Ljava/lang/String;
+Allocating object of size: 120 to 16 aligned size: 144 on EDEN space
+Allocated memory with address: 007A5958, data start at address: 007A5968
+Inserting object with address: 007A5968 to index: 105
+	INVOKEVIRTUAL       		STACK SIZE: 2
+Executing native method: java/io/PrintStream - println (Ljava/lang/String;)V
+	GETSTATIC           		STACK SIZE: 0
+	NEW                 		STACK SIZE: 1
+Inserting object with address: 007AF740 to index: 106
+	DUP                 		STACK SIZE: 2
+	INVOKESPECIAL       		STACK SIZE: 3
+Executing native method: java/lang/StringBuilder - <init> ()V
+Allocating object of size: 279 to 16 aligned size: 304 on EDEN space
+Allocation cannot proceed, garbage collection needed
+Garbage collection starts...
+Allocating object of size: 168 to 16 aligned size: 192 on EDEN space
+Allocated memory with address: 007A5B48, data start at address: 007A5B58
+Allocating object of size: 1 to 16 aligned size: 32 on TENURED space
