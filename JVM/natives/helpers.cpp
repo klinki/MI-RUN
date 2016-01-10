@@ -11,7 +11,7 @@ Method* getNativeMethod(const char* name, const char* descriptor, NativeMethodPt
 	method->setDescriptor(Utf8String(descriptor));
 	method->byteCode = NULL;
 	method->byteCodeLength = 0;
-	method->localVariablesArraySize = 0;
+	method->localVariablesArraySize = 1;
 	method->operandStackSize = 0;
 	method->nativeMethod = (NativeMethodPtr)nativeMethod;
 

@@ -969,9 +969,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case IF_ACMPEQ:
 			case IF_ACMPNE:
 			{
-				short offset = this->getShort();
-				unsigned short b = this->getCurrentMethodFrame()->operandStack->pop();
-				unsigned short a = this->getCurrentMethodFrame()->operandStack->pop();
+				short offset = this->getShort() - 2;
+				unsigned int b = this->getCurrentMethodFrame()->operandStack->pop();
+				unsigned int a = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if ((a == b && currentInstruction == IF_ACMPEQ) || (a != b && currentInstruction == IF_ACMPNE))
 				{
@@ -986,7 +986,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				PRINT_OBJECT_TABLE(this->objectTable);
 
-				short offset = this->getShort();
+				short offset = this->getShort() - 2;
 				unsigned short ref = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if ((ref == NULL && currentInstruction == IFNULL) || (ref != NULL && currentInstruction == IFNONNULL) )
@@ -1554,7 +1554,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				byte* stringMemory = this->heap->allocate(java::lang::String::String::getMemorySize(strlen(e.getMessage())));
 				java::lang::String::String * string = new(stringMemory) java::lang::String::String(e.getMessage(), true);
 				size_t stringIndex = this->objectTable->insert(string);
-				throwable->fields->set(0, stringIndex);
+				throwable->fields->set(0, makeReferenceAddress(stringIndex));
 			}
 
 			size_t excIndex = this->runtime->objectTable->insert(throwable);

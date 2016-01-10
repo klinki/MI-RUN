@@ -71,7 +71,7 @@ namespace java
 			NATIVE_METHOD_HEADER(length)
 			{
 				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
-				Utf8String* strPtr = (Utf8String*)engine->objectTable->get(index);
+				java::lang::String::String* strPtr = (java::lang::String::String*)engine->objectTable->get(index);
 
 				engine->getCurrentMethodFrame()->operandStack->push(strPtr->length());
 			}
@@ -79,7 +79,7 @@ namespace java
 			NATIVE_METHOD_HEADER(hashCode)
 			{
 				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
-				Utf8String* strPtr = (Utf8String*)engine->objectTable->get(index);
+				java::lang::String::String* strPtr = (java::lang::String::String*)engine->objectTable->get(index);
 
 				engine->getCurrentMethodFrame()->operandStack->push(strPtr->getHash());
 			}
@@ -93,10 +93,10 @@ namespace java
 			NATIVE_METHOD_HEADER(clone)
 			{
 				size_t index = getReferenceAddress(engine->getCurrentMethodFrame()->operandStack->pop());
-				Utf8String* strPtr = (Utf8String*)engine->objectTable->get(index);
+				java::lang::String::String* strPtr = (java::lang::String::String*)engine->objectTable->get(index);
 
-				byte* data = engine->heap->allocate(strPtr->getMemorySize());
-				Utf8String * clone = new(data) Utf8String(strPtr->toAsciiString(), strPtr->bytes());
+				byte* data = engine->heap->allocate(strPtr->getMemorySize(strPtr->bytes()));
+				java::lang::String::String* clone = new(data) java::lang::String::String(strPtr->toAsciiString(), strPtr->bytes());
 
 				size_t cloneIndex = engine->objectTable->insert(clone);
 

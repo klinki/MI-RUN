@@ -81,16 +81,14 @@ namespace java
 					Method* objectHashCode = object->objectClass->getMethod("hashCode", "()I");
 					Method* anotherObjectHashCode = object->objectClass->getMethod("hashCode", "()I");
 
-					MethodFrame* objFrame = engine->createMethodFrame(objectHashCode, object->objectClass, InstructionSet::INVOKEVIRTUAL);
-					MethodFrame* anotherObjFrame = engine->createMethodFrame(anotherObjectHashCode, anotherObj->objectClass, InstructionSet::INVOKEVIRTUAL);
-
 					engine->getCurrentMethodFrame()->operandStack->pushReference(objReference);
-					engine->execute(objFrame);
-					int objHash = engine->getCurrentMethodFrame()->operandStack->pop();
-
+					objectHashCode->nativeMethod(engine);
+					
 					engine->getCurrentMethodFrame()->operandStack->pushReference(anotherObjReference);
-					engine->execute(anotherObjFrame);
+					anotherObjectHashCode->nativeMethod(engine);
+
 					int anotherObjHash = engine->getCurrentMethodFrame()->operandStack->pop();
+					int objHash = engine->getCurrentMethodFrame()->operandStack->pop();
 
 					engine->getCurrentMethodFrame()->operandStack->push(objHash == anotherObjHash);
 				}
@@ -123,8 +121,9 @@ namespace java
 
 			NATIVE_METHOD_HEADER(hashCode)
 			{
-				::Object* object = engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
-				engine->getCurrentMethodFrame()->operandStack->push((int)object);
+
+				size_t reference = engine->getCurrentMethodFrame()->operandStack->popReference();
+				engine->getCurrentMethodFrame()->operandStack->push((unsigned int)engine->objectTable->get(reference));
 			}
 		}
 	}
