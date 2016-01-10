@@ -6,14 +6,10 @@
 #include "exceptions/RuntimeExceptions.h"
 #include "natives/java//lang/String.h"
 
-#include "PermSpaceCollection.h"
-
 using namespace std;
 
 int main(int argc, const char * argv[])
 {
-	run();
-
     int statusCode = 0;
 	Runtime * runtime = new Runtime(argc, argv);
 	
