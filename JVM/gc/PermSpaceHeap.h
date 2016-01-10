@@ -3,12 +3,14 @@
 #include "Heap.h"
 #include "Baker/BakerGc.h"
 #include "MemoryCell.h"
+#include "../utils/Macros.h"
 
 class Marker;
 class Sweeper;
 
 class PermSpaceHeap : public Heap
 {
+visibility:
 	struct FreeListHeader : MemoryHeader
 	{
 		FreeListHeader * left = nullptr;
@@ -63,7 +65,6 @@ class PermSpaceHeap : public Heap
 		}
 	};
 
-protected:
 	FreeListHeader * freeList;
 	FreeListHeader * lastInserted;
 

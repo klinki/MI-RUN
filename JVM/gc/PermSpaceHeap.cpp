@@ -93,6 +93,9 @@ void PermSpaceHeap::addToFreeList(MemoryHeader* header)
 		}
 
 		freeListHeader->size += sizeof(MemoryHeader);
+
+
+		this->usedBytes -= freeListHeader->size;
 	}
 	else
 	{

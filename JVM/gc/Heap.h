@@ -1,11 +1,13 @@
 #pragma once
 #include <stdlib.h>
 #include "interfaces/HeapInterface.h"
+#include "../utils/Macros.h"
+
 class Heap : public HeapInterface
 {
 	static const int DEFAULT_HEAP_SIZE = 64 * 1024; // 64kB
 
-protected:
+visibility:
 	size_t allocatedBytes;
 	size_t usedBytes;
 	unsigned char * data;

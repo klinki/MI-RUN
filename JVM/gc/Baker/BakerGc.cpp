@@ -306,5 +306,7 @@ void BakerGc::finalize(GarbageCollectableInterface * objPtr)
 
 void BakerGc::fullCollect()
 {
+	word frameIndex = this->runtime->executionEngine->callStack->top();
+	this->marker->mark(frameIndex);
 	this->sweeper->sweep(this->permanentSpace->data);
 }
