@@ -17,8 +17,8 @@ namespace Tests
 		{
 			// val
 			// val, val
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = 0x0BAFBAF;
 
@@ -41,8 +41,8 @@ namespace Tests
 		{
 			// val2, val1
 			// val1, val2, val1
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xBEBEBEB;
 			int b = 0x0BAFBAF;
@@ -68,8 +68,8 @@ namespace Tests
 		{
 			// value3, value2, value1
 			// value1, value3, value2, value1
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xBEBEBEB;
 			int b = 0x0BAFBAF;
@@ -98,8 +98,8 @@ namespace Tests
 		{
 			// value2, value1
 			// value2, value1, value2, value1
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xBEBEBEB;
 			int b = 0x0BAFBAF;
@@ -126,8 +126,8 @@ namespace Tests
 		{
 			// value3, value2, value1
 			// value2, value1, value3, value2, value1
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xBEBEBEB;
 			int b = 0x0BAFBAF;
@@ -157,8 +157,8 @@ namespace Tests
 		{
 			// value4, value3, value2, value1
 			// value2, value1, value4, value3, value2, value1
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xBEBEBEB;
 			int b = 0x0BAFBAF;

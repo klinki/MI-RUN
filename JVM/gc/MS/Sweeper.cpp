@@ -1,48 +1,68 @@
 #include "Sweeper.h"
 #include "../PermSpaceHeap.h"
 
+Sweeper::Sweeper(BakerGc* baker)
+{
+	this->objectTable = baker;
+	this->baker = baker;
+	this->heap = this->baker->permanentSpace;
+}
+
+Sweeper::~Sweeper()
+{
+}
+
 void Sweeper::sweep(void* address)
 {
+	this->heap->freeList = nullptr;
+
 	char* ptr = (char*)address;
-	char* endPtr = NULL;
+	char* endPtr = (char*)address + this->heap->allocatedBytes;
 
-	while (ptr != endPtr)
+	while (ptr < endPtr)
 	{
-		ptr += sizeof(MemoryHeader);
-		MemoryHeader * header = MemoryHeader::getHeader(ptr);
+		MemoryHeader * header = (MemoryHeader*) ptr;
 		size_t size = header->size;
-		GarbageCollectableInterface* objPtr = (GarbageCollectableInterface*)ptr;
+		ptr += sizeof(MemoryHeader);
 
-		if (header->getColor() != Color::BLACK)
+		Color color = header->getColor();
+
+		if (color != Color::INTERNAL_MEMORY)
 		{
-			// finalize object
-			if (objPtr->requiresFinalization())
+			if (color != Color::BLACK)
 			{
-				this->baker->finalize(objPtr);
+				if (color != Color::FREE_REGION)
+				{
+					GarbageCollectableInterface* objPtr = (GarbageCollectableInterface*)ptr;
+					// finalize object
+					if (objPtr->requiresFinalization())
+					{
+						this->baker->finalize(objPtr);
+					}
+
+					DEBUG_PRINT("Removing key: %d from table\n", header->key);
+
+					this->objectTable->remove(header->key);
+				}
+
+				this->heap->addToFreeList(header);
 			}
-
-			DEBUG_PRINT("Removing key: %d from table\n", header->key);
-
-			this->objectTable->remove(header->key);
-
-			PermSpaceHeap::FreeListHeader * freeListHeader = new(header) PermSpaceHeap::FreeListHeader(size + sizeof(MemoryHeader));
-
-
-		}
-		else
-		{
-			header->setColor(Color::WHITE);
+			else
+			{
+				header->setColor(Color::WHITE);
+			}
 		}
 
 		ptr += size;
-		ptr += BakerGc::MEMORY_ALIGNMENT - (size % BakerGc::MEMORY_ALIGNMENT);
+
+		int rem = size % BakerGc::MEMORY_ALIGNMENT;
+
+		if (rem != 0)
+		{
+			ptr += BakerGc::MEMORY_ALIGNMENT - rem;
+		}
 	}
 
 
 	this->heap->lastInserted = nullptr;
-}
-
-void Sweeper::addToFreeList(void* address)
-{
-
 }

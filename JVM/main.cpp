@@ -19,7 +19,7 @@ int main(int argc, const char * argv[])
 	}
 	catch (java::lang::Throwable::Throwable* exc)
 	{
-		size_t messageIndex = exc->fields->get(0);
+		size_t messageIndex = getReferenceAddress(exc->fields->get(0));
 
 		cerr << "Unhandled exception: " << exc->objectClass->fullyQualifiedName.toAsciiString();
 		

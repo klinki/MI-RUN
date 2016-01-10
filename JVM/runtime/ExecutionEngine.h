@@ -371,7 +371,7 @@ public:
 		return ref->isSubclassOf(resolvedClass) || ref->implementsInterface(resolvedClass);
 	}
 
-	inline int recursiveAllocateArray(int dimensions, int dimensionsArray[], int currentLevel = 0, ArrayObject<Object*> * previousLevel = NULL)
+	inline int recursiveAllocateArray(int dimensions, int dimensionsArray[], int currentLevel = 0)
 	{
 		int currentDimension = dimensionsArray[currentLevel];
 
@@ -384,7 +384,7 @@ public:
 		{
 			if (dimensions > 1)
 			{
-				(*object)[currentDimension] = (Object*)this->recursiveAllocateArray(dimensions - 1, dimensionsArray, currentLevel + 1, NULL);
+				(*object)[currentDimension] = (Object*)this->recursiveAllocateArray(dimensions - 1, dimensionsArray, currentLevel + 1);
 			}
 		}
 
@@ -407,8 +407,8 @@ public:
 			classPtr = item->methodInfo.classPtr;
 			methodPtr = item->methodInfo.methodPtr;
 
-			int classIndex = item->methodInfo.class_index;
-			int nameAndTypeIndex = item->methodInfo.name_and_type_index;
+			size_t classIndex = item->methodInfo.class_index;
+			size_t nameAndTypeIndex = item->methodInfo.name_and_type_index;
 
 			ConstantPoolItem * nameAndType = this->getCurrentMethodFrame()->constantPool->get(nameAndTypeIndex);
 			ConstantPoolItem * name = this->getCurrentMethodFrame()->constantPool->get(nameAndType->nameAndTypeInfo.name_index);

@@ -11,6 +11,8 @@
 class ExecutionEngine;
 class Runtime;
 class PermSpaceHeap;
+class Marker;
+class Sweeper;
 
 class BakerGc : public ObjectTable, public ObjectVisitorInterface, public HeapInterface
 {
@@ -28,7 +30,10 @@ visibility:
 	};
 
 	Heap* memorySlots[2];
-	Heap* permanentSpace;
+	
+	PermSpaceHeap* permanentSpace;
+	Marker* marker;
+	Sweeper* sweeper;
 
 	size_t activeSlot;
 
@@ -57,7 +62,9 @@ public:
 	unsigned char* allocateOnEdenSpace(size_t size);
 	virtual unsigned char* allocateOnSystemMemory(size_t size)
 	{
-		return this->allocateOnPermanentSpace(size);
+		unsigned char* data = this->allocateOnPermanentSpace(size);
+		this->getHeader(data)->setColor(Color::INTERNAL_MEMORY);
+		return data;
 	}
 
 	unsigned char* allocateOnPermanentSpace(size_t size);

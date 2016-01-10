@@ -11,8 +11,8 @@ namespace Tests
 	public:
 		TEST_METHOD(testFMUL)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float a[] = { 3.14, 0, 1, -1, -1, INT_MAX, ULLONG_MAX,  1.012 };
 			float b[] = { INFINITY, 0, INFINITY, INFINITY, -INFINITY, INT_MAX, ULLONG_MAX, 1.012 };
@@ -41,8 +41,8 @@ namespace Tests
 
 		TEST_METHOD(testFDivByZeroPositive)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::FDIV;
@@ -64,8 +64,8 @@ namespace Tests
 
 		TEST_METHOD(testFDivByZeroNegative)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::FDIV;
@@ -87,8 +87,8 @@ namespace Tests
 
 		TEST_METHOD(testFDIV)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::FDIV;
@@ -110,8 +110,8 @@ namespace Tests
 
 		TEST_METHOD(testFREM)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::FREM;
@@ -133,8 +133,8 @@ namespace Tests
 
 		TEST_METHOD(testFRemByZero)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::FREM;
@@ -154,8 +154,8 @@ namespace Tests
 
 		TEST_METHOD(testFADD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float a[] = { 1, 1, -1, 3.14, 3.14, INT_MAX, INT_MAX,  +0.0, -0.0 };
 			float b[] = { -0.0, 1, -1, 3.14, -3.14, -INT_MAX, INT_MAX, -0.0, +0.0 };
@@ -184,8 +184,8 @@ namespace Tests
 
 		TEST_METHOD(testAddSpecial)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float a[] = {  INFINITY, -INFINITY };
 			float b[] = { INFINITY, -INFINITY };
@@ -214,8 +214,8 @@ namespace Tests
 
 		TEST_METHOD(testFSUB)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float a[] = { 1, 1, -1, 3.14, 3.14, INT_MAX, INT_MAX, +0.0, -0.0 };
 			float b[] = { -0.0, 1, -1, 3.14, -3.14, -INT_MAX, INT_MAX, +0.0, -0.0 };
@@ -244,8 +244,8 @@ namespace Tests
 
 		TEST_METHOD(testFSUBInf)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float a[] = { INFINITY, -INFINITY };
 			float b[] = { -INFINITY, INFINITY };
@@ -274,8 +274,8 @@ namespace Tests
 
 		TEST_METHOD(testFNEG)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float a[] = { 1, -1, INFINITY, -INFINITY, +0.0, -0.0};
 			
@@ -302,8 +302,8 @@ namespace Tests
 
 		TEST_METHOD(testFNEGspecial)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float a = NAN;
 

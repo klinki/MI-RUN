@@ -14,8 +14,8 @@ namespace Tests
 
 		TEST_METHOD(testISTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = 0x0BAFBAF;
 
@@ -36,8 +36,8 @@ namespace Tests
 
 		TEST_METHOD(testFSTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			float expected = (float)3.14159265359;
 
@@ -58,8 +58,8 @@ namespace Tests
 
 		TEST_METHOD(testLSTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			long long expected = 0xBAFFEEDBEEF;
 
@@ -85,8 +85,8 @@ namespace Tests
 
 		TEST_METHOD(testDSTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double expected = (double)3.14159265359;
 
@@ -112,8 +112,8 @@ namespace Tests
 
 		TEST_METHOD(testASTORE)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int expected = (int)&m;
 

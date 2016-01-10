@@ -14,10 +14,10 @@ namespace java
 			{
 			public:
 				String(const char* str, size_t length, Class* classPtr, bool preallocated);
-				String(size_t length, Class* classPtr): ObjectHeader(classPtr),  Utf8String(length, true) {};
+				String(size_t length, Class* classPtr): ObjectHeader(classPtr),  Utf8String(length) {};
 				String(Utf8String & str, Class* classPtr);
 				String(const char* str, bool preallocated);
-				String(const String & copy): ObjectHeader(copy.objectClass), Utf8String(copy.dataLength, true) 
+				String(const String & copy): ObjectHeader(copy.objectClass), Utf8String(copy.dataLength) 
 				{
 					memcpy(this->data, copy.data, copy.dataLength);
 				}

@@ -29,6 +29,15 @@ visibility:
 	int argsIndex = 0;
 
 public:
+	Runtime() 
+	{
+		this->parser = nullptr;
+		this->heap = nullptr;
+		this->objectTable = new ObjectTable();
+		this->classLoader = nullptr;
+		this->executionEngine = nullptr;
+	}
+
 	Runtime(int argc, const char** argv)
 	{
 		this->parser = new ArgumentsParser (this, argc, argv);

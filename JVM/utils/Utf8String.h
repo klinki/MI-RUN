@@ -13,7 +13,7 @@ protected:
 
 public:
 	Utf8String();
-	Utf8String(size_t length, bool preallocated)
+	Utf8String(size_t length)
 	{
 		this->dataLength = length;
 		this->data = (char*)(&this->data + 1);

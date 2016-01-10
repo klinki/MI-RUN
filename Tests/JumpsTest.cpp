@@ -12,8 +12,8 @@ namespace Tests
 		TEST_METHOD(GOTO)
 		{
 			const int byteCodeLength = 5;
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xCAFEBABD;
 			int b = 1;
@@ -44,8 +44,8 @@ namespace Tests
 		TEST_METHOD(GOTO_W)
 		{
 			const int byteCodeLength = 70000;
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xCAFEBABD;
 			int b = 1;
@@ -85,8 +85,8 @@ namespace Tests
 		TEST_METHOD(RET)
 		{
 			const int byteCodeLength = 5;
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int a = 0xCAFEBABD;
 			int b = 1;
@@ -405,8 +405,8 @@ namespace Tests
 		inline void ifTestStub(Instruction instruction, int stack, int a, int b, int expected)
 		{
 			const int byteCodeLength = 5;
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[byteCodeLength];
 			m.byteCode[0] = instruction;
@@ -435,8 +435,8 @@ namespace Tests
 		inline void icmpTestStub(Instruction instruction, int stackA, int stackB, int a, int b, int expected)
 		{
 			const int byteCodeLength = 5;
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[byteCodeLength];
 			m.byteCode[0] = instruction;

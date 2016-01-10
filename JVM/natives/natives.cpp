@@ -59,6 +59,7 @@ void initializeNatives(Runtime* runtime, ClassMap* classMap)
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/NoSuchMethodError", "java/lang/Error"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/IllegalAccessError", "java/lang/Error"));
 	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/UnsatisfiedLinkError", "java/lang/Error"));
+	classMap->addClass(java::lang::Exception::initialize(classMap, "java/lang/OutOfMemoryError", "java/lang/Error"));
 }
 
 void initializeNatives(Runtime* runtime)

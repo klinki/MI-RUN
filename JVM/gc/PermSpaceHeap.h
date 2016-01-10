@@ -3,26 +3,29 @@
 #include "Heap.h"
 #include "Baker/BakerGc.h"
 #include "MemoryCell.h"
+#include "../utils/Macros.h"
 
 class Marker;
 class Sweeper;
 
 class PermSpaceHeap : public Heap
 {
-	struct FreeListHeader
+visibility:
+	struct FreeListHeader : MemoryHeader
 	{
 		FreeListHeader * left = nullptr;
 		FreeListHeader * right = nullptr;
-		MemoryHeader * header = nullptr;
-		char* PADDING = nullptr; // pading for 16B memory alignment
-
-		FreeListHeader() {};
-
-		FreeListHeader(size_t size)
+		
+		FreeListHeader(): FreeListHeader(0)
 		{
-			this->header = new(&this->header + 1) MemoryHeader(size + sizeof(FreeListHeader));
+		};
+
+		FreeListHeader(size_t size): MemoryHeader(size - sizeof(FreeListHeader))
+		{
+			this->size = size;
 			this->left = this;
 			this->right = this;
+			this->accessCounter = Color::FREE_REGION;
 		}
 
 		void updateLeft(void* address)
@@ -62,7 +65,6 @@ class PermSpaceHeap : public Heap
 		}
 	};
 
-protected:
 	FreeListHeader * freeList;
 	FreeListHeader * lastInserted;
 
@@ -81,6 +83,7 @@ public:
 
 	virtual unsigned char* allocate(size_t size);
 
+	void addToFreeList(MemoryHeader * header);
 	void addToFreeList(FreeListHeader * header);
 
 	friend class BakerGc;

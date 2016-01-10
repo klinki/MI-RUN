@@ -6,6 +6,7 @@ package errors;
 public class NoSuchMethodException
 {
     public static void main(String[] args) {
+        System.out.println("Expecting NoSuchMethodException");
         System.gc();
     }
 }

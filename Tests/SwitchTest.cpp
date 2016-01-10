@@ -78,8 +78,8 @@ namespace Tests
 				byteCodeLength += 2 * 4 + 6 * 8;
 			}
 			
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int nopsBefore = 4 - alignment - 1;
 			int i = 0;
@@ -166,8 +166,8 @@ namespace Tests
 		{
 			// instruction + alignment + (default + low + high) + (table * 6)  
 			const int byteCodeLength = 1 + 3 + 3 * 4 + 8 * 6  + 6 * 4 + 2;
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			int i = 1;
 

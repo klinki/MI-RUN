@@ -14,9 +14,8 @@ struct MemoryCell
 
 struct MemoryHeader
 {
-	static const int TENURATION_MASK = 0xfffff;
+	static const int TENURATION_MASK = 0xffff0000;
 	static const int COLOR_MASK = 0x07;
-
 	size_t size;
 	size_t accessCounter; // or color for perm. generation
 	size_t key;

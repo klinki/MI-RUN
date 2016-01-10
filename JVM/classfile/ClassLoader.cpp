@@ -491,7 +491,7 @@ int ClassLoader::loadAttributes(Class * thisClass)
 	return 0;
 }
 
-int ClassLoader::reader(int nob)
+void ClassLoader::reader(int nob)
 {
 	if (myfile->is_open())
 	{
@@ -501,15 +501,11 @@ int ClassLoader::reader(int nob)
 			data = new char[nob];
 		}
 		myfile->read(data, nob);
-
-		return 0;
 	}
 	else
 	{
 		throw NoClassDefFoundError("Error while reading from file");
-		return -1;
 	}
-
 }
 void ClassLoader::resolvePool(Class * thisClass, int nameptr)
 {
@@ -650,12 +646,13 @@ void ClassLoader::resolveClassPointer(Class * thisClass, int i, int nameptr)
 		unsigned char *a = thisClass->constantPool->get(name_index)->utf8Info.bytes;
 		//string a ((char*)thisClass->constantPool->get(name_index)->utf8Info.bytes);
 		size_t alen = thisClass->constantPool->get(name_index)->utf8Info.length;
-
-		int tclen = thisClass->constantPool->get(nameptr)->utf8Info.length;
+		size_t tclen = thisClass->constantPool->get(nameptr)->utf8Info.length;
+		
 		int counter = 0;
 		int lastcol = 0;
 		int morecol = 0;
-		for (size_t i = 0; i < (alen>tclen ? alen : tclen); i++)
+
+		for (size_t i = 0; i < (alen > tclen ? alen : tclen); i++)
 		{
 			if (a[i] == thisClass->constantPool->get(nameptr)->utf8Info.bytes[i])
 			{

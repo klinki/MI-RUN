@@ -97,34 +97,31 @@ public:
 	}
 };
 
-#ifdef _MSC_VER
 template <>
-void ArrayObject<Object*>::accept(ObjectVisitorInterface * visitor)
+inline void ArrayObject<Object*>::accept(ObjectVisitorInterface * visitor)
 {
 	visitor->visit(this);
 
-	for (int i = 0; i < this->size; i++)
+	for (size_t i = 0; i < this->size; i++)
 	{
 		visitor->visit((word)this->arrayData[i]);
 	}
 }
 
 template <>
-void ArrayObject<Object*>::accept(ObjectVisitorInterface & visitor)
+inline void ArrayObject<Object*>::accept(ObjectVisitorInterface & visitor)
 {
 	this->accept(&visitor);
 }
 
 template <>
-bool ArrayObject<Object*>::requiresFinalization()
+inline bool ArrayObject<Object*>::requiresFinalization()
 {
 	return false;
 }
 
 template <>
-Method* ArrayObject<Object*>::getFinalizationMethod()
+inline Method* ArrayObject<Object*>::getFinalizationMethod()
 {
 	return this->objectClass->getMethod("finalize", "()V");
 }
-
-#endif

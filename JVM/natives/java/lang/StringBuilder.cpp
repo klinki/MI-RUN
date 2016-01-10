@@ -83,7 +83,7 @@ namespace java
 				{
 					size_t newSize = builder->getSize() * 2;
 					byte* memory = engine->heap->allocate(StringBuilder::getMemorySize(newSize));
-					StringBuilder* newBuilder = new StringBuilder(newSize, builder->objectClass);
+					StringBuilder* newBuilder = new (memory) StringBuilder(newSize, builder->objectClass);
 
 					engine->objectTable->updateAddress(builderIndex, newBuilder);
 

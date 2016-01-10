@@ -11,8 +11,8 @@ namespace Tests
 	public:
 		TEST_METHOD(testDMUL)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double a[] = { 3.14, 0, 1, -1, -1, INT_MAX, ULLONG_MAX,  1.012 };
 			double b[] = { INFINITY, 0, INFINITY, INFINITY, -INFINITY, INT_MAX, ULLONG_MAX, 1.012 };
@@ -41,8 +41,8 @@ namespace Tests
 
 		TEST_METHOD(testDDivByZeroPositive)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::DDIV;
@@ -64,8 +64,8 @@ namespace Tests
 
 		TEST_METHOD(testDDivByZeroNegative)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::DDIV;
@@ -88,8 +88,8 @@ namespace Tests
 		TEST_METHOD(testDDIV)
 		{
 
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::DDIV;
@@ -111,8 +111,8 @@ namespace Tests
 
 		TEST_METHOD(testDREM)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::DREM;
@@ -134,8 +134,8 @@ namespace Tests
 
 		TEST_METHOD(testDRemByZero)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			m.byteCode = new Instruction[1];
 			m.byteCode[0] = (Instruction)InstructionSet::DREM;
@@ -155,8 +155,8 @@ namespace Tests
 
 		TEST_METHOD(testDADD)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double a[] = { 1, 1, -1, 3.14, 3.14, INT_MAX, INT_MAX,  +0.0, -0.0 };
 			double b[] = { -0.0, 1, -1, 3.14, -3.14, -INT_MAX, INT_MAX, -0.0, +0.0 };
@@ -185,8 +185,8 @@ namespace Tests
 
 		TEST_METHOD(testAddSpecial)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double a[] = { INFINITY, -INFINITY };
 			double b[] = { INFINITY, -INFINITY };
@@ -215,8 +215,8 @@ namespace Tests
 
 		TEST_METHOD(testDSUB)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double a[] = { 1, 1, -1, 3.14, 3.14, INT_MAX, INT_MAX, +0.0, -0.0 };
 			double b[] = { -0.0, 1, -1, 3.14, -3.14, -INT_MAX, INT_MAX, +0.0, -0.0 };
@@ -245,8 +245,8 @@ namespace Tests
 
 		TEST_METHOD(testDSUBInf)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double a[] = { INFINITY, -INFINITY };
 			double b[] = { -INFINITY, INFINITY };
@@ -275,8 +275,8 @@ namespace Tests
 
 		TEST_METHOD(testDNEG)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double a[] = { 1, -1, INFINITY, -INFINITY, +0.0, -0.0 };
 
@@ -303,8 +303,8 @@ namespace Tests
 
 		TEST_METHOD(testDNEGspecial)
 		{
-			ExecutionEngine eng;
-			Method m;
+			ExecutionEngine eng = getEngine();
+			Method m = getMethod();
 
 			double a = NAN;
 

@@ -8,6 +8,9 @@ class Sweeper
 	BakerGc * baker;
 	ObjectTable * objectTable;
 
+public:
+	Sweeper(BakerGc* baker);
+	~Sweeper();
+
 	virtual void sweep(void* address);
-	virtual void addToFreeList(void* address);
 };

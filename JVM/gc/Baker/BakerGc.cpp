@@ -3,6 +3,9 @@
 #include "../../runtime/ExecutionEngine.h"
 #include "../debug/DebugVisitor.h"
 #include "../../runtime/Runtime.h"
+#include "../PermSpaceHeap.h"
+#include "../MS/Marker.h"
+#include "../MS/Sweeper.h"
 
 BakerGc::BakerGc() : BakerGc(10 * 1024 , 50 * 1024 * 1024) {};
 
@@ -13,7 +16,9 @@ BakerGc::BakerGc(Runtime* runtime, size_t memorySize, size_t permSize)
 	this->memorySlots[0] = new Heap(memorySize);
 	this->memorySlots[1] = new Heap(memorySize);
 
-	this->permanentSpace = new Heap(permSize);
+	this->permanentSpace = new PermSpaceHeap(permSize);
+	this->marker = new Marker(this);
+	this->sweeper = new Sweeper(this);
 
 	this->activeSlot = 0;
 }
@@ -27,6 +32,8 @@ BakerGc::~BakerGc()
 	delete this->memorySlots[0];
 	delete this->memorySlots[1];
 	delete this->permanentSpace;
+	delete this->marker;
+	delete this->sweeper;
 }
 
 void BakerGc::visit(MethodFrame* methodFrame)
@@ -115,7 +122,13 @@ size_t BakerGc::countAllocatedBlockSize(size_t size)
 {
 	int totalAllocated = size + sizeof(MemoryHeader);
 
-	int slots = totalAllocated / MEMORY_ALIGNMENT + 1;
+	int slots = totalAllocated / MEMORY_ALIGNMENT;
+
+	if (totalAllocated % MEMORY_ALIGNMENT != 0)
+	{
+		slots++;
+	}
+
 	size_t bytesAllocated = slots * MEMORY_ALIGNMENT;
 
 	return bytesAllocated;
@@ -180,6 +193,7 @@ unsigned char * BakerGc::allocateOnPermanentSpace(size_t size)
 	if ((this->permanentSpace->usedBytes + bytesAllocated) >= this->permanentSpace->allocatedBytes)
 	{
 		// Thats bad - time for FULL old space garbage collection!!
+		DEBUG_PRINT("Allocation cannot proceed, garbage TENURED SPACE collection needed\n");
 		this->fullCollect();
 	}
 
@@ -262,7 +276,13 @@ void BakerGc::finalize(Heap* slot)
 		}
 
 		ptr += size;
-		ptr += MEMORY_ALIGNMENT - (size % MEMORY_ALIGNMENT);
+
+		int rem = size % BakerGc::MEMORY_ALIGNMENT;
+
+		if (rem != 0)
+		{
+			ptr += BakerGc::MEMORY_ALIGNMENT - rem;
+		}
 	}
 }
 
@@ -289,5 +309,8 @@ void BakerGc::finalize(GarbageCollectableInterface * objPtr)
 
 void BakerGc::fullCollect()
 {
-
+	DEBUG_PRINT("Garbage collection of TENURED space starts...\n");
+	word frameIndex = this->runtime->executionEngine->callStack->top();
+	this->marker->mark(frameIndex);
+	this->sweeper->sweep(this->permanentSpace->data);
 }
