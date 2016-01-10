@@ -42,6 +42,7 @@ namespace java
 				newClass->addMethod(getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
 				newClass->addMethod(getNativeMethod("hashCode", "()I", &hashCode));
 				newClass->addMethod(getNativeMethod("length", "()I", &length));
+				newClass->addMethod(getNativeMethod("equals", "(Ljava/lang/Object;)Z", &equals));
 
 				return newClass;
 			}
@@ -101,6 +102,37 @@ namespace java
 				size_t cloneIndex = engine->objectTable->insert(clone);
 
 				engine->getCurrentMethodFrame()->operandStack->push(makeReferenceAddress(cloneIndex));
+			}
+
+			NATIVE_METHOD_HEADER(equals)
+			{
+				word objReference = engine->getCurrentMethodFrame()->operandStack->popReference();
+				word anotherObjReference = engine->getCurrentMethodFrame()->operandStack->popReference();
+
+				java::lang::String::String * object = (java::lang::String::String*)engine->objectTable->get(objReference);
+				java::lang::String::String * anotherObj = (java::lang::String::String*)engine->objectTable->get(anotherObjReference);
+
+				if (object == nullptr)
+				{
+					throw Exceptions::Runtime::NullPointerException();
+				}
+
+				if (anotherObj == nullptr)
+				{
+					engine->getCurrentMethodFrame()->operandStack->push(false);
+				}
+				else
+				{
+					bool equal = false;
+
+					if (object->bytes() == anotherObj->bytes() && object->getHash() == anotherObj->getHash())
+					{
+						int result = strcmp(object->toAsciiString(), anotherObj->toAsciiString());
+						equal = result == 0;
+					}
+
+					engine->getCurrentMethodFrame()->operandStack->push(equal);
+				}
 			}
 		}
 	}

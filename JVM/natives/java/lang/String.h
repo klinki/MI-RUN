@@ -59,6 +59,8 @@ namespace java
 
 			NATIVE_METHOD_HEADER(length);
 			NATIVE_METHOD_HEADER(hashCode);
+			NATIVE_METHOD_HEADER(equals);
+
 			NATIVE_METHOD_HEADER(toString);
 			
 			NATIVE_METHOD_HEADER(clone);
