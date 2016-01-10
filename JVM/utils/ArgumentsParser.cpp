@@ -89,10 +89,11 @@ void ArgumentsParser::setParameters()
 				strStream >> permSize;
 				size_t sizeInBytes = permSize * 1024 * 1024;
 
+#ifndef _DEBUG
 				if (sizeInBytes < this->runtime->parameters.MinPermSpaceSize) {
 					sizeInBytes = this->runtime->parameters.MinPermSpaceSize;
 				}
-
+#endif
 				this->runtime->parameters.PermSpaceSize = sizeInBytes;
 
 				i++;

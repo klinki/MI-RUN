@@ -20,7 +20,7 @@ visibility:
 		{
 		};
 
-		FreeListHeader(size_t size): MemoryHeader(size - sizeof(FreeListHeader) - sizeof(MemoryHeader))
+		FreeListHeader(size_t size): MemoryHeader(size - sizeof(FreeListHeader))
 		{
 			this->size = size;
 			this->left = this;

@@ -6,5 +6,6 @@ enum Color
 	BLACK = 4, // reachable
 
 	BAKER_MOVED = 5,
-	FREE_REGION = 6
+	FREE_REGION = 6,
+	INTERNAL_MEMORY = 7
 };

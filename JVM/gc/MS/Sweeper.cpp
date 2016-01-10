@@ -25,27 +25,32 @@ void Sweeper::sweep(void* address)
 		size_t size = header->size;
 		ptr += sizeof(MemoryHeader);
 
-		if (header->getColor() != Color::BLACK)
+		Color color = header->getColor();
+
+		if (color != Color::INTERNAL_MEMORY)
 		{
-			if (header->getColor() != Color::FREE_REGION) 
+			if (color != Color::BLACK)
 			{
-				GarbageCollectableInterface* objPtr = (GarbageCollectableInterface*)ptr;
-				// finalize object
-				if (objPtr->requiresFinalization())
+				if (color != Color::FREE_REGION)
 				{
-					this->baker->finalize(objPtr);
+					GarbageCollectableInterface* objPtr = (GarbageCollectableInterface*)ptr;
+					// finalize object
+					if (objPtr->requiresFinalization())
+					{
+						this->baker->finalize(objPtr);
+					}
+
+					DEBUG_PRINT("Removing key: %d from table\n", header->key);
+
+					this->objectTable->remove(header->key);
 				}
 
-				DEBUG_PRINT("Removing key: %d from table\n", header->key);
-
-				this->objectTable->remove(header->key);
+				this->heap->addToFreeList(header);
 			}
-
-			this->heap->addToFreeList(header);
-		}
-		else
-		{
-			header->setColor(Color::WHITE);
+			else
+			{
+				header->setColor(Color::WHITE);
+			}
 		}
 
 		ptr += size;
@@ -60,9 +65,4 @@ void Sweeper::sweep(void* address)
 
 
 	this->heap->lastInserted = nullptr;
-}
-
-void Sweeper::addToFreeList(void* address)
-{
-
 }

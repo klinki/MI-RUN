@@ -62,7 +62,9 @@ public:
 	unsigned char* allocateOnEdenSpace(size_t size);
 	virtual unsigned char* allocateOnSystemMemory(size_t size)
 	{
-		return this->allocateOnPermanentSpace(size);
+		unsigned char* data = this->allocateOnPermanentSpace(size);
+		this->getHeader(data)->setColor(Color::INTERNAL_MEMORY);
+		return data;
 	}
 
 	unsigned char* allocateOnPermanentSpace(size_t size);

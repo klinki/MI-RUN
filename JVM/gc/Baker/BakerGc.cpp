@@ -193,6 +193,7 @@ unsigned char * BakerGc::allocateOnPermanentSpace(size_t size)
 	if ((this->permanentSpace->usedBytes + bytesAllocated) >= this->permanentSpace->allocatedBytes)
 	{
 		// Thats bad - time for FULL old space garbage collection!!
+		DEBUG_PRINT("Allocation cannot proceed, garbage TENURED SPACE collection needed\n");
 		this->fullCollect();
 	}
 
@@ -308,6 +309,7 @@ void BakerGc::finalize(GarbageCollectableInterface * objPtr)
 
 void BakerGc::fullCollect()
 {
+	DEBUG_PRINT("Garbage collection of TENURED space starts...\n");
 	word frameIndex = this->runtime->executionEngine->callStack->top();
 	this->marker->mark(frameIndex);
 	this->sweeper->sweep(this->permanentSpace->data);

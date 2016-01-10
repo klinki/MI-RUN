@@ -1557,6 +1557,9 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				throwable->fields->set(0, stringIndex);
 			}
 
+			size_t excIndex = this->runtime->objectTable->insert(throwable);
+			this->getCurrentMethodFrame()->operandStack->pushReference(excIndex);
+
 			if (!this->handleException(throwable))
 			{
 				size_t exceptionIndex = this->getCurrentMethodFrame()->operandStack->top();

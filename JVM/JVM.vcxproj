@@ -140,7 +140,6 @@
     <ClCompile Include="natives\java\lang\System.cpp" />
     <ClCompile Include="natives\java\lang\Throwable.cpp" />
     <ClCompile Include="natives\natives.cpp" />
-    <ClCompile Include="PermSpaceCollection.cpp" />
     <ClCompile Include="runtime\ClassMap.cpp" />
     <ClCompile Include="natives\java\util\Scanner.cpp" />
     <ClCompile Include="types\Descriptors.cpp" />
@@ -188,7 +187,6 @@
     <ClInclude Include="natives\java\lang\System.h" />
     <ClInclude Include="natives\java\lang\Throwable.h" />
     <ClInclude Include="natives\natives.h" />
-    <ClInclude Include="PermSpaceCollection.h" />
     <ClInclude Include="runtime\ClassMap.h" />
     <ClInclude Include="runtime\ClassMember.h" />
     <ClInclude Include="runtime\ClassMemberMap.h" />

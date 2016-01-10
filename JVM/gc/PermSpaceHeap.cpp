@@ -51,8 +51,12 @@ unsigned char* PermSpaceHeap::allocate(size_t size)
 
 	size_t previousFreeSize = selectedHeader->size;
 
-	if ((previousFreeSize - requiredSize) <= (sizeof(FreeListHeader) + sizeof(MemoryHeader)))
+	if ((previousFreeSize - requiredSize) < (sizeof(FreeListHeader) + sizeof(MemoryHeader)))
 	{
+		// TODO: remove from free list
+		// selectedHeader->updateLeft(selectedHeader->right);
+		// selectedHeader->updateRight(selectedHeader->left);
+
 		this->freeList = NULL;
 	}
 	else

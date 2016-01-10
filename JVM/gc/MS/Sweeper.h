@@ -13,5 +13,4 @@ public:
 	~Sweeper();
 
 	virtual void sweep(void* address);
-	virtual void addToFreeList(void* address);
 };
