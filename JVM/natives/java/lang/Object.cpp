@@ -29,7 +29,7 @@ namespace java
 
 				newClass->addMethod(::getNativeMethod("toString", "()Ljava/lang/String;", &toString));
 				newClass->addMethod(::getNativeMethod("clone", "()Ljava/lang/Object;", &clone));
-				newClass->addMethod(::getNativeMethod("equals", "(Ljava/lang/Object;)B", &equals));
+				newClass->addMethod(::getNativeMethod("equals", "(Ljava/lang/Object;)Z", &equals));
 
 				newClass->addMethod(::getNativeMethod("hashCode", "()I", &hashCode));
 		
@@ -66,8 +66,11 @@ namespace java
 
 			NATIVE_METHOD_HEADER(equals)
 			{
-				::Object* object = engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
-				::Object* anotherObj = engine->objectTable->get(engine->getCurrentMethodFrame()->operandStack->popReference());
+				word objReference = engine->getCurrentMethodFrame()->operandStack->popReference();
+				word anotherObjReference = engine->getCurrentMethodFrame()->operandStack->popReference();
+
+				::Object* object = engine->objectTable->get(objReference);
+				::Object* anotherObj = engine->objectTable->get(anotherObjReference);
 
 				if (anotherObj == nullptr)
 				{
@@ -75,14 +78,21 @@ namespace java
 				}
 				else
 				{
-					// TODO: Fix
-					hashCode(engine);
-					hashCode(engine);
+					Method* objectHashCode = object->objectClass->getMethod("hashCode", "()I");
+					Method* anotherObjectHashCode = object->objectClass->getMethod("hashCode", "()I");
 
-					int secondHash = engine->getCurrentMethodFrame()->operandStack->pop();
-					int firstHash = engine->getCurrentMethodFrame()->operandStack->pop();
+					MethodFrame* objFrame = engine->createMethodFrame(objectHashCode, object->objectClass, InstructionSet::INVOKEVIRTUAL);
+					MethodFrame* anotherObjFrame = engine->createMethodFrame(anotherObjectHashCode, anotherObj->objectClass, InstructionSet::INVOKEVIRTUAL);
 
-					engine->getCurrentMethodFrame()->operandStack->push(firstHash == secondHash);
+					engine->getCurrentMethodFrame()->operandStack->pushReference(objReference);
+					engine->execute(objFrame);
+					int objHash = engine->getCurrentMethodFrame()->operandStack->pop();
+
+					engine->getCurrentMethodFrame()->operandStack->pushReference(anotherObjReference);
+					engine->execute(anotherObjFrame);
+					int anotherObjHash = engine->getCurrentMethodFrame()->operandStack->pop();
+
+					engine->getCurrentMethodFrame()->operandStack->push(objHash == anotherObjHash);
 				}
 			}
 
