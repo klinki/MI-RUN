@@ -51,12 +51,12 @@ bool ExecutionEngine::handleException(java::lang::Throwable::Throwable* e)
 	{
 		Exception & exception = (*table)[i];
 
-		if (pc >= exception.start_pc && pc <= exception.end_pc)
+		if (this->getCurrentMethodFrame()->pc >= exception.start_pc && this->getCurrentMethodFrame()->pc <= exception.end_pc)
 		{
 			// NULL objectClass is for finally block
 			if (exception.classPtr == NULL || e->objectClass == exception.classPtr || e->objectClass->isSubclassOf(exception.classPtr))
 			{
-				pc = exception.handler_pc;
+				this->getCurrentMethodFrame()->pc = exception.handler_pc;
 				this->getCurrentMethodFrame()->operandStack->clear();
 				this->getCurrentMethodFrame()->operandStack->push(exceptionIndex);
 				return true;
@@ -99,13 +99,11 @@ int ExecutionEngine::execute(MethodFrame * frame)
 	unsigned int length = this->getCurrentMethodFrame()->method->getByteCodeLength();
 	ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
 
-	while (pc < length)
+	while (this->getCurrentMethodFrame()->pc < length)
 	{
 		try
 		{
-			ProgramCounter & pc = this->getCurrentMethodFrame()->pc;
-
-			Instruction currentInstruction = instructions[pc++];
+			Instruction currentInstruction = instructions[this->getCurrentMethodFrame()->pc++];
 
 #ifdef _DEBUG
 			if (this->runtime->parameters.PrintExecutedInstructions) {
@@ -152,7 +150,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case BIPUSH:
 			{
 				// push byte
-				word byte = instructions[pc++];
+				word byte = instructions[this->getCurrentMethodFrame()->pc++];
 				this->getCurrentMethodFrame()->operandStack->push(byte);
 			}
 			break;
@@ -169,7 +167,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case LDC:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->pushFromConstantPool(index);
 			}
 			break;
@@ -193,7 +191,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// load from local variable 
 				// index
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->singleWordLoad(index);
 			}
 			break;
@@ -208,7 +206,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case LLOAD:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->lload(index);
 			}
 			break;
@@ -223,7 +221,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case FLOAD:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->singleWordLoad(index);
 			}
 			break;
@@ -238,7 +236,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case DLOAD:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->dload(index);
 			}
 			break;
@@ -253,7 +251,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case ALOAD:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->singleWordLoad(index);
 			}
 			break;
@@ -300,7 +298,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case ISTORE:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->singleWordStore(index);
 				// store int into local variable
 			}
@@ -316,7 +314,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case LSTORE:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->lstore(index);
 			}
 			break;
@@ -330,7 +328,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case FSTORE:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->singleWordStore(index);
 				break;
 			}
@@ -343,7 +341,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case DSTORE:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->dstore(index);
 			}
 			break;
@@ -356,7 +354,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case ASTORE:
 			{
-				unsigned char index = instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
 				this->singleWordStore(index);
 			}
 			break;
@@ -777,8 +775,8 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case IINC:
 			{
-				unsigned char index = instructions[pc++];
-				int value = (char)instructions[pc++];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc++];
+				int value = (char)instructions[this->getCurrentMethodFrame()->pc++];
 				this->iinc(index, value);
 			}
 			break;
@@ -1013,7 +1011,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case JSR:
 			{
 				short offset = this->getShort();
-				this->getCurrentMethodFrame()->operandStack->push(pc);
+				this->getCurrentMethodFrame()->operandStack->push(this->getCurrentMethodFrame()->pc);
 				this->jumpWithOffset(offset);
 			}
 			break;
@@ -1021,7 +1019,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			case JSR_W:
 			{
 				int offset = (int)this->getInt();
-				this->getCurrentMethodFrame()->operandStack->push(pc);
+				this->getCurrentMethodFrame()->operandStack->push(this->getCurrentMethodFrame()->pc);
 				this->jumpWithOffset(offset);
 			}
 			break;
@@ -1029,20 +1027,20 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case RET:
 			{
-				unsigned char index = instructions[pc];
+				unsigned char index = instructions[this->getCurrentMethodFrame()->pc];
 				int restoredPc = this->getCurrentMethodFrame()->localVariables->operator[](index);
-				pc = restoredPc;
+				this->getCurrentMethodFrame()->pc = restoredPc;
 			}
 			break;
 
 			case TABLESWITCH:
 			{
-				int switchPc = pc;
+				int switchPc = this->getCurrentMethodFrame()->pc;
 
 				// figure out padding
-				while (pc % 4 != 0)
+				while (this->getCurrentMethodFrame()->pc % 4 != 0)
 				{
-					pc++;
+					this->getCurrentMethodFrame()->pc++;
 				}
 
 				int def = this->getInt();
@@ -1060,24 +1058,24 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				}
 				else
 				{
-					pc += (index - low) * 4;
+					this->getCurrentMethodFrame()->pc += (index - low) * 4;
 					offset = this->getInt();
 				}
 
 				// high - low + 1
-				pc = switchPc;
+				this->getCurrentMethodFrame()->pc = switchPc;
 				this->jumpWithOffset(offset);
 			}
 			break;
 
 			case LOOKUPSWITCH:
 			{
-				int switchPc = pc;
+				int switchPc = this->getCurrentMethodFrame()->pc;
 
 				// figure out padding
-				while (pc % 4 != 0)
+				while (this->getCurrentMethodFrame()->pc % 4 != 0)
 				{
-					pc++;
+					this->getCurrentMethodFrame()->pc++;
 				}
 
 				int def = this->getInt();
@@ -1106,7 +1104,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 					offset = def;
 				}
 
-				pc = switchPc;
+				this->getCurrentMethodFrame()->pc = switchPc;
 				this->jumpWithOffset(offset);
 			}
 			break;
@@ -1263,7 +1261,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				PRINT_STACK(this->getCurrentMethodFrame()->operandStack);
 
 				size_t index = this->getShort();
-				size_t count = instructions[pc++]; // information about parameters, could be determined from const pool
+				size_t count = instructions[this->getCurrentMethodFrame()->pc++]; // information about parameters, could be determined from const pool
 				pc++; // Reserved 0
 
 				// TODO: Implement
@@ -1294,7 +1292,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case NEWARRAY:
 			{
-				ArrayType type = (ArrayType)instructions[pc++];
+				ArrayType type = (ArrayType)instructions[this->getCurrentMethodFrame()->pc++];
 				int size = this->getCurrentMethodFrame()->operandStack->pop();
 
 				if (size < 0)
@@ -1375,7 +1373,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 			{
 				// TODO: Check class
 				int index = this->getShort();
-				int dimensions = (int)instructions[pc++];
+				int dimensions = (int)instructions[this->getCurrentMethodFrame()->pc++];
 
 				if (dimensions < 1) 
 				{
@@ -1470,7 +1468,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 
 			case WIDE:
 			{
-				Instruction modifiedInstruction = instructions[pc++];
+				Instruction modifiedInstruction = instructions[this->getCurrentMethodFrame()->pc++];
 				size_t index = this->getShort();
 
 				switch (modifiedInstruction)
@@ -1500,7 +1498,7 @@ int ExecutionEngine::execute(MethodFrame * frame)
 				case RET: 
 					{
 						int restoredPc = this->getCurrentMethodFrame()->localVariables->operator[](index);
-						pc = restoredPc;
+						this->getCurrentMethodFrame()->pc = restoredPc;
 					}
 					break;
 				case IINC:

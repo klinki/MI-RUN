@@ -244,6 +244,11 @@ public:
 		{
 			this->jumpWithOffset(offset - 2);
 		}
+		else
+		{
+			DEBUG_PRINT("Konec", value);
+			return;
+		}
 	}
 
 	template<class T>
